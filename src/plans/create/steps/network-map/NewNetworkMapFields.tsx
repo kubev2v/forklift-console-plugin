@@ -6,15 +6,16 @@ import { HelpIconPopover } from '@components/common/HelpIconPopover/HelpIconPopo
 import { getMultiNicSourceNetworks } from '@components/mappings/network-mappings/utils/getMultiNicSourceNetworks';
 import type { ProviderVirtualMachine as TypesProviderVirtualMachine } from '@forklift-ui/types';
 import { Alert, AlertVariant, Stack, StackItem, TextInput } from '@patternfly/react-core';
-import { DEFAULT_NETWORK } from '@utils/constants';
+import { POD } from '@utils/constants';
 import { isEmpty } from '@utils/helpers';
 import { useForkliftTranslation } from '@utils/i18n';
+import { isDefaultNetworkTarget } from '@utils/mappings/constants';
 import {
-  defaultNetMapping,
   netMapFieldLabels,
   NetworkMapFieldId,
   type NetworkMapping,
 } from '@utils/mappings/networkMap';
+import type { MappingValue } from '@utils/types';
 
 import { useCreatePlanFormContext } from '../../hooks/useCreatePlanFormContext';
 import { useCreatePlanWizardContext } from '../../hooks/useCreatePlanWizardContext';
@@ -27,6 +28,11 @@ import { filterTargetNetworksByProject, getSourceNetworkValues } from './utils';
 
 const NewNetworkMapFields: FC = () => {
   const { t } = useForkliftTranslation();
+  const defaultNetworkLabel = t('Default network');
+  const defaultTarget = useMemo(
+    (): MappingValue => ({ id: POD, name: defaultNetworkLabel }),
+    [defaultNetworkLabel],
+  );
   const { control, getFieldState, setValue } = useCreatePlanFormContext();
   const { network } = useCreatePlanWizardContext();
   const [targetProject, vms, networkMap] = useWatch({
@@ -45,16 +51,18 @@ const NewNetworkMapFields: FC = () => {
     availableSourceNetworks,
     Object.values(vms),
     oVirtNicProfiles,
+    defaultNetworkLabel,
   );
 
   const targetNetworkMap = useMemo(
-    () => filterTargetNetworksByProject(availableTargetNetworks, targetProject),
-    [availableTargetNetworks, targetProject],
+    () =>
+      filterTargetNetworksByProject(availableTargetNetworks, targetProject, defaultNetworkLabel),
+    [availableTargetNetworks, defaultNetworkLabel, targetProject],
   );
 
   useInitializeMappings<NetworkMapping>({
     currentMap: networkMap,
-    defaultTarget: defaultNetMapping[NetworkMapFieldId.TargetNetwork],
+    defaultTarget,
     fieldIds: {
       mapField: NetworkMapFieldId.NetworkMap,
       sourceField: NetworkMapFieldId.SourceNetwork,
@@ -78,9 +86,11 @@ const NewNetworkMapFields: FC = () => {
     let updated = false;
     const updatedMap = networkMap.map((mapping) => {
       const sourceId = mapping[NetworkMapFieldId.SourceNetwork]?.id ?? '';
-      const targetName = mapping[NetworkMapFieldId.TargetNetwork]?.name;
 
-      if (multiNicIds.has(sourceId) && targetName === DEFAULT_NETWORK) {
+      if (
+        multiNicIds.has(sourceId) &&
+        isDefaultNetworkTarget(mapping[NetworkMapFieldId.TargetNetwork])
+      ) {
         updated = true;
         return { ...mapping, [NetworkMapFieldId.TargetNetwork]: { name: '' } };
       }
@@ -93,7 +103,7 @@ const NewNetworkMapFields: FC = () => {
         shouldValidate: true,
       });
     }
-  }, [isLoading, networkMap, vms, oVirtNicProfiles, setValue]);
+  }, [isLoading, networkMap, oVirtNicProfiles, setValue, vms]);
 
   return (
     <Stack className="pf-v6-u-ml-lg" hasGutter>
