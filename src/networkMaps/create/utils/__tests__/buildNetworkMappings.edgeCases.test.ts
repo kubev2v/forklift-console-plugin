@@ -1,7 +1,7 @@
 import { buildNetworkMappings } from '../buildNetworkMappings';
 
 import {
-  DEFAULT_NETWORK,
+  getDefaultNetworkLabel,
   mockNetworkMapping,
   mockVMwareProvider,
   NetworkMapFieldId,
@@ -102,7 +102,7 @@ describe('buildNetworkMappings - edge cases', () => {
       mockNetworkMapping,
       {
         [NetworkMapFieldId.SourceNetwork]: { name: 'source-network-2' },
-        [NetworkMapFieldId.TargetNetwork]: { name: DEFAULT_NETWORK },
+        [NetworkMapFieldId.TargetNetwork]: { name: getDefaultNetworkLabel() },
       },
     ];
 

@@ -1,7 +1,9 @@
+import { POD } from '@utils/constants';
+
 import { buildNetworkMappings } from '../buildNetworkMappings';
 
 import {
-  DEFAULT_NETWORK,
+  getDefaultNetworkLabel,
   mockNetworkMapping,
   mockOpenShiftProvider,
   mockVMwareProvider,
@@ -13,7 +15,7 @@ describe('buildNetworkMappings - OpenShift provider', () => {
     const mappings = [
       {
         ...mockNetworkMapping,
-        [NetworkMapFieldId.TargetNetwork]: { name: DEFAULT_NETWORK },
+        [NetworkMapFieldId.TargetNetwork]: { name: getDefaultNetworkLabel() },
       },
     ];
 
@@ -85,7 +87,7 @@ describe('buildNetworkMappings - VMware provider', () => {
     const mappings = [
       {
         ...mockNetworkMapping,
-        [NetworkMapFieldId.TargetNetwork]: { name: DEFAULT_NETWORK },
+        [NetworkMapFieldId.TargetNetwork]: { name: getDefaultNetworkLabel() },
       },
     ];
 
@@ -97,6 +99,19 @@ describe('buildNetworkMappings - VMware provider', () => {
         source: { id: 'source-network', name: 'source-network' },
       },
     ]);
+  });
+
+  it('maps a pod id to the pod network when the stored label is from another language', () => {
+    const mappings = [
+      {
+        ...mockNetworkMapping,
+        [NetworkMapFieldId.TargetNetwork]: { id: POD, name: 'Red predeterminada' },
+      },
+    ];
+
+    const result = buildNetworkMappings(mappings, mockVMwareProvider);
+
+    expect(result[0].destination).toEqual({ type: 'pod' });
   });
 
   it('should create multus network mapping for VMware provider with multus target', () => {
