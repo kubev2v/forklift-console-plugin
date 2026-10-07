@@ -1,6 +1,6 @@
 import { describe, expect, it } from '@jest/globals';
-import { DEFAULT_NETWORK } from '@utils/constants';
 import { NetworkMapFieldId } from '@utils/crds/maps/types';
+import { getDefaultNetworkLabel } from '@utils/mappings/constants';
 
 import { validateNetworkMaps } from '../utils';
 
@@ -22,7 +22,10 @@ describe('validateNetworkMaps - validation', () => {
 
   it('allows only one default network target', () => {
     expect(
-      validateNetworkMaps([mapping('s1', DEFAULT_NETWORK), mapping('s2', DEFAULT_NETWORK)]),
+      validateNetworkMaps([
+        mapping('s1', getDefaultNetworkLabel()),
+        mapping('s2', getDefaultNetworkLabel()),
+      ]),
     ).toMatch(/Only one mapping can target the default network/i);
   });
 
