@@ -179,5 +179,6 @@ When implementing a new feature that introduces concepts, patterns, CRDs, provid
 - New testing pattern or tooling -- update `testing.mdc`.
 - New i18n utility or namespace change -- update `i18n.mdc`.
 - New workflow or development process -- add or update the relevant file under `workflows/`.
+- New reusable screen type or MTV layout pattern -- add a row to `agents/forklift-ux-patterns.mdc`.
 
 Keeping the rules accurate ensures every team member and AI assistant works with up-to-date project knowledge.
