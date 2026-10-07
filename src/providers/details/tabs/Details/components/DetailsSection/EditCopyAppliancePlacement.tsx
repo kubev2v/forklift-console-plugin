@@ -1,18 +1,16 @@
 import { useState } from 'react';
-import { FormGroupWithHelpText } from 'src/components/common/FormGroupWithHelpText/FormGroupWithHelpText';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
-import { FilterableSelect } from '@components/FilterableSelect/FilterableSelect';
 import ModalForm from '@components/ModalForm/ModalForm';
 import type { V1beta1Provider } from '@forklift-ui/types';
 import type { OverlayComponent } from '@openshift-console/dynamic-plugin-sdk/lib/app/modal-support/OverlayProvider';
 import { Form, ModalVariant, Stack, StackItem } from '@patternfly/react-core';
 
 import {
-  COPY_APPLIANCE_FIELD_IDS,
   COPY_APPLIANCE_SETTING_GETTERS,
   type CopyApplianceSettingField,
 } from './copyAppliancePlacementConfig';
+import CopyAppliancePlacementField from './CopyAppliancePlacementField';
 import onUpdateCopyApplianceSetting from './onUpdateCopyAppliancePlacement';
 import { useCopyAppliancePlacementLabels } from './useCopyAppliancePlacementLabels';
 import { useCopyAppliancePlacementOptions } from './useCopyAppliancePlacementOptions';
@@ -51,7 +49,6 @@ const EditCopyAppliancePlacement: OverlayComponent<EditCopyAppliancePlacementPro
     network: t('Edit network'),
     resourcePool: t('Edit resource pool'),
   };
-  const { help, label, placeholder } = labels[field];
   const selectedWarning = field === 'datastore' ? datastoreWarning(value) : undefined;
 
   return (
@@ -66,23 +63,15 @@ const EditCopyAppliancePlacement: OverlayComponent<EditCopyAppliancePlacementPro
       <Stack hasGutter>
         <StackItem>
           <Form>
-            <FormGroupWithHelpText
-              fieldId={COPY_APPLIANCE_FIELD_IDS[field]}
-              helperText={selectedWarning ?? help}
-              label={label}
-              validated={selectedWarning ? 'warning' : 'default'}
-            >
-              <FilterableSelect
-                isDisabled={inventoryLoading}
-                isScrollable
-                onSelect={(selected) => {
-                  setValue(selected.toString());
-                }}
-                placeholder={placeholder}
-                selectOptions={optionsByField[field]}
-                value={value}
-              />
-            </FormGroupWithHelpText>
+            <CopyAppliancePlacementField
+              datastoreWarning={selectedWarning}
+              field={field}
+              inventoryLoading={inventoryLoading}
+              label={labels[field]}
+              onChange={setValue}
+              selectOptions={optionsByField[field]}
+              value={value}
+            />
           </Form>
         </StackItem>
       </Stack>

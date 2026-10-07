@@ -431,7 +431,6 @@
   "Dates are compared in UTC. End of the interval is included.": "Las fechas se comparan en UTC. Se incluye el final del intervalo.",
   "Dedicated CPU": "CPU dedicada",
   "Dedicated migration hosts": "Hosts de migración dedicados",
-  "Deep inspections": "Deep inspections",
   "default": "por defecto",
   "Default": "Por defecto",
   "Default name template": "Plantilla de nombre predeterminada",

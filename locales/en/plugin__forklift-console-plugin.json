@@ -421,7 +421,6 @@
   "Dates are compared in UTC. End of the interval is included.": "Dates are compared in UTC. End of the interval is included.",
   "Dedicated CPU": "Dedicated CPU",
   "Dedicated migration hosts": "Dedicated migration hosts",
-  "Deep inspections": "Deep inspections",
   "default": "default",
   "Default": "Default",
   "Default name template": "Default name template",

@@ -420,7 +420,6 @@
   "Dates are compared in UTC. End of the interval is included.": "日付は UTC で比較されます。間隔の終了日も含まれます。",
   "Dedicated CPU": "専用 CPU",
   "Dedicated migration hosts": "専用の移行ホスト",
-  "Deep inspections": "Deep inspections",
   "default": "デフォルト",
   "Default": "デフォルト",
   "Default name template": "デフォルトの名前テンプレート",
