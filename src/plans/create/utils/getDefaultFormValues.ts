@@ -59,7 +59,7 @@ export const getDefaultFormValues = (
     },
     [NetworkMapFieldId.NetworkMap]: [getDefaultNetMapping()],
     [NetworkMapFieldId.NetworkMapType]: NetworkMapType.Existing,
-    [OtherSettingsFormId.DiskDecryptionPassPhrases]: [defaultDiskPassPhrase],
+    [OtherSettingsFormFieldId.DiskDecryptionPassPhrases]: [defaultDiskPassPhrase],
     [OtherSettingsFormFieldId.DiskDecryptionType]: DiskDecryptionType.New,
     [OtherSettingsFormFieldId.ExistingLUKSSecret]: undefined,
     [OtherSettingsFormFieldId.InstanceTypes]: {},
