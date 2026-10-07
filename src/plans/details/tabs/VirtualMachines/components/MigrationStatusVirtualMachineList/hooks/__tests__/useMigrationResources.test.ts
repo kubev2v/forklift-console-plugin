@@ -29,10 +29,12 @@ jest.mock('../../utils/utils', () => ({
 const PLAN_UID = 'plan-uid-abc';
 const MIGRATION_UID = 'migration-uid-xyz';
 const OPENSHIFT_MTV_NS = 'openshift-mtv';
+const SOURCE_PROVIDER_NS = 'vsphere-ns';
 
 const mockPlan = {
   metadata: { name: 'mtv-6091-offload', namespace: OPENSHIFT_MTV_NS, uid: PLAN_UID },
   spec: {
+    provider: { source: { name: 'vsphere', namespace: SOURCE_PROVIDER_NS } },
     targetNamespace: OPENSHIFT_MTV_NS,
     vms: [{ id: 'vm-1008', name: 'mtv-tests-rhel8' }],
   },
@@ -66,7 +68,7 @@ describe('useMigrationResources', () => {
     const watchCalls = mockUseK8sWatchResource.mock.calls.map((call) => call[0]);
     const nonNullWatches = watchCalls.filter(Boolean);
 
-    expect(nonNullWatches).toHaveLength(4);
+    expect(nonNullWatches).toHaveLength(5);
     for (const watch of nonNullWatches) {
       expect(watch.selector.matchLabels).toEqual({
         migration: MIGRATION_UID,
@@ -94,6 +96,25 @@ describe('useMigrationResources', () => {
     });
   });
 
+  it('watches CopyAppliances in the source provider namespace', () => {
+    mockUseLatestPlanMigration.mockReturnValue([
+      { metadata: { uid: MIGRATION_UID } },
+      true,
+      undefined,
+    ]);
+
+    renderHook(() => useMigrationResources(mockPlan));
+
+    const copyApplianceWatch = mockUseK8sWatchResource.mock.calls
+      .map((call) => call[0])
+      .find((watch) => watch?.groupVersionKind?.kind === 'CopyAppliance');
+
+    expect(copyApplianceWatch).toMatchObject({
+      namespace: SOURCE_PROVIDER_NS,
+      selector: { matchLabels: { migration: MIGRATION_UID, plan: PLAN_UID } },
+    });
+  });
+
   it('stays unloaded while the latest migration watch is still loading', () => {
     mockUseLatestPlanMigration.mockReturnValue([undefined, false, undefined]);
 
@@ -112,6 +133,7 @@ describe('useMigrationResources', () => {
       .mockReturnValueOnce([[], true, undefined])
       .mockReturnValueOnce([[], true, undefined])
       .mockReturnValueOnce([[], false, undefined])
+      .mockReturnValueOnce([[], true, undefined])
       .mockReturnValueOnce([[], true, undefined]);
 
     const { result } = renderHook(() => useMigrationResources(mockPlan));
@@ -138,6 +160,7 @@ describe('useMigrationResources', () => {
     ]);
     mockUseK8sWatchResource
       .mockReturnValueOnce([[], true, podsError])
+      .mockReturnValueOnce([[], true, undefined])
       .mockReturnValueOnce([[], true, undefined])
       .mockReturnValueOnce([[], true, undefined])
       .mockReturnValueOnce([[], true, undefined]);

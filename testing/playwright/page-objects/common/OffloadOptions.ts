@@ -1,6 +1,8 @@
 import { expect, type Locator, type Page } from '@playwright/test';
 
 import { HOST_INVENTORY_TIMEOUT_MS } from '../../utils/timeouts';
+import { V5_1_0 } from '../../utils/version/constants';
+import { isVersionAtLeast } from '../../utils/version/version';
 
 export type DedicatedMigrationHostSelection = {
   hostId: string;
@@ -22,6 +24,7 @@ const OFFLOAD_FIELD = {
 const CLEAR_BUTTON_TEXT = 'Clear offload options';
 const DEDICATED_MIGRATION_HOST_OPTION_TEST_ID = 'dedicated-migration-host-option';
 const EXPANDABLE_TOGGLE_TEXT = 'Offload options (optional)';
+const NO_RESULTS_OPTION_TEXT = 'No results';
 
 /**
  * Page object for interacting with the offload options expandable section
@@ -50,14 +53,36 @@ export class OffloadOptions {
   }
 
   private firstHostOption(): Locator {
-    return this.page.getByTestId(DEDICATED_MIGRATION_HOST_OPTION_TEST_ID).first().locator('button');
+    if (isVersionAtLeast(V5_1_0)) {
+      return this.page
+        .getByTestId(DEDICATED_MIGRATION_HOST_OPTION_TEST_ID)
+        .first()
+        .locator('button');
+    }
+
+    return this.hostListbox()
+      .getByRole('option', { includeHidden: true })
+      .filter({ hasNotText: NO_RESULTS_OPTION_TEXT })
+      .first();
+  }
+
+  private hostListbox(): Locator {
+    return this.page.getByRole('listbox', { includeHidden: true });
   }
 
   private hostOptionByName(hostName: string): Locator {
-    return this.page
-      .getByTestId(DEDICATED_MIGRATION_HOST_OPTION_TEST_ID)
-      .filter({ has: this.page.getByText(hostName, { exact: true }) })
-      .locator('button');
+    if (isVersionAtLeast(V5_1_0)) {
+      return this.page
+        .getByTestId(DEDICATED_MIGRATION_HOST_OPTION_TEST_ID)
+        .filter({ has: this.page.getByText(hostName, { exact: true }) })
+        .locator('button');
+    }
+
+    return this.hostListbox().getByRole('option', {
+      exact: true,
+      includeHidden: true,
+      name: hostName,
+    });
   }
 
   private isOffloadExpanded(mappingIndex: number): Promise<boolean> {

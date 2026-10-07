@@ -10,7 +10,6 @@ import type {
   V1beta1PlanStatusMigrationVms,
 } from '@forklift-ui/types';
 import type { TargetPowerStateValue } from '@utils/plans/constants';
-import type { EnhancedPlanSpecVms } from '@utils/plans/types';
 
 export const getPlanDestinationProvider = (plan: V1beta1Plan): V1beta1PlanSpecProviderDestination =>
   plan?.spec?.provider?.destination ?? {};
@@ -81,10 +80,13 @@ export const getLUKSSecretName = (plan: V1beta1Plan): string | undefined =>
   plan?.spec?.vms?.[0]?.luks?.name;
 
 export const getPlanHasNBDEClevis = (plan: V1beta1Plan): boolean =>
-  plan?.spec?.vms?.some((vm: EnhancedPlanSpecVms) => vm.nbdeClevis === true) ?? false;
+  plan?.spec?.vms?.some((vm: V1beta1PlanSpecVms) => vm.nbdeClevis === true) ?? false;
 
 export const getRootDisk = (plan: V1beta1Plan): string | undefined =>
   plan?.spec?.vms?.[0]?.rootDisk;
+
+export const getVmExcludeDisks = (vm?: V1beta1PlanSpecVms): string[] | undefined =>
+  vm?.excludeDisks;
 
 export const getPlanTargetPowerState = (plan: V1beta1Plan): TargetPowerStateValue =>
   plan?.spec?.targetPowerState;

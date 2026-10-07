@@ -42,7 +42,7 @@ const MigrationPodsTable: FC<MigrationPodsTableProps> = ({ pods }) => {
         <Thead>
           <Tr>
             <Th width={40}>{t('Name')}</Th>
-            <Th width={20}>{t('Description')}</Th>
+            <Th width={20}>{t('Phase')}</Th>
             <Th>{t('Completed at')}</Th>
           </Tr>
         </Thead>

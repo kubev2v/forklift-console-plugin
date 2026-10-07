@@ -48,6 +48,7 @@ Defines a migration plan selecting VMs and their mappings.
 - **Frontend statuses** (UI enum in `src/plans/details/components/PlanStatus/utils/types.ts`): Ready, Executing, Completed, Paused, Incomplete, CannotStart, Canceled, Archived, Unknown
 - References NetworkMap, StorageMap, and optional Hooks
 - Specifies target namespace and power state settings
+- **Per-VM disk exclusion (vSphere):** `spec.vms[].excludeDisks` — array of vSphere bus addresses (e.g. `scsi0:1`); edited in plan details Virtual machines tab (not plan-level)
 
 ### Migration
 Represents an active migration execution, created when a Plan starts.
@@ -77,6 +78,17 @@ Represents a conversion or deep-inspection operation on a VM.
 - Constants and selectors: `CONVERSION_PHASE`, `CONVERSION_TYPE`, `getInspectionStatus`, `hasInspectionPassed`
 - **Note**: Backend returns `all_checks_passed` in snake_case — use the `hasInspectionPassed` selector to handle both casings
 
+### CopyAppliance / CopyApplianceTemplate
+Manages vSphere copy appliances used for disk copy operations (not Hyper-V; not copy-offload).
+
+- **CopyApplianceTemplate**: Namespaced template (provider namespace) defining vSphere placement (datastore, folder, network, resource pool); SSH secret names live on provider status
+- **CopyAppliance**: Namespaced appliance instance created from a template; shown on migration Virtual Machines resources tab
+- Types/GVKs/models from `@forklift-ui/types` (`CopyApplianceModelGroupVersionKind`, `CopyApplianceTemplateModel`, …)
+- Provider selectors live in `src/utils/crds/providers/selectors.ts` (`getCopyApplianceTemplateName`, placement getters, `getCopyApplianceSSHPrivateSecret` / `getCopyApplianceSSHPublicSecret`)
+- Provider status fields: `copyApplianceSSHPrivateSecret`, `copyApplianceSSHPublicSecret`
+- Placement create/update uses JSON Patch (`add` / `replace` / `remove`) via `buildCopyApplianceSettingPatch` / `copyAppliancePlacementConfig` under provider DetailsSection
+- Clearing placement settings must use JSON Patch `remove`, not empty-string replace
+
 ### Hook
 Pre/post migration scripts executed as containers (`quay.io/konveyor/hook-runner`). Referenced in Plan VM specifications.
 
@@ -84,7 +96,7 @@ Pre/post migration scripts executed as containers (`quay.io/konveyor/hook-runner
 Represents ESXi hosts for direct disk transfer operations with vSphere providers.
 
 ### ForkliftController
-Operator configuration resource controlling feature flags: `feature_copy_offload`, `feature_ocp_live_migration`, `feature_volume_populator`.
+Operator configuration resource controlling feature flags: `feature_copy_appliance`, `feature_copy_offload`, `feature_ocp_live_migration`, `feature_volume_populator`.
 
 ---
 
@@ -167,5 +179,6 @@ When implementing a new feature that introduces concepts, patterns, CRDs, provid
 - New testing pattern or tooling -- update `testing.mdc`.
 - New i18n utility or namespace change -- update `i18n.mdc`.
 - New workflow or development process -- add or update the relevant file under `workflows/`.
+- New reusable screen type or MTV layout pattern -- add a row to `agents/forklift-ux-patterns.mdc`.
 
 Keeping the rules accurate ensures every team member and AI assistant works with up-to-date project knowledge.

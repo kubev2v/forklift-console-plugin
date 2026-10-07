@@ -11,6 +11,7 @@ import {
   canPlanReStart,
   canPlanResumeConversion,
   canPlanStart,
+  isPlanEditable,
 } from '../../details/components/PlanStatus/utils/planStatusPermissions';
 import {
   getPlanStatus,
@@ -35,6 +36,7 @@ type UsePlanActionsDropdownResult = {
   activeMigration: ReturnType<typeof usePlanMigration>[0];
   buttonStartLabel: string;
   canDelete: boolean;
+  canEdit: boolean;
   canReStart: boolean;
   canResume: boolean;
   canScheduleCutover: boolean;
@@ -66,6 +68,7 @@ export const usePlanActionsDropdown = (plan: V1beta1Plan): UsePlanActionsDropdow
   const canStart = canPlanStart(plan);
   const canReStart = canPlanReStart(plan);
   const canResume = canPlanResumeConversion(plan);
+  const canEdit = isPlanEditable(plan);
   const isWarmAndExecuting = Boolean(getPlanIsWarm(plan)) && isPlanExecuting(plan);
   const isArchived = isPlanArchived(plan);
   const buttonStartLabel = canReStart ? t('Restart') : t('Start');
@@ -79,6 +82,7 @@ export const usePlanActionsDropdown = (plan: V1beta1Plan): UsePlanActionsDropdow
     activeMigration,
     buttonStartLabel,
     canDelete,
+    canEdit,
     canReStart,
     canResume,
     canScheduleCutover,

@@ -11,6 +11,9 @@ import EditPVCNameTemplate, {
 import EditVolumeNameTemplate, {
   type EditVolumeNameTemplateProps,
 } from 'src/plans/details/tabs/Details/components/SettingsSection/components/VolumeNameTemplate/EditVolumeNameTemplate';
+import EditVmExcludeDisks, {
+  type EditVmExcludeDisksProps,
+} from 'src/plans/details/tabs/VirtualMachines/components/PlanSpecVirtualMachinesList/components/ExcludeDisks/EditVmExcludeDisks';
 import { getVmNameTemplateActionDescription } from 'src/plans/details/utils/nameTemplateOverrides';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
@@ -83,6 +86,19 @@ const VsphereVmActionsDropdownItems: FC<VsphereVmActionsDropdownItemsProps> = ({
         }}
       >
         {t('Edit network name template')}
+      </DropdownItem>
+      <DropdownItem
+        data-testid="edit-vm-exclude-disks-menu-item"
+        isDisabled={!canEdit}
+        key="edit-vm-exclude-disks"
+        onClick={() => {
+          launchOverlay<EditVmExcludeDisksProps>(EditVmExcludeDisks, {
+            index: vmIndex,
+            resource: plan,
+          });
+        }}
+      >
+        {t('Edit excluded disks')}
       </DropdownItem>
       <DropdownItem
         data-testid="edit-vm-shared-disks-menu-item"
