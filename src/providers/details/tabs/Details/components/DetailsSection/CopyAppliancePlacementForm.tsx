@@ -1,15 +1,13 @@
 import type { FC } from 'react';
-import { FormGroupWithHelpText } from 'src/components/common/FormGroupWithHelpText/FormGroupWithHelpText';
 
-import { FilterableSelect } from '@components/FilterableSelect/FilterableSelect';
 import { Form, type SelectOptionProps } from '@patternfly/react-core';
 
 import {
-  COPY_APPLIANCE_FIELD_IDS,
   COPY_APPLIANCE_SETTING_FIELDS,
   type CopyAppliancePlacementValues,
   type CopyApplianceSettingField,
 } from './copyAppliancePlacementConfig';
+import CopyAppliancePlacementField from './CopyAppliancePlacementField';
 import type { CopyAppliancePlacementFieldLabels } from './useCopyAppliancePlacementLabels';
 
 type CopyAppliancePlacementFormProps = {
@@ -44,30 +42,21 @@ const CopyAppliancePlacementForm: FC<CopyAppliancePlacementFormProps> = ({
 
   return (
     <Form>
-      {COPY_APPLIANCE_SETTING_FIELDS.map((field) => {
-        const warning = field === 'datastore' ? datastoreWarning : undefined;
-        return (
-          <FormGroupWithHelpText
-            fieldId={COPY_APPLIANCE_FIELD_IDS[field]}
-            helperText={warning ?? labels[field].help}
-            isRequired
-            key={field}
-            label={labels[field].label}
-            validated={warning ? 'warning' : 'default'}
-          >
-            <FilterableSelect
-              isDisabled={inventoryLoading}
-              isScrollable
-              onSelect={(selected) => {
-                onChange(field, selected.toString());
-              }}
-              placeholder={labels[field].placeholder}
-              selectOptions={optionsByField[field]}
-              value={values[field]}
-            />
-          </FormGroupWithHelpText>
-        );
-      })}
+      {COPY_APPLIANCE_SETTING_FIELDS.map((field) => (
+        <CopyAppliancePlacementField
+          datastoreWarning={field === 'datastore' ? datastoreWarning : undefined}
+          field={field}
+          inventoryLoading={inventoryLoading}
+          isRequired
+          key={field}
+          label={labels[field]}
+          onChange={(value) => {
+            onChange(field, value);
+          }}
+          selectOptions={optionsByField[field]}
+          value={values[field]}
+        />
+      ))}
     </Form>
   );
 };

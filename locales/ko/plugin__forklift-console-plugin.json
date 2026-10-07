@@ -420,7 +420,6 @@
   "Dates are compared in UTC. End of the interval is included.": "날짜는 UTC 기준으로 비교됩니다. 종료 시점도 포함됩니다.",
   "Dedicated CPU": "전용 CPU",
   "Dedicated migration hosts": "전용 마이그레이션 호스트",
-  "Deep inspections": "Deep inspections",
   "default": "기본",
   "Default": "기본값",
   "Default name template": "기본 이름 템플릿",

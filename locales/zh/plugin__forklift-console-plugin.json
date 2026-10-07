@@ -420,7 +420,6 @@
   "Dates are compared in UTC. End of the interval is included.": "日期以 UTC 格式进行比较。包括间隔结束。",
   "Dedicated CPU": "专用 CPU",
   "Dedicated migration hosts": "专用迁移主机",
-  "Deep inspections": "Deep inspections",
   "default": "默认",
   "Default": "默认",
   "Default name template": "默认名称模板",
