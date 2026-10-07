@@ -1,9 +1,18 @@
-import type { V1beta1Provider } from '@forklift-ui/types';
+import type { V1beta1Provider, V1beta1ProviderStatus } from '@forklift-ui/types';
 
 import { getName } from '../common/selectors';
 
+type ProviderStatusWithCopyApplianceSSH = V1beta1ProviderStatus & {
+  copyApplianceSSHPrivateSecret?: string;
+  copyApplianceSSHPublicSecret?: string;
+};
+
 const getSettings = (provider: V1beta1Provider): Record<string, string> | undefined =>
   provider?.spec?.settings;
+
+const getProviderStatus = (
+  provider: V1beta1Provider,
+): ProviderStatusWithCopyApplianceSSH | undefined => provider?.status;
 
 export const getCopyApplianceDatastore = (provider: V1beta1Provider): string | undefined =>
   getSettings(provider)?.copyApplianceDatastore;
@@ -17,19 +26,8 @@ export const getCopyApplianceNetwork = (provider: V1beta1Provider): string | und
 export const getCopyApplianceResourcePool = (provider: V1beta1Provider): string | undefined =>
   getSettings(provider)?.copyApplianceResourcePool;
 
-const getProviderStatusString = (provider: V1beta1Provider, key: string): string | undefined => {
-  const status: unknown = provider?.status;
-  if (typeof status !== 'object' || status === null) {
-    return undefined;
-  }
-  const value = (status as Record<string, unknown>)[key];
-  return typeof value === 'string' ? value : undefined;
-};
-
 export const getCopyApplianceSSHPrivateSecret = (provider: V1beta1Provider): string | undefined => {
-  const fromStatus =
-    getProviderStatusString(provider, 'copyApplianceSSHPrivateSecret') ??
-    getProviderStatusString(provider, 'toeholdSSHPrivateSecret');
+  const fromStatus = getProviderStatus(provider)?.copyApplianceSSHPrivateSecret;
   if (fromStatus) {
     return fromStatus;
   }
@@ -38,9 +36,7 @@ export const getCopyApplianceSSHPrivateSecret = (provider: V1beta1Provider): str
 };
 
 export const getCopyApplianceSSHPublicSecret = (provider: V1beta1Provider): string | undefined => {
-  const fromStatus =
-    getProviderStatusString(provider, 'copyApplianceSSHPublicSecret') ??
-    getProviderStatusString(provider, 'toeholdSSHPublicSecret');
+  const fromStatus = getProviderStatus(provider)?.copyApplianceSSHPublicSecret;
   if (fromStatus) {
     return fromStatus;
   }

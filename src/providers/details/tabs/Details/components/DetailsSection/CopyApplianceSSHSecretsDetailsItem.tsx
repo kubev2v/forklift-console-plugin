@@ -40,7 +40,12 @@ const CopyApplianceSSHSecretsDetailsItem: FC<ProviderDetailsItemProps> = ({
           <span className="text-muted">-</span>
         )
       }
-      crumbs={['Provider', 'status', 'copyApplianceSSHPrivateSecret']}
+      crumbs={[
+        'Provider',
+        'status',
+        'copyApplianceSSHPrivateSecret',
+        'copyApplianceSSHPublicSecret',
+      ]}
       helpContent={t(
         'SSH key pair used by the copy appliance template and copy appliances for this provider.',
       )}

@@ -72,5 +72,4 @@ const CopyAppliancePlacementForm: FC<CopyAppliancePlacementFormProps> = ({
   );
 };
 
-export type { CopyAppliancePlacementValues };
 export default CopyAppliancePlacementForm;

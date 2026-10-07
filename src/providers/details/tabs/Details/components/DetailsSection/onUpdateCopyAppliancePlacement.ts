@@ -8,8 +8,6 @@ import {
   type CopyApplianceSettingField,
 } from './copyAppliancePlacementConfig';
 
-export type { CopyApplianceSettingField } from './copyAppliancePlacementConfig';
-
 const onUpdateCopyApplianceSetting = async (
   provider: V1beta1Provider,
   field: CopyApplianceSettingField,
