@@ -12,7 +12,7 @@ import type {
 import { Stack } from '@patternfly/react-core';
 import { useForkliftTranslation } from '@utils/i18n';
 import {
-  defaultNetMapping,
+  getDefaultNetMapping,
   netMapFieldLabels,
   NetworkMapFieldId,
   type NetworkMapping,
@@ -88,10 +88,7 @@ const NetworkMapFieldTable: FC<NetworkMapFieldTableProps> = ({
           isDisabled: isLoading || Boolean(loadError),
           label: t('Add mapping'),
           onClick: () => {
-            append({
-              [NetworkMapFieldId.SourceNetwork]: defaultNetMapping[NetworkMapFieldId.SourceNetwork],
-              [NetworkMapFieldId.TargetNetwork]: defaultNetMapping[NetworkMapFieldId.TargetNetwork],
-            });
+            append(getDefaultNetMapping());
           },
         }}
         fieldRows={netMappingFields.map((field, index) => ({
