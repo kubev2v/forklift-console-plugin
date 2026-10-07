@@ -2,7 +2,11 @@ import { defaultTargetPowerStateOption } from 'src/plans/constants';
 import { QUAY_FORKLIFT_HOOK_RUNNER_IMAGE } from 'src/plans/details/tabs/Hooks/utils/constants';
 import { defaultStorageMapping } from 'src/storageMaps/utils/constants';
 
-import { defaultNetMapping, NetworkMapFieldId, NetworkMapType } from '@utils/mappings/networkMap';
+import {
+  getDefaultNetMapping,
+  NetworkMapFieldId,
+  NetworkMapType,
+} from '@utils/mappings/networkMap';
 import { StorageMapFieldId } from '@utils/storage/types';
 
 import {
@@ -53,9 +57,9 @@ export const getDefaultFormValues = (
       [MigrationHookFieldId.EnableHook]: false,
       [MigrationHookFieldId.HookRunnerImage]: QUAY_FORKLIFT_HOOK_RUNNER_IMAGE,
     },
-    [NetworkMapFieldId.NetworkMap]: [defaultNetMapping],
+    [NetworkMapFieldId.NetworkMap]: [getDefaultNetMapping()],
     [NetworkMapFieldId.NetworkMapType]: NetworkMapType.Existing,
-    [OtherSettingsFormFieldId.DiskDecryptionPassPhrases]: [defaultDiskPassPhrase],
+    [OtherSettingsFormId.DiskDecryptionPassPhrases]: [defaultDiskPassPhrase],
     [OtherSettingsFormFieldId.DiskDecryptionType]: DiskDecryptionType.New,
     [OtherSettingsFormFieldId.ExistingLUKSSecret]: undefined,
     [OtherSettingsFormFieldId.InstanceTypes]: {},
