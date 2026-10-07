@@ -7,34 +7,19 @@ import ModalForm from '@components/ModalForm/ModalForm';
 import type { V1beta1Provider } from '@forklift-ui/types';
 import type { OverlayComponent } from '@openshift-console/dynamic-plugin-sdk/lib/app/modal-support/OverlayProvider';
 import { Form, ModalVariant, Stack, StackItem } from '@patternfly/react-core';
-import {
-  getCopyApplianceDatastore,
-  getCopyApplianceFolder,
-  getCopyApplianceNetwork,
-  getCopyApplianceResourcePool,
-} from '@utils/crds/common/selectors';
 
-import onUpdateCopyApplianceSetting, {
+import {
+  COPY_APPLIANCE_FIELD_IDS,
+  COPY_APPLIANCE_SETTING_GETTERS,
   type CopyApplianceSettingField,
-} from './onUpdateCopyAppliancePlacement';
-import {
-  useCopyAppliancePlacementLabels,
-  useCopyAppliancePlacementOptions,
-} from './useCopyAppliancePlacementOptions';
+} from './copyAppliancePlacementConfig';
+import onUpdateCopyApplianceSetting from './onUpdateCopyAppliancePlacement';
+import { useCopyAppliancePlacementLabels } from './useCopyAppliancePlacementLabels';
+import { useCopyAppliancePlacementOptions } from './useCopyAppliancePlacementOptions';
 
-export type EditCopyAppliancePlacementProps = {
+type EditCopyAppliancePlacementProps = {
   field: CopyApplianceSettingField;
   provider: V1beta1Provider;
-};
-
-const getters: Record<
-  CopyApplianceSettingField,
-  (provider: V1beta1Provider) => string | undefined
-> = {
-  datastore: getCopyApplianceDatastore,
-  folder: getCopyApplianceFolder,
-  network: getCopyApplianceNetwork,
-  resourcePool: getCopyApplianceResourcePool,
 };
 
 const EditCopyAppliancePlacement: OverlayComponent<EditCopyAppliancePlacementProps> = ({
@@ -43,7 +28,7 @@ const EditCopyAppliancePlacement: OverlayComponent<EditCopyAppliancePlacementPro
   provider,
 }) => {
   const { t } = useForkliftTranslation();
-  const [value, setValue] = useState(getters[field](provider) ?? '');
+  const [value, setValue] = useState(COPY_APPLIANCE_SETTING_GETTERS[field](provider) ?? '');
   const labels = useCopyAppliancePlacementLabels();
   const {
     datastoreOptions,
@@ -82,7 +67,7 @@ const EditCopyAppliancePlacement: OverlayComponent<EditCopyAppliancePlacementPro
         <StackItem>
           <Form>
             <FormGroupWithHelpText
-              fieldId={`copyApplianceTemplate-${field}`}
+              fieldId={COPY_APPLIANCE_FIELD_IDS[field]}
               helperText={selectedWarning ?? help}
               label={label}
               validated={selectedWarning ? 'warning' : 'default'}

@@ -78,6 +78,16 @@ Represents a conversion or deep-inspection operation on a VM.
 - Constants and selectors: `CONVERSION_PHASE`, `CONVERSION_TYPE`, `getInspectionStatus`, `hasInspectionPassed`
 - **Note**: Backend returns `all_checks_passed` in snake_case — use the `hasInspectionPassed` selector to handle both casings
 
+### CopyAppliance / CopyApplianceTemplate
+Manages Hyper-V copy appliances (formerly “toehold”) used for disk copy operations.
+
+- **CopyApplianceTemplate**: Cluster-scoped template defining placement (namespace, storage class, PVC size, network) and optional SSH secret refs
+- **CopyAppliance**: Namespaced appliance instance created from a template; shown on migration Virtual Machines resources tab
+- Types/GVKs/models from `@forklift-ui/types` (`CopyApplianceModelGroupVersionKind`, `CopyApplianceTemplateModel`, …)
+- Provider selectors live in `src/utils/crds/providers/selectors.ts` (`getCopyApplianceTemplateName`, `getCopyAppliancePlacement`, SSH helpers). Runtime SSH status keys may still be `toeholdSSH*` until backend/types align — selectors accept both
+- Placement create/update uses JSON Patch (`add` / `replace` / `remove`) via `buildCopyApplianceSettingPatch` / `copyAppliancePlacementConfig` under provider DetailsSection
+- Clearing placement settings must use JSON Patch `remove`, not empty-string replace
+
 ### Hook
 Pre/post migration scripts executed as containers (`quay.io/konveyor/hook-runner`). Referenced in Plan VM specifications.
 

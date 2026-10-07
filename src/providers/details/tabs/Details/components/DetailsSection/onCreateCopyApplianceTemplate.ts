@@ -1,35 +1,21 @@
-import { ADD, REPLACE } from '@components/ModalForm/utils/constants';
-import { ProviderModel, type V1beta1Provider } from '@forklift-ui/types';
-import { k8sCreate, k8sPatch, type K8sResourceCommon } from '@openshift-console/dynamic-plugin-sdk';
-import { CopyApplianceTemplateModel } from '@utils/crds/common/models';
 import {
-  getCopyApplianceDatastore,
-  getCopyApplianceFolder,
-  getCopyApplianceNetwork,
-  getCopyApplianceResourcePool,
-  getName,
-  getNamespace,
-  getUID,
-} from '@utils/crds/common/selectors';
+  CopyApplianceTemplateModel,
+  ProviderModel,
+  type V1beta1CopyApplianceTemplate,
+  type V1beta1Provider,
+} from '@forklift-ui/types';
+import { k8sCreate, k8sPatch } from '@openshift-console/dynamic-plugin-sdk';
+import { getName, getNamespace, getUID } from '@utils/crds/common/selectors';
+import { getCopyApplianceTemplateName } from '@utils/crds/providers/selectors';
+import { isEmpty } from '@utils/helpers';
 
-import type { CopyAppliancePlacementFormValues } from './CopyAppliancePlacementForm';
-
-type SettingPatch = {
-  op: typeof ADD | typeof REPLACE;
-  path: string;
-  value: string | undefined;
-};
-
-const patchOp = (current: string | undefined, path: string, value: string): SettingPatch => ({
-  op: current ? REPLACE : ADD,
-  path,
-  value: value || undefined,
-});
+import { buildCopyAppliancePlacementPatches } from './buildCopyApplianceSettingPatch';
+import type { CopyAppliancePlacementValues } from './copyAppliancePlacementConfig';
 
 const onCreateCopyApplianceTemplate = async (
   provider: V1beta1Provider,
-  placement: CopyAppliancePlacementFormValues,
-): Promise<K8sResourceCommon> => {
+  placement: CopyAppliancePlacementValues,
+): Promise<V1beta1CopyApplianceTemplate> => {
   const name = getName(provider);
   const namespace = getNamespace(provider);
   const uid = getUID(provider);
@@ -37,34 +23,19 @@ const onCreateCopyApplianceTemplate = async (
     throw new Error('Provider is missing name, namespace, or uid');
   }
 
-  const templateName = `${name}-copy-appliance-template`;
+  const templateName = getCopyApplianceTemplateName(provider);
+  if (!templateName) {
+    throw new Error('Provider is missing name');
+  }
 
-  await k8sPatch({
-    data: [
-      patchOp(
-        getCopyApplianceDatastore(provider),
-        '/spec/settings/copyApplianceDatastore',
-        placement.datastore,
-      ),
-      patchOp(
-        getCopyApplianceFolder(provider),
-        '/spec/settings/copyApplianceFolder',
-        placement.folder,
-      ),
-      patchOp(
-        getCopyApplianceNetwork(provider),
-        '/spec/settings/copyApplianceNetwork',
-        placement.network,
-      ),
-      patchOp(
-        getCopyApplianceResourcePool(provider),
-        '/spec/settings/copyApplianceResourcePool',
-        placement.resourcePool,
-      ),
-    ],
-    model: ProviderModel,
-    resource: provider,
-  });
+  const patches = buildCopyAppliancePlacementPatches(provider, placement);
+  if (!isEmpty(patches)) {
+    await k8sPatch({
+      data: patches,
+      model: ProviderModel,
+      resource: provider,
+    });
+  }
 
   return k8sCreate({
     data: {

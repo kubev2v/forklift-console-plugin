@@ -50,61 +50,6 @@ export const getVddkInitImage = (provider: V1beta1Provider): string | undefined 
 export const getUseVddkAioOptimization = (provider: V1beta1Provider): string | undefined =>
   getSettings(provider)?.useVddkAioOptimization;
 
-export const getCopyApplianceDatastore = (provider: V1beta1Provider): string | undefined =>
-  getSettings(provider)?.copyApplianceDatastore;
-
-export const getCopyApplianceFolder = (provider: V1beta1Provider): string | undefined =>
-  getSettings(provider)?.copyApplianceFolder;
-
-export const getCopyApplianceNetwork = (provider: V1beta1Provider): string | undefined =>
-  getSettings(provider)?.copyApplianceNetwork;
-
-export const getCopyApplianceResourcePool = (provider: V1beta1Provider): string | undefined =>
-  getSettings(provider)?.copyApplianceResourcePool;
-
-/** Provider status fields not yet in published @forklift-ui/types. */
-type ProviderCopyApplianceTemplateStatus = {
-  copyApplianceSSHPrivateSecret?: string;
-  copyApplianceSSHPublicSecret?: string;
-};
-
-const getCopyApplianceTemplateStatus = (
-  provider: V1beta1Provider,
-): ProviderCopyApplianceTemplateStatus | undefined => {
-  const status: unknown = provider?.status;
-  if (typeof status !== 'object' || status === null) {
-    return undefined;
-  }
-  const record = status as Record<string, unknown>;
-  const copyApplianceSSHPrivateSecret =
-    typeof record.copyApplianceSSHPrivateSecret === 'string'
-      ? record.copyApplianceSSHPrivateSecret
-      : undefined;
-  const copyApplianceSSHPublicSecret =
-    typeof record.copyApplianceSSHPublicSecret === 'string'
-      ? record.copyApplianceSSHPublicSecret
-      : undefined;
-  return { copyApplianceSSHPrivateSecret, copyApplianceSSHPublicSecret };
-};
-
-export const getCopyApplianceSSHPrivateSecret = (provider: V1beta1Provider): string | undefined => {
-  const fromStatus = getCopyApplianceTemplateStatus(provider)?.copyApplianceSSHPrivateSecret;
-  if (fromStatus) {
-    return fromStatus;
-  }
-  const name = getName(provider);
-  return name ? `copy-appliance-ssh-keys-${name}-private` : undefined;
-};
-
-export const getCopyApplianceSSHPublicSecret = (provider: V1beta1Provider): string | undefined => {
-  const fromStatus = getCopyApplianceTemplateStatus(provider)?.copyApplianceSSHPublicSecret;
-  if (fromStatus) {
-    return fromStatus;
-  }
-  const name = getName(provider);
-  return name ? `copy-appliance-ssh-keys-${name}-public` : undefined;
-};
-
 export const getSdkEndpoint = (provider: V1beta1Provider): string | undefined =>
   getSettings(provider)?.sdkEndpoint;
 

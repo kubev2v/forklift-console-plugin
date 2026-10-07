@@ -3,45 +3,41 @@ import { DetailsItem } from 'src/components/DetailItems/DetailItem';
 
 import { ResourceLink } from '@openshift-console/dynamic-plugin-sdk';
 import { Stack, StackItem } from '@patternfly/react-core';
+import { getNamespace } from '@utils/crds/common/selectors';
 import {
   getCopyApplianceSSHPrivateSecret,
   getCopyApplianceSSHPublicSecret,
-  getNamespace,
-} from '@utils/crds/common/selectors';
+} from '@utils/crds/providers/selectors';
+import { isEmpty } from '@utils/helpers';
 import { useForkliftTranslation } from '@utils/i18n';
 
 import type { ProviderDetailsItemProps } from './utils/types';
+
+const SECRET_GVK = { kind: 'Secret', version: 'v1' } as const;
 
 const CopyApplianceSSHSecretsDetailsItem: FC<ProviderDetailsItemProps> = ({
   resource: provider,
 }) => {
   const { t } = useForkliftTranslation();
   const namespace = getNamespace(provider);
-  const privateSecret = getCopyApplianceSSHPrivateSecret(provider);
-  const publicSecret = getCopyApplianceSSHPublicSecret(provider);
+  const secrets = [
+    getCopyApplianceSSHPrivateSecret(provider),
+    getCopyApplianceSSHPublicSecret(provider),
+  ].filter((name): name is string => Boolean(name));
 
   return (
     <DetailsItem
       content={
-        privateSecret && publicSecret && namespace ? (
-          <Stack>
-            <StackItem>
-              <ResourceLink
-                groupVersionKind={{ kind: 'Secret', version: 'v1' }}
-                name={privateSecret}
-                namespace={namespace}
-              />
-            </StackItem>
-            <StackItem>
-              <ResourceLink
-                groupVersionKind={{ kind: 'Secret', version: 'v1' }}
-                name={publicSecret}
-                namespace={namespace}
-              />
-            </StackItem>
+        !isEmpty(secrets) && namespace ? (
+          <Stack hasGutter>
+            {secrets.map((name) => (
+              <StackItem key={name}>
+                <ResourceLink groupVersionKind={SECRET_GVK} name={name} namespace={namespace} />
+              </StackItem>
+            ))}
           </Stack>
         ) : (
-          <span className="text-muted">{t('Empty')}</span>
+          <span className="text-muted">-</span>
         )
       }
       crumbs={['Provider', 'status', 'copyApplianceSSHPrivateSecret']}

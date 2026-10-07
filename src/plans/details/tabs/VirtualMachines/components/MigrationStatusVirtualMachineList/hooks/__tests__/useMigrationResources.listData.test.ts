@@ -139,4 +139,20 @@ describe('useMigrationResources - listData', () => {
     expect(result.current.error).toBe(podsError);
     expect(result.current.migrationListData[0].pods).toBeUndefined();
   });
+
+  it('surfaces copy appliance watch errors and omits failed resource dicts', () => {
+    const copyAppliancesError = new Error('copy appliances watch failed');
+    mockUseK8sWatchResource.mockReset();
+    mockUseK8sWatchResource
+      .mockReturnValueOnce([[], true, null])
+      .mockReturnValueOnce([[], true, null])
+      .mockReturnValueOnce([[], true, null])
+      .mockReturnValueOnce([[], true, null])
+      .mockReturnValueOnce([[], true, copyAppliancesError]);
+
+    const { result } = renderHook(() => useMigrationResources(plan));
+
+    expect(result.current.error).toBe(copyAppliancesError);
+    expect(result.current.migrationListData[0].copyAppliances).toBeUndefined();
+  });
 });

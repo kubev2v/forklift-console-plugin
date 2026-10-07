@@ -1,16 +1,17 @@
 import { useMemo } from 'react';
 import { useLatestPlanMigration } from 'src/plans/hooks/useLatestPlanMigration';
 
-import type {
-  IoK8sApiBatchV1Job,
-  IoK8sApiCoreV1PersistentVolumeClaim,
-  IoK8sApiCoreV1Pod,
-  V1beta1DataVolume,
-  V1beta1Plan,
-} from '@forklift-ui/types';
-import type { K8sResourceCommon, WatchK8sResource } from '@openshift-console/dynamic-plugin-sdk';
 import {
   CopyApplianceModelGroupVersionKind,
+  type IoK8sApiBatchV1Job,
+  type IoK8sApiCoreV1PersistentVolumeClaim,
+  type IoK8sApiCoreV1Pod,
+  type V1beta1CopyAppliance,
+  type V1beta1DataVolume,
+  type V1beta1Plan,
+} from '@forklift-ui/types';
+import type { WatchK8sResource } from '@openshift-console/dynamic-plugin-sdk';
+import {
   DataVolumeModelGroupVersionKind,
   JobModelGroupVersionKind,
   PersistentVolumeClaimModelGroupVersionKind,
@@ -84,7 +85,7 @@ export const useMigrationResources = (plan: V1beta1Plan): MigrationResources => 
   );
 
   const [copyAppliances, copyAppliancesLoaded, copyAppliancesError] = useK8sWatchResource<
-    K8sResourceCommon[]
+    V1beta1CopyAppliance[]
   >(
     watchOptions
       ? {
@@ -145,7 +146,7 @@ export const useMigrationResources = (plan: V1beta1Plan): MigrationResources => 
   }, [virtualMachines, copyAppliancesDict, dvsDict, jobsDict, podsDict, pvcsDict, vmDict, plan]);
 
   return {
-    error: migrationError ?? podsError ?? jobsError ?? pvcsError ?? dvsError,
+    error: migrationError ?? podsError ?? jobsError ?? pvcsError ?? dvsError ?? copyAppliancesError,
     loaded: migrationLoaded && resourcesLoaded,
     migrationListData,
   };

@@ -1,24 +1,19 @@
 import type { FC } from 'react';
 import { DetailsItem } from 'src/components/DetailItems/DetailItem';
 
-import { type K8sResourceCommon, ResourceLink } from '@openshift-console/dynamic-plugin-sdk';
+import {
+  CopyApplianceTemplateModelGroupVersionKind,
+  type V1beta1CopyApplianceTemplate,
+} from '@forklift-ui/types';
+import { ResourceLink } from '@openshift-console/dynamic-plugin-sdk';
 import { Label, Stack, StackItem } from '@patternfly/react-core';
 import { PF_LABEL_STATUS } from '@utils/constants';
-import { CopyApplianceTemplateModelGroupVersionKind } from '@utils/crds/common/models';
-import { getName, getNamespace } from '@utils/crds/common/selectors';
+import { getNamespace } from '@utils/crds/common/selectors';
+import { getCopyApplianceTemplateName } from '@utils/crds/providers/selectors';
 import { useK8sWatchResource } from '@utils/hooks/useK8sWatchResource';
 import { useForkliftTranslation } from '@utils/i18n';
 
 import type { ProviderDetailsItemProps } from './utils/types';
-
-type CopyApplianceTemplate = K8sResourceCommon & {
-  status?: {
-    message?: string;
-    phase?: string;
-    stage?: string;
-    template?: { moref?: string };
-  };
-};
 
 const phaseStatus = {
   Failed: PF_LABEL_STATUS.DANGER,
@@ -29,11 +24,10 @@ const phaseStatus = {
 
 const CopyApplianceTemplateDetailsItem: FC<ProviderDetailsItemProps> = ({ resource: provider }) => {
   const { t } = useForkliftTranslation();
-  const name = getName(provider);
   const namespace = getNamespace(provider);
-  const templateName = name ? `${name}-copy-appliance-template` : undefined;
+  const templateName = getCopyApplianceTemplateName(provider);
 
-  const [copyApplianceTemplate] = useK8sWatchResource<CopyApplianceTemplate>(
+  const [copyApplianceTemplate] = useK8sWatchResource<V1beta1CopyApplianceTemplate>(
     templateName && namespace
       ? {
           groupVersionKind: CopyApplianceTemplateModelGroupVersionKind,
@@ -44,10 +38,8 @@ const CopyApplianceTemplateDetailsItem: FC<ProviderDetailsItemProps> = ({ resour
       : null,
   );
 
-  const phase = copyApplianceTemplate?.status?.phase;
-  const stage = copyApplianceTemplate?.status?.stage;
-  const message = copyApplianceTemplate?.status?.message;
-  const moref = copyApplianceTemplate?.status?.template?.moref;
+  const { message, phase, stage, template } = copyApplianceTemplate?.status ?? {};
+  const moref = template?.moref;
 
   return (
     <DetailsItem
@@ -63,7 +55,7 @@ const CopyApplianceTemplateDetailsItem: FC<ProviderDetailsItemProps> = ({ resour
             </StackItem>
             {phase ? (
               <StackItem>
-                <Label isCompact status={phaseStatus[phase as keyof typeof phaseStatus]}>
+                <Label isCompact status={phaseStatus[phase]}>
                   {phase}
                 </Label>
                 {stage ? ` · ${stage}` : null}
@@ -77,7 +69,7 @@ const CopyApplianceTemplateDetailsItem: FC<ProviderDetailsItemProps> = ({ resour
             ) : null}
           </Stack>
         ) : (
-          <span className="text-muted">{t('Empty')}</span>
+          <span className="text-muted">-</span>
         )
       }
       helpContent={t(

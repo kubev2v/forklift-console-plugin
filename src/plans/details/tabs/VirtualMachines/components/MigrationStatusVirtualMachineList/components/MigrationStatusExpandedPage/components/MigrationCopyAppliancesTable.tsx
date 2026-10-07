@@ -2,15 +2,15 @@ import type { FC } from 'react';
 
 import { ConsoleTimestamp } from '@components/ConsoleTimestamp/ConsoleTimestamp';
 import SectionHeading from '@components/headers/SectionHeading';
-import { type K8sResourceCommon, ResourceLink } from '@openshift-console/dynamic-plugin-sdk';
+import { CopyApplianceModelGroupVersionKind, type V1beta1CopyAppliance } from '@forklift-ui/types';
+import { ResourceLink } from '@openshift-console/dynamic-plugin-sdk';
 import { Table, Tbody, Td, Th, Thead, Tr } from '@patternfly/react-table';
-import { CopyApplianceModelGroupVersionKind } from '@utils/crds/common/models';
 import { getName, getNamespace, getUID } from '@utils/crds/common/selectors';
 import { isEmpty } from '@utils/helpers';
 import { useForkliftTranslation } from '@utils/i18n';
 
 type MigrationCopyAppliancesTableProps = {
-  copyAppliances: (K8sResourceCommon & { status?: { phase?: string } })[];
+  copyAppliances: V1beta1CopyAppliance[];
 };
 
 const MigrationCopyAppliancesTable: FC<MigrationCopyAppliancesTableProps> = ({
@@ -33,7 +33,7 @@ const MigrationCopyAppliancesTable: FC<MigrationCopyAppliancesTableProps> = ({
         <Thead>
           <Tr>
             <Th width={40}>{t('Name')}</Th>
-            <Th width={20}>{t('Description')}</Th>
+            <Th width={20}>{t('Phase')}</Th>
             <Th>{t('Completed at')}</Th>
           </Tr>
         </Thead>

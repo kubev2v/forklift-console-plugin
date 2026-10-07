@@ -15,29 +15,6 @@ export const ConversionModel = {
   plural: 'conversions',
 };
 
-export const CopyApplianceModelGroupVersionKind = {
-  group: 'forklift.konveyor.io',
-  kind: 'CopyAppliance',
-  version: 'v1beta1',
-};
-
-export const CopyApplianceTemplateModelGroupVersionKind = {
-  group: 'forklift.konveyor.io',
-  kind: 'CopyApplianceTemplate',
-  version: 'v1beta1',
-};
-
-export const CopyApplianceTemplateModel = {
-  abbr: 'CAT',
-  apiGroup: 'forklift.konveyor.io',
-  apiVersion: 'v1beta1',
-  kind: 'CopyApplianceTemplate',
-  label: 'CopyApplianceTemplate',
-  labelPlural: 'CopyApplianceTemplates',
-  namespaced: true,
-  plural: 'copyappliancetemplates',
-};
-
 export const VirtualMachineModelGroupVersionKind = {
   group: 'kubevirt.io',
   kind: 'VirtualMachine',

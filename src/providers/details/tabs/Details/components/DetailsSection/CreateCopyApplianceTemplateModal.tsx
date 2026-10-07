@@ -10,18 +10,15 @@ import {
   getCopyApplianceFolder,
   getCopyApplianceNetwork,
   getCopyApplianceResourcePool,
-} from '@utils/crds/common/selectors';
+} from '@utils/crds/providers/selectors';
 
-import CopyAppliancePlacementForm, {
-  type CopyAppliancePlacementFormValues,
-} from './CopyAppliancePlacementForm';
+import type { CopyAppliancePlacementValues } from './copyAppliancePlacementConfig';
+import CopyAppliancePlacementForm from './CopyAppliancePlacementForm';
 import onCreateCopyApplianceTemplate from './onCreateCopyApplianceTemplate';
-import {
-  useCopyAppliancePlacementLabels,
-  useCopyAppliancePlacementOptions,
-} from './useCopyAppliancePlacementOptions';
+import { useCopyAppliancePlacementLabels } from './useCopyAppliancePlacementLabels';
+import { useCopyAppliancePlacementOptions } from './useCopyAppliancePlacementOptions';
 
-export type CreateCopyApplianceTemplateModalProps = {
+type CreateCopyApplianceTemplateModalProps = {
   provider: V1beta1Provider;
 };
 
@@ -30,7 +27,7 @@ const CreateCopyApplianceTemplateModal: OverlayComponent<CreateCopyApplianceTemp
   provider,
 }) => {
   const { t } = useForkliftTranslation();
-  const [values, setValues] = useState<CopyAppliancePlacementFormValues>({
+  const [values, setValues] = useState<CopyAppliancePlacementValues>({
     datastore: getCopyApplianceDatastore(provider) ?? '',
     folder: getCopyApplianceFolder(provider) ?? '',
     network: getCopyApplianceNetwork(provider) ?? '',

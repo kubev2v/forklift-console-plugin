@@ -1,7 +1,11 @@
 import type { FC, ReactNode } from 'react';
 
+import { ErrorState } from '@components/common/Page/PageStates';
 import SectionHeading from '@components/headers/SectionHeading';
-import type { K8sResourceCommon } from '@openshift-console/dynamic-plugin-sdk';
+import {
+  CopyApplianceTemplateModelGroupVersionKind,
+  type V1beta1CopyApplianceTemplate,
+} from '@forklift-ui/types';
 import { useOverlay } from '@openshift-console/dynamic-plugin-sdk';
 import {
   Button,
@@ -17,20 +21,19 @@ import {
 } from '@patternfly/react-core';
 import { PlusCircleIcon } from '@patternfly/react-icons';
 import { FEATURE_NAMES } from '@utils/constants';
-import { CopyApplianceTemplateModelGroupVersionKind } from '@utils/crds/common/models';
-import { getName, getNamespace } from '@utils/crds/common/selectors';
+import { getNamespace, getType } from '@utils/crds/common/selectors';
+import { getCopyApplianceTemplateName } from '@utils/crds/providers/selectors';
 import { useFeatureFlags } from '@utils/hooks/useFeatureFlags';
 import { useK8sWatchResource } from '@utils/hooks/useK8sWatchResource';
 import { useForkliftTranslation } from '@utils/i18n';
 import { PROVIDER_TYPES } from '@utils/providers/constants';
 import type { ProviderData } from '@utils/providers/types';
 
+import { COPY_APPLIANCE_SETTING_FIELDS } from '../DetailsSection/copyAppliancePlacementConfig';
 import CopyApplianceSettingDetailsItem from '../DetailsSection/CopyApplianceSettingDetailsItem';
 import CopyApplianceSSHSecretsDetailsItem from '../DetailsSection/CopyApplianceSSHSecretsDetailsItem';
 import CopyApplianceTemplateDetailsItem from '../DetailsSection/CopyApplianceTemplateDetailsItem';
-import CreateCopyApplianceTemplateModal, {
-  type CreateCopyApplianceTemplateModalProps,
-} from '../DetailsSection/CreateCopyApplianceTemplateModal';
+import CreateCopyApplianceTemplateModal from '../DetailsSection/CreateCopyApplianceTemplateModal';
 
 type CopyApplianceTemplateSectionProps = {
   data: ProviderData;
@@ -41,14 +44,14 @@ const CopyApplianceTemplateSection: FC<CopyApplianceTemplateSectionProps> = ({ d
   const launchOverlay = useOverlay();
   const { isFeatureEnabled } = useFeatureFlags();
   const { permissions, provider } = data;
-  const name = getName(provider);
   const namespace = getNamespace(provider);
-  const templateName = name ? `${name}-copy-appliance-template` : undefined;
+  const providerType = getType(provider);
+  const templateName = getCopyApplianceTemplateName(provider);
   const copyApplianceTemplateEnabled = isFeatureEnabled(FEATURE_NAMES.COPY_APPLIANCE_TEMPLATE);
 
   // List watch: a single-name watch never leaves loading when the CR is missing.
-  const [templates, loaded, loadError] = useK8sWatchResource<K8sResourceCommon[]>(
-    copyApplianceTemplateEnabled && provider?.spec?.type === PROVIDER_TYPES.vsphere && namespace
+  const [templates, loaded, loadError] = useK8sWatchResource<V1beta1CopyApplianceTemplate[]>(
+    copyApplianceTemplateEnabled && providerType === PROVIDER_TYPES.vsphere && namespace
       ? {
           groupVersionKind: CopyApplianceTemplateModelGroupVersionKind,
           isList: true,
@@ -60,7 +63,7 @@ const CopyApplianceTemplateSection: FC<CopyApplianceTemplateSectionProps> = ({ d
 
   if (
     !copyApplianceTemplateEnabled ||
-    provider?.spec?.type !== PROVIDER_TYPES.vsphere ||
+    providerType !== PROVIDER_TYPES.vsphere ||
     !provider ||
     !permissions
   ) {
@@ -70,45 +73,15 @@ const CopyApplianceTemplateSection: FC<CopyApplianceTemplateSectionProps> = ({ d
   const templateExists =
     loaded &&
     Boolean(templateName) &&
-    (Array.isArray(templates) ? templates : []).some((item) => getName(item) === templateName);
+    (Array.isArray(templates) ? templates : []).some(
+      (item) => item.metadata?.name === templateName,
+    );
 
-  const stillLoading = !loaded && !loadError;
-
-  let body: ReactNode = (
-    <EmptyState
-      headingLevel="h4"
-      icon={PlusCircleIcon}
-      titleText={t('No CopyApplianceTemplate')}
-      variant={EmptyStateVariant.sm}
-    >
-      <EmptyStateBody>
-        {t(
-          'Create a CopyApplianceTemplate to place the copy-appliance template on this vSphere provider. Datastore, folder, network, and resource pool are required.',
-        )}
-      </EmptyStateBody>
-      <EmptyStateFooter>
-        <EmptyStateActions>
-          <Button
-            isDisabled={!permissions.canPatch}
-            onClick={() => {
-              launchOverlay<CreateCopyApplianceTemplateModalProps>(
-                CreateCopyApplianceTemplateModal,
-                {
-                  provider,
-                },
-              );
-            }}
-            variant={ButtonVariant.primary}
-          >
-            {t('Create CopyApplianceTemplate')}
-          </Button>
-        </EmptyStateActions>
-      </EmptyStateFooter>
-    </EmptyState>
-  );
-
-  if (stillLoading) {
+  let body: ReactNode;
+  if (!loaded && !loadError) {
     body = <Spinner size="lg" />;
+  } else if (loadError) {
+    body = <ErrorState title={t('Unable to load CopyApplianceTemplate')} />;
   } else if (templateExists) {
     body = (
       <>
@@ -117,32 +90,50 @@ const CopyApplianceTemplateSection: FC<CopyApplianceTemplateSectionProps> = ({ d
             default: '2Col',
           }}
         >
-          <CopyApplianceSettingDetailsItem
-            canPatch={permissions.canPatch}
-            field="datastore"
-            resource={provider}
-          />
-          <CopyApplianceSettingDetailsItem
-            canPatch={permissions.canPatch}
-            field="folder"
-            resource={provider}
-          />
-          <CopyApplianceSettingDetailsItem
-            canPatch={permissions.canPatch}
-            field="network"
-            resource={provider}
-          />
-          <CopyApplianceSettingDetailsItem
-            canPatch={permissions.canPatch}
-            field="resourcePool"
-            resource={provider}
-          />
+          {COPY_APPLIANCE_SETTING_FIELDS.map((field) => (
+            <CopyApplianceSettingDetailsItem
+              canPatch={permissions.canPatch}
+              field={field}
+              key={field}
+              resource={provider}
+            />
+          ))}
         </DescriptionList>
         <DescriptionList>
           <CopyApplianceTemplateDetailsItem resource={provider} />
           <CopyApplianceSSHSecretsDetailsItem resource={provider} />
         </DescriptionList>
       </>
+    );
+  } else {
+    body = (
+      <EmptyState
+        headingLevel="h4"
+        icon={PlusCircleIcon}
+        titleText={t('No CopyApplianceTemplate')}
+        variant={EmptyStateVariant.sm}
+      >
+        <EmptyStateBody>
+          {t(
+            'Create a CopyApplianceTemplate to place the copy-appliance template on this vSphere provider. Datastore, folder, network, and resource pool are required.',
+          )}
+        </EmptyStateBody>
+        <EmptyStateFooter>
+          <EmptyStateActions>
+            <Button
+              isDisabled={!permissions.canPatch}
+              onClick={() => {
+                launchOverlay(CreateCopyApplianceTemplateModal, {
+                  provider,
+                });
+              }}
+              variant={ButtonVariant.primary}
+            >
+              {t('Create CopyApplianceTemplate')}
+            </Button>
+          </EmptyStateActions>
+        </EmptyStateFooter>
+      </EmptyState>
     );
   }
 

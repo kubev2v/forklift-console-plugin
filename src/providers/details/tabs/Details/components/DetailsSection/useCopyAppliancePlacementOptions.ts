@@ -7,18 +7,10 @@ import useProviderInventory from '@utils/hooks/useProviderInventory';
 import { useSourceStorages } from '@utils/hooks/useStorages';
 import { useForkliftTranslation } from '@utils/i18n';
 
-import type { CopyAppliancePlacementFormProps } from './CopyAppliancePlacementForm';
 import { toDatastoreSelectOptions, warningForDatastoreName } from './datastoreSelectOptions';
+import { toSelectOptions } from './toSelectOptions';
 
 type PathItem = { path?: string };
-
-const toOptions = (values: string[]): SelectOptionProps[] =>
-  [...new Set(values.filter(Boolean))]
-    .sort((a, b) => a.localeCompare(b))
-    .map((value) => ({
-      children: value,
-      itemId: value,
-    }));
 
 export const useCopyAppliancePlacementOptions = (
   provider: V1beta1Provider,
@@ -53,10 +45,13 @@ export const useCopyAppliancePlacementOptions = (
   );
 
   const folderOptions = useMemo(
-    () => toOptions((Array.isArray(folders) ? folders : []).map((item) => item.path ?? '')),
+    () => toSelectOptions((Array.isArray(folders) ? folders : []).map((item) => item.path ?? '')),
     [folders],
   );
-  const networkOptions = useMemo(() => toOptions(networks.map((item) => item.name)), [networks]);
+  const networkOptions = useMemo(
+    () => toSelectOptions(networks.map((item) => item.name)),
+    [networks],
+  );
   const resourcePoolOptions = useMemo(() => {
     const paths = (Array.isArray(resourcePools) ? resourcePools : []).map(
       (item) => item.path ?? '',
@@ -64,7 +59,7 @@ export const useCopyAppliancePlacementOptions = (
     if (resourcePool) {
       paths.push(resourcePool);
     }
-    return toOptions(paths);
+    return toSelectOptions(paths);
   }, [resourcePools, resourcePool]);
 
   return {
@@ -74,31 +69,5 @@ export const useCopyAppliancePlacementOptions = (
     inventoryLoading: storagesLoading || networksLoading || foldersLoading || poolsLoading,
     networkOptions,
     resourcePoolOptions,
-  };
-};
-
-export const useCopyAppliancePlacementLabels = (): CopyAppliancePlacementFormProps['labels'] => {
-  const { t } = useForkliftTranslation();
-  return {
-    datastore: {
-      help: t('Datastore used to store the copy appliance template disk.'),
-      label: t('Datastore'),
-      placeholder: t('Select a datastore'),
-    },
-    folder: {
-      help: t('Inventory folder path for the copy appliance template VM.'),
-      label: t('Folder'),
-      placeholder: t('Select a folder'),
-    },
-    network: {
-      help: t('Network attached to the copy appliance template VM.'),
-      label: t('Network'),
-      placeholder: t('Select a network'),
-    },
-    resourcePool: {
-      help: t('Resource pool for copy appliance clones.'),
-      label: t('Resource pool'),
-      placeholder: t('Select a resource pool'),
-    },
   };
 };
