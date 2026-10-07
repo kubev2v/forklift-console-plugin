@@ -8,7 +8,7 @@ import {
 import { k8sCreate } from '@openshift-console/dynamic-plugin-sdk';
 import { IGNORED, MULTUS, POD } from '@utils/constants';
 import { getObjectRef } from '@utils/helpers/getObjectRef';
-import { DefaultNetworkLabel, IgnoreNetwork } from '@utils/mappings/constants';
+import { IgnoreNetwork, isDefaultNetworkTarget } from '@utils/mappings/constants';
 import type { NetworkMapping } from '@utils/mappings/networkMap';
 import { PROVIDER_TYPES } from '@utils/providers/constants';
 import type { MappingValue } from '@utils/types';
@@ -23,12 +23,15 @@ type CreateNetworkMapParams = {
   trackEvent?: (eventType: string, properties?: Record<string, unknown>) => void;
 };
 
-const getNetworkType = (targetName: string): string => {
-  if (targetName === DefaultNetworkLabel.Source || targetName === '') {
+const isPodDestination = (targetNetwork: { id?: string; name?: string }): boolean =>
+  !targetNetwork.name || isDefaultNetworkTarget(targetNetwork);
+
+const getNetworkType = (targetNetwork: { id?: string; name: string }): string => {
+  if (isPodDestination(targetNetwork)) {
     return POD;
   }
 
-  if (targetName === IgnoreNetwork.Label) {
+  if (targetNetwork.name === IgnoreNetwork.Label) {
     return IGNORED;
   }
 
@@ -52,14 +55,14 @@ const getSource = (
 };
 
 const getDestination = (
-  targetNetwork: { name: string },
+  targetNetwork: { id?: string; name: string },
   targetNamespace: string,
 ): V1beta1NetworkMapSpecMapDestination => {
   const [nadNamespace, nadName] = targetNetwork.name.includes('/')
     ? targetNetwork.name.split('/')
     : [targetNamespace, targetNetwork.name];
 
-  if (targetNetwork.name === DefaultNetworkLabel.Source || targetNetwork.name === '') {
+  if (isPodDestination(targetNetwork)) {
     return { type: POD };
   }
   if (targetNetwork.name === IgnoreNetwork.Label) {
@@ -90,7 +93,7 @@ export const createNetworkMap = async ({
   trackEvent?.('Network map create started', {
     mappingCount: mappings?.length,
     namespace: project,
-    networkTypes: mappings?.map((mapping) => getNetworkType(mapping.targetNetwork.name)),
+    networkTypes: mappings?.map((mapping) => getNetworkType(mapping.targetNetwork)),
     sourceProviderType: sourceProvider?.spec?.type,
   });
 
@@ -133,7 +136,7 @@ export const createNetworkMap = async ({
       mappingCount: mappings?.length,
       namespace: project,
       networkMapName: createdNetworkMap.metadata?.name,
-      networkTypes: mappings?.map((mapping) => getNetworkType(mapping.targetNetwork.name)),
+      networkTypes: mappings?.map((mapping) => getNetworkType(mapping.targetNetwork)),
       sourceProviderType: sourceProvider?.spec?.type,
     });
 
@@ -143,7 +146,7 @@ export const createNetworkMap = async ({
       error: error instanceof Error ? error.message : 'Unknown error',
       mappingCount: mappings?.length,
       namespace: project,
-      networkTypes: mappings?.map((mapping) => getNetworkType(mapping.targetNetwork.name)),
+      networkTypes: mappings?.map((mapping) => getNetworkType(mapping.targetNetwork)),
       sourceProviderType: sourceProvider?.spec?.type,
     });
 
