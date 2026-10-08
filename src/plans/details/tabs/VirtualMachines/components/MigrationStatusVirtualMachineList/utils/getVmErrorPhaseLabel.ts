@@ -1,4 +1,4 @@
-import { t } from '@utils/i18n';
+import type { TFunction } from 'i18next';
 
 const VM_ERROR_PHASE_LABELS: Record<string, string> = {
   ConvertGuest: 'Guest conversion',
@@ -6,11 +6,14 @@ const VM_ERROR_PHASE_LABELS: Record<string, string> = {
   PowerOffSource: 'Power off source VM',
 };
 
-export const getVmErrorPhaseLabel = (phase: string | undefined): string | undefined => {
+export const getVmErrorPhaseLabel = (
+  phase: string | undefined,
+  translate: TFunction,
+): string | undefined => {
   if (!phase) {
     return undefined;
   }
 
   const key = VM_ERROR_PHASE_LABELS[phase];
-  return key ? t(key) : phase;
+  return key ? translate(key) : phase;
 };

@@ -8,16 +8,16 @@ import { getVirtV2vContainerName } from '../utils/getMigrationLogPod';
 
 type PodLogState = {
   error: Error | undefined;
+  fetchInFlight: boolean;
   loaded: boolean;
-  loading: boolean;
   logText: string | undefined;
   podUid: string | undefined;
 };
 
 const emptyPodLogState: PodLogState = {
   error: undefined,
+  fetchInFlight: false,
   loaded: false,
-  loading: false,
   logText: undefined,
   podUid: undefined,
 };
@@ -25,7 +25,6 @@ const emptyPodLogState: PodLogState = {
 type UsePodLogTailResult = {
   error: Error | undefined;
   loaded: boolean;
-  loading: boolean;
   loadLogs: () => void;
   logText: string | undefined;
 };
@@ -36,15 +35,15 @@ export const usePodLogTail = (pod: IoK8sApiCoreV1Pod | undefined): UsePodLogTail
   const scopedLogState = logState.podUid === podUid ? logState : emptyPodLogState;
 
   const loadLogs = useCallback((): void => {
-    if (!pod || scopedLogState.loading) {
+    if (!pod || scopedLogState.fetchInFlight) {
       return;
     }
 
     const requestPodUid = getUID(pod);
     setLogState({
       error: undefined,
+      fetchInFlight: true,
       loaded: false,
-      loading: true,
       logText: undefined,
       podUid: requestPodUid,
     });
@@ -58,8 +57,8 @@ export const usePodLogTail = (pod: IoK8sApiCoreV1Pod | undefined): UsePodLogTail
           }
           return {
             ...previous,
+            fetchInFlight: false,
             loaded: true,
-            loading: false,
             logText: text,
           };
         });
@@ -72,18 +71,17 @@ export const usePodLogTail = (pod: IoK8sApiCoreV1Pod | undefined): UsePodLogTail
           return {
             ...previous,
             error: reason instanceof Error ? reason : new Error(String(reason)),
+            fetchInFlight: false,
             loaded: true,
-            loading: false,
             logText: undefined,
           };
         });
       });
-  }, [pod, scopedLogState.loading]);
+  }, [pod, scopedLogState.fetchInFlight]);
 
   return {
     error: scopedLogState.error,
     loaded: scopedLogState.loaded,
-    loading: scopedLogState.loading,
     loadLogs,
     logText: scopedLogState.logText,
   };
