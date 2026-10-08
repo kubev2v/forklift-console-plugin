@@ -28,9 +28,14 @@ describe('useTableColumnWidths', () => {
   });
 
   it('passes saved width to DataViewTh', () => {
+    const columnWidthsSettings = {
+      clear: jest.fn(),
+      data: { name: 240 },
+      save: jest.fn(),
+    };
     const { result } = renderHook(() =>
       useTableColumnWidths({
-        columnWidthsSettings: { data: { name: 240 } },
+        columnWidthsSettings,
         enabled: true,
         visibleColumns: [nameField],
       }),
