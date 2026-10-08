@@ -2,7 +2,7 @@ import type { FC } from 'react';
 import type { RowProps } from 'src/components/common/TableView/types';
 import { TableCell } from 'src/components/TableCell/TableCell';
 
-import { Td } from '@patternfly/react-table';
+import ResizableTd from '@components/common/TableView/ResizableTd';
 
 import type { HypervHost } from '../types';
 
@@ -24,39 +24,69 @@ const HypervHostsCells: FC<RowProps<HypervHost>> = ({ resourceData, resourceFiel
         switch (fieldId) {
           case 'name':
             return (
-              <Td dataLabel={fieldId} key={fieldId}>
+              <ResizableTd
+                columnId={fieldId}
+                dataLabel={fieldId}
+                key={fieldId}
+                resourceFields={resourceFields}
+              >
                 <TableCell>{resourceData.name}</TableCell>
-              </Td>
+              </ResizableTd>
             );
           case 'state':
             return (
-              <Td dataLabel={fieldId} key={fieldId}>
+              <ResizableTd
+                columnId={fieldId}
+                dataLabel={fieldId}
+                key={fieldId}
+                resourceFields={resourceFields}
+              >
                 <TableCell>{resourceData.state}</TableCell>
-              </Td>
+              </ResizableTd>
             );
           case 'cpuSockets':
             return (
-              <Td dataLabel={fieldId} key={fieldId}>
+              <ResizableTd
+                columnId={fieldId}
+                dataLabel={fieldId}
+                key={fieldId}
+                resourceFields={resourceFields}
+              >
                 <TableCell>{resourceData.cpuSockets}</TableCell>
-              </Td>
+              </ResizableTd>
             );
           case 'cpuCores':
             return (
-              <Td dataLabel={fieldId} key={fieldId}>
+              <ResizableTd
+                columnId={fieldId}
+                dataLabel={fieldId}
+                key={fieldId}
+                resourceFields={resourceFields}
+              >
                 <TableCell>{resourceData.cpuCores}</TableCell>
-              </Td>
+              </ResizableTd>
             );
           case 'memoryBytes':
             return (
-              <Td dataLabel={fieldId} key={fieldId}>
+              <ResizableTd
+                columnId={fieldId}
+                dataLabel={fieldId}
+                key={fieldId}
+                resourceFields={resourceFields}
+              >
                 <TableCell>{formatBytes(resourceData.memoryBytes)}</TableCell>
-              </Td>
+              </ResizableTd>
             );
           default:
             return (
-              <Td dataLabel={fieldId} key={fieldId}>
+              <ResizableTd
+                columnId={fieldId}
+                dataLabel={fieldId}
+                key={fieldId}
+                resourceFields={resourceFields}
+              >
                 <TableCell />
-              </Td>
+              </ResizableTd>
             );
         }
       })}

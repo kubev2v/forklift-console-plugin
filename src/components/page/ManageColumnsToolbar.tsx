@@ -3,6 +3,7 @@ import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { ManageColumnsModal } from '../common/TableView/ManageColumnsModal';
 import { ManageColumnsToolbarItem } from '../common/TableView/ManageColumnsToolbarItem';
+import { useTableColumnWidthContext } from '../common/TableView/TableColumnWidthContext';
 import type { ResourceField } from '../common/utils/types';
 
 type ManageColumnsToolbarProps = {
@@ -23,6 +24,7 @@ export const ManageColumnsToolbar = ({
   setColumns,
 }: ManageColumnsToolbarProps): ReactElement => {
   const { t } = useForkliftTranslation();
+  const { resetAllColumnWidths } = useTableColumnWidthContext();
   const [isOpen, setIsOpen] = useState(false);
   return (
     <ManageColumnsToolbarItem
@@ -41,6 +43,7 @@ export const ManageColumnsToolbar = ({
           onClose={() => {
             setIsOpen(false);
           }}
+          onResetColumnWidths={resetAllColumnWidths}
           reorderLabel={t('Reorder')}
           resourceFields={resourceFields}
           restoreLabel={t('Restore default columns')}

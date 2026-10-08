@@ -1,9 +1,9 @@
 import type { ReactElement, ReactNode } from 'react';
 
-import { Td, Tr } from '@patternfly/react-table';
-
+import TableRow from '../DataViewTable/TableRow';
 import { getResourceFieldValue } from '../FilterGroup/matchers';
 
+import ResizableTd from './ResizableTd';
 import type { RowProps } from './types';
 
 /**
@@ -11,11 +11,16 @@ import type { RowProps } from './types';
  */
 export const DefaultRow = <T,>({ resourceData, resourceFields }: RowProps<T>): ReactElement => {
   return (
-    <Tr>
+    <TableRow>
       {resourceFields?.reduce<ReactNode[]>((acc, { label, resourceFieldId }) => {
         if (resourceFieldId) {
           acc.push(
-            <Td dataLabel={label ?? undefined} key={resourceFieldId}>
+            <ResizableTd
+              columnId={resourceFieldId}
+              dataLabel={label ?? undefined}
+              key={resourceFieldId}
+              resourceFields={resourceFields}
+            >
               {(getResourceFieldValue(
                 resourceData as Record<
                   string,
@@ -24,11 +29,11 @@ export const DefaultRow = <T,>({ resourceData, resourceFields }: RowProps<T>): R
                 resourceFieldId ?? '',
                 resourceFields,
               ) as string) ?? ''}
-            </Td>,
+            </ResizableTd>,
           );
         }
         return acc;
       }, [])}
-    </Tr>
+    </TableRow>
   );
 };

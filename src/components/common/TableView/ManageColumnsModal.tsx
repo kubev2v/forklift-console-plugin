@@ -14,6 +14,7 @@ type ManagedColumnsProps = {
   description?: string;
   onChange: (columns: ResourceField[]) => void;
   onClose: () => void;
+  onResetColumnWidths?: () => void;
   reorderLabel?: string;
   resourceFields: ResourceField[];
   restoreLabel?: string;
@@ -28,6 +29,7 @@ export const ManageColumnsModal = ({
   description = 'Selected columns will be displayed in the table.',
   onChange,
   onClose,
+  onResetColumnWidths,
   reorderLabel: _reorderLabel = 'Reorder',
   resourceFields,
   restoreLabel = 'Restore default columns',
@@ -40,6 +42,7 @@ export const ManageColumnsModal = ({
 
   const restoreDefaults = (): void => {
     setEditedColumns([...filterActionsAndHidden(defaultColumns)]);
+    onResetColumnWidths?.();
   };
 
   const onMove = (fieldId: string, direction: -1 | 1): void => {

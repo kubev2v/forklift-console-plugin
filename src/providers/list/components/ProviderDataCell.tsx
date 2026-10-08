@@ -1,9 +1,9 @@
 import { type FC, useMemo } from 'react';
-import { TableEmptyCell } from 'src/components/TableCell/TableEmptyCell';
 import type { ProvidersResourceFieldId } from 'src/providers/utils/constants';
 
+import ResizableTd from '@components/common/TableView/ResizableTd';
 import type { ResourceField } from '@components/common/utils/types';
-import { Td } from '@patternfly/react-table';
+import { EMPTY_MSG } from '@utils/constants';
 import type { ProviderData } from '@utils/providers/types';
 
 import { ProviderDataCellRenderers, ProvidersInventoryFields } from './utils/constants';
@@ -29,24 +29,35 @@ const ProviderDataCell: FC<ProviderDataCellProps> = ({
     [resourceFieldId, hasInventoryData, isInventoryField],
   );
 
-  if (isEmptyCell) {
-    return <TableEmptyCell />;
-  }
+  const DataCellRenderer = resourceFieldId
+    ? ProviderDataCellRenderers?.[resourceFieldId as ProvidersResourceFieldId]
+    : undefined;
 
-  const DataCellRenderer = ProviderDataCellRenderers?.[resourceFieldId as ProvidersResourceFieldId];
-
-  if (!DataCellRenderer) {
-    return <TableEmptyCell />;
+  if (isEmptyCell || !DataCellRenderer) {
+    return (
+      <ResizableTd
+        columnId={resourceFieldId}
+        dataLabel={resourceFieldId ?? undefined}
+        resourceFields={resourceFields}
+      >
+        {EMPTY_MSG}
+      </ResizableTd>
+    );
   }
 
   return (
-    <Td dataLabel={resourceFieldId ?? undefined} key={resourceFieldId}>
+    <ResizableTd
+      columnId={resourceFieldId}
+      dataLabel={resourceFieldId ?? undefined}
+      key={resourceFieldId}
+      resourceFields={resourceFields}
+    >
       <DataCellRenderer
         data={resourceData}
         fieldId={resourceFieldId ?? ''}
         fields={resourceFields}
       />
-    </Td>
+    </ResizableTd>
   );
 };
 

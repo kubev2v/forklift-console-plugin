@@ -83,6 +83,7 @@ const HypervHostsList: FC<HypervHostsListProps> = ({ data }) => {
       dataSource={[inventoryHosts ?? [], !loading, error]}
       fieldsMetadata={hypervHostsFields}
       namespace={provider?.metadata?.namespace ?? undefined}
+      resizableColumns
       title={t('Cluster hosts')}
       userSettings={userSettings}
     />

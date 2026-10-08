@@ -1,4 +1,5 @@
-import type { FC } from 'react';
+import { type FC, useMemo } from 'react';
+import { loadUserSettings } from 'src/components/common/Page/userSettings';
 import StandardPage from 'src/components/page/StandardPage';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
@@ -21,6 +22,7 @@ import MigrationRow from './MigrationRow';
 
 const MigrationsListPage: FC = () => {
   const { t } = useForkliftTranslation();
+  const userSettings = useMemo(() => loadUserSettings({ pageId: 'MigrationsHistory' }), []);
 
   const [migrations, migrationsLoaded, migrationsLoadError] = useK8sWatchResource<
     V1beta1Migration[]
@@ -138,8 +140,10 @@ const MigrationsListPage: FC = () => {
         postFilterData={(data, selectedFilters) =>
           selectedFilters.recent?.[0] === 'true' ? filterMostRecentMigrations(data) : data
         }
+        resizableColumns
         row={(props) => <MigrationRow {...props} plans={plans} />}
         showManageColumns={false}
+        userSettings={userSettings}
       />
     </LoadingSuspend>
   );

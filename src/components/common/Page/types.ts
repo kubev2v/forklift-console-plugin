@@ -1,7 +1,14 @@
 export type UserSettings = {
+  columnWidths?: ColumnWidthsSettings;
   fields?: FieldSettings;
   filters?: FiltersSettings;
   pagination?: PaginationSettings;
+};
+
+export type ColumnWidthsSettings = {
+  clear: () => void;
+  data: Record<string, number>;
+  save: (columnWidths: Record<string, number>) => void;
 };
 
 export type FieldSettings = {

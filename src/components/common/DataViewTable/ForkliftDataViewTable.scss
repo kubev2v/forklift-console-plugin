@@ -1,0 +1,8 @@
+// DataViewTable body cells are transparent; PF sticky cells paint an opaque background by default.
+.forklift-data-view-table {
+  background-color: var(--pf-v6-c-table--BackgroundColor);
+
+  .pf-v6-c-table__sticky-cell {
+    --pf-v6-c-table__sticky-cell--BackgroundColor: var(--pf-v6-c-table--BackgroundColor);
+  }
+}

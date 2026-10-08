@@ -131,6 +131,7 @@ const NetworkMapsListPage: FC<{
     <LearningExperienceDrawer>
       <StandardPage<NetworkMapData>
         data-testid="network-maps-list"
+        resizableColumns
         {...(permissions.canCreate && {
           addButton: <NetworkMapsAddButton namespace={namespace} testId="add-network-map-button" />,
         })}

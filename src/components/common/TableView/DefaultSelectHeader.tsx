@@ -10,31 +10,29 @@ const DefaultSelectHeader = <T,>({
   canSelect,
   setActiveSort,
   visibleColumns,
-}: TableViewHeaderProps<T>): ReactElement => {
-  return (
-    <>
-      {canSelect && <Th screenReaderText="Row select" />}
-      {visibleColumns.map(({ info, label, resourceFieldId, sortable, testId }, columnIndex) => (
-        <Th
-          data-testid={testId}
-          info={info}
-          key={resourceFieldId}
-          sort={
-            sortable
-              ? buildSort({
-                  activeSort,
-                  columnIndex,
-                  resourceFields: visibleColumns,
-                  setActiveSort,
-                })
-              : undefined
-          }
-        >
-          {label}
-        </Th>
-      ))}
-    </>
-  );
-};
+}: TableViewHeaderProps<T>): ReactElement => (
+  <>
+    {canSelect && <Th screenReaderText="Row select" />}
+    {visibleColumns.map((field, columnIndex) => (
+      <Th
+        data-testid={field.testId}
+        info={field.info}
+        key={field.resourceFieldId ?? columnIndex}
+        sort={
+          field.sortable
+            ? buildSort({
+                activeSort,
+                columnIndex,
+                resourceFields: visibleColumns,
+                setActiveSort,
+              })
+            : undefined
+        }
+      >
+        {field.label}
+      </Th>
+    ))}
+  </>
+);
 
 export default DefaultSelectHeader;

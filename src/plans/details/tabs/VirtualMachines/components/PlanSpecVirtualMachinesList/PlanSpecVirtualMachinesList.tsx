@@ -88,6 +88,7 @@ const PlanSpecVirtualMachinesList: FC<PlanVirtualMachinesListProps> = ({ plan })
       fieldsMetadata={specVirtualMachineFields}
       GlobalActionToolbarItems={actions}
       onSelect={onSelect}
+      resizableColumns
       selectedIds={selectedIds}
       title={t('Virtual machines')}
       toId={vmDataToId}

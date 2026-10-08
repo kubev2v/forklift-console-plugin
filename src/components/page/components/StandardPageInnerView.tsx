@@ -36,6 +36,7 @@ const StandardPageInnerView = <T,>({
   page,
   pageDataIds,
   renderedGlobalActions,
+  resizableColumns,
   RowComponent,
   selectedFilters,
   selectedIds,
@@ -85,6 +86,7 @@ const StandardPageInnerView = <T,>({
           page={page}
           pageDataIds={pageDataIds}
           renderedGlobalActions={renderedGlobalActions}
+          resizableColumns={resizableColumns}
           selectedFilters={selectedFilters}
           selectedIds={selectedIds}
           setFields={setFields}
@@ -110,6 +112,7 @@ const StandardPageInnerView = <T,>({
         header={header}
         loaded={loaded}
         namespace={namespace}
+        resizableColumns={resizableColumns}
         RowComponent={RowComponent}
         setActiveSort={setActiveSort}
         sortedData={sortedData}

@@ -45,6 +45,7 @@ type StandardPageProps<T> = {
     selectedFilters: Record<string, string[]>,
     fields: ResourceField[],
   ) => T[];
+  resizableColumns?: boolean;
   row?: FC<RowProps<T>>;
   selectedIds?: string[];
   shouldShowLearningExperienceButton?: boolean;
