@@ -24,11 +24,12 @@ export const getMigrationLogPod = (
   pipelineStepName: string | undefined,
   pods: IoK8sApiCoreV1Pod[] | undefined,
 ): IoK8sApiCoreV1Pod | undefined => {
-  if (isEmpty(pods)) {
+  const podList = pods ?? [];
+  if (isEmpty(podList)) {
     return undefined;
   }
 
-  const candidates = pods.filter((pod) => !isWaitRebootPod(pod));
+  const candidates = podList.filter((pod) => !isWaitRebootPod(pod));
 
   if (pipelineStepName === IMAGE_CONVERSION_STEP) {
     const virtV2vPods = candidates.filter(isVirtV2vPod);
