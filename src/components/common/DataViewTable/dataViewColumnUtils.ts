@@ -13,7 +13,7 @@ export const SELECTION_COLUMN_WIDTH = '45px';
 
 const actionColumnWidth = `${ACTION_COLUMN_WIDTH_PX}px`;
 
-export const getActionHeaderProps = (): ThProps => ({
+const getActionHeaderProps = (): ThProps => ({
   hasLeftBorder: true,
   isStickyColumn: true,
   stickyMinWidth: actionColumnWidth,

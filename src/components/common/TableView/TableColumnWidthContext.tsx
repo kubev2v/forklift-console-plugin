@@ -15,7 +15,7 @@ import type { ResourceField } from '../utils/types';
 
 import { useTableColumnWidths } from './useTableColumnWidths';
 
-export type TableColumnWidthContextValue = {
+type TableColumnWidthContextValue = {
   columnLayoutKey: number;
   enabled: boolean;
   getResizableProps: (
