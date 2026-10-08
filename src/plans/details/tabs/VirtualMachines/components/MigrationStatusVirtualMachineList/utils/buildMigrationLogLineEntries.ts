@@ -1,4 +1,4 @@
-export type MigrationLogLineEntry = {
+type MigrationLogLineEntry = {
   key: string;
   line: string;
 };
