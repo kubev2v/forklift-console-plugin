@@ -38,6 +38,7 @@ const MigrationProgressTableRow: FC<MigrationProgressTableRowProps> = ({
   vmName,
 }) => {
   const displayName = getPipelineStepDisplayName(pipe?.name);
+  const failureReasons = pipe?.error?.reasons;
 
   return (
     <Tr key={pipe?.name}>
@@ -57,11 +58,11 @@ const MigrationProgressTableRow: FC<MigrationProgressTableRowProps> = ({
           vmCreated={vmCreated}
           vmName={vmName}
         />
-        {!isEmpty(pipe?.error?.reasons) && (
+        {!isEmpty(failureReasons) && (
           <MigrationStepFailurePanel
             pipelineStepName={pipe.name}
             pods={pods}
-            reasons={pipe.error.reasons}
+            reasons={failureReasons}
             vmErrorPhase={vmErrorPhase}
           />
         )}
