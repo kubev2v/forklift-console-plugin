@@ -80,6 +80,7 @@ const ProvidersListPage: FC<{
         dataSource={[data || [], providersLoaded, providersLoadError]}
         fieldsMetadata={providerFields}
         namespace={namespace}
+        resizableColumns
         row={ProviderRow}
         shouldShowLearningExperienceButton
         title={t('Providers')}

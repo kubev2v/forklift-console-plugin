@@ -3,6 +3,7 @@ import { type ComponentProps, type ReactElement, useMemo } from 'react';
 import { useFields } from '@components/common/Page/useFields';
 import { DefaultHeader } from '@components/common/TableView/DefaultHeader';
 import { DefaultRow } from '@components/common/TableView/DefaultRow';
+import { TableColumnWidthProvider } from '@components/common/TableView/TableColumnWidthContext';
 import type { TableSortContextProps } from '@components/TableSortContext';
 
 import StandardPageInnerView from './components/StandardPageInnerView';
@@ -36,6 +37,7 @@ const StandardPageInner = <T,>(props: StandardPageInnerProps<T>): ReactElement =
     pageRef,
     pagination,
     postFilterData,
+    resizableColumns = false,
     row = DefaultRow<T>,
     userSettings,
     ...viewProps
@@ -96,30 +98,37 @@ const StandardPageInner = <T,>(props: StandardPageInnerProps<T>): ReactElement =
   });
 
   return (
-    <StandardPageInnerView
-      {...viewProps}
-      clearAllFilters={clearAllFilters}
-      defaultFieldsWithoutFilters={defaultFieldsWithoutFilters}
-      error={error}
-      fields={fields}
-      fieldsMetadata={fieldsMetadata}
-      finalFilteredData={finalFilteredData}
-      flatData={flatData}
-      header={header}
-      itemsPerPage={itemsPerPage}
-      loaded={loaded}
-      namespace={namespace}
-      onPerPageSelect={onPerPageSelect}
-      onSetPage={onSetPage}
-      page={page}
-      selectedFilters={selectedFilters}
-      setFields={setFields}
-      setSelectedFilters={setSelectedFilters}
-      showPagination={showPagination}
-      sortedData={sortedData}
-      supportedFilters={supportedFilters}
-      {...innerData}
-    />
+    <TableColumnWidthProvider
+      columnWidthsSettings={userSettings?.columnWidths}
+      enabled={resizableColumns}
+      visibleColumns={innerData.visibleColumns}
+    >
+      <StandardPageInnerView
+        {...viewProps}
+        clearAllFilters={clearAllFilters}
+        defaultFieldsWithoutFilters={defaultFieldsWithoutFilters}
+        error={error}
+        fields={fields}
+        fieldsMetadata={fieldsMetadata}
+        finalFilteredData={finalFilteredData}
+        flatData={flatData}
+        header={header}
+        itemsPerPage={itemsPerPage}
+        loaded={loaded}
+        namespace={namespace}
+        onPerPageSelect={onPerPageSelect}
+        onSetPage={onSetPage}
+        page={page}
+        resizableColumns={resizableColumns}
+        selectedFilters={selectedFilters}
+        setFields={setFields}
+        setSelectedFilters={setSelectedFilters}
+        showPagination={showPagination}
+        sortedData={sortedData}
+        supportedFilters={supportedFilters}
+        {...innerData}
+      />
+    </TableColumnWidthProvider>
   );
 };
 

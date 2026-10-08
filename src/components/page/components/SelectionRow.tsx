@@ -1,5 +1,6 @@
 import { type FC, memo, type ReactElement, useRef } from 'react';
 
+import { useDataViewCellScope } from '@components/common/DataViewTable/DataViewCellScope';
 import type { RowProps } from '@components/common/TableView/types';
 import { Tooltip } from '@patternfly/react-core';
 import { Td } from '@patternfly/react-table';
@@ -80,6 +81,11 @@ const SelectionRowCell = memo(
 const SelectionRow = <T,>(props: RowProps<T>): ReactElement => {
   const { cellRef, hasExpansion, hasSelection } = usePageSelectionConfig<T>();
   const CellComponent = cellRef.current;
+  const scope = useDataViewCellScope();
+
+  if (scope) {
+    return CellComponent ? <SelectionRowCell CellComponent={CellComponent} {...props} /> : <></>;
+  }
 
   return (
     <>

@@ -2,9 +2,9 @@ import type { FC, ReactElement } from 'react';
 import type { RowProps } from 'src/components/common/TableView/types';
 import { TableCell } from 'src/components/TableCell/TableCell';
 
+import ResizableTd from '@components/common/TableView/ResizableTd';
 import type { ResourceField } from '@components/common/utils/types';
 import type { OvaVM } from '@forklift-ui/types';
-import { Td } from '@patternfly/react-table';
 import { renderResourceRowCells } from '@utils/renderResourceRowCells';
 
 import { GuestOSCellRenderer } from './components/GuestOSCellRenderer';
@@ -28,9 +28,14 @@ const renderTd = ({
 
   const CellRenderer = cellRenderers?.[fieldId] ?? ((): ReactElement => <></>);
   return (
-    <Td dataLabel={fieldId} key={fieldId}>
+    <ResizableTd
+      columnId={fieldId}
+      dataLabel={fieldId}
+      key={fieldId}
+      resourceFields={resourceFields}
+    >
       <CellRenderer data={resourceData} fieldId={fieldId} fields={resourceFields} />
-    </Td>
+    </ResizableTd>
   );
 };
 

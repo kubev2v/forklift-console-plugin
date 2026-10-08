@@ -91,6 +91,7 @@ const InspectionVmTable: FC<InspectionVmTableProps> = ({
       fieldsMetadata={inspectionVmFields}
       getSelectDisabledReason={getSelectDisabledReason}
       onSelect={onSelect}
+      resizableColumns
       selectedIds={selectedIds}
       toId={toId}
       userSettings={userSettings}

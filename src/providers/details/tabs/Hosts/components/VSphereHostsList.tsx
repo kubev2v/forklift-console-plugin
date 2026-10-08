@@ -75,6 +75,7 @@ const VSphereHostsList: FC<VSphereHostsListProps> = ({ data }) => {
 
   return (
     <StandardPageWithSelection<InventoryHostNetworkTriple>
+      resizableColumns
       {...canPatchProps}
       cell={VSphereHostsCells}
       dataSource={[hostsData || [], loaded, loadError]}

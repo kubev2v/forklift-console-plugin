@@ -1,13 +1,13 @@
 import type { FC } from 'react';
 import type { RowProps } from 'src/components/common/TableView/types';
 
-import { Tr } from '@patternfly/react-table';
+import TableRow from '@components/common/DataViewTable/TableRow';
 import type { ProviderData } from '@utils/providers/types';
 
 import ProviderDataCell from './ProviderDataCell';
 
 const ProviderRow: FC<RowProps<ProviderData>> = ({ resourceData, resourceFields }) => (
-  <Tr>
+  <TableRow>
     {resourceFields.map(({ resourceFieldId }) => (
       <ProviderDataCell
         key={resourceFieldId}
@@ -16,7 +16,7 @@ const ProviderRow: FC<RowProps<ProviderData>> = ({ resourceData, resourceFields 
         resourceFields={resourceFields}
       />
     ))}
-  </Tr>
+  </TableRow>
 );
 
 export default ProviderRow;

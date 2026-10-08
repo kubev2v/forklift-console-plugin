@@ -84,6 +84,7 @@ const PlansListPage: FC<PlansListPageProps> = ({ namespace }) => {
         namespace={namespace}
         onSelect={onSelect}
         postFilterData={postFilterData}
+        resizableColumns
         selectedIds={selectedIds}
         shouldShowLearningExperienceButton
         testId="plans-list"
