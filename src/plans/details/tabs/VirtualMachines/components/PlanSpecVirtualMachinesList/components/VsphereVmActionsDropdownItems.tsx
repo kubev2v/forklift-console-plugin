@@ -14,6 +14,7 @@ import EditVolumeNameTemplate, {
 import EditVmExcludeDisks, {
   type EditVmExcludeDisksProps,
 } from 'src/plans/details/tabs/VirtualMachines/components/PlanSpecVirtualMachinesList/components/ExcludeDisks/EditVmExcludeDisks';
+import { getVmNameTemplateActionDescription } from 'src/plans/details/utils/nameTemplateOverrides';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import type { V1beta1Plan } from '@forklift-ui/types';
@@ -45,6 +46,7 @@ const VsphereVmActionsDropdownItems: FC<VsphereVmActionsDropdownItemsProps> = ({
   return (
     <>
       <DropdownItem
+        description={getVmNameTemplateActionDescription(vm?.pvcNameTemplate)}
         isDisabled={!canEdit}
         key="edit-pvc-name-template"
         onClick={() => {
@@ -58,6 +60,7 @@ const VsphereVmActionsDropdownItems: FC<VsphereVmActionsDropdownItemsProps> = ({
         {t('Edit PVC name template')}
       </DropdownItem>
       <DropdownItem
+        description={getVmNameTemplateActionDescription(vm?.volumeNameTemplate)}
         isDisabled={!canEdit}
         key="edit-volume-name-template"
         onClick={() => {
@@ -71,6 +74,7 @@ const VsphereVmActionsDropdownItems: FC<VsphereVmActionsDropdownItemsProps> = ({
         {t('Edit volume name template')}
       </DropdownItem>
       <DropdownItem
+        description={getVmNameTemplateActionDescription(vm?.networkNameTemplate)}
         isDisabled={!canEdit}
         key="edit-network-name-template"
         onClick={() => {
