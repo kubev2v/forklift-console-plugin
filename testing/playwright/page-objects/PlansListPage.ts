@@ -36,7 +36,11 @@ export class PlansListPage {
   }
 
   async clickPlanByName(planName: string): Promise<void> {
-    await this.page.getByTestId(`plan-link-${planName}`).click();
+    // Main exposes plan-link-*; 2.12.z uses a plain Name column link.
+    await this.page
+      .getByTestId(`plan-link-${planName}`)
+      .or(this.page.getByRole('link', { exact: true, name: planName }))
+      .click();
   }
 
   async confirmBulkModal(): Promise<void> {
@@ -95,7 +99,10 @@ export class PlansListPage {
   }
 
   async searchForPlan(planName: string): Promise<void> {
-    const searchInput = this.page.getByTestId('name-search-input');
+    // Main: name-search-input (FreetextFilter testId). 2.12.z: unlabeled PF Search input.
+    const searchInput = this.page
+      .getByTestId('name-search-input')
+      .or(this.page.getByRole('textbox', { name: 'Search input' }));
     await searchInput.fill(planName);
     await searchInput.press('Enter');
   }
