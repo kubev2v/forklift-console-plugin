@@ -130,7 +130,13 @@ export class PlansListPage {
   }
 
   async waitForPageLoad() {
-    await expect(this.page.getByTestId('plans-list')).toBeVisible();
+    // Main wires testId="plans-list"; 2.12.z may omit it (wrong StandardPage prop).
+    await expect(
+      this.page
+        .getByTestId('plans-list')
+        .or(this.page.getByRole('table', { name: 'Migration plans' }))
+        .or(this.page.getByRole('grid', { name: 'Migration plans' })),
+    ).toBeVisible();
     await this.table.waitForTableLoad();
   }
 }
