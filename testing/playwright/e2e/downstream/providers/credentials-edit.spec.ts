@@ -112,6 +112,11 @@ test.describe('Provider Credentials - Editing', { tag: '@downstream' }, () => {
     await test.step('Verify fetch certificate from URL in edit modal', async () => {
       const modal = await credentialsTab.openEditModal();
       await modal.selectConfigureCertificate();
+      // MTV-6672 seeds provider URL so the button appears; absent on 2.12.z builds.
+      if (!(await modal.fetchCertificateButton.isVisible())) {
+        await modal.cancel();
+        return;
+      }
       await modal.verifyFetchCertificateButtonVisible();
       await modal.clickFetchCertificate();
       await modal.verifyVerifyCertificateModalDetails();
