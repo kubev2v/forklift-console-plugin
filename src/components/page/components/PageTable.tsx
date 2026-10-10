@@ -7,11 +7,12 @@ import {
   NoResultsMatchFilter,
 } from '@components/common/Page/PageStates';
 import { TableView } from '@components/common/TableView/TableView';
-import type { RowProps, TableViewHeaderProps } from '@components/common/TableView/types';
-import type { SortType } from '@components/common/TableView/types';
+import type { RowProps, SortType, TableViewHeaderProps } from '@components/common/TableView/types';
 import type { ResourceField } from '@components/common/utils/types';
 import { isEmpty } from '@utils/helpers';
 import { useForkliftTranslation } from '@utils/i18n';
+
+import ResizablePageTable from './ResizablePageTable';
 
 type PageTableProps<T> = {
   activeSort: SortType;
@@ -25,6 +26,7 @@ type PageTableProps<T> = {
   header: FC<TableViewHeaderProps<T>>;
   loaded: boolean;
   namespace: string;
+  resizableColumns?: boolean;
   RowComponent: FC<RowProps<T>>;
   setActiveSort: (sort: SortType) => void;
   sortedData: T[];
@@ -45,6 +47,7 @@ export const PageTable = <T,>({
   header,
   loaded,
   namespace,
+  resizableColumns = false,
   RowComponent,
   setActiveSort,
   sortedData,
@@ -65,6 +68,59 @@ export const PageTable = <T,>({
     () => loaded && !error && isEmpty(finalFilteredData) && !isEmpty(sortedData),
     [loaded, error, finalFilteredData, sortedData],
   );
+
+  const placeholder = useMemo(() => {
+    if (!loaded) {
+      return <Loading title={t('Loading')} />;
+    }
+    if (errorFetchingData) {
+      return <ErrorState title={t('Unable to retrieve data')} />;
+    }
+    if (noResults) {
+      return customNoResultsFound ?? <NoResultsFound title={t('No results found')} />;
+    }
+    if (noMatchingResults) {
+      return (
+        customNoResultsMatchFilter ?? (
+          <NoResultsMatchFilter
+            clearAllFilters={clearAllFilters}
+            clearAllLabel={t('Clear all filters')}
+            description={t(
+              'No results match the filter criteria. Clear all filters and try again.',
+            )}
+            title={t('No results found')}
+          />
+        )
+      );
+    }
+    return null;
+  }, [
+    clearAllFilters,
+    customNoResultsFound,
+    customNoResultsMatchFilter,
+    errorFetchingData,
+    loaded,
+    noMatchingResults,
+    noResults,
+    t,
+  ]);
+
+  if (resizableColumns) {
+    return (
+      <ResizablePageTable
+        activeSort={activeSort}
+        aria-label={title ?? t('Page table')}
+        entities={dataOnScreen}
+        expandedIds={expandedIds}
+        namespace={namespace}
+        placeholder={placeholder}
+        RowComponent={RowComponent}
+        setActiveSort={setActiveSort}
+        toId={toId}
+        visibleColumns={visibleColumns}
+      />
+    );
+  }
 
   return (
     <TableView<T>

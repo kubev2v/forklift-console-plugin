@@ -36,6 +36,7 @@ export type StandardPageInnerViewProps<T> = {
   page: number;
   pageDataIds: string[];
   renderedGlobalActions: ReactElement[];
+  resizableColumns?: boolean;
   RowComponent: FC<RowProps<T>>;
   selectedFilters: Record<string, string[]>;
   selectedIds?: string[];

@@ -1,9 +1,9 @@
-import { type ReactElement, type ReactNode, useMemo } from 'react';
+import type { ReactElement, ReactNode } from 'react';
 
 import { AttributeValueFilter } from '@components/common/FilterGroup/AttributeValueFilter';
 import { FilterGroup } from '@components/common/FilterGroup/FilterGroup';
-import { toFieldFilter } from '@components/common/FilterGroup/helpers';
 import type { FilterRenderer } from '@components/common/FilterGroup/types';
+import ResetColumnWidthsToolbar from '@components/common/TableView/ResetColumnWidthsToolbar';
 import type { ResourceField } from '@components/common/utils/types';
 import TableBulkSelect from '@components/TableBulkSelect';
 import type { OnPerPageSelect, OnSetPage } from '@patternfly/react-core';
@@ -19,8 +19,8 @@ import { FilterIcon } from '@patternfly/react-icons';
 import { isEmpty } from '@utils/helpers';
 import { useForkliftTranslation } from '@utils/i18n';
 
+import { usePageToolbarFilterFields } from '../hooks/usePageToolbarFilterFields';
 import { ManageColumnsToolbar } from '../ManageColumnsToolbar';
-import { isSecondaryAttributeFilter } from '../utils/utils';
 
 type PageToolbarProps<T> = {
   clearAllFilters: () => void;
@@ -36,6 +36,7 @@ type PageToolbarProps<T> = {
   page: number;
   pageDataIds?: string[];
   renderedGlobalActions?: ReactNode[];
+  resizableColumns?: boolean;
   selectedFilters: Record<string, string[]>;
   selectedIds?: string[];
   setFields: (fields: ResourceField[]) => void;
@@ -61,6 +62,7 @@ export const PageToolbar = <T,>({
   page,
   pageDataIds,
   renderedGlobalActions,
+  resizableColumns = false,
   selectedFilters,
   selectedIds,
   setFields,
@@ -72,21 +74,12 @@ export const PageToolbar = <T,>({
   totalItems,
 }: PageToolbarProps<T>): ReactElement => {
   const { t } = useForkliftTranslation();
-
-  const primaryFilters = useMemo(
-    () => fields.filter((field) => field.filter?.primary).map(toFieldFilter(sortedData)),
-    [fields, sortedData],
-  );
-
-  const secondaryFilters = useMemo(
-    () => fieldsMetadata.filter(isSecondaryAttributeFilter).map(toFieldFilter(flatData)),
-    [fieldsMetadata, flatData],
-  );
-
-  const standaloneFilters = useMemo(
-    () => fields.filter((field) => field.filter?.standalone).map(toFieldFilter(flatData)),
-    [fields, flatData],
-  );
+  const { primaryFilters, secondaryFilters, standaloneFilters } = usePageToolbarFilterFields({
+    fields,
+    fieldsMetadata,
+    flatData,
+    sortedData,
+  });
 
   return (
     <Toolbar clearAllFilters={clearAllFilters} clearFiltersButtonText={t('Clear all filters')}>
@@ -137,6 +130,7 @@ export const PageToolbar = <T,>({
                 setColumns={setFields}
               />
             )}
+            {resizableColumns && <ResetColumnWidthsToolbar />}
             {!isEmpty(renderedGlobalActions) && renderedGlobalActions}
           </ToolbarToggleGroup>
         </Split>

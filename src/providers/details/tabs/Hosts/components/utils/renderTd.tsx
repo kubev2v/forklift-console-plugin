@@ -1,8 +1,8 @@
 import type { FC, ReactElement } from 'react';
 import { NameCellRenderer } from 'src/providers/details/tabs/Hosts/components/NameCellRenderer';
 
+import ResizableTd from '@components/common/TableView/ResizableTd';
 import type { ResourceField } from '@components/common/utils/types';
-import { Td } from '@patternfly/react-table';
 
 import IDCellRenderer from '../IDCellRenderer';
 import LinkSpeedCellRenderer from '../LinkSpeedCellRenderer';
@@ -36,14 +36,19 @@ export const RenderTd = ({
   resourceFields,
 }: RenderTdProps): ReactElement => {
   if (!resourceFieldId) {
-    return <Td></Td>;
+    return <ResizableTd columnId={null}></ResizableTd>;
   }
 
   const CellRenderer = cellRenderers?.[resourceFieldId] ?? null;
 
   return (
-    <Td dataLabel={resourceFieldId} key={resourceFieldId}>
+    <ResizableTd
+      columnId={resourceFieldId}
+      dataLabel={resourceFieldId}
+      key={resourceFieldId}
+      resourceFields={resourceFields}
+    >
       <CellRenderer data={resourceData} fieldId={resourceFieldId} fields={resourceFields} />
-    </Td>
+    </ResizableTd>
   );
 };

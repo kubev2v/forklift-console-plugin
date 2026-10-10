@@ -109,4 +109,19 @@ describe('userSettings - behavior', () => {
     pagination.save(100);
     expect(mockSave).toHaveBeenCalledWith('forklift/x', JSON.stringify({ perPage: 100 }));
   });
+
+  it('sanitizes and saves column widths', () => {
+    mockLoad.mockReturnValue(JSON.stringify({ columnWidths: { bad: 'x', name: 180 } }));
+    const { columnWidths } = loadUserSettings({ pageId: 'providers' });
+
+    expect(columnWidths?.data).toEqual({ name: 180 });
+    columnWidths?.save({ name: 200 });
+    expect(mockSave).toHaveBeenCalledWith(
+      'forklift/providers',
+      JSON.stringify({ columnWidths: { name: 200 } }),
+    );
+
+    columnWidths?.clear();
+    expect(mockRemove).toHaveBeenCalledWith('forklift/providers');
+  });
 });

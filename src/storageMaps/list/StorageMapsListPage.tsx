@@ -131,6 +131,7 @@ const StorageMapsListPage: FC<{
     <LearningExperienceDrawer>
       <StandardPage<StorageMapData>
         data-testid="network-maps-list"
+        resizableColumns
         {...(permissions.canCreate && {
           addButton: <StorageMapsAddButton namespace={namespace} testId="add-storage-map-button" />,
         })}
