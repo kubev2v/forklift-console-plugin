@@ -9,6 +9,8 @@ import { buildSort } from '../TableView/sort';
 import type { SortType } from '../TableView/types';
 import type { ResourceField } from '../utils/types';
 
+import { prepareColumnResize } from './prepareColumnResize';
+
 export const SELECTION_COLUMN_WIDTH = '45px';
 
 const actionColumnWidth = `${ACTION_COLUMN_WIDTH_PX}px`;
@@ -43,7 +45,6 @@ type ToDataViewColumnArgs = {
   activeSort: SortType;
   columnIndex: number;
   field: ResourceField;
-  headerLayoutProps?: Pick<ThProps, 'modifier' | 'style'>;
   resizableProps?: DataViewThResizableProps;
   setActiveSort: (sort: SortType) => void;
   visibleColumns: ResourceField[];
@@ -53,7 +54,6 @@ export const toDataViewColumn = ({
   activeSort,
   columnIndex,
   field,
-  headerLayoutProps,
   resizableProps,
   setActiveSort,
   visibleColumns,
@@ -64,6 +64,19 @@ export const toDataViewColumn = ({
     dataLabel: label || undefined,
     id: field.resourceFieldId ?? undefined,
     info: field.info,
+    ...(resizableProps?.isResizable
+      ? {
+          onKeyDownCapture: (event): void => {
+            prepareColumnResize(event, resizableProps.resizeButtonAriaLabel);
+          },
+          onMouseDownCapture: (event): void => {
+            prepareColumnResize(event, resizableProps.resizeButtonAriaLabel);
+          },
+          onTouchStartCapture: (event): void => {
+            prepareColumnResize(event, resizableProps.resizeButtonAriaLabel);
+          },
+        }
+      : {}),
     sort: field.sortable
       ? buildSort({
           activeSort,
@@ -78,7 +91,6 @@ export const toDataViewColumn = ({
     cell: (label || null) as ReactNode,
     props: {
       ...headerProps,
-      ...headerLayoutProps,
       ...(field.testId ? { 'data-testid': field.testId } : {}),
       ...(label ? {} : { screenReaderText: 'Actions' }),
     } as ThProps,
@@ -87,6 +99,6 @@ export const toDataViewColumn = ({
 };
 
 export const getBodyCellProps = (field: ResourceField): TdProps => ({
-  ...(field.isAction ? getActionCellProps() : { modifier: 'nowrap' as const }),
+  ...(field.isAction ? getActionCellProps() : { modifier: 'truncate' as const }),
   dataLabel: field.label ?? field.resourceFieldId ?? undefined,
 });

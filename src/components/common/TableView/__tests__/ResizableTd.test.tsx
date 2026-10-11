@@ -1,0 +1,45 @@
+import type { ResourceField } from '@components/common/utils/types';
+import { render, screen } from '@testing-library/react';
+
+import ResizableTd from '../ResizableTd';
+import { TableColumnWidthProvider } from '../TableColumnWidthContext';
+
+const renderCell = (enabled: boolean, isAction = false): void => {
+  const field: ResourceField = { isAction, label: 'Name', resourceFieldId: 'name' };
+  render(
+    <TableColumnWidthProvider enabled={enabled} visibleColumns={[field]}>
+      <table>
+        <tbody>
+          <tr>
+            <ResizableTd columnId="name" resourceFields={[field]}>
+              Cell content
+            </ResizableTd>
+          </tr>
+        </tbody>
+      </table>
+    </TableColumnWidthProvider>,
+  );
+};
+
+describe('ResizableTd', () => {
+  it('allows hybrid table data cells to shrink by truncating content', () => {
+    renderCell(true);
+
+    expect(screen.getByRole('cell')).toHaveClass('pf-m-truncate');
+    expect(screen.getByRole('cell')).not.toHaveClass('pf-m-nowrap');
+  });
+
+  it('preserves the existing layout when resizing is disabled', () => {
+    renderCell(false);
+
+    expect(screen.getByRole('cell')).toHaveClass('pf-m-nowrap');
+    expect(screen.getByRole('cell')).not.toHaveClass('pf-m-truncate');
+  });
+
+  it('keeps sticky action controls outside truncation', () => {
+    renderCell(true, true);
+
+    expect(screen.getByRole('cell')).toHaveClass('pf-v6-c-table__sticky-cell');
+    expect(screen.getByRole('cell')).not.toHaveClass('pf-m-truncate');
+  });
+});

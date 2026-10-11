@@ -9,117 +9,97 @@ const nameField: ResourceField = {
   label: 'Name',
   resourceFieldId: 'name',
   sortable: true,
+  width: 25,
 };
 
+const projectField: ResourceField = { label: 'Project', resourceFieldId: 'namespace' };
+const visibleColumns = [nameField, projectField];
+
+const resizeEvent = {} as MouseEvent;
+
 describe('useTableColumnWidths', () => {
-  it('omits initial width so DataViewTh measures the rendered column', () => {
-    const { result } = renderHook(() =>
-      useTableColumnWidths({
-        enabled: true,
-        visibleColumns: [nameField],
-      }),
-    );
+  it('leaves unsaved widths to DataViewTh rather than imposing pixel defaults', () => {
+    const { result } = renderHook(() => useTableColumnWidths({ enabled: true, visibleColumns }));
 
     expect(result.current.getResizableProps(nameField, 'Name')).toEqual(
-      expect.objectContaining({
-        isResizable: true,
-        minWidth: 100,
-      }),
+      expect.objectContaining({ isResizable: true, minWidth: 100 }),
     );
     expect(result.current.getResizableProps(nameField, 'Name')).not.toHaveProperty('width');
   });
 
-  it('applies nowrap and header width from defaults or saved overrides', () => {
-    const columnWidthsSettings = {
-      clear: jest.fn(),
-      data: { name: 240 },
-      save: jest.fn(),
-    };
+  it('passes saved widths, including the minimum, to DataViewTh', () => {
     const { result } = renderHook(() =>
       useTableColumnWidths({
-        columnWidthsSettings,
+        columnWidthsSettings: {
+          clear: jest.fn(),
+          data: { name: 100, namespace: 240 },
+          save: jest.fn(),
+        },
         enabled: true,
-        visibleColumns: [nameField],
+        visibleColumns,
       }),
     );
 
-    expect(result.current.getColumnHeaderLayoutProps(nameField, 1)).toEqual({
-      modifier: 'nowrap',
-      style: { width: '240px' },
-    });
+    expect(result.current.getResizableProps(nameField, 'Name')).toMatchObject({ width: 100 });
+    expect(result.current.getResizableProps(projectField, 'Project')).toMatchObject({ width: 240 });
   });
 
-  it('uses default header width when nothing is saved', () => {
-    const { result } = renderHook(() =>
-      useTableColumnWidths({
-        enabled: true,
-        visibleColumns: [nameField],
-      }),
-    );
-
-    expect(result.current.getColumnHeaderLayoutProps(nameField, 4)).toEqual({
-      modifier: 'nowrap',
-      style: { width: '300px' },
-    });
-  });
-
-  it('passes saved width to DataViewTh', () => {
-    const columnWidthsSettings = {
-      clear: jest.fn(),
-      data: { name: 240 },
-      save: jest.fn(),
-    };
-    const { result } = renderHook(() =>
-      useTableColumnWidths({
-        columnWidthsSettings,
-        enabled: true,
-        visibleColumns: [nameField],
-      }),
-    );
-
-    expect(result.current.getResizableProps(nameField, 'Name')).toMatchObject({ width: 240 });
-  });
-
-  it('does not pass width when saved width is only the column minimum', () => {
-    const columnWidthsSettings = {
-      clear: jest.fn(),
-      data: { name: 100 },
-      save: jest.fn(),
-    };
-    const { result } = renderHook(() =>
-      useTableColumnWidths({
-        columnWidthsSettings,
-        enabled: true,
-        visibleColumns: [nameField],
-      }),
-    );
-
-    expect(result.current.getResizableProps(nameField, 'Name')).not.toHaveProperty('width');
-  });
-
-  it('clears persisted width when resize ends at minimum', () => {
+  it('preserves adjacent minimum widths when growing the first column again', () => {
     const save = jest.fn();
-    const columnWidthsSettings = {
-      clear: jest.fn(),
-      data: { name: 200 },
-      save,
-    };
     const { result } = renderHook(() =>
       useTableColumnWidths({
-        columnWidthsSettings,
+        columnWidthsSettings: { clear: jest.fn(), data: { name: 240 }, save },
         enabled: true,
-        visibleColumns: [nameField],
+        visibleColumns,
+      }),
+    );
+    // PatternFly retains the resize callbacks from the initial render.
+    const resizeName = result.current.getResizableProps(nameField, 'Name')?.onResize;
+    const resizeProject = result.current.getResizableProps(projectField, 'Project')?.onResize;
+
+    act(() => resizeName?.(resizeEvent, 'name', 100));
+    act(() => resizeProject?.(resizeEvent, 'namespace', 100));
+    expect(save).toHaveBeenLastCalledWith({ name: 100, namespace: 100 });
+
+    act(() => resizeName?.(resizeEvent, 'name', 150));
+    expect(save).toHaveBeenLastCalledWith({ name: 150, namespace: 100 });
+    expect(result.current.getResizableProps(projectField, 'Project')).toMatchObject({ width: 100 });
+    expect(result.current.columnLayoutKey).toBe(0);
+  });
+
+  it('resets saved widths and remounts the table only on explicit reset', () => {
+    const clear = jest.fn();
+    const { result } = renderHook(() =>
+      useTableColumnWidths({
+        columnWidthsSettings: { clear, data: { name: 100, namespace: 240 }, save: jest.fn() },
+        enabled: true,
+        visibleColumns,
       }),
     );
 
-    expect(result.current.columnLayoutKey).toBe(0);
-    const props = result.current.getResizableProps(nameField, 'Name');
     act(() => {
-      props?.onResize?.({} as MouseEvent, 'name', 100);
+      result.current.resetAllColumnWidths();
     });
 
-    expect(save).toHaveBeenLastCalledWith({});
+    expect(clear).toHaveBeenCalledTimes(1);
+    expect(result.current.columnLayoutKey).toBe(1);
     expect(result.current.getResizableProps(nameField, 'Name')).not.toHaveProperty('width');
-    expect(result.current.columnLayoutKey).toBe(0);
+    expect(result.current.getResizableProps(projectField, 'Project')).not.toHaveProperty('width');
+  });
+
+  it('does not resize actions or disabled tables', () => {
+    const { result, rerender } = renderHook(
+      ({ enabled }) => useTableColumnWidths({ enabled, visibleColumns }),
+      { initialProps: { enabled: false } },
+    );
+    expect(result.current.getResizableProps(nameField, 'Name')).toBeUndefined();
+
+    rerender({ enabled: true });
+    expect(
+      result.current.getResizableProps(
+        { isAction: true, label: 'Actions', resourceFieldId: 'actions' },
+        'Actions',
+      ),
+    ).toBeUndefined();
   });
 });

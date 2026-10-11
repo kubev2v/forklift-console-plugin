@@ -21,8 +21,7 @@ export const useForkliftDataViewColumns = ({
   setActiveSort,
   visibleColumns,
 }: UseForkliftDataViewColumnsArgs): DataViewTh[] => {
-  const { getColumnHeaderLayoutProps, getResizableProps } = useTableColumnWidthContext();
-  const visibleColumnCount = visibleColumns.length;
+  const { getResizableProps } = useTableColumnWidthContext();
 
   return useMemo(
     () => [
@@ -32,21 +31,12 @@ export const useForkliftDataViewColumns = ({
           activeSort,
           columnIndex,
           field,
-          headerLayoutProps: getColumnHeaderLayoutProps(field, visibleColumnCount),
           resizableProps: getResizableProps(field, field.label),
           setActiveSort,
           visibleColumns,
         }),
       ),
     ],
-    [
-      activeSort,
-      getColumnHeaderLayoutProps,
-      getResizableProps,
-      leadingColumns,
-      setActiveSort,
-      visibleColumnCount,
-      visibleColumns,
-    ],
+    [activeSort, getResizableProps, leadingColumns, setActiveSort, visibleColumns],
   );
 };

@@ -689,6 +689,13 @@ const [data, loaded, error] = useK8sWatchResource<Resource>({
 });
 ```
 
+### Resizable Tables
+- Enable resizing through `StandardPage`'s `resizableColumns` prop; reuse the shared DataView adapters.
+- Let `DataViewTh` measure unsaved widths and resize via `min-width`. Do not impose data-header `style.width`, reference-table pixel defaults, or `nowrap` modifiers that prevent shrinking.
+- Keep saved minimum widths as user overrides; only explicit reset should clear them.
+- Keep the `prepareColumnResize` capture handlers: browser auto-layout can redistribute spare space after shrinking, so rendered header widths must be measured together before rebasing their minimums for the next resize.
+- Use truncation for resizable data cells, but preserve sticky selection/actions cells and their controls.
+
 ### Actions Dropdown Convention
 Action dropdowns use `isDetailsPage` (not `isKebab`) to control behavior by context:
 - **List page** (default): kebab icon, "Edit" navigates to resource, "Delete"

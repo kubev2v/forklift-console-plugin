@@ -9,7 +9,6 @@ import {
 } from 'react';
 
 import type { DataViewThResizableProps } from '@patternfly/react-data-view/dist/esm/DataViewTh/DataViewTh';
-import type { ThProps } from '@patternfly/react-table';
 
 import type { ColumnWidthsSettings } from '../Page/types';
 import type { ResourceField } from '../utils/types';
@@ -19,10 +18,6 @@ import { useTableColumnWidths } from './useTableColumnWidths';
 type TableColumnWidthContextValue = {
   columnLayoutKey: number;
   enabled: boolean;
-  getColumnHeaderLayoutProps: (
-    field: ResourceField,
-    visibleColumnCount: number,
-  ) => Pick<ThProps, 'modifier' | 'style'> | undefined;
   getResizableProps: (
     field: ResourceField,
     columnLabel: string | null,
@@ -33,7 +28,6 @@ type TableColumnWidthContextValue = {
 const defaultContext: TableColumnWidthContextValue = {
   columnLayoutKey: 0,
   enabled: false,
-  getColumnHeaderLayoutProps: () => undefined,
   getResizableProps: () => undefined,
   resetAllColumnWidths: (): void => undefined,
 };
@@ -63,17 +57,10 @@ export const TableColumnWidthProvider: FC<TableColumnWidthProviderProps> = ({
     (): TableColumnWidthContextValue => ({
       columnLayoutKey: widths.columnLayoutKey,
       enabled,
-      getColumnHeaderLayoutProps: widths.getColumnHeaderLayoutProps,
       getResizableProps: widths.getResizableProps,
       resetAllColumnWidths: widths.resetAllColumnWidths,
     }),
-    [
-      enabled,
-      widths.columnLayoutKey,
-      widths.getColumnHeaderLayoutProps,
-      widths.getResizableProps,
-      widths.resetAllColumnWidths,
-    ],
+    [enabled, widths.columnLayoutKey, widths.getResizableProps, widths.resetAllColumnWidths],
   );
 
   return (

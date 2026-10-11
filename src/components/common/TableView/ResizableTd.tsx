@@ -6,6 +6,8 @@ import { useDataViewCellScope } from '../DataViewTable/DataViewCellScope';
 import { getActionCellProps } from '../DataViewTable/dataViewColumnUtils';
 import type { ResourceField } from '../utils/types';
 
+import { useTableColumnWidthContext } from './TableColumnWidthContext';
+
 type ResizableTdProps = TdProps & {
   columnId: string | null;
   resourceFields?: ResourceField[];
@@ -19,6 +21,7 @@ const ResizableTd: FC<ResizableTdProps> = ({
   ...rest
 }) => {
   const scope = useDataViewCellScope();
+  const { enabled } = useTableColumnWidthContext();
   if (scope) {
     if (scope.columnId !== columnId) {
       return null;
@@ -34,7 +37,7 @@ const ResizableTd: FC<ResizableTdProps> = ({
     <Td
       className={className}
       data-column-id={columnId ?? undefined}
-      {...(isAction ? getActionCellProps() : { modifier: 'nowrap' as const })}
+      {...(isAction ? getActionCellProps() : { modifier: enabled ? 'truncate' : 'nowrap' })}
       {...rest}
     >
       {children}

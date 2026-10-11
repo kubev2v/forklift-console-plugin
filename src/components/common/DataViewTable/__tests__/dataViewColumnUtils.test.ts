@@ -18,12 +18,11 @@ const actionField: ResourceField = {
 };
 
 describe('dataViewColumnUtils', () => {
-  it('builds a resizable data column', () => {
+  it('lets DataViewTh control resizing without a conflicting CSS width or nowrap modifier', () => {
     const column = toDataViewColumn({
       activeSort,
       columnIndex: 0,
       field: nameField,
-      headerLayoutProps: { modifier: 'nowrap', style: { width: '240px' } },
       resizableProps: {
         isResizable: true,
         minWidth: 100,
@@ -37,10 +36,14 @@ describe('dataViewColumnUtils', () => {
     expect(column).toEqual(
       expect.objectContaining({
         cell: 'Name',
-        props: expect.objectContaining({ modifier: 'nowrap', style: { width: '240px' } }),
+        props: expect.objectContaining({ id: 'name' }),
         resizableProps: expect.objectContaining({ isResizable: true, width: 240 }),
       }),
     );
+    if (typeof column === 'object' && column && 'props' in column) {
+      expect(column.props).not.toHaveProperty('style');
+      expect(column.props).not.toHaveProperty('modifier');
+    }
   });
 
   it('keeps action columns sticky and not resizable', () => {
@@ -63,7 +66,7 @@ describe('dataViewColumnUtils', () => {
     );
     expect(getBodyCellProps(actionField)).toEqual(expect.objectContaining({ isActionCell: true }));
     expect(getBodyCellProps(nameField)).toEqual(
-      expect.objectContaining({ modifier: 'nowrap', dataLabel: 'Name' }),
+      expect.objectContaining({ modifier: 'truncate', dataLabel: 'Name' }),
     );
   });
 });
