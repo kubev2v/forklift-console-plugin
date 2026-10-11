@@ -2,9 +2,11 @@ import type { ResourceField } from '@components/common/utils/types';
 
 import {
   clampColumnWidth,
+  dropAtMinimumColumnWidths,
   getDefaultWidthForField,
   getMinWidthForField,
   isResizableField,
+  resolveColumnWidthPx,
   sanitizeColumnWidths,
 } from '../columnWidthUtils';
 
@@ -45,9 +47,26 @@ describe('columnWidthUtils', () => {
     ).toBe(72);
   });
 
+  it('prefers saved width above minimum over the field default', () => {
+    const field: ResourceField = { label: 'Name', resourceFieldId: 'name' };
+    expect(resolveColumnWidthPx(field, 4, 220)).toBe(220);
+    expect(resolveColumnWidthPx(field, 4, 100)).toBe(300);
+    expect(resolveColumnWidthPx(field, 4)).toBe(300);
+  });
+
   it('clamps widths to the min and max', () => {
     expect(clampColumnWidth(40, 100)).toBe(100);
     expect(clampColumnWidth(900, 100)).toBe(480);
     expect(clampColumnWidth(180, 100)).toBe(180);
+  });
+
+  it('drops at-minimum widths when hydrating saved settings', () => {
+    const columns: ResourceField[] = [
+      { label: 'Name', resourceFieldId: 'name' },
+      { label: 'Status', resourceFieldId: 'status' },
+    ];
+    expect(dropAtMinimumColumnWidths({ name: 100, status: 180 }, columns)).toEqual({
+      status: 180,
+    });
   });
 });

@@ -34,6 +34,33 @@ export const getDefaultWidthForField = (
 export const clampColumnWidth = (width: number, minWidth: number): number =>
   Math.min(DEFAULT_COLUMN_MAX_WIDTH_PX, Math.max(minWidth, width));
 
+/** Saved override when above min; otherwise the table default for this field. */
+export const resolveColumnWidthPx = (
+  field: ResourceField,
+  visibleColumnCount: number,
+  savedWidth?: number,
+): number => {
+  const minWidth = getMinWidthForField(field);
+  if (savedWidth !== undefined && savedWidth > minWidth) {
+    return clampColumnWidth(savedWidth, minWidth);
+  }
+  return getDefaultWidthForField(field, visibleColumnCount);
+};
+
+/** Widths at the column minimum are layout defaults, not user overrides. */
+export const dropAtMinimumColumnWidths = (
+  widths: Record<string, number>,
+  visibleColumns: ResourceField[],
+): Record<string, number> =>
+  Object.entries(widths).reduce<Record<string, number>>((acc, [columnId, width]) => {
+    const field = visibleColumns.find((col) => col.resourceFieldId === columnId);
+    const minWidth = field ? getMinWidthForField(field) : DEFAULT_COLUMN_MIN_WIDTH_PX;
+    if (width > minWidth) {
+      acc[columnId] = width;
+    }
+    return acc;
+  }, {});
+
 export const sanitizeColumnWidths = (columnWidths: unknown): Record<string, number> => {
   if (!columnWidths || typeof columnWidths !== 'object') {
     return {};

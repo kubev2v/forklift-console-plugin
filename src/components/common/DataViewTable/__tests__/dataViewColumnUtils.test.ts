@@ -23,6 +23,7 @@ describe('dataViewColumnUtils', () => {
       activeSort,
       columnIndex: 0,
       field: nameField,
+      headerLayoutProps: { modifier: 'nowrap', style: { width: '240px' } },
       resizableProps: {
         isResizable: true,
         minWidth: 100,
@@ -36,6 +37,7 @@ describe('dataViewColumnUtils', () => {
     expect(column).toEqual(
       expect.objectContaining({
         cell: 'Name',
+        props: expect.objectContaining({ modifier: 'nowrap', style: { width: '240px' } }),
         resizableProps: expect.objectContaining({ isResizable: true, width: 240 }),
       }),
     );
@@ -60,5 +62,8 @@ describe('dataViewColumnUtils', () => {
       expect.objectContaining({ isActionCell: true, isStickyColumn: true }),
     );
     expect(getBodyCellProps(actionField)).toEqual(expect.objectContaining({ isActionCell: true }));
+    expect(getBodyCellProps(nameField)).toEqual(
+      expect.objectContaining({ modifier: 'nowrap', dataLabel: 'Name' }),
+    );
   });
 });

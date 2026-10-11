@@ -6,7 +6,11 @@ import { Modal, ModalBody, ModalFooter, ModalHeader } from '@patternfly/react-co
 import type { ResourceField } from '../utils/types';
 
 import { ManageColumnsList } from './ManageColumnsList';
-import { filterActionsAndHidden, sameOrderAndVisibility } from './manageColumnsUtils';
+import {
+  filterActionsAndHidden,
+  sameOrderAndVisibility,
+  sameVisibleColumnSet,
+} from './manageColumnsUtils';
 
 type ManagedColumnsProps = {
   cancelLabel?: string;
@@ -68,15 +72,19 @@ export const ManageColumnsModal = ({
     );
   };
 
+  const visibleResourceFields = filterActionsAndHidden(resourceFields);
+
   const onSave = (): void => {
+    const visibilityChanged = !sameVisibleColumnSet(visibleResourceFields, editedColumns);
     onChange([
       ...editedColumns,
       ...resourceFields.filter((col) => Boolean(col.isAction) || Boolean(col.isHidden)),
     ]);
+    if (visibilityChanged) {
+      onResetColumnWidths?.();
+    }
     onClose();
   };
-
-  const visibleResourceFields = filterActionsAndHidden(resourceFields);
 
   return (
     <Modal data-testid="manage-columns-modal" isOpen={showModal} onClose={onClose} variant="small">

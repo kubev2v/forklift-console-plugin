@@ -29,15 +29,15 @@ export const useForkliftDataViewRows = <T,>({
   useMemo(
     () =>
       entities.map((resourceData, resourceIndex) => {
-        const rowProps: RowProps<T> = {
-          namespace,
-          resourceData,
-          resourceFields: visibleColumns,
-          resourceIndex,
-        };
         const dataCells: DataViewTd[] = visibleColumns.reduce<DataViewTd[]>((cells, field) => {
           const columnId = field.resourceFieldId;
           if (columnId) {
+            const rowProps: RowProps<T> = {
+              namespace,
+              resourceData,
+              resourceFields: [field],
+              resourceIndex,
+            };
             cells.push({
               cell: (
                 <ScopedDataViewCell

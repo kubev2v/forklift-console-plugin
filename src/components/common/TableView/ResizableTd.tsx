@@ -34,7 +34,7 @@ const ResizableTd: FC<ResizableTdProps> = ({
     <Td
       className={className}
       data-column-id={columnId ?? undefined}
-      {...(isAction ? getActionCellProps() : {})}
+      {...(isAction ? getActionCellProps() : { modifier: 'nowrap' as const })}
       {...rest}
     >
       {children}

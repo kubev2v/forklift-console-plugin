@@ -43,6 +43,7 @@ type ToDataViewColumnArgs = {
   activeSort: SortType;
   columnIndex: number;
   field: ResourceField;
+  headerLayoutProps?: Pick<ThProps, 'modifier' | 'style'>;
   resizableProps?: DataViewThResizableProps;
   setActiveSort: (sort: SortType) => void;
   visibleColumns: ResourceField[];
@@ -52,6 +53,7 @@ export const toDataViewColumn = ({
   activeSort,
   columnIndex,
   field,
+  headerLayoutProps,
   resizableProps,
   setActiveSort,
   visibleColumns,
@@ -76,6 +78,7 @@ export const toDataViewColumn = ({
     cell: (label || null) as ReactNode,
     props: {
       ...headerProps,
+      ...headerLayoutProps,
       ...(field.testId ? { 'data-testid': field.testId } : {}),
       ...(label ? {} : { screenReaderText: 'Actions' }),
     } as ThProps,
@@ -84,6 +87,6 @@ export const toDataViewColumn = ({
 };
 
 export const getBodyCellProps = (field: ResourceField): TdProps => ({
-  ...(field.isAction ? getActionCellProps() : {}),
+  ...(field.isAction ? getActionCellProps() : { modifier: 'nowrap' as const }),
   dataLabel: field.label ?? field.resourceFieldId ?? undefined,
 });
