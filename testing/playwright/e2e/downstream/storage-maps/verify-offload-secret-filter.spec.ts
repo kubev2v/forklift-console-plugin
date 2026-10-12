@@ -1,7 +1,7 @@
+import { getName } from '../../../../../src/utils/crds/common/selectors';
 import { providerOnlyFixtures as test } from '../../../fixtures/resourceFixtures';
 import { StorageMapCreatePage } from '../../../page-objects/StorageMapCreatePage';
 import { StorageMapsListPage } from '../../../page-objects/StorageMapsListPage';
-import { getName } from '../../../../../src/utils/crds/common/selectors';
 // eslint-disable-next-line import/no-unresolved -- no working alias path for E2E tests
 import { MTV_NAMESPACE } from '../../../utils/resource-manager/constants';
 import { createSecret } from '../../../utils/resource-manager/ResourceCreator';
