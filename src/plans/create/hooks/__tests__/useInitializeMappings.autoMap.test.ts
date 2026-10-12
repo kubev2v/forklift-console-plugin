@@ -135,4 +135,23 @@ describe('useInitializeMappings - autoMap', () => {
     const updated = mockSetValue.mock.calls[0][1] as { sourceNetwork: { name: string } }[];
     expect(updated.map((row) => row.sourceNetwork.name)).toEqual(['src-a', 'src-b']);
   });
+
+  it('matches sources by id when their translated names change', () => {
+    renderHook(() => {
+      useInitializeMappings({
+        currentMap: [
+          {
+            [NetworkMapFieldId.SourceNetwork]: { id: 'pod', name: 'Default network' },
+            [NetworkMapFieldId.TargetNetwork]: defaultTarget,
+          },
+        ],
+        defaultTarget,
+        fieldIds,
+        isLoading: false,
+        usedSources: [{ id: 'pod', name: 'Réseau par défaut' }],
+      });
+    });
+
+    expect(mockSetValue).not.toHaveBeenCalled();
+  });
 });

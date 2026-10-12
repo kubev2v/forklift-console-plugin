@@ -6,6 +6,7 @@ import type { MappingValue } from '@utils/types';
 
 import type { MappingFieldIds } from '../types';
 import { fillUnmappedSources } from '../utils/fillUnmappedSources';
+
 type UseInitializeMappingsParams<T extends Record<string, unknown>> = {
   currentMap: T[] | undefined;
   defaultTarget: MappingValue;
@@ -14,6 +15,8 @@ type UseInitializeMappingsParams<T extends Record<string, unknown>> = {
   isLoading: boolean;
   usedSources: MappingValue[];
 };
+
+const getSourceKey = (source: MappingValue): string | undefined => source.id ?? source.name;
 
 /**
  * Automatically creates mappings for unmapped sources by pairing them with default targets
@@ -30,7 +33,7 @@ export const useInitializeMappings = <T extends Record<string, unknown>>({
   const hasInitializedRef = useRef(false);
   const autoMappedSourcesRef = useRef(new Set<string>());
 
-  const mappedSourceNames = useMemo(() => {
+  const mappedSourceKeys = useMemo(() => {
     if (!currentMap?.length) {
       return new Set<string>();
     }
@@ -39,9 +42,9 @@ export const useInitializeMappings = <T extends Record<string, unknown>>({
       currentMap
         .map((mapping) => {
           const sourceField = mapping[fieldIds.sourceField] as MappingValue | undefined;
-          return sourceField?.name;
+          return sourceField ? getSourceKey(sourceField) : undefined;
         })
-        .filter((name): name is string => Boolean(name?.trim())),
+        .filter((key): key is string => Boolean(key?.trim())),
     );
   }, [currentMap, fieldIds.sourceField]);
 
@@ -53,10 +56,10 @@ export const useInitializeMappings = <T extends Record<string, unknown>>({
     return usedSources.filter(
       (source) =>
         source.name?.trim() &&
-        !mappedSourceNames.has(source.name) &&
-        !autoMappedSourcesRef.current.has(source.name),
+        !mappedSourceKeys.has(getSourceKey(source) ?? '') &&
+        !autoMappedSourcesRef.current.has(getSourceKey(source) ?? ''),
     );
-  }, [usedSources, mappedSourceNames]);
+  }, [usedSources, mappedSourceKeys]);
 
   const targetValue = useMemo(
     (): MappingValue => ({
@@ -107,8 +110,9 @@ export const useInitializeMappings = <T extends Record<string, unknown>>({
       }, 0);
 
       for (const source of unmappedSources) {
-        if (source.name) {
-          autoMappedSourcesRef.current.add(source.name);
+        const sourceKey = getSourceKey(source);
+        if (sourceKey) {
+          autoMappedSourcesRef.current.add(sourceKey);
         }
       }
     }
