@@ -1,6 +1,7 @@
 import { createElement, Fragment, useMemo } from 'react';
 
 import type { DataViewTh } from '@patternfly/react-data-view/dist/esm/DataViewTable/DataViewTable';
+import { useForkliftTranslation } from '@utils/i18n';
 
 import { useTableColumnWidthContext } from '../TableView/TableColumnWidthContext';
 import type { SortType } from '../TableView/types';
@@ -21,7 +22,9 @@ export const useForkliftDataViewColumns = ({
   setActiveSort,
   visibleColumns,
 }: UseForkliftDataViewColumnsArgs): DataViewTh[] => {
+  const { t } = useForkliftTranslation();
   const { getResizableProps } = useTableColumnWidthContext();
+  const actionScreenReaderText = t('Actions');
 
   return useMemo((): DataViewTh[] => {
     const spacer: DataViewTh = {
@@ -31,6 +34,7 @@ export const useForkliftDataViewColumns = ({
     const columns = visibleColumns.flatMap((field, columnIndex) => [
       ...(field.isAction ? [spacer] : []),
       toDataViewColumn({
+        actionScreenReaderText,
         activeSort,
         columnIndex,
         field,
@@ -44,5 +48,12 @@ export const useForkliftDataViewColumns = ({
       ...columns,
       ...(visibleColumns.some((field) => field.isAction) ? [] : [spacer]),
     ];
-  }, [activeSort, getResizableProps, leadingColumns, setActiveSort, visibleColumns]);
+  }, [
+    actionScreenReaderText,
+    activeSort,
+    getResizableProps,
+    leadingColumns,
+    setActiveSort,
+    visibleColumns,
+  ]);
 };

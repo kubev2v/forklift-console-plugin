@@ -47,6 +47,9 @@ export const useDefaultColumnLayout = ({
         setDefaultLayoutVersion((version) => version + 1);
       }
     };
+    if (typeof ResizeObserver === 'undefined') {
+      return undefined;
+    }
     const observer = new ResizeObserver(() => {
       if (table.dataset.columnWidthsCustomized === 'true') {
         return;

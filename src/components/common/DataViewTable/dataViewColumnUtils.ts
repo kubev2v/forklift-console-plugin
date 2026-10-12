@@ -8,9 +8,17 @@ import { buildSort } from '../TableView/sort';
 import type { SortType } from '../TableView/types';
 import type { ResourceField } from '../utils/types';
 
+import { FORKLIFT_DATA_VIEW_TABLE_STICKY_CELL_CLASS } from './forkliftDataViewTableClass';
 import { prepareColumnResize } from './prepareColumnResize';
 
 export const SELECTION_COLUMN_WIDTH = '45px';
+
+const withStickyCellClass = <T extends { className?: string }>(props: T): T => ({
+  ...props,
+  className: props.className
+    ? `${props.className} ${FORKLIFT_DATA_VIEW_TABLE_STICKY_CELL_CLASS}`
+    : FORKLIFT_DATA_VIEW_TABLE_STICKY_CELL_CLASS,
+});
 
 export const getColumnWidthSpacerProps = (): TdProps &
   ThProps & { 'data-column-width-spacer': true } => ({
@@ -19,32 +27,36 @@ export const getColumnWidthSpacerProps = (): TdProps &
   role: 'presentation',
 });
 
-const getActionHeaderProps = (): ThProps => ({
-  hasLeftBorder: true,
-  isStickyColumn: true,
-  stickyMinWidth: '0',
-});
+const getActionHeaderProps = (): ThProps =>
+  withStickyCellClass({
+    hasLeftBorder: true,
+    isStickyColumn: true,
+    stickyMinWidth: '0',
+  });
 
-export const getActionCellProps = (): TdProps => ({
-  hasLeftBorder: true,
-  isActionCell: true,
-  isStickyColumn: true,
-  stickyMinWidth: '0',
-});
+export const getActionCellProps = (): TdProps =>
+  withStickyCellClass({
+    hasLeftBorder: true,
+    isActionCell: true,
+    isStickyColumn: true,
+    stickyMinWidth: '0',
+  });
 
-export const getSelectionHeaderProps = (screenReaderText: string): ThProps => ({
-  isStickyColumn: true,
-  screenReaderText,
-  stickyLeftOffset: '0',
-  stickyMinWidth: SELECTION_COLUMN_WIDTH,
-  style: { maxWidth: SELECTION_COLUMN_WIDTH, width: SELECTION_COLUMN_WIDTH },
-});
+export const getSelectionHeaderProps = (screenReaderText: string): ThProps =>
+  withStickyCellClass({
+    isStickyColumn: true,
+    screenReaderText,
+    stickyLeftOffset: '0',
+    stickyMinWidth: SELECTION_COLUMN_WIDTH,
+    style: { maxWidth: SELECTION_COLUMN_WIDTH, width: SELECTION_COLUMN_WIDTH },
+  });
 
 export const getExpandHeaderProps = (screenReaderText: string): ThProps => ({
   screenReaderText,
 });
 
 type ToDataViewColumnArgs = {
+  actionScreenReaderText: string;
   activeSort: SortType;
   columnIndex: number;
   field: ResourceField;
@@ -54,6 +66,7 @@ type ToDataViewColumnArgs = {
 };
 
 export const toDataViewColumn = ({
+  actionScreenReaderText,
   activeSort,
   columnIndex,
   field,
@@ -97,7 +110,7 @@ export const toDataViewColumn = ({
     props: {
       ...headerProps,
       ...(field.testId ? { 'data-testid': field.testId } : {}),
-      ...(label ? {} : { screenReaderText: 'Actions' }),
+      ...(label ? {} : { screenReaderText: actionScreenReaderText }),
     } as ThProps,
     resizableProps,
   };

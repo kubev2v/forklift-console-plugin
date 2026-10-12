@@ -35,7 +35,8 @@
     display: none;
   }
 
-  .pf-v6-c-table__sticky-cell {
-    --pf-v6-c-table__sticky-cell--BackgroundColor: var(--pf-v6-c-table--BackgroundColor);
+  &__sticky-cell {
+    --forklift-data-view-table-sticky-cell-background: var(--pf-v6-c-table--BackgroundColor);
+    background-color: var(--forklift-data-view-table-sticky-cell-background);
   }
 }

@@ -7,6 +7,7 @@ import { V5_0_0 } from '../../utils/version/constants';
 import { requireVersion } from '../../utils/version/version';
 
 const LAYOUT_TOLERANCE_PX = 1;
+const MAX_COMPACT_ACTIONS_WIDTH_PX = 72;
 const VIEWPORT_HEIGHT = 1080;
 
 const getActionWidth = (table: Locator): Promise<number> =>
@@ -15,12 +16,14 @@ const getActionWidth = (table: Locator): Promise<number> =>
     .last()
     .evaluate((header) => header.getBoundingClientRect().width);
 
-const expectContentSizedActions = async (table: Locator, defaultWidth: number): Promise<void> => {
+const expectContentSizedActions = async (table: Locator): Promise<void> => {
   await expect(table.locator('thead th').last()).toHaveCSS(
     '--pf-v6-c-table__sticky-cell--MinWidth',
     '0',
   );
-  expect(await getActionWidth(table)).toBeLessThanOrEqual(defaultWidth + LAYOUT_TOLERANCE_PX);
+  expect(await getActionWidth(table)).toBeLessThanOrEqual(
+    MAX_COMPACT_ACTIONS_WIDTH_PX + LAYOUT_TOLERANCE_PX,
+  );
   await expect(table.locator('tbody tr').first().locator('td').last()).toHaveCSS(
     '--pf-v6-c-table__sticky-cell--MinWidth',
     '0',
@@ -49,8 +52,7 @@ test.describe('Column management and resizing', { tag: '@upstream' }, () => {
         await expect(table.locator('tbody').getByRole('link').first()).toBeVisible();
         await expectTableToFit(table);
         const headerCount = await table.locator('thead th').count();
-        const defaultActionWidth = await getActionWidth(table);
-        await expectContentSizedActions(table, defaultActionWidth);
+        await expectContentSizedActions(table);
         if (resource.kind === 'Plan') {
           await table.locator('tbody input[type="checkbox"]').first().check();
         }
@@ -67,7 +69,7 @@ test.describe('Column management and resizing', { tag: '@upstream' }, () => {
         await expect(modal).not.toBeVisible();
         expect(await initialTable?.evaluate((element) => element.isConnected)).toBe(false);
         await expectTableToFit(table);
-        await expectContentSizedActions(table, defaultActionWidth);
+        await expectContentSizedActions(table);
         const managedTable = await table.elementHandle();
         await page.getByRole('button', { exact: true, name: 'Reset column widths' }).click();
         expect(await managedTable?.evaluate((element) => element.isConnected)).toBe(true);
@@ -85,7 +87,7 @@ test.describe('Column management and resizing', { tag: '@upstream' }, () => {
         await expect(modal).not.toBeVisible();
         await expect(table.locator('thead th')).toHaveCount(headerCount);
         await expectTableToFit(table);
-        await expectContentSizedActions(table, defaultActionWidth);
+        await expectContentSizedActions(table);
         if (resource.kind === 'Plan') {
           await expect(table.locator('tbody input[type="checkbox"]').first()).toBeChecked();
         }

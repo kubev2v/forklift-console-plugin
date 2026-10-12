@@ -91,6 +91,34 @@ describe('useTableColumnWidths', () => {
     expect(result.current.hasCustomColumnWidths).toBe(false);
   });
 
+  it('syncs width overrides when persisted settings arrive after mount', () => {
+    const { result, rerender } = renderHook(
+      ({
+        columnWidthsSettings,
+      }: {
+        columnWidthsSettings?: {
+          clear: () => void;
+          data: Record<string, number>;
+          save: (widths: Record<string, number>) => void;
+        };
+      }) =>
+        useTableColumnWidths({
+          columnWidthsSettings,
+          enabled: true,
+          visibleColumns,
+        }),
+      { initialProps: { columnWidthsSettings: undefined } },
+    );
+
+    expect(result.current.getResizableProps(nameField, 'Name')).not.toHaveProperty('width');
+
+    rerender({
+      columnWidthsSettings: { clear: jest.fn(), data: { name: 180 }, save: jest.fn() },
+    });
+
+    expect(result.current.getResizableProps(nameField, 'Name')).toMatchObject({ width: 180 });
+  });
+
   it('does not resize actions or disabled tables', () => {
     const { result, rerender } = renderHook(
       ({ enabled }) => useTableColumnWidths({ enabled, visibleColumns }),

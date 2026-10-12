@@ -6,6 +6,7 @@ import {
   getSelectionHeaderProps,
   SELECTION_COLUMN_WIDTH,
 } from '@components/common/DataViewTable/dataViewColumnUtils';
+import { FORKLIFT_DATA_VIEW_TABLE_STICKY_CELL_CLASS } from '@components/common/DataViewTable/forkliftDataViewTableClass';
 import type {
   DataViewTd,
   DataViewTh,
@@ -64,6 +65,7 @@ export const useDataViewSelection = <T,>(): UseDataViewSelectionResult<T> => {
             ''
           ),
           props: {
+            className: FORKLIFT_DATA_VIEW_TABLE_STICKY_CELL_CLASS,
             'data-testid': `row-select-checkbox-${itemId || index}`,
             isStickyColumn: true,
             select: {

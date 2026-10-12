@@ -39,11 +39,12 @@ export const useTableColumnWidths = ({
     save: saveWidthsInSettings = (): void => undefined,
   } = columnWidthsSettings ?? {};
 
-  const [widthOverrides, setWidthOverrides] = useState(() =>
-    sanitizeColumnWidths(widthsFromSettings),
-  );
+  const persistedWidths = sanitizeColumnWidths(widthsFromSettings);
+  const [resizeOverrides, setResizeOverrides] = useState<Record<string, number> | null>(null);
+  const widthOverrides = resizeOverrides ?? persistedWidths;
   const [columnLayoutKey, setColumnLayoutKey] = useState(0);
   const widthOverridesRef = useRef(widthOverrides);
+  widthOverridesRef.current = widthOverrides;
 
   const persistWidth = useCallback(
     (columnId: string, width: number): void => {
@@ -51,9 +52,9 @@ export const useTableColumnWidths = ({
         return;
       }
       const next = { ...widthOverridesRef.current, [columnId]: width };
-      widthOverridesRef.current = next;
-      setWidthOverrides(next);
       saveWidthsInSettings(next);
+      widthOverridesRef.current = next;
+      setResizeOverrides(next);
     },
     [saveWidthsInSettings],
   );
@@ -89,9 +90,9 @@ export const useTableColumnWidths = ({
     if (isEmpty(widthOverridesRef.current)) {
       return;
     }
-    widthOverridesRef.current = {};
-    setWidthOverrides(widthOverridesRef.current);
     clearSettings();
+    widthOverridesRef.current = {};
+    setResizeOverrides({});
     setColumnLayoutKey((key) => key + 1);
   }, [clearSettings]);
 

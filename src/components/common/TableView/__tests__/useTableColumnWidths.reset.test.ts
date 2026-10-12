@@ -76,6 +76,27 @@ describe('column width reset', () => {
     expect(result.current.getResizableProps(nameField, 'Name')).not.toHaveProperty('width');
   });
 
+  it('keeps overrides when persistence clear fails', () => {
+    const clear = jest.fn((): void => {
+      throw new Error('storage failed');
+    });
+    const { result } = renderHook(() =>
+      useTableColumnWidths({
+        columnWidthsSettings: { clear, data: { name: 100 }, save: jest.fn() },
+        enabled: true,
+        visibleColumns,
+      }),
+    );
+
+    expect(() => {
+      act(() => {
+        result.current.resetAllColumnWidths();
+      });
+    }).toThrow('storage failed');
+    expect(result.current.getResizableProps(nameField, 'Name')).toMatchObject({ width: 100 });
+    expect(result.current.columnLayoutKey).toBe(0);
+  });
+
   it('keeps the reset handler stable and responsive to later resizes', () => {
     const { clear, result } = renderWidths();
     const reset = result.current.resetAllColumnWidths;
