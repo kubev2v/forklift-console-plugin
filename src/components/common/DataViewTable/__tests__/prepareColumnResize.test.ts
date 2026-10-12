@@ -53,6 +53,8 @@ describe('prepareColumnResize', () => {
 
       expect(headers.map((header) => header.style.minWidth)).toEqual(['112px', '106px', '198px']);
       expect(headers[0].closest('table')?.dataset.columnWidthsCustomized).toBe('true');
+      expect(headers[0].dataset.columnWidthFixed).toBe('true');
+      expect(headers[1].dataset.columnWidthFixed).toBeUndefined();
     },
   );
 
@@ -104,6 +106,7 @@ describe('prepareColumnResize', () => {
 
     expect(headers.map((header) => header.style.minWidth)).toEqual(['100px', '100px', '100px']);
     expect(headers[0].closest('table')?.dataset.columnWidthsCustomized).toBe('false');
+    expect(headers[0].dataset.columnWidthFixed).toBeUndefined();
     for (const header of headers) {
       expect(jest.spyOn(header, 'getBoundingClientRect')).not.toHaveBeenCalled();
     }

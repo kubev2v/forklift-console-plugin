@@ -2,6 +2,7 @@ import type { FC } from 'react';
 
 import { Td, type TdProps } from '@patternfly/react-table';
 
+import ColumnWidthSpacer from '../DataViewTable/ColumnWidthSpacer';
 import { useDataViewCellScope } from '../DataViewTable/DataViewCellScope';
 import { getActionCellProps } from '../DataViewTable/dataViewColumnUtils';
 import type { ResourceField } from '../utils/types';
@@ -33,15 +34,22 @@ const ResizableTd: FC<ResizableTdProps> = ({
     resourceFields?.some((field) => field.resourceFieldId === columnId && field.isAction),
   );
 
+  const isLastColumn = resourceFields?.[resourceFields.length - 1]?.resourceFieldId === columnId;
+  const hasActions = resourceFields?.some((field) => field.isAction);
+
   return (
-    <Td
-      className={className}
-      data-column-id={columnId ?? undefined}
-      {...(isAction ? getActionCellProps() : { modifier: enabled ? 'truncate' : 'nowrap' })}
-      {...rest}
-    >
-      {children}
-    </Td>
+    <>
+      {enabled && isAction && <ColumnWidthSpacer />}
+      <Td
+        className={className}
+        data-column-id={columnId ?? undefined}
+        {...(isAction ? getActionCellProps() : { modifier: enabled ? 'truncate' : 'nowrap' })}
+        {...rest}
+      >
+        {children}
+      </Td>
+      {enabled && !hasActions && isLastColumn && <ColumnWidthSpacer />}
+    </>
   );
 };
 

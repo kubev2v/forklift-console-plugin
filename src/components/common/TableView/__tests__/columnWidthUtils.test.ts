@@ -1,19 +1,26 @@
 import type { ResourceField } from '@components/common/utils/types';
 
 import {
-  clampColumnWidth,
   getMinWidthForField,
   getTableColumnLayoutKey,
   isResizableField,
+  isValidColumnWidth,
   sanitizeColumnWidths,
 } from '../columnWidthUtils';
 
 describe('columnWidthUtils', () => {
   it('sanitizes column width records', () => {
-    expect(sanitizeColumnWidths({ bad: 'x', count: 3, name: 120 })).toEqual({
-      count: 3,
-      name: 120,
-    });
+    expect(
+      sanitizeColumnWidths({
+        bad: 'x',
+        infinite: Infinity,
+        name: 624.125,
+        negative: -1,
+        notANumber: NaN,
+        small: 79.125,
+        zero: 0,
+      }),
+    ).toEqual({ name: 624.125, small: 79.125 });
   });
 
   it('uses the resize minimum for data fields', () => {
@@ -44,9 +51,14 @@ describe('columnWidthUtils', () => {
     expect(getTableColumnLayoutKey(0, [status, name])).not.toBe(key);
   });
 
-  it('clamps widths to the min and max', () => {
-    expect(clampColumnWidth(40, 100)).toBe(100);
-    expect(clampColumnWidth(900, 100)).toBe(480);
-    expect(clampColumnWidth(180, 100)).toBe(180);
+  it.each([79.125, 100, 624.125, 1200])('accepts a finite positive %spx width', (width) => {
+    expect(isValidColumnWidth(width)).toBe(true);
   });
+
+  it.each([undefined, null, '180', {}, 0, -1, NaN, Infinity])(
+    'rejects an invalid width: %s',
+    (width) => {
+      expect(isValidColumnWidth(width)).toBe(false);
+    },
+  );
 });

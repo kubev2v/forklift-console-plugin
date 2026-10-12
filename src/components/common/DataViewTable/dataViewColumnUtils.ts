@@ -12,6 +12,13 @@ import { prepareColumnResize } from './prepareColumnResize';
 
 export const SELECTION_COLUMN_WIDTH = '45px';
 
+export const getColumnWidthSpacerProps = (): TdProps &
+  ThProps & { 'data-column-width-spacer': true } => ({
+  'aria-hidden': true,
+  'data-column-width-spacer': true,
+  role: 'presentation',
+});
+
 const getActionHeaderProps = (): ThProps => ({
   hasLeftBorder: true,
   isStickyColumn: true,
@@ -62,6 +69,7 @@ export const toDataViewColumn = ({
     info: field.info,
     ...(resizableProps?.isResizable
       ? {
+          'data-column-width-fixed': resizableProps.width !== undefined,
           'data-resizable-column': true,
           onKeyDownCapture: (event): void => {
             prepareColumnResize(event, resizableProps.resizeButtonAriaLabel);

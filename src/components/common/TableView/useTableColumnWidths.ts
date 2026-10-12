@@ -6,8 +6,12 @@ import { isEmpty } from '@utils/helpers';
 import type { ColumnWidthsSettings } from '../Page/types';
 import type { ResourceField } from '../utils/types';
 
-import { DEFAULT_COLUMN_MIN_WIDTH_PX } from './columnWidthConstants';
-import { clampColumnWidth, getMinWidthForField, isResizableField } from './columnWidthUtils';
+import {
+  getMinWidthForField,
+  isResizableField,
+  isValidColumnWidth,
+  sanitizeColumnWidths,
+} from './columnWidthUtils';
 
 type UseTableColumnWidthsArgs = {
   columnWidthsSettings?: ColumnWidthsSettings;
@@ -25,20 +29,9 @@ type UseTableColumnWidthsResult = {
   resetAllColumnWidths: () => void;
 };
 
-const getPersistedWidth = (
-  savedWidth: number | undefined,
-  minWidth: number,
-): number | undefined => {
-  if (savedWidth === undefined) {
-    return undefined;
-  }
-  return clampColumnWidth(savedWidth, minWidth);
-};
-
 export const useTableColumnWidths = ({
   columnWidthsSettings,
   enabled,
-  visibleColumns,
 }: UseTableColumnWidthsArgs): UseTableColumnWidthsResult => {
   const {
     clear: clearSettings = (): void => undefined,
@@ -46,21 +39,23 @@ export const useTableColumnWidths = ({
     save: saveWidthsInSettings = (): void => undefined,
   } = columnWidthsSettings ?? {};
 
-  const [widthOverrides, setWidthOverrides] = useState<Record<string, number>>(widthsFromSettings);
+  const [widthOverrides, setWidthOverrides] = useState(() =>
+    sanitizeColumnWidths(widthsFromSettings),
+  );
   const [columnLayoutKey, setColumnLayoutKey] = useState(0);
-  const widthOverridesRef = useRef(widthsFromSettings);
+  const widthOverridesRef = useRef(widthOverrides);
 
   const persistWidth = useCallback(
     (columnId: string, width: number): void => {
-      const field = visibleColumns.find((col) => col.resourceFieldId === columnId);
-      const minWidth = field ? getMinWidthForField(field) : DEFAULT_COLUMN_MIN_WIDTH_PX;
-      const clamped = clampColumnWidth(width, minWidth);
-      const next = { ...widthOverridesRef.current, [columnId]: clamped };
+      if (!isValidColumnWidth(width)) {
+        return;
+      }
+      const next = { ...widthOverridesRef.current, [columnId]: width };
       widthOverridesRef.current = next;
       setWidthOverrides(next);
       saveWidthsInSettings(next);
     },
-    [saveWidthsInSettings, visibleColumns],
+    [saveWidthsInSettings],
   );
   const persistWidthRef = useRef(persistWidth);
   persistWidthRef.current = persistWidth;
@@ -72,7 +67,7 @@ export const useTableColumnWidths = ({
       }
       const columnId = field.resourceFieldId;
       const minWidth = getMinWidthForField(field);
-      const persistedWidth = getPersistedWidth(widthOverrides[columnId], minWidth);
+      const persistedWidth = widthOverrides[columnId];
       const label = columnLabel ?? columnId;
 
       return {

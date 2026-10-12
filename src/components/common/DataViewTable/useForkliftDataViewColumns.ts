@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { createElement, Fragment, useMemo } from 'react';
 
 import type { DataViewTh } from '@patternfly/react-data-view/dist/esm/DataViewTable/DataViewTable';
 
@@ -6,7 +6,7 @@ import { useTableColumnWidthContext } from '../TableView/TableColumnWidthContext
 import type { SortType } from '../TableView/types';
 import type { ResourceField } from '../utils/types';
 
-import { toDataViewColumn } from './dataViewColumnUtils';
+import { getColumnWidthSpacerProps, toDataViewColumn } from './dataViewColumnUtils';
 
 type UseForkliftDataViewColumnsArgs = {
   activeSort: SortType;
@@ -23,20 +23,26 @@ export const useForkliftDataViewColumns = ({
 }: UseForkliftDataViewColumnsArgs): DataViewTh[] => {
   const { getResizableProps } = useTableColumnWidthContext();
 
-  return useMemo(
-    () => [
+  return useMemo((): DataViewTh[] => {
+    const spacer: DataViewTh = {
+      cell: createElement(Fragment),
+      props: getColumnWidthSpacerProps(),
+    };
+    const columns = visibleColumns.flatMap((field, columnIndex) => [
+      ...(field.isAction ? [spacer] : []),
+      toDataViewColumn({
+        activeSort,
+        columnIndex,
+        field,
+        resizableProps: getResizableProps(field, field.label),
+        setActiveSort,
+        visibleColumns,
+      }),
+    ]);
+    return [
       ...leadingColumns,
-      ...visibleColumns.map((field, columnIndex) =>
-        toDataViewColumn({
-          activeSort,
-          columnIndex,
-          field,
-          resizableProps: getResizableProps(field, field.label),
-          setActiveSort,
-          visibleColumns,
-        }),
-      ),
-    ],
-    [activeSort, getResizableProps, leadingColumns, setActiveSort, visibleColumns],
-  );
+      ...columns,
+      ...(visibleColumns.some((field) => field.isAction) ? [] : [spacer]),
+    ];
+  }, [activeSort, getResizableProps, leadingColumns, setActiveSort, visibleColumns]);
 };

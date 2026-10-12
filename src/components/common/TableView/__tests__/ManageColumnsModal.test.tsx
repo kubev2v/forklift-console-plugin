@@ -61,12 +61,34 @@ describe('ManageColumnsModal width reset', () => {
     expect(onClose).toHaveBeenCalledTimes(1);
   });
 
-  it('resets widths when saving changed visibility', async () => {
-    const { onResetColumnWidths, user } = renderModal();
-    await user.click(screen.getByRole('checkbox', { name: 'Status' }));
-    await user.click(screen.getByRole('button', { name: 'Save' }));
+  it.each([true, false])(
+    'preserves saved widths when toggling a column initially visible: %s',
+    async (isVisible) => {
+      const columns = defaultColumns.map((field) =>
+        field.resourceFieldId === 'status' ? { ...field, isVisible } : field,
+      );
+      const { onChange, onClose, onResetColumnWidths, user } = renderModal(columns);
+      await user.click(screen.getByRole('checkbox', { name: 'Status' }));
+      await user.click(screen.getByRole('button', { name: 'Save' }));
 
-    expect(onResetColumnWidths).toHaveBeenCalledTimes(1);
+      expect(onChange).toHaveBeenCalledWith(
+        columns.map((field) =>
+          field.resourceFieldId === 'status' ? { ...field, isVisible: !isVisible } : field,
+        ),
+      );
+      expect(onResetColumnWidths).not.toHaveBeenCalled();
+      expect(onClose).toHaveBeenCalledTimes(1);
+    },
+  );
+
+  it('does not change columns or widths when visibility changes are canceled', async () => {
+    const { onChange, onClose, onResetColumnWidths, user } = renderModal();
+    await user.click(screen.getByRole('checkbox', { name: 'Status' }));
+    await user.click(screen.getByRole('button', { name: 'Cancel' }));
+
+    expect(onChange).not.toHaveBeenCalled();
+    expect(onResetColumnWidths).not.toHaveBeenCalled();
+    expect(onClose).toHaveBeenCalledTimes(1);
   });
 
   it('preserves saved widths when reordering columns', async () => {

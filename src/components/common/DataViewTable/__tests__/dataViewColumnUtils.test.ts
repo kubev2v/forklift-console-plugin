@@ -36,7 +36,11 @@ describe('dataViewColumnUtils', () => {
     expect(column).toEqual(
       expect.objectContaining({
         cell: 'Name',
-        props: expect.objectContaining({ 'data-resizable-column': true, id: 'name' }),
+        props: expect.objectContaining({
+          'data-column-width-fixed': true,
+          'data-resizable-column': true,
+          id: 'name',
+        }),
         resizableProps: expect.objectContaining({ isResizable: true, width: 240 }),
       }),
     );
@@ -44,6 +48,19 @@ describe('dataViewColumnUtils', () => {
       expect(column.props).not.toHaveProperty('style');
       expect(column.props).not.toHaveProperty('modifier');
     }
+  });
+
+  it('leaves unsaved headers flexible until a resize starts', () => {
+    const column = toDataViewColumn({
+      activeSort,
+      columnIndex: 0,
+      field: nameField,
+      resizableProps: { isResizable: true, minWidth: 100, resizeButtonAriaLabel: 'Name' },
+      setActiveSort: () => undefined,
+      visibleColumns: [nameField],
+    });
+
+    expect(column).toMatchObject({ props: { 'data-column-width-fixed': false } });
   });
 
   it('keeps action columns sticky and not resizable', () => {

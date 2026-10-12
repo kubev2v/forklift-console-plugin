@@ -8,7 +8,7 @@ import type {
 import type { RowProps } from '../TableView/types';
 import type { ResourceField } from '../utils/types';
 
-import { getBodyCellProps } from './dataViewColumnUtils';
+import { getBodyCellProps, getColumnWidthSpacerProps } from './dataViewColumnUtils';
 import ScopedDataViewCell from './ScopedDataViewCell';
 
 type UseForkliftDataViewRowsArgs<T> = {
@@ -32,6 +32,9 @@ export const useForkliftDataViewRows = <T,>({
         const dataCells: DataViewTd[] = visibleColumns.reduce<DataViewTd[]>((cells, field) => {
           const columnId = field.resourceFieldId;
           if (columnId) {
+            if (field.isAction) {
+              cells.push({ cell: null, props: getColumnWidthSpacerProps() });
+            }
             const rowProps: RowProps<T> = {
               namespace,
               resourceData,
@@ -51,7 +54,13 @@ export const useForkliftDataViewRows = <T,>({
           }
           return cells;
         }, []);
-        return [...(getLeadingCells?.(resourceData, resourceIndex) ?? []), ...dataCells];
+        return [
+          ...(getLeadingCells?.(resourceData, resourceIndex) ?? []),
+          ...dataCells,
+          ...(visibleColumns.some((field) => field.isAction)
+            ? []
+            : [{ cell: null, props: getColumnWidthSpacerProps() }]),
+        ];
       }),
     [entities, getLeadingCells, namespace, RowComponent, visibleColumns],
   );
