@@ -1,20 +1,19 @@
 import type { ResourceField } from '../utils/types';
 
-import {
-  ACTION_COLUMN_WIDTH_PX,
-  DEFAULT_COLUMN_MAX_WIDTH_PX,
-  DEFAULT_COLUMN_MIN_WIDTH_PX,
-} from './columnWidthConstants';
+import { DEFAULT_COLUMN_MAX_WIDTH_PX, DEFAULT_COLUMN_MIN_WIDTH_PX } from './columnWidthConstants';
 
 export const isResizableField = (field: ResourceField): boolean =>
   !field.isAction && Boolean(field.resourceFieldId);
 
 export const getMinWidthForField = (field: ResourceField): number => {
   if (field.isAction) {
-    return ACTION_COLUMN_WIDTH_PX;
+    return 0;
   }
   return DEFAULT_COLUMN_MIN_WIDTH_PX;
 };
+
+export const getTableColumnLayoutKey = (resetVersion: number, columns: ResourceField[]): string =>
+  JSON.stringify([resetVersion, columns.map(({ resourceFieldId }) => resourceFieldId)]);
 
 export const clampColumnWidth = (width: number, minWidth: number): number =>
   Math.min(DEFAULT_COLUMN_MAX_WIDTH_PX, Math.max(minWidth, width));

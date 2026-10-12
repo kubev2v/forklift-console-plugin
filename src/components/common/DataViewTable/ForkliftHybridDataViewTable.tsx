@@ -5,6 +5,7 @@ import { DataViewTableHead } from '@patternfly/react-data-view';
 import type { DataViewTh } from '@patternfly/react-data-view/dist/esm/DataViewTable/DataViewTable';
 import { InnerScrollContainer, Table, Tbody, Td, Tr } from '@patternfly/react-table';
 
+import { getTableColumnLayoutKey } from '../TableView/columnWidthUtils';
 import { useTableColumnWidthContext } from '../TableView/TableColumnWidthContext';
 import type { RowProps, SortType } from '../TableView/types';
 import { UID } from '../utils/constants';
@@ -59,7 +60,7 @@ const ForkliftHybridDataViewTable = <T,>({
         aria-label={ariaLabel}
         className={FORKLIFT_DATA_VIEW_TABLE_CLASS}
         isStickyHeader
-        key={columnLayoutKey}
+        key={getTableColumnLayoutKey(columnLayoutKey, visibleColumns)}
         variant="compact"
       >
         <DataViewTableHead columns={columns} hasResizableColumns />

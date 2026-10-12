@@ -7,6 +7,7 @@ const createHeaders = (): HTMLTableCellElement[] => {
   return [112, 106, 198].map((width) => {
     const header = document.createElement('th');
     header.style.minWidth = '100px';
+    header.setAttribute('data-resizable-column', 'true');
     jest.spyOn(header, 'getBoundingClientRect').mockImplementation(() => {
       // All reads must precede writes, or later measurements include redistributed space.
       expect(row.firstElementChild?.getAttribute('style')).toBe('min-width: 100px;');
@@ -49,6 +50,31 @@ describe('prepareColumnResize', () => {
       expect(headers.map((header) => header.style.minWidth)).toEqual(['112px', '106px', '198px']);
     },
   );
+
+  it('does not freeze the widths of selection or action columns', () => {
+    const headers = createHeaders();
+    const row = headers[0].parentElement;
+    const controls = ['45px', '0px'].map((minWidth) => {
+      const header = document.createElement('th');
+      header.style.minWidth = minWidth;
+      row?.append(header);
+      jest.spyOn(header, 'getBoundingClientRect');
+      return header;
+    });
+
+    prepareColumnResize(
+      {
+        currentTarget: headers[0],
+        target: createButton(headers[0], 'Name'),
+      } as unknown as MouseEvent<HTMLTableCellElement>,
+      'Name',
+    );
+
+    expect(controls.map((header) => header.style.minWidth)).toEqual(['45px', '0px']);
+    for (const header of controls) {
+      expect(jest.spyOn(header, 'getBoundingClientRect')).not.toHaveBeenCalled();
+    }
+  });
 
   it('ignores sorting, info buttons and other keyboard events', () => {
     const headers = createHeaders();

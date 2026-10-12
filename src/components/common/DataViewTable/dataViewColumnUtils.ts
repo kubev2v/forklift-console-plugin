@@ -4,7 +4,6 @@ import type { DataViewTh } from '@patternfly/react-data-view/dist/esm/DataViewTa
 import type { DataViewThResizableProps } from '@patternfly/react-data-view/dist/esm/DataViewTh/DataViewTh';
 import type { TdProps, ThProps } from '@patternfly/react-table';
 
-import { ACTION_COLUMN_WIDTH_PX } from '../TableView/columnWidthConstants';
 import { buildSort } from '../TableView/sort';
 import type { SortType } from '../TableView/types';
 import type { ResourceField } from '../utils/types';
@@ -13,20 +12,17 @@ import { prepareColumnResize } from './prepareColumnResize';
 
 export const SELECTION_COLUMN_WIDTH = '45px';
 
-const actionColumnWidth = `${ACTION_COLUMN_WIDTH_PX}px`;
-
 const getActionHeaderProps = (): ThProps => ({
   hasLeftBorder: true,
   isStickyColumn: true,
-  stickyMinWidth: actionColumnWidth,
-  style: { width: actionColumnWidth },
+  stickyMinWidth: '0',
 });
 
 export const getActionCellProps = (): TdProps => ({
   hasLeftBorder: true,
   isActionCell: true,
   isStickyColumn: true,
-  stickyMinWidth: actionColumnWidth,
+  stickyMinWidth: '0',
 });
 
 export const getSelectionHeaderProps = (screenReaderText: string): ThProps => ({
@@ -66,6 +62,7 @@ export const toDataViewColumn = ({
     info: field.info,
     ...(resizableProps?.isResizable
       ? {
+          'data-resizable-column': true,
           onKeyDownCapture: (event): void => {
             prepareColumnResize(event, resizableProps.resizeButtonAriaLabel);
           },

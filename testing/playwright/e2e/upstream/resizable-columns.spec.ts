@@ -48,6 +48,12 @@ const expectSmoothGrowth = async (page: Page, name: Locator, project: Locator): 
   expect(Math.abs((await getWidth(name)) - widthBeforeRelease)).toBeLessThan(LAYOUT_TOLERANCE_PX);
 };
 
+const expectResetToPreserveTable = async (page: Page, table: Locator): Promise<void> => {
+  const defaultTable = await table.elementHandle();
+  await page.getByRole('button', { exact: true, name: 'Reset column widths' }).click();
+  expect(await defaultTable?.evaluate((element) => element.isConnected)).toBe(true);
+};
+
 test.describe('Resizable list columns', { tag: '@upstream' }, () => {
   requireVersion(test, V5_0_0);
 
@@ -68,6 +74,7 @@ test.describe('Resizable list columns', { tag: '@upstream' }, () => {
         await page.goto(`/k8s/all-namespaces/forklift.konveyor.io~v1beta1~${resource.kind}`);
         const table = page.getByRole('grid', { exact: true, name: resource.title });
         await expect(table.locator('tbody').getByRole('link').first()).toBeVisible();
+        await expectResetToPreserveTable(page, table);
         const name = table.locator('th#name');
         const { x, y } = await startResize(page, name);
         await page.mouse.move(x + SMALL_DRAG_PX * 10, y);
@@ -89,6 +96,7 @@ test.describe('Resizable list columns', { tag: '@upstream' }, () => {
             }),
           )
           .toBe(true);
+        await expectResetToPreserveTable(page, table);
       });
     }
   }

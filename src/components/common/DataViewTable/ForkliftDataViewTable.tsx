@@ -7,6 +7,7 @@ import type {
   DataViewTh,
 } from '@patternfly/react-data-view/dist/esm/DataViewTable/DataViewTable';
 
+import { getTableColumnLayoutKey } from '../TableView/columnWidthUtils';
 import { useTableColumnWidthContext } from '../TableView/TableColumnWidthContext';
 import type { RowProps, SortType } from '../TableView/types';
 import type { ResourceField } from '../utils/types';
@@ -77,7 +78,7 @@ const ForkliftDataViewTable = <T,>({
       gridBreakPoint=""
       isResizable
       isStickyHeader
-      key={columnLayoutKey}
+      key={getTableColumnLayoutKey(columnLayoutKey, visibleColumns)}
       rows={rows}
       variant="compact"
     />

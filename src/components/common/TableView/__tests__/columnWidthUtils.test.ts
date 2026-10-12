@@ -3,6 +3,7 @@ import type { ResourceField } from '@components/common/utils/types';
 import {
   clampColumnWidth,
   getMinWidthForField,
+  getTableColumnLayoutKey,
   isResizableField,
   sanitizeColumnWidths,
 } from '../columnWidthUtils';
@@ -26,10 +27,21 @@ describe('columnWidthUtils', () => {
     );
   });
 
-  it('uses a fixed width for action fields', () => {
+  it('lets action controls determine their width without a fixed minimum', () => {
     expect(
       getMinWidthForField({ isAction: true, label: 'Actions', resourceFieldId: 'actions' }),
-    ).toBe(72);
+    ).toBe(0);
+  });
+
+  it('changes the layout key for resets, visibility changes and reordering, not new field objects', () => {
+    const name: ResourceField = { label: 'Name', resourceFieldId: 'name' };
+    const status: ResourceField = { label: 'Status', resourceFieldId: 'status' };
+    const key = getTableColumnLayoutKey(0, [name, status]);
+
+    expect(getTableColumnLayoutKey(0, [{ ...name }, { ...status }])).toBe(key);
+    expect(getTableColumnLayoutKey(1, [name, status])).not.toBe(key);
+    expect(getTableColumnLayoutKey(0, [name])).not.toBe(key);
+    expect(getTableColumnLayoutKey(0, [status, name])).not.toBe(key);
   });
 
   it('clamps widths to the min and max', () => {

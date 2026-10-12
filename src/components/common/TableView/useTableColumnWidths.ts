@@ -1,6 +1,7 @@
 import { useCallback, useRef, useState } from 'react';
 
 import type { DataViewThResizableProps } from '@patternfly/react-data-view/dist/esm/DataViewTh/DataViewTh';
+import { isEmpty } from '@utils/helpers';
 
 import type { ColumnWidthsSettings } from '../Page/types';
 import type { ResourceField } from '../utils/types';
@@ -46,17 +47,17 @@ export const useTableColumnWidths = ({
 
   const [widthOverrides, setWidthOverrides] = useState<Record<string, number>>(widthsFromSettings);
   const [columnLayoutKey, setColumnLayoutKey] = useState(0);
+  const widthOverridesRef = useRef(widthsFromSettings);
 
   const persistWidth = useCallback(
     (columnId: string, width: number): void => {
       const field = visibleColumns.find((col) => col.resourceFieldId === columnId);
       const minWidth = field ? getMinWidthForField(field) : DEFAULT_COLUMN_MIN_WIDTH_PX;
       const clamped = clampColumnWidth(width, minWidth);
-      setWidthOverrides((prev) => {
-        const next = { ...prev, [columnId]: clamped };
-        saveWidthsInSettings(next);
-        return next;
-      });
+      const next = { ...widthOverridesRef.current, [columnId]: clamped };
+      widthOverridesRef.current = next;
+      setWidthOverrides(next);
+      saveWidthsInSettings(next);
     },
     [saveWidthsInSettings, visibleColumns],
   );
@@ -89,7 +90,11 @@ export const useTableColumnWidths = ({
   );
 
   const resetAllColumnWidths = useCallback((): void => {
-    setWidthOverrides({});
+    if (isEmpty(widthOverridesRef.current)) {
+      return;
+    }
+    widthOverridesRef.current = {};
+    setWidthOverrides(widthOverridesRef.current);
     clearSettings();
     setColumnLayoutKey((key) => key + 1);
   }, [clearSettings]);

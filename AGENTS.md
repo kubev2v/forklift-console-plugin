@@ -692,9 +692,11 @@ const [data, loaded, error] = useK8sWatchResource<Resource>({
 ### Resizable Tables
 - Enable resizing through `StandardPage`'s `resizableColumns` prop; reuse the shared DataView adapters.
 - Let `DataViewTh` measure unsaved widths and resize via `min-width`. Do not impose data-header `style.width`, reference-table pixel defaults, or `nowrap` modifiers that prevent shrinking.
-- Keep saved minimum widths as user overrides; only explicit reset should clear them.
-- Keep the `prepareColumnResize` capture handlers: browser auto-layout can redistribute spare space after shrinking, so rendered header widths must be measured together before rebasing their minimums for the next resize.
-- Use truncation for resizable data cells, but preserve sticky selection/actions cells and their controls.
+- Keep saved minimum widths as user overrides. Repeated width resets must be no-ops once overrides are cleared, including batched calls and callbacks retained from earlier renders.
+- Include visible column IDs and their order in the table layout key: PatternFly caches header widths by position, so column management must invalidate layout even without saved widths. Reordering should preserve widths by column ID.
+- Stage "Restore default columns" until Save; Cancel must not clear widths or change the table behind the modal.
+- Keep the `prepareColumnResize` capture handlers: browser auto-layout can redistribute spare space after shrinking, so resizable header widths must be measured together before rebasing their minimums. Mark these headers with `data-resizable-column`; do not freeze selection/actions widths.
+- Use truncation for resizable data cells, but preserve sticky selection/actions cells and their controls. Actions should use Console's content-sized layout with `stickyMinWidth: '0'`, not fixed pixel widths.
 
 ### Actions Dropdown Convention
 Action dropdowns use `isDetailsPage` (not `isKebab`) to control behavior by context:

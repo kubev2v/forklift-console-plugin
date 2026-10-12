@@ -19,9 +19,11 @@ export const prepareColumnResize = (event: ColumnResizeEvent, resizeButtonLabel?
   }
 
   const headers = Array.from(
-    event.currentTarget.parentElement?.querySelectorAll<HTMLTableCellElement>('th') ?? [],
+    event.currentTarget.parentElement?.querySelectorAll<HTMLTableCellElement>(
+      'th[data-resizable-column="true"]',
+    ) ?? [],
   );
-  // Auto layout redistributes spare space after shrinking. Rebase all minimums before
+  // Auto layout redistributes spare space after shrinking. Rebase resizable minimums before
   // PatternFly calculates the drag offset so the first move does not add that space twice.
   const widths = headers.map((header) => header.getBoundingClientRect().width);
   for (const [index, header] of headers.entries()) {

@@ -36,7 +36,7 @@ describe('dataViewColumnUtils', () => {
     expect(column).toEqual(
       expect.objectContaining({
         cell: 'Name',
-        props: expect.objectContaining({ id: 'name' }),
+        props: expect.objectContaining({ 'data-resizable-column': true, id: 'name' }),
         resizableProps: expect.objectContaining({ isResizable: true, width: 240 }),
       }),
     );
@@ -57,12 +57,20 @@ describe('dataViewColumnUtils', () => {
 
     expect(column).toEqual(
       expect.objectContaining({
-        props: expect.objectContaining({ hasLeftBorder: true, isStickyColumn: true }),
+        props: expect.objectContaining({
+          hasLeftBorder: true,
+          isStickyColumn: true,
+          stickyMinWidth: '0',
+        }),
         resizableProps: undefined,
       }),
     );
+    if (typeof column === 'object' && column && 'props' in column) {
+      expect(column.props).not.toHaveProperty('style');
+      expect(column.props).not.toHaveProperty('data-resizable-column');
+    }
     expect(getActionCellProps()).toEqual(
-      expect.objectContaining({ isActionCell: true, isStickyColumn: true }),
+      expect.objectContaining({ isActionCell: true, isStickyColumn: true, stickyMinWidth: '0' }),
     );
     expect(getBodyCellProps(actionField)).toEqual(expect.objectContaining({ isActionCell: true }));
     expect(getBodyCellProps(nameField)).toEqual(
