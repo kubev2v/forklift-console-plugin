@@ -142,7 +142,8 @@ export class PlansListPage {
       this.page
         .getByTestId('plans-list')
         .or(this.page.getByRole('table', { name: 'Migration plans' }))
-        .or(this.page.getByRole('grid', { name: 'Migration plans' })),
+        .or(this.page.getByRole('grid', { name: 'Migration plans' }))
+        .first(),
     ).toBeVisible();
     await this.table.waitForTableLoad();
   }
