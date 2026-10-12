@@ -26,7 +26,7 @@ test.describe('Storage Offloading - Secret Filtering', { tag: '@downstream' }, (
 
     // 1. Create an Opaque secret
     const opaqueSecretName = `opaque-secret-${Math.random().toString(36).substring(7)}`;
-    await createSecret(
+    const opaqueSecret = await createSecret(
       {
         apiVersion: 'v1',
         kind: 'Secret',
@@ -36,6 +36,9 @@ test.describe('Storage Offloading - Secret Filtering', { tag: '@downstream' }, (
       },
       MTV_NAMESPACE,
     );
+    if (opaqueSecret === null) {
+      throw new Error('Failed to create Opaque secret for offload filter test');
+    }
     resourceManager.addSecret(opaqueSecretName, MTV_NAMESPACE);
 
     // 2. Create a non-Opaque secret
@@ -64,7 +67,11 @@ test.describe('Storage Offloading - Secret Filtering', { tag: '@downstream' }, (
     await test.step('Fill form: name, project, providers', async () => {
       await createPage.fillMapName(`filter-test-sm-${Math.random().toString(36).substring(7)}`);
       await createPage.selectProject(MTV_NAMESPACE);
-      await createPage.selectSourceProvider(getName(testProvider));
+      const providerName = getName(testProvider);
+      if (providerName === undefined) {
+        throw new Error('testProvider name is required');
+      }
+      await createPage.selectSourceProvider(providerName);
       await createPage.selectTargetProvider('host');
       await createPage.waitForMappingTableReady();
     });

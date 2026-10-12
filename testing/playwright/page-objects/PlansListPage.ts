@@ -40,6 +40,7 @@ export class PlansListPage {
     await this.page
       .getByTestId(`plan-link-${planName}`)
       .or(this.page.getByRole('link', { exact: true, name: planName }))
+      .first()
       .click();
   }
 
@@ -102,7 +103,8 @@ export class PlansListPage {
     // Main: name-search-input (FreetextFilter testId). 2.12.z: unlabeled PF Search input.
     const searchInput = this.page
       .getByTestId('name-search-input')
-      .or(this.page.getByRole('textbox', { name: 'Search input' }));
+      .or(this.page.getByRole('textbox', { name: 'Search input' }))
+      .first();
     await searchInput.fill(planName);
     await searchInput.press('Enter');
   }
