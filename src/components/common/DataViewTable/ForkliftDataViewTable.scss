@@ -1,6 +1,25 @@
+.forklift-data-view-table-layout {
+  min-width: 0;
+  width: 100%;
+}
+
 // DataViewTable body cells are transparent; PF sticky cells paint an opaque background by default.
 .forklift-data-view-table {
+  --pf-v6-c-table--m-truncate--cell--MinWidth: 0;
+  --pf-v6-c-table__text--m-truncate--MinWidth: 0;
+
   background-color: var(--pf-v6-c-table--BackgroundColor);
+
+  th[data-resizable-column='true'] {
+    --pf-v6-c-table__sort--MinWidth: 0;
+    --pf-v6-c-table__th--m-help--MinWidth: 0;
+  }
+
+  // Override PatternFly's cached inline minimums until resizing starts, and keep actions content-sized.
+  &[data-column-widths-customized='false'] [data-resizable-column='true'],
+  [data-action-column='true'] {
+    min-width: 0 !important;
+  }
 
   .pf-v6-c-table__sticky-cell {
     --pf-v6-c-table__sticky-cell--BackgroundColor: var(--pf-v6-c-table--BackgroundColor);

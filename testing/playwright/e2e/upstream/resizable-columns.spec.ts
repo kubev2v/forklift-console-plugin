@@ -2,6 +2,7 @@ import { expect, type Locator, type Page, test } from '@playwright/test';
 
 import { setupPlansIntercepts } from '../../intercepts/plans';
 import { setupProvidersIntercepts } from '../../intercepts/providers';
+import { expectLastResizeHandleVisible, expectTableToFit } from '../../utils/resizableColumns';
 import { V5_0_0 } from '../../utils/version/constants';
 import { requireVersion } from '../../utils/version/version';
 
@@ -48,9 +49,17 @@ const expectSmoothGrowth = async (page: Page, name: Locator, project: Locator): 
   expect(Math.abs((await getWidth(name)) - widthBeforeRelease)).toBeLessThan(LAYOUT_TOLERANCE_PX);
 };
 
+const resetColumnWidths = async (page: Page): Promise<void> => {
+  const resetButton = page.getByRole('button', { exact: true, name: 'Reset column widths' });
+  if (!(await resetButton.isVisible())) {
+    await page.getByRole('button', { exact: true, name: 'Show Filters' }).click();
+  }
+  await resetButton.click();
+};
+
 const expectResetToPreserveTable = async (page: Page, table: Locator): Promise<void> => {
   const defaultTable = await table.elementHandle();
-  await page.getByRole('button', { exact: true, name: 'Reset column widths' }).click();
+  await resetColumnWidths(page);
   expect(await defaultTable?.evaluate((element) => element.isConnected)).toBe(true);
 };
 
@@ -66,39 +75,45 @@ test.describe('Resizable list columns', { tag: '@upstream' }, () => {
     { kind: 'Provider', title: 'Providers' },
     { kind: 'Plan', title: 'Migration plans' },
   ]) {
-    for (const width of [1280, 1440, 1920]) {
-      test(`${resource.kind}: reset exposes the last resize handle at ${width}px`, async ({
-        page,
-      }) => {
+    for (const width of [1100, 1280, 1440, 1920]) {
+      test(`${resource.kind}: initial and reset layouts fit at ${width}px`, async ({ page }) => {
         await page.setViewportSize({ height: VIEWPORT_HEIGHT, width });
         await page.goto(`/k8s/all-namespaces/forklift.konveyor.io~v1beta1~${resource.kind}`);
         const table = page.getByRole('grid', { exact: true, name: resource.title });
         await expect(table.locator('tbody').getByRole('link').first()).toBeVisible();
+        await expectTableToFit(table);
+        await expectLastResizeHandleVisible(table);
         await expectResetToPreserveTable(page, table);
         const name = table.locator('th#name');
         const { x, y } = await startResize(page, name);
         await page.mouse.move(x + SMALL_DRAG_PX * 10, y);
         await page.mouse.up();
-        await page.getByRole('button', { exact: true, name: 'Reset column widths' }).click();
+        expect(
+          await table.evaluate((element) => {
+            const container = element.parentElement;
+            return container ? container.scrollWidth - container.clientWidth : 0;
+          }),
+        ).toBeGreaterThan(0);
+        await resetColumnWidths(page);
+        await expectTableToFit(table);
 
-        const handle = table.locator('thead th').nth(-2).locator('button[aria-label]');
-        await expect(handle).toBeVisible();
-        await expect
-          .poll(() =>
-            handle.evaluate((button) => {
-              const rect = button.getBoundingClientRect();
-              const actions = button.closest('th')?.nextElementSibling?.getBoundingClientRect();
-              const target = document.elementFromPoint(
-                rect.x + rect.width / 2,
-                rect.y + rect.height / 2,
-              );
-              return button.contains(target) && Boolean(actions && rect.right <= actions.left);
-            }),
-          )
-          .toBe(true);
+        await expectLastResizeHandleVisible(table);
         await expectResetToPreserveTable(page, table);
       });
     }
+
+    test(`${resource.kind}: default widths refit when the viewport changes`, async ({ page }) => {
+      await page.setViewportSize({ height: VIEWPORT_HEIGHT, width: 1920 });
+      await page.goto(`/k8s/all-namespaces/forklift.konveyor.io~v1beta1~${resource.kind}`);
+      const table = page.getByRole('grid', { exact: true, name: resource.title });
+      await expect(table.locator('tbody').getByRole('link').first()).toBeVisible();
+      await expectTableToFit(table);
+      for (const width of [1280, 1440, 1100, 1920]) {
+        await page.setViewportSize({ height: VIEWPORT_HEIGHT, width });
+        await expectTableToFit(table);
+        await expectLastResizeHandleVisible(table);
+      }
+    });
   }
 
   test('plans: growing Name after shrinking adjacent columns does not jump', async ({ page }) => {
@@ -106,7 +121,7 @@ test.describe('Resizable list columns', { tag: '@upstream' }, () => {
     await page.goto('/k8s/all-namespaces/forklift.konveyor.io~v1beta1~Plan');
     const table = page.getByRole('grid', { exact: true, name: 'Migration plans' });
     await expect(table.locator('tbody').getByRole('link').first()).toBeVisible();
-    await page.getByRole('button', { exact: true, name: 'Reset column widths' }).click();
+    await resetColumnWidths(page);
     const name = table.locator('th#name');
     const project = table.locator('th#namespace');
     await shrinkColumn(page, name);

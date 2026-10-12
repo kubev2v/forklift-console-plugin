@@ -4,6 +4,9 @@ import { prepareColumnResize } from '../prepareColumnResize';
 
 const createHeaders = (): HTMLTableCellElement[] => {
   const row = document.createElement('tr');
+  const table = document.createElement('table');
+  table.dataset.columnWidthsCustomized = 'false';
+  table.append(row);
   return [112, 106, 198].map((width) => {
     const header = document.createElement('th');
     header.style.minWidth = '100px';
@@ -11,6 +14,7 @@ const createHeaders = (): HTMLTableCellElement[] => {
     jest.spyOn(header, 'getBoundingClientRect').mockImplementation(() => {
       // All reads must precede writes, or later measurements include redistributed space.
       expect(row.firstElementChild?.getAttribute('style')).toBe('min-width: 100px;');
+      expect(table.dataset.columnWidthsCustomized).toBe('false');
       return { width } as DOMRect;
     });
     row.append(header);
@@ -48,6 +52,7 @@ describe('prepareColumnResize', () => {
       prepareColumnResize(event, 'Name');
 
       expect(headers.map((header) => header.style.minWidth)).toEqual(['112px', '106px', '198px']);
+      expect(headers[0].closest('table')?.dataset.columnWidthsCustomized).toBe('true');
     },
   );
 
@@ -98,6 +103,7 @@ describe('prepareColumnResize', () => {
     );
 
     expect(headers.map((header) => header.style.minWidth)).toEqual(['100px', '100px', '100px']);
+    expect(headers[0].closest('table')?.dataset.columnWidthsCustomized).toBe('false');
     for (const header of headers) {
       expect(jest.spyOn(header, 'getBoundingClientRect')).not.toHaveBeenCalled();
     }

@@ -22,6 +22,7 @@ type TableColumnWidthContextValue = {
     field: ResourceField,
     columnLabel: string | null,
   ) => DataViewThResizableProps | undefined;
+  hasCustomColumnWidths: boolean;
   resetAllColumnWidths: () => void;
 };
 
@@ -29,6 +30,7 @@ const defaultContext: TableColumnWidthContextValue = {
   columnLayoutKey: 0,
   enabled: false,
   getResizableProps: () => undefined,
+  hasCustomColumnWidths: false,
   resetAllColumnWidths: (): void => undefined,
 };
 
@@ -58,9 +60,16 @@ export const TableColumnWidthProvider: FC<TableColumnWidthProviderProps> = ({
       columnLayoutKey: widths.columnLayoutKey,
       enabled,
       getResizableProps: widths.getResizableProps,
+      hasCustomColumnWidths: widths.hasCustomColumnWidths,
       resetAllColumnWidths: widths.resetAllColumnWidths,
     }),
-    [enabled, widths.columnLayoutKey, widths.getResizableProps, widths.resetAllColumnWidths],
+    [
+      enabled,
+      widths.columnLayoutKey,
+      widths.getResizableProps,
+      widths.hasCustomColumnWidths,
+      widths.resetAllColumnWidths,
+    ],
   );
 
   return (

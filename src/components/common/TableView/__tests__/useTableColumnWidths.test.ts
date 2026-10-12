@@ -25,6 +25,7 @@ describe('useTableColumnWidths', () => {
       expect.objectContaining({ isResizable: true, minWidth: 100 }),
     );
     expect(result.current.getResizableProps(nameField, 'Name')).not.toHaveProperty('width');
+    expect(result.current.hasCustomColumnWidths).toBe(false);
   });
 
   it('passes saved widths, including the minimum, to DataViewTh', () => {
@@ -42,6 +43,7 @@ describe('useTableColumnWidths', () => {
 
     expect(result.current.getResizableProps(nameField, 'Name')).toMatchObject({ width: 100 });
     expect(result.current.getResizableProps(projectField, 'Project')).toMatchObject({ width: 240 });
+    expect(result.current.hasCustomColumnWidths).toBe(true);
   });
 
   it('preserves adjacent minimum widths when growing the first column again', () => {
@@ -65,6 +67,7 @@ describe('useTableColumnWidths', () => {
     expect(save).toHaveBeenLastCalledWith({ name: 150, namespace: 100 });
     expect(result.current.getResizableProps(projectField, 'Project')).toMatchObject({ width: 100 });
     expect(result.current.columnLayoutKey).toBe(0);
+    expect(result.current.hasCustomColumnWidths).toBe(true);
   });
 
   it('resets saved widths and remounts the table only on explicit reset', () => {
@@ -85,6 +88,7 @@ describe('useTableColumnWidths', () => {
     expect(result.current.columnLayoutKey).toBe(1);
     expect(result.current.getResizableProps(nameField, 'Name')).not.toHaveProperty('width');
     expect(result.current.getResizableProps(projectField, 'Project')).not.toHaveProperty('width');
+    expect(result.current.hasCustomColumnWidths).toBe(false);
   });
 
   it('does not resize actions or disabled tables', () => {

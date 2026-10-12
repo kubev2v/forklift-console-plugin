@@ -29,4 +29,5 @@ export const prepareColumnResize = (event: ColumnResizeEvent, resizeButtonLabel?
   for (const [index, header] of headers.entries()) {
     header.style.minWidth = `${widths[index]}px`;
   }
+  event.currentTarget.closest('table')?.setAttribute('data-column-widths-customized', 'true');
 };

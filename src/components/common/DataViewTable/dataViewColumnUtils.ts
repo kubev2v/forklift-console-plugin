@@ -56,7 +56,7 @@ export const toDataViewColumn = ({
 }: ToDataViewColumnArgs): DataViewTh => {
   const label = field.label ?? '';
   const headerProps: ThProps = {
-    ...(field.isAction ? getActionHeaderProps() : {}),
+    ...(field.isAction ? { ...getActionHeaderProps(), 'data-action-column': true } : {}),
     dataLabel: label || undefined,
     id: field.resourceFieldId ?? undefined,
     info: field.info,

@@ -11,7 +11,11 @@ import type { RowProps, SortType } from '../TableView/types';
 import { UID } from '../utils/constants';
 import type { ResourceField } from '../utils/types';
 
-import { FORKLIFT_DATA_VIEW_TABLE_CLASS } from './forkliftDataViewTableClass';
+import {
+  FORKLIFT_DATA_VIEW_TABLE_CLASS,
+  FORKLIFT_DATA_VIEW_TABLE_LAYOUT_CLASS,
+} from './forkliftDataViewTableClass';
+import { useDefaultColumnLayout } from './useDefaultColumnLayout';
 import { useForkliftDataViewColumns } from './useForkliftDataViewColumns';
 
 import './ForkliftDataViewTable.scss';
@@ -45,7 +49,12 @@ const ForkliftHybridDataViewTable = <T,>({
   uidFieldId = UID,
   visibleColumns,
 }: ForkliftHybridDataViewTableProps<T>): ReactElement => {
-  const { columnLayoutKey } = useTableColumnWidthContext();
+  const { columnLayoutKey, hasCustomColumnWidths } = useTableColumnWidthContext();
+  const layoutKey = getTableColumnLayoutKey(columnLayoutKey, visibleColumns);
+  const { defaultLayoutVersion, layoutRef } = useDefaultColumnLayout({
+    hasCustomColumnWidths,
+    layoutKey,
+  });
   const columns = useForkliftDataViewColumns({
     activeSort,
     leadingColumns,
@@ -55,38 +64,41 @@ const ForkliftHybridDataViewTable = <T,>({
   const columnSignature = visibleColumns.map(({ resourceFieldId: id }) => id).join();
 
   return (
-    <InnerScrollContainer>
-      <Table
-        aria-label={ariaLabel}
-        className={FORKLIFT_DATA_VIEW_TABLE_CLASS}
-        isStickyHeader
-        key={getTableColumnLayoutKey(columnLayoutKey, visibleColumns)}
-        variant="compact"
-      >
-        <DataViewTableHead columns={columns} hasResizableColumns />
-        <Tbody>
-          {placeholder ? (
-            <Tr>
-              <Td colSpan={columns.length}>
-                <Bullseye>{placeholder}</Bullseye>
-              </Td>
-            </Tr>
-          ) : (
-            entities.map((resourceData, index) => (
-              <RowComponent
-                isExpanded={expandedIds?.includes(toId ? toId(resourceData) : '')}
-                key={`${columnSignature}_${String(resourceData?.[uidFieldId as keyof T] ?? index)}`}
-                length={Math.max(columns.length - 1, 1)}
-                namespace={namespace}
-                resourceData={resourceData}
-                resourceFields={visibleColumns}
-                resourceIndex={index}
-              />
-            ))
-          )}
-        </Tbody>
-      </Table>
-    </InnerScrollContainer>
+    <div className={FORKLIFT_DATA_VIEW_TABLE_LAYOUT_CLASS} ref={layoutRef}>
+      <InnerScrollContainer>
+        <Table
+          aria-label={ariaLabel}
+          className={FORKLIFT_DATA_VIEW_TABLE_CLASS}
+          data-column-widths-customized={hasCustomColumnWidths}
+          isStickyHeader
+          key={`${layoutKey}-${defaultLayoutVersion}`}
+          variant="compact"
+        >
+          <DataViewTableHead columns={columns} hasResizableColumns />
+          <Tbody>
+            {placeholder ? (
+              <Tr>
+                <Td colSpan={columns.length}>
+                  <Bullseye>{placeholder}</Bullseye>
+                </Td>
+              </Tr>
+            ) : (
+              entities.map((resourceData, index) => (
+                <RowComponent
+                  isExpanded={expandedIds?.includes(toId ? toId(resourceData) : '')}
+                  key={`${columnSignature}_${String(resourceData?.[uidFieldId as keyof T] ?? index)}`}
+                  length={Math.max(columns.length - 1, 1)}
+                  namespace={namespace}
+                  resourceData={resourceData}
+                  resourceFields={visibleColumns}
+                  resourceIndex={index}
+                />
+              ))
+            )}
+          </Tbody>
+        </Table>
+      </InnerScrollContainer>
+    </div>
   );
 };
 

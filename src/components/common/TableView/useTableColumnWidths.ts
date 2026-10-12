@@ -21,6 +21,7 @@ type UseTableColumnWidthsResult = {
     field: ResourceField,
     columnLabel: string | null,
   ) => DataViewThResizableProps | undefined;
+  hasCustomColumnWidths: boolean;
   resetAllColumnWidths: () => void;
 };
 
@@ -102,6 +103,7 @@ export const useTableColumnWidths = ({
   return {
     columnLayoutKey,
     getResizableProps,
+    hasCustomColumnWidths: !isEmpty(widthOverrides),
     resetAllColumnWidths,
   };
 };

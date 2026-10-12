@@ -12,7 +12,11 @@ import { useTableColumnWidthContext } from '../TableView/TableColumnWidthContext
 import type { RowProps, SortType } from '../TableView/types';
 import type { ResourceField } from '../utils/types';
 
-import { FORKLIFT_DATA_VIEW_TABLE_CLASS } from './forkliftDataViewTableClass';
+import {
+  FORKLIFT_DATA_VIEW_TABLE_CLASS,
+  FORKLIFT_DATA_VIEW_TABLE_LAYOUT_CLASS,
+} from './forkliftDataViewTableClass';
+import { useDefaultColumnLayout } from './useDefaultColumnLayout';
 import { useForkliftDataViewColumns } from './useForkliftDataViewColumns';
 import { useForkliftDataViewRows } from './useForkliftDataViewRows';
 
@@ -43,7 +47,12 @@ const ForkliftDataViewTable = <T,>({
   setActiveSort,
   visibleColumns,
 }: ForkliftDataViewTableProps<T>): ReactElement => {
-  const { columnLayoutKey } = useTableColumnWidthContext();
+  const { columnLayoutKey, hasCustomColumnWidths } = useTableColumnWidthContext();
+  const layoutKey = getTableColumnLayoutKey(columnLayoutKey, visibleColumns);
+  const { defaultLayoutVersion, layoutRef } = useDefaultColumnLayout({
+    hasCustomColumnWidths,
+    layoutKey,
+  });
   const columns = useForkliftDataViewColumns({
     activeSort,
     leadingColumns,
@@ -71,17 +80,20 @@ const ForkliftDataViewTable = <T,>({
     : dataRows;
 
   return (
-    <DataViewTable
-      aria-label={ariaLabel}
-      className={FORKLIFT_DATA_VIEW_TABLE_CLASS}
-      columns={columns}
-      gridBreakPoint=""
-      isResizable
-      isStickyHeader
-      key={getTableColumnLayoutKey(columnLayoutKey, visibleColumns)}
-      rows={rows}
-      variant="compact"
-    />
+    <div className={FORKLIFT_DATA_VIEW_TABLE_LAYOUT_CLASS} ref={layoutRef}>
+      <DataViewTable
+        aria-label={ariaLabel}
+        className={FORKLIFT_DATA_VIEW_TABLE_CLASS}
+        columns={columns}
+        data-column-widths-customized={hasCustomColumnWidths}
+        gridBreakPoint=""
+        isResizable
+        isStickyHeader
+        key={`${layoutKey}-${defaultLayoutVersion}`}
+        rows={rows}
+        variant="compact"
+      />
+    </div>
   );
 };
 

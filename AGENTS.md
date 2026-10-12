@@ -692,6 +692,8 @@ const [data, loaded, error] = useK8sWatchResource<Resource>({
 ### Resizable Tables
 - Enable resizing through `StandardPage`'s `resizableColumns` prop; reuse the shared DataView adapters.
 - Let `DataViewTh` measure unsaved widths and resize via `min-width`. Do not impose data-header `style.width`, reference-table pixel defaults, or `nowrap` modifiers that prevent shrinking.
+- Initial/reset layouts must fit 100% without horizontal overflow. Keep cached data-header minimums flexible until resizing begins; `prepareColumnResize` switches to custom sizing only after measuring and freezing the rendered widths. Preserve overflow for user-enlarged columns.
+- Refresh stale default header measurements when async controls/fonts or viewport changes alter the layout. Defer refreshes outside the `ResizeObserver` delivery cycle and cancel them when resizing starts; never automatically remount a customized table.
 - Keep saved minimum widths as user overrides. Repeated width resets must be no-ops once overrides are cleared, including batched calls and callbacks retained from earlier renders.
 - Include visible column IDs and their order in the table layout key: PatternFly caches header widths by position, so column management must invalidate layout even without saved widths. Reordering should preserve widths by column ID.
 - Stage "Restore default columns" until Save; Cancel must not clear widths or change the table behind the modal.
