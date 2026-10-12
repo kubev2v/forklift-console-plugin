@@ -1,11 +1,17 @@
-import { IGNORED } from '@utils/constants';
-import { DEFAULT_NETWORK } from '@utils/constants';
+import { IGNORED, POD } from '@utils/constants';
 import { t } from '@utils/i18n';
+import type { MappingValue } from '@utils/types';
 
-export const DefaultNetworkLabel = {
-  Source: DEFAULT_NETWORK,
-  Target: DEFAULT_NETWORK,
-} as const;
+export const getDefaultNetworkLabel = (): string => t('Default network');
+
+export const isDefaultNetworkTarget = (
+  network: { id?: string; name?: string } | undefined,
+): boolean => network?.id === POD || network?.name === getDefaultNetworkLabel();
+
+export const getDefaultNetworkTarget = (): MappingValue => ({
+  id: POD,
+  name: getDefaultNetworkLabel(),
+});
 
 export const IgnoreNetwork = {
   Label: t('Ignore network'),
