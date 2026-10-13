@@ -97,6 +97,7 @@ describe('useTableColumnWidths', () => {
   });
 
   it('syncs width overrides when persisted settings arrive after mount', () => {
+    const initialProps: WidthsHookProps = { columnWidthsSettings: undefined };
     const { result, rerender } = renderHook(
       ({ columnWidthsSettings }: WidthsHookProps) =>
         useTableColumnWidths({
@@ -104,7 +105,7 @@ describe('useTableColumnWidths', () => {
           enabled: true,
           visibleColumns,
         }),
-      { initialProps: { columnWidthsSettings: undefined } },
+      { initialProps },
     );
 
     expect(result.current.getResizableProps(nameField, 'Name')).not.toHaveProperty('width');
