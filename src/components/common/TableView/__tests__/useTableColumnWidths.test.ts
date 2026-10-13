@@ -1,9 +1,14 @@
 import type { MouseEvent } from 'react';
 
+import type { ColumnWidthsSettings } from '@components/common/Page/types';
 import type { ResourceField } from '@components/common/utils/types';
 import { act, renderHook } from '@testing-library/react';
 
 import { useTableColumnWidths } from '../useTableColumnWidths';
+
+type WidthsHookProps = {
+  columnWidthsSettings?: ColumnWidthsSettings;
+};
 
 const nameField: ResourceField = {
   label: 'Name',
@@ -93,15 +98,7 @@ describe('useTableColumnWidths', () => {
 
   it('syncs width overrides when persisted settings arrive after mount', () => {
     const { result, rerender } = renderHook(
-      ({
-        columnWidthsSettings,
-      }: {
-        columnWidthsSettings?: {
-          clear: () => void;
-          data: Record<string, number>;
-          save: (widths: Record<string, number>) => void;
-        };
-      }) =>
+      ({ columnWidthsSettings }: WidthsHookProps) =>
         useTableColumnWidths({
           columnWidthsSettings,
           enabled: true,
