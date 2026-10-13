@@ -26,4 +26,10 @@ describe('getMigrationLogPod', () => {
   it('returns undefined when pods list is empty', () => {
     expect(getMigrationLogPod('ImageConversion', [])).toBeUndefined();
   });
+
+  it('returns undefined for ImageConversion when no virt-v2v pod exists', () => {
+    const pods = [buildPod('disk-transfer-pod', 'Failed')];
+
+    expect(getMigrationLogPod('ImageConversion', pods)).toBeUndefined();
+  });
 });

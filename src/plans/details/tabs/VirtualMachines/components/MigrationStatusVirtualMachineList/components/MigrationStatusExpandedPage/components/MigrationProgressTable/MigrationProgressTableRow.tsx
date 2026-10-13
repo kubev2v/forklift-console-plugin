@@ -10,6 +10,7 @@ import { Split, SplitItem } from '@patternfly/react-core';
 import { Td, Tr } from '@patternfly/react-table';
 import { isEmpty } from '@utils/helpers';
 
+import { getMigrationLogPod } from '../../../../utils/getMigrationLogPod';
 import { getPipelineStepDisplayName } from '../../../../utils/utils';
 import { getPipelineProgressIcon } from '../../../utils/icon';
 
@@ -39,6 +40,9 @@ const MigrationProgressTableRow: FC<MigrationProgressTableRowProps> = ({
 }) => {
   const displayName = getPipelineStepDisplayName(pipe?.name);
   const failureReasons = pipe?.error?.reasons;
+  const logPod = getMigrationLogPod(pipe?.name, pods);
+  const shouldShowFailurePanel =
+    Boolean(pipe?.error) && (!isEmpty(failureReasons) || Boolean(vmErrorPhase) || Boolean(logPod));
 
   return (
     <Tr key={pipe?.name}>
@@ -58,7 +62,7 @@ const MigrationProgressTableRow: FC<MigrationProgressTableRowProps> = ({
           vmCreated={vmCreated}
           vmName={vmName}
         />
-        {!isEmpty(failureReasons) && (
+        {shouldShowFailurePanel && (
           <MigrationStepFailurePanel
             pipelineStepName={pipe.name}
             pods={pods}

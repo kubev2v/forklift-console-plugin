@@ -40,6 +40,7 @@ export const getMigrationLogPod = (
     if (!isEmpty(virtV2vPods)) {
       return virtV2vPods[0];
     }
+    return undefined;
   }
 
   const failedPod = candidates.find(isFailedPod);
