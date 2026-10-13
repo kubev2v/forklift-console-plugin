@@ -32,4 +32,10 @@ describe('getMigrationLogPod', () => {
 
     expect(getMigrationLogPod('ImageConversion', pods)).toBeUndefined();
   });
+
+  it('returns undefined for non-ImageConversion steps even when pods exist', () => {
+    const pods = [buildPod('disk-transfer-pod', 'Failed')];
+
+    expect(getMigrationLogPod('DiskTransferV2v', pods)).toBeUndefined();
+  });
 });

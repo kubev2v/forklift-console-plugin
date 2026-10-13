@@ -43,6 +43,5 @@ export const getMigrationLogPod = (
     return undefined;
   }
 
-  const failedPod = candidates.find(isFailedPod);
-  return failedPod ?? candidates[0];
+  return undefined;
 };
