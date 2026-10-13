@@ -1,6 +1,10 @@
 import type { FC } from 'react';
 
-import type { V1beta1Plan, V1beta1PlanStatusMigrationVms } from '@forklift-ui/types';
+import type {
+  IoK8sApiCoreV1Pod,
+  V1beta1Plan,
+  V1beta1PlanStatusMigrationVms,
+} from '@forklift-ui/types';
 import { Table, Tbody, Th, Thead, Tr } from '@patternfly/react-table';
 import { useForkliftTranslation } from '@utils/i18n';
 
@@ -12,6 +16,7 @@ import './MigrationProgressTable.scss';
 
 type MigrationProgressTableProps = {
   plan: V1beta1Plan;
+  pods?: IoK8sApiCoreV1Pod[];
   statusVM: V1beta1PlanStatusMigrationVms | undefined;
   targetNamespace?: string;
   vmCreated?: boolean;
@@ -20,6 +25,7 @@ type MigrationProgressTableProps = {
 
 const MigrationProgressTable: FC<MigrationProgressTableProps> = ({
   plan,
+  pods,
   statusVM,
   targetNamespace,
   vmCreated,
@@ -45,8 +51,10 @@ const MigrationProgressTable: FC<MigrationProgressTableProps> = ({
             key={pipe?.name}
             pipe={pipe}
             plan={plan}
+            pods={pods}
             targetNamespace={targetNamespace}
             vmCreated={vmCreated}
+            vmErrorPhase={statusVM?.error?.phase}
             vmName={vmName}
           />
         ))}
