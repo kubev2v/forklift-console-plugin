@@ -21,7 +21,7 @@ const renderLayout = (hasCustomColumnWidths = false): LayoutFixture => {
   header.dataset.resizableColumn = 'true';
   header.style.minWidth = '120px';
   jest.spyOn(header, 'getBoundingClientRect').mockReturnValue({ width: 100 } as DOMRect);
-  table.append(header);
+  table.createTHead().insertRow().append(header);
   container.append(table);
   document.body.append(container);
   const view = renderHook((args: LayoutArgs) => useDefaultColumnLayout(args), {
@@ -114,7 +114,7 @@ describe('useDefaultColumnLayout', () => {
 
     expect(disconnect).toHaveBeenCalledTimes(1);
     expect(cancelAnimationFrame).toHaveBeenCalledWith(1);
-    expect(observe).toHaveBeenCalledTimes(1);
+    expect(observe).toHaveBeenCalledTimes(2);
   });
 
   it('leaves initially persisted custom widths alone', () => {

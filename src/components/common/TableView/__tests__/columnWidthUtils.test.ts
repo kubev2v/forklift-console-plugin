@@ -28,6 +28,26 @@ describe('columnWidthUtils', () => {
     expect(getMinWidthForField(field)).toBe(100);
   });
 
+  it('uses an explicit compact gesture minimum without changing the legacy default', () => {
+    expect(
+      getMinWidthForField({
+        defaultWidth: { minWidth: 50, weight: 1 },
+        label: 'VMs',
+        resourceFieldId: 'vms',
+      }),
+    ).toBe(50);
+  });
+
+  it.each([0, -1, NaN, Infinity])('ignores an invalid configured minimum: %s', (minWidth) => {
+    expect(
+      getMinWidthForField({
+        defaultWidth: { minWidth, weight: 1 },
+        label: 'VMs',
+        resourceFieldId: 'vms',
+      }),
+    ).toBe(100);
+  });
+
   it('marks action columns as non-resizable', () => {
     expect(isResizableField({ isAction: true, label: 'Actions', resourceFieldId: 'actions' })).toBe(
       false,

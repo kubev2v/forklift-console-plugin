@@ -53,8 +53,11 @@ describe('prepareColumnResize', () => {
 
       expect(headers.map((header) => header.style.minWidth)).toEqual(['112px', '106px', '198px']);
       expect(headers[0].closest('table')?.dataset.columnWidthsCustomized).toBe('true');
-      expect(headers[0].dataset.columnWidthFixed).toBe('true');
-      expect(headers[1].dataset.columnWidthFixed).toBeUndefined();
+      expect(headers.map((header) => header.dataset.columnWidthFixed)).toEqual([
+        'true',
+        'true',
+        'true',
+      ]);
     },
   );
 
@@ -80,6 +83,7 @@ describe('prepareColumnResize', () => {
     expect(controls.map((header) => header.style.minWidth)).toEqual(['45px', '0px']);
     for (const header of controls) {
       expect(jest.spyOn(header, 'getBoundingClientRect')).not.toHaveBeenCalled();
+      expect(header.dataset.columnWidthFixed).toBeUndefined();
     }
   });
 

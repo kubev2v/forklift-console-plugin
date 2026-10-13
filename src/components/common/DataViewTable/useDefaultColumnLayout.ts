@@ -2,6 +2,8 @@ import { type RefObject, useLayoutEffect, useRef, useState } from 'react';
 
 import { COLUMN_MEASUREMENT_TOLERANCE_PX } from '../TableView/columnWidthConstants';
 
+import { createDefaultColumnLayout } from './defaultColumnLayout';
+
 type UseDefaultColumnLayoutArgs = {
   hasCustomColumnWidths: boolean;
   layoutKey: string;
@@ -20,13 +22,15 @@ export const useDefaultColumnLayout = ({
   const [defaultLayoutVersion, setDefaultLayoutVersion] = useState(0);
 
   useLayoutEffect(() => {
-    const table = layoutRef.current?.querySelector('table');
-    if (!table || hasCustomColumnWidths) {
+    const container = layoutRef.current;
+    const table = container?.querySelector('table');
+    if (!container || !table || hasCustomColumnWidths) {
       return undefined;
     }
     const headers = Array.from(
       table.querySelectorAll<HTMLTableCellElement>('th[data-resizable-column="true"]'),
     );
+    const defaultLayout = createDefaultColumnLayout(table, container);
     let animationFrame: number | undefined;
     const needsMeasurement = (): boolean =>
       headers.some((header) => {
@@ -39,29 +43,31 @@ export const useDefaultColumnLayout = ({
       });
     const refreshMeasurements = (): void => {
       animationFrame = undefined;
-      if (
-        table.isConnected &&
-        table.dataset.columnWidthsCustomized !== 'true' &&
-        needsMeasurement()
-      ) {
+      if (!table.isConnected || table.dataset.columnWidthsCustomized === 'true') {
+        return;
+      }
+      defaultLayout.refresh();
+      if (needsMeasurement()) {
         setDefaultLayoutVersion((version) => version + 1);
       }
     };
     if (typeof ResizeObserver === 'undefined') {
-      return undefined;
+      return defaultLayout.dispose;
     }
     const observer = new ResizeObserver(() => {
       if (table.dataset.columnWidthsCustomized === 'true') {
         return;
       }
-      if (needsMeasurement() && animationFrame === undefined) {
+      if ((needsMeasurement() || defaultLayout.needsRefresh()) && animationFrame === undefined) {
         // Refresh outside the observer delivery cycle to avoid ResizeObserver loops.
         animationFrame = requestAnimationFrame(refreshMeasurements);
       }
     });
-    for (const header of headers) observer.observe(header);
+    for (const header of Array.from(table.querySelectorAll('thead th'))) observer.observe(header);
+    observer.observe(container);
     return (): void => {
       observer.disconnect();
+      defaultLayout.dispose();
       if (animationFrame !== undefined) {
         cancelAnimationFrame(animationFrame);
       }

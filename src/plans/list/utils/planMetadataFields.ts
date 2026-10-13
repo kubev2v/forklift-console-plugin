@@ -1,6 +1,7 @@
 import { createElement } from 'react';
 import DatesComparedHelperText from 'src/plans/details/components/DatesComparedHelperText';
 
+import { REGULAR_COLUMN_WIDTH } from '@components/common/TableView/columnWidthConstants';
 import { FilterDefType, type ResourceField } from '@components/common/utils/types';
 import { t } from '@utils/i18n';
 
@@ -8,6 +9,7 @@ import { planResourceApiJsonPaths, PlanTableResourceId } from './constants';
 
 export const planMetadataFields: ResourceField[] = [
   {
+    defaultWidth: REGULAR_COLUMN_WIDTH,
     filter: {
       helperText: createElement(DatesComparedHelperText),
       placeholderLabel: 'YYYY-MM-DD',
@@ -20,6 +22,7 @@ export const planMetadataFields: ResourceField[] = [
     sortable: true,
   },
   {
+    defaultWidth: REGULAR_COLUMN_WIDTH,
     filter: {
       placeholderLabel: t('Filter by description'),
       type: FilterDefType.FreeText,

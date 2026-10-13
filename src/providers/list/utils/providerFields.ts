@@ -2,6 +2,12 @@ import { ProvidersResourceFieldId } from 'src/providers/utils/constants';
 import { SOURCE_ONLY_PROVIDER_TYPES } from 'src/providers/utils/helpers/getIsTarget';
 
 import { enumToTuple } from '@components/common/FilterGroup/helpers';
+import {
+  COMPACT_COLUMN_WIDTH,
+  MEDIUM_COLUMN_WIDTH,
+  REGULAR_COLUMN_WIDTH,
+  WIDE_COLUMN_WIDTH,
+} from '@components/common/TableView/columnWidthConstants';
 import type { ResourceField } from '@components/common/utils/types';
 import type { ProviderType } from '@forklift-ui/types';
 import { PROVIDERS } from '@utils/enums';
@@ -13,6 +19,7 @@ import { getProviderStorageCount } from './getProviderStorageCount';
 
 export const providerFields: ResourceField[] = [
   {
+    defaultWidth: WIDE_COLUMN_WIDTH,
     filter: {
       placeholderLabel: t('Filter by name'),
       type: 'freetext',
@@ -25,6 +32,7 @@ export const providerFields: ResourceField[] = [
     sortable: true,
   },
   {
+    defaultWidth: MEDIUM_COLUMN_WIDTH,
     filter: {
       placeholderLabel: t('Filter by project'),
       type: 'freetext',
@@ -37,6 +45,7 @@ export const providerFields: ResourceField[] = [
     sortable: true,
   },
   {
+    defaultWidth: REGULAR_COLUMN_WIDTH,
     filter: {
       placeholderLabel: t('Status'),
       primary: true,
@@ -50,6 +59,7 @@ export const providerFields: ResourceField[] = [
     sortable: true,
   },
   {
+    defaultWidth: MEDIUM_COLUMN_WIDTH,
     filter: {
       placeholderLabel: t('Filter by endpoint'),
       type: 'freetext',
@@ -61,6 +71,7 @@ export const providerFields: ResourceField[] = [
     sortable: true,
   },
   {
+    defaultWidth: COMPACT_COLUMN_WIDTH,
     filter: {
       groups: [
         { groupId: 'target', label: t('Target and source') },
@@ -82,6 +93,7 @@ export const providerFields: ResourceField[] = [
     sortable: true,
   },
   {
+    defaultWidth: COMPACT_COLUMN_WIDTH,
     isVisible: true,
     jsonPath: '$.inventory.vmCount',
     label: t('VMs'),
@@ -89,6 +101,7 @@ export const providerFields: ResourceField[] = [
     sortable: true,
   },
   {
+    defaultWidth: COMPACT_COLUMN_WIDTH,
     isVisible: true,
     jsonPath: '$.inventory.networkCount',
     label: t('Networks'),
@@ -96,6 +109,7 @@ export const providerFields: ResourceField[] = [
     sortable: true,
   },
   {
+    defaultWidth: COMPACT_COLUMN_WIDTH,
     isVisible: false,
     jsonPath: '$.inventory.clusterCount',
     label: t('Clusters'),
@@ -103,6 +117,7 @@ export const providerFields: ResourceField[] = [
     sortable: true,
   },
   {
+    defaultWidth: COMPACT_COLUMN_WIDTH,
     isVisible: true,
     jsonPath: '$.inventory.hostCount',
     label: t('Hosts'),
@@ -110,6 +125,7 @@ export const providerFields: ResourceField[] = [
     sortable: true,
   },
   {
+    defaultWidth: COMPACT_COLUMN_WIDTH,
     isVisible: false,
     jsonPath: (provider: ProviderData) => getProviderStorageCount(provider),
     label: t('Storage'),

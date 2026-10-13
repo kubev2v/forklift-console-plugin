@@ -4,6 +4,7 @@ import type { DataViewTh } from '@patternfly/react-data-view/dist/esm/DataViewTa
 import type { DataViewThResizableProps } from '@patternfly/react-data-view/dist/esm/DataViewTh/DataViewTh';
 import type { TdProps, ThProps } from '@patternfly/react-table';
 
+import { getMinWidthForField } from '../TableView/columnWidthUtils';
 import { buildSort } from '../TableView/sort';
 import type { SortType } from '../TableView/types';
 import type { ResourceField } from '../utils/types';
@@ -81,6 +82,8 @@ export const toDataViewColumn = ({
     ...(resizableProps?.isResizable
       ? {
           'data-column-width-fixed': resizableProps.width !== undefined,
+          'data-default-column-min-width': getMinWidthForField(field),
+          'data-default-column-weight': field.defaultWidth?.weight ?? 1,
           'data-resizable-column': true,
           onKeyDownCapture: (event): void => {
             prepareColumnResize(event, resizableProps.resizeButtonAriaLabel);

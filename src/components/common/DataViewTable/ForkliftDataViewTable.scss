@@ -20,6 +20,10 @@
     min-width: 0 !important;
   }
 
+  &[data-column-widths-customized='false'] colgroup[data-default-column-widths='true'] col {
+    width: var(--forklift-default-column-width, auto);
+  }
+
   // A zero preferred width leaves PatternFly's live minimum as the resized column's exact size.
   &[data-column-widths-customized='true'] [data-column-width-fixed='true'] {
     width: 0;
