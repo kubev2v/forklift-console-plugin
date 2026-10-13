@@ -3,7 +3,6 @@
   width: 100%;
 }
 
-// DataViewTable body cells are transparent; PF sticky cells paint an opaque background by default.
 .forklift-data-view-table {
   --pf-v6-c-table--m-truncate--cell--MinWidth: 0;
   --pf-v6-c-table__text--m-truncate--MinWidth: 0;
@@ -35,8 +34,9 @@
     display: none;
   }
 
-  &__sticky-cell {
-    --forklift-data-view-table-sticky-cell-background: var(--pf-v6-c-table--BackgroundColor);
-    background-color: var(--forklift-data-view-table-sticky-cell-background);
+  // Glass surfaces and late-loaded PF styles can make even the sticky token translucent.
+  & &__sticky-cell,
+  th[data-action-column='true'] {
+    background-color: rgb(from var(--pf-v6-c-table__sticky-cell--BackgroundColor) r g b / 1);
   }
 }

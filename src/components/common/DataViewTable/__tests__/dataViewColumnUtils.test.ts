@@ -92,9 +92,19 @@ describe('dataViewColumnUtils', () => {
       expect(column.props).not.toHaveProperty('data-resizable-column');
     }
     expect(getActionCellProps()).toEqual(
-      expect.objectContaining({ isActionCell: true, isStickyColumn: true, stickyMinWidth: '0' }),
+      expect.objectContaining({
+        className: FORKLIFT_DATA_VIEW_TABLE_STICKY_CELL_CLASS,
+        isActionCell: true,
+        isStickyColumn: true,
+        stickyMinWidth: '0',
+      }),
     );
-    expect(getBodyCellProps(actionField)).toEqual(expect.objectContaining({ isActionCell: true }));
+    expect(getBodyCellProps(actionField)).toEqual(
+      expect.objectContaining({
+        className: FORKLIFT_DATA_VIEW_TABLE_STICKY_CELL_CLASS,
+        isActionCell: true,
+      }),
+    );
     expect(getBodyCellProps(nameField)).toEqual(
       expect.objectContaining({ modifier: 'truncate', dataLabel: 'Name' }),
     );

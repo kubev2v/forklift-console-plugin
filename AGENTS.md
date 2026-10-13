@@ -701,6 +701,7 @@ const [data, loaded, error] = useK8sWatchResource<Resource>({
 - Stage "Restore default columns" until Save; Cancel must not clear widths or change the table behind the modal.
 - Keep the `prepareColumnResize` capture handlers: browser auto-layout can redistribute spare space after shrinking, so resizable header widths must be measured together before rebasing their minimums. Mark these headers with `data-resizable-column`; do not freeze selection/actions widths.
 - Use truncation for resizable data cells, but preserve sticky selection/actions cells and their controls. Actions should use Console's content-sized layout with `stickyMinWidth: '0'`, not fixed pixel widths.
+- Sticky controls must paint a fully opaque version of PatternFly's `--pf-v6-c-table__sticky-cell--BackgroundColor` using `rgb(from ... r g b / 1)`. The token itself can become translucent in Console's glass theme when PatternFly styles load later; the table background can be entirely transparent. Scope the rule under the project table class to prevent late library styles overriding it, and include the action-header marker because DataViewTh versions can replace custom header classes. Test opacity and pixel masking during horizontal overflow/scrolling in light and dark themes, including late loading of the actual PatternFly stylesheet; keep Actions clickable and selection intact.
 
 ### Actions Dropdown Convention
 Action dropdowns use `isDetailsPage` (not `isKebab`) to control behavior by context:

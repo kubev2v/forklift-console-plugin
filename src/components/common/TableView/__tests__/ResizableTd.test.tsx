@@ -1,3 +1,4 @@
+import { FORKLIFT_DATA_VIEW_TABLE_STICKY_CELL_CLASS } from '@components/common/DataViewTable/forkliftDataViewTableClass';
 import type { ResourceField } from '@components/common/utils/types';
 import { render, screen } from '@testing-library/react';
 
@@ -44,7 +45,10 @@ describe('ResizableTd', () => {
   it('keeps sticky action controls outside truncation', () => {
     renderCell(true, true);
 
-    expect(screen.getByRole('cell')).toHaveClass('pf-v6-c-table__sticky-cell');
+    expect(screen.getByRole('cell')).toHaveClass(
+      'pf-v6-c-table__sticky-cell',
+      FORKLIFT_DATA_VIEW_TABLE_STICKY_CELL_CLASS,
+    );
     expect(screen.getByRole('cell')).toAppearAfter(
       screen.getByRole('presentation', { hidden: true }),
     );
