@@ -65,4 +65,20 @@ describe('validateNetworkMap with VLAN-qualified entries', () => {
     });
     expect(result).toBeDefined();
   });
+
+  it('matches mapped sources by id when the displayed label is stale', () => {
+    const result = validateNetworkMap({
+      usedSourceNetworks: [{ id: 'pod', name: 'Default network' }],
+      values: [
+        {
+          [NetworkMapFieldId.SourceNetwork]: { id: 'pod', name: 'Red predeterminada' },
+          [NetworkMapFieldId.TargetNetwork]: { id: '', name: 'Default network' },
+        },
+      ],
+      vms: {},
+      oVirtNicProfiles: [],
+    });
+
+    expect(result).toBeUndefined();
+  });
 });

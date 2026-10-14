@@ -142,11 +142,13 @@ export const getMappingValues = (
     const sourceNet = mapping.source;
     const destNet = mapping.destination;
     const { vlan } = sourceNet as NetworkMapSource;
+    const openShiftSourceId =
+      sourceNet.type === POD
+        ? POD
+        : (sourceNetworks.find((net) => net.name === sourceNet.name)?.id ?? '');
 
     const sourceNetwork: MappingValue = {
-      id: isOpenShiftProvider
-        ? (sourceNetworks.find((net) => net.name === sourceNet.name)?.id ?? '')
-        : (sourceNet.id ?? ''),
+      id: isOpenShiftProvider ? openShiftSourceId : (sourceNet.id ?? ''),
       name: getSourceNetName(sourceNet, isOpenShiftProvider),
       ...(vlan ? { vlan } : {}),
     };

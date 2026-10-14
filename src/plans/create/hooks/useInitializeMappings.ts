@@ -16,8 +16,13 @@ type UseInitializeMappingsParams<T extends Record<string, unknown>> = {
   usedSources: MappingValue[];
 };
 
-const getSourceKey = (source: MappingValue): string | undefined =>
-  source.id?.trim() ? source.id : source.name;
+const getSourceKey = (source: MappingValue): string | undefined => {
+  if (source.vlan) {
+    return `${source.id ?? source.name}:vlan=${source.vlan}`;
+  }
+
+  return source.id?.trim() ? source.id : source.name;
+};
 
 /**
  * Automatically creates mappings for unmapped sources by pairing them with default targets

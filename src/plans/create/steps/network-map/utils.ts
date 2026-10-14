@@ -28,6 +28,14 @@ type ValidateNetworkMapParams = {
   vms: Record<string, ProviderVirtualMachine>;
 };
 
+const getSourceKey = (source: MappingValue): string | undefined => {
+  if (source.vlan) {
+    return `${source.id ?? source.name}:vlan=${source.vlan}`;
+  }
+
+  return source.id?.trim() ? source.id : source.name;
+};
+
 export const getNetworkMapFieldId = (id: keyof NetworkMapping, index: number): NetworkMappingId =>
   `${NetworkMapFieldId.NetworkMap}.${index}.${id}`;
 
@@ -76,12 +84,14 @@ export const validateNetworkMap = (
   validateNetworkMapParams: ValidateNetworkMapParams,
 ): string | undefined => {
   const { oVirtNicProfiles, usedSourceNetworks, values, vms } = validateNetworkMapParams;
-  const mappedNetworkNames = new Set(
-    values.map((value) => value[NetworkMapFieldId.SourceNetwork].name),
+  const mappedSourceKeys = new Set(
+    values
+      .map((value) => getSourceKey(value[NetworkMapFieldId.SourceNetwork]))
+      .filter((key): key is string => Boolean(key?.trim())),
   );
 
   const hasUnmappedNetwork = !usedSourceNetworks.every((sourceNetwork) =>
-    mappedNetworkNames.has(sourceNetwork.name),
+    mappedSourceKeys.has(getSourceKey(sourceNetwork) ?? ''),
   );
   if (hasUnmappedNetwork) {
     return t('All networks detected on the selected VMs require a mapping.');
