@@ -130,9 +130,9 @@ export const PageToolbar = <T,>({
                 setColumns={setFields}
               />
             )}
-            {resizableColumns && <ResetColumnWidthsToolbar />}
             {!isEmpty(renderedGlobalActions) && renderedGlobalActions}
           </ToolbarToggleGroup>
+          {resizableColumns && <ResetColumnWidthsToolbar />}
         </Split>
 
         {showPagination && (

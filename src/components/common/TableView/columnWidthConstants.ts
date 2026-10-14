@@ -14,3 +14,5 @@ export const RESIZE_COLUMN_WIDTH_INCREMENT = 5;
 export const RESIZE_COLUMN_WIDTH_SHIFT_INCREMENT = 25;
 
 export const COLUMN_WIDTH_PERSIST_DEBOUNCE_MS = 300;
+
+export const COLUMN_WIDTH_PERSIST_EVENTS = ['mouseup', 'touchend', 'keyup', 'pagehide'] as const;

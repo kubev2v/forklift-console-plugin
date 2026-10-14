@@ -14,10 +14,21 @@
     --pf-v6-c-table__th--m-help--MinWidth: 0;
   }
 
-  // Override PatternFly's cached inline minimums until resizing starts, and keep actions content-sized.
+  // Inline cached minima must yield to default allocation; otherwise stale measurements cause overflow.
   &[data-column-widths-customized='false'] th[data-resizable-column='true'],
-  &[data-column-widths-customized='false'] th[data-action-column='true'] {
-    min-width: 0;
+  th[data-action-column='true'] {
+    min-width: 0 !important;
+  }
+
+  // Empty control headers must not inherit a share of the data-column budget through cached minima.
+  [data-table-control-column] {
+    width: 0;
+    min-width: var(--pf-v6-c-table__sticky-cell--MinWidth) !important;
+  }
+
+  [data-table-control-column='expand']:first-child {
+    padding-inline-start: var(--pf-v6-c-table__toggle--PaddingInlineStart);
+    padding-inline-end: var(--pf-v6-c-table__toggle--PaddingInlineEnd);
   }
 
   &[data-column-widths-customized='false'] colgroup[data-default-column-widths='true'] col {
@@ -30,7 +41,7 @@
   }
 
   &[data-column-widths-customized='true'] [data-column-width-spacer='true'] {
-    min-width: 0;
+    min-width: 0 !important;
     padding: 0;
   }
 
@@ -38,9 +49,10 @@
     display: none;
   }
 
-  // Match table surface on sticky cells (glass / late PF styles can make sticky tokens translucent).
+  // Glass surfaces and late-loaded PF styles can make even the sticky token translucent.
   & &__sticky-cell,
-  th[data-action-column='true'] {
-    background-color: var(--pf-v6-c-table--BackgroundColor);
+  th[data-action-column='true'],
+  [data-table-control-column] {
+    background-color: rgb(from var(--pf-v6-c-table__sticky-cell--BackgroundColor) r g b / 1);
   }
 }

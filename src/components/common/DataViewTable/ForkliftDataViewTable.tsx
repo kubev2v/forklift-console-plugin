@@ -12,6 +12,7 @@ import { useTableColumnWidthContext } from '../TableView/TableColumnWidthContext
 import type { RowProps, SortType } from '../TableView/types';
 import type { ResourceField } from '../utils/types';
 
+import { getRenderedColumnCount } from './dataViewColumnUtils';
 import {
   FORKLIFT_DATA_VIEW_TABLE_CLASS,
   FORKLIFT_DATA_VIEW_TABLE_LAYOUT_CLASS,
@@ -66,13 +67,14 @@ const ForkliftDataViewTable = <T,>({
     RowComponent,
     visibleColumns,
   });
+  const renderedColumnCount = getRenderedColumnCount(columns.length, hasCustomColumnWidths);
   const rows = placeholder
     ? [
         {
           row: [
             {
               cell: <Bullseye>{placeholder}</Bullseye>,
-              props: { colSpan: columns.length },
+              props: { colSpan: renderedColumnCount },
             },
           ],
         },

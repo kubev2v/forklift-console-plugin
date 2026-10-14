@@ -5,7 +5,11 @@ type ColumnResizeEvent =
   | MouseEvent<HTMLTableCellElement>
   | TouchEvent<HTMLTableCellElement>;
 
-export const prepareColumnResize = (event: ColumnResizeEvent, resizeButtonLabel?: string): void => {
+export const prepareColumnResize = (
+  event: ColumnResizeEvent,
+  resizeButtonLabel?: string,
+  captureColumnWidths?: (widths: Record<string, number>) => void,
+): void => {
   if ('key' in event && event.key !== 'ArrowLeft' && event.key !== 'ArrowRight') {
     return;
   }
@@ -26,6 +30,11 @@ export const prepareColumnResize = (event: ColumnResizeEvent, resizeButtonLabel?
   // Auto layout redistributes spare space after shrinking. Rebase resizable minimums before
   // PatternFly calculates the drag offset so the first move does not add that space twice.
   const widths = headers.map((header) => header.getBoundingClientRect().width);
+  captureColumnWidths?.(
+    Object.fromEntries(
+      headers.flatMap((header, index) => (header.id ? [[header.id, widths[index]]] : [])),
+    ),
+  );
   for (const [index, header] of headers.entries()) {
     header.style.minWidth = `${widths[index]}px`;
     header.setAttribute('data-column-width-fixed', 'true');

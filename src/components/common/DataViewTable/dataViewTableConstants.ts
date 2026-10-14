@@ -1,5 +1,9 @@
 export const SELECTION_COLUMN_WIDTH = '45px';
 
+export const EXPANSION_COLUMN_WIDTH = '45px';
+
+export const DATA_CONTROL_COLUMN_ATTR = 'data-table-control-column';
+
 export const DATA_COLUMN_WIDTH_SPACER_ATTR = 'data-column-width-spacer';
 
 export const DATA_ACTION_COLUMN_ATTR = 'data-action-column';

@@ -13,7 +13,7 @@ const observe = jest.fn();
 const disconnect = jest.fn();
 const originalObserver = global.ResizeObserver;
 
-const renderLayout = (hasCustomColumnWidths = false): LayoutFixture => {
+const renderLayout = (hasCustomColumnWidths = false, includeNestedTable = false): LayoutFixture => {
   const container = document.createElement('div');
   const table = document.createElement('table');
   table.dataset.columnWidthsCustomized = String(hasCustomColumnWidths);
@@ -22,6 +22,10 @@ const renderLayout = (hasCustomColumnWidths = false): LayoutFixture => {
   header.style.minWidth = '120px';
   jest.spyOn(header, 'getBoundingClientRect').mockReturnValue({ width: 100 } as DOMRect);
   table.createTHead().insertRow().append(header);
+  if (includeNestedTable) {
+    table.createTBody().insertRow().insertCell().innerHTML =
+      '<table><thead><tr><th data-resizable-column="true" style="min-width:999px"></th></tr></thead></table>';
+  }
   container.append(table);
   document.body.append(container);
   const view = renderHook((args: LayoutArgs) => useDefaultColumnLayout(args), {
@@ -62,6 +66,16 @@ describe('useDefaultColumnLayout', () => {
     jest.restoreAllMocks();
     global.ResizeObserver = originalObserver;
     document.body.replaceChildren();
+  });
+
+  it('does not observe or repeatedly refresh tables nested inside expanded rows', () => {
+    const { header, result } = renderLayout(false, true);
+    header.style.minWidth = '100px';
+    deliverResize();
+
+    expect(observe).toHaveBeenCalledTimes(2);
+    expect(requestAnimationFrame).not.toHaveBeenCalled();
+    expect(result.current.defaultLayoutVersion).toBe(0);
   });
 
   it('does not remount when cached measurements already match the fitted layout', () => {

@@ -3,10 +3,9 @@ import { useCallback, useMemo } from 'react';
 
 import {
   getExpandHeaderProps,
+  getSelectionCellProps,
   getSelectionHeaderProps,
-  SELECTION_COLUMN_WIDTH,
-} from '@components/common/DataViewTable/dataViewColumnUtils';
-import { FORKLIFT_DATA_VIEW_TABLE_STICKY_CELL_CLASS } from '@components/common/DataViewTable/forkliftDataViewTableClass';
+} from '@components/common/DataViewTable/dataViewControlColumnUtils';
 import type {
   DataViewTd,
   DataViewTh,
@@ -41,7 +40,7 @@ export const useDataViewSelection = <T,>(): UseDataViewSelectionResult<T> => {
     if (selection.config.hasSelection) {
       columns.push({
         cell: '',
-        props: getSelectionHeaderProps(t('Row select')),
+        props: getSelectionHeaderProps(t('Row select'), selection.config.hasExpansion),
       });
     }
     return columns;
@@ -65,9 +64,8 @@ export const useDataViewSelection = <T,>(): UseDataViewSelectionResult<T> => {
             ''
           ),
           props: {
-            className: FORKLIFT_DATA_VIEW_TABLE_STICKY_CELL_CLASS,
+            ...getSelectionCellProps(),
             'data-testid': `row-select-checkbox-${itemId || index}`,
-            isStickyColumn: true,
             select: {
               isDisabled,
               isSelected: selection.state.selectedIds?.includes(itemId) ?? false,
@@ -76,9 +74,6 @@ export const useDataViewSelection = <T,>(): UseDataViewSelectionResult<T> => {
               },
               rowIndex: index,
             },
-            stickyLeftOffset: '0',
-            stickyMinWidth: SELECTION_COLUMN_WIDTH,
-            style: { maxWidth: SELECTION_COLUMN_WIDTH },
           },
         },
       ];

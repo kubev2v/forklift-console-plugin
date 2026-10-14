@@ -18,12 +18,9 @@ import {
   DATA_DEFAULT_COLUMN_MIN_WIDTH_ATTR,
   DATA_DEFAULT_COLUMN_WEIGHT_ATTR,
   DATA_RESIZABLE_COLUMN_ATTR,
-  SELECTION_COLUMN_WIDTH,
 } from './dataViewTableConstants';
 import { FORKLIFT_DATA_VIEW_TABLE_STICKY_CELL_CLASS } from './forkliftDataViewTableClass';
 import { prepareColumnResize } from './prepareColumnResize';
-
-export { SELECTION_COLUMN_WIDTH } from './dataViewTableConstants';
 
 const withStickyCellClass = (className?: string): string =>
   className
@@ -52,22 +49,10 @@ export const getActionCellProps = (): TdProps => ({
   stickyMinWidth: '0',
 });
 
-export const getSelectionHeaderProps = (screenReaderText: string): ThProps => ({
-  className: withStickyCellClass(),
-  isStickyColumn: true,
-  screenReaderText,
-  stickyLeftOffset: '0',
-  stickyMinWidth: SELECTION_COLUMN_WIDTH,
-  style: { maxWidth: SELECTION_COLUMN_WIDTH, width: SELECTION_COLUMN_WIDTH },
-});
-
-export const getExpandHeaderProps = (screenReaderText: string): ThProps => ({
-  screenReaderText,
-});
-
 type ToDataViewColumnArgs = {
   actionScreenReaderText: string;
   activeSort: SortType;
+  captureColumnWidths?: (widths: Record<string, number>) => void;
   columnIndex: number;
   field: ResourceField;
   resizableProps?: DataViewThResizableProps;
@@ -78,6 +63,7 @@ type ToDataViewColumnArgs = {
 export const toDataViewColumn = ({
   actionScreenReaderText,
   activeSort,
+  captureColumnWidths,
   columnIndex,
   field,
   resizableProps,
@@ -97,13 +83,13 @@ export const toDataViewColumn = ({
           [DATA_DEFAULT_COLUMN_WEIGHT_ATTR]: field.defaultWidth?.weight ?? 1,
           [DATA_RESIZABLE_COLUMN_ATTR]: true,
           onKeyDownCapture: (event): void => {
-            prepareColumnResize(event, resizableProps.resizeButtonAriaLabel);
+            prepareColumnResize(event, resizableProps.resizeButtonAriaLabel, captureColumnWidths);
           },
           onMouseDownCapture: (event): void => {
-            prepareColumnResize(event, resizableProps.resizeButtonAriaLabel);
+            prepareColumnResize(event, resizableProps.resizeButtonAriaLabel, captureColumnWidths);
           },
           onTouchStartCapture: (event): void => {
-            prepareColumnResize(event, resizableProps.resizeButtonAriaLabel);
+            prepareColumnResize(event, resizableProps.resizeButtonAriaLabel, captureColumnWidths);
           },
         }
       : {}),
@@ -127,6 +113,11 @@ export const toDataViewColumn = ({
     resizableProps,
   };
 };
+
+export const getRenderedColumnCount = (
+  columnCount: number,
+  hasCustomColumnWidths: boolean,
+): number => Math.max(columnCount - (hasCustomColumnWidths ? 0 : 1), 1);
 
 export const getBodyCellProps = (field: ResourceField): TdProps => ({
   ...(field.isAction ? getActionCellProps() : { modifier: 'truncate' as const }),

@@ -9,7 +9,7 @@ import { requireVersion } from '../../utils/version/version';
 const VIEWPORT_HEIGHT = 1080;
 const LARGE_DRAG_PX = 500;
 const KEYBOARD_MINIMUM_PX = 100;
-const MAX_KEYBOARD_STEPS = 10;
+const KEYBOARD_SHIFT_INCREMENT_PX = 25;
 
 const getWidth = (header: Locator): Promise<number> =>
   header.evaluate((element) => element.getBoundingClientRect().width);
@@ -30,7 +30,8 @@ const resizeName = async (page: Page, header: Locator, gesture: string): Promise
     await expect.poll(() => getWidth(header)).toBeGreaterThan(LARGE_DRAG_PX);
     return;
   }
-  for (let step = 0; step < MAX_KEYBOARD_STEPS; step += 1) {
+  const maxKeyboardSteps = Math.ceil((await getWidth(header)) / KEYBOARD_SHIFT_INCREMENT_PX) + 1;
+  for (let step = 0; step < maxKeyboardSteps; step += 1) {
     await handle.press('Shift+ArrowLeft');
     if ((await getWidth(header)) < KEYBOARD_MINIMUM_PX) {
       break;

@@ -9,6 +9,7 @@ import type { ResourceField } from '../utils/types';
 
 import {
   COLUMN_WIDTH_PERSIST_DEBOUNCE_MS,
+  COLUMN_WIDTH_PERSIST_EVENTS,
   RESIZE_COLUMN_WIDTH_INCREMENT,
   RESIZE_COLUMN_WIDTH_SHIFT_INCREMENT,
 } from './columnWidthConstants';
@@ -25,6 +26,7 @@ type UseTableColumnWidthsArgs = {
 };
 
 type UseTableColumnWidthsResult = {
+  captureColumnWidths: (widths: Record<string, number>) => void;
   columnLayoutKey: number;
   getResizableProps: (
     field: ResourceField,
@@ -49,6 +51,7 @@ export const useTableColumnWidths = ({
   const widthOverrides = resizeOverrides ?? persistedWidths;
   const [columnLayoutKey, setColumnLayoutKey] = useState(0);
   const widthOverridesRef = useRef(widthOverrides);
+  const capturedWidthsRef = useRef<Record<string, number>>({});
   widthOverridesRef.current = widthOverrides;
 
   const saveWidthsInSettingsRef = useRef(saveWidthsInSettings);
@@ -62,16 +65,26 @@ export const useTableColumnWidths = ({
 
   useEffect(() => {
     const debouncedSave = debouncedSaveRef.current;
+    for (const eventType of COLUMN_WIDTH_PERSIST_EVENTS) {
+      window.addEventListener(eventType, debouncedSave.flush);
+    }
     return (): void => {
-      debouncedSave.cancel();
+      for (const eventType of COLUMN_WIDTH_PERSIST_EVENTS) {
+        window.removeEventListener(eventType, debouncedSave.flush);
+      }
+      debouncedSave.flush();
     };
+  }, []);
+
+  const captureColumnWidths = useCallback((widths: Record<string, number>): void => {
+    capturedWidthsRef.current = sanitizeColumnWidths(widths);
   }, []);
 
   const persistWidth = useCallback((columnId: string, width: number): void => {
     if (!isValidColumnWidth(width)) {
       return;
     }
-    const next = { ...widthOverridesRef.current, [columnId]: width };
+    const next = { ...capturedWidthsRef.current, ...widthOverridesRef.current, [columnId]: width };
     widthOverridesRef.current = next;
     setResizeOverrides(next);
     debouncedSaveRef.current(next);
@@ -103,6 +116,7 @@ export const useTableColumnWidths = ({
   );
 
   const resetAllColumnWidths = useCallback((): void => {
+    capturedWidthsRef.current = {};
     if (isEmpty(widthOverridesRef.current)) {
       return;
     }
@@ -114,6 +128,7 @@ export const useTableColumnWidths = ({
   }, [clearSettings]);
 
   return {
+    captureColumnWidths,
     columnLayoutKey,
     getResizableProps,
     hasCustomColumnWidths: !isEmpty(widthOverrides),

@@ -16,6 +16,7 @@ import type { RowProps, SortType } from '../TableView/types';
 import { UID } from '../utils/constants';
 import type { ResourceField } from '../utils/types';
 
+import { getRenderedColumnCount } from './dataViewColumnUtils';
 import {
   FORKLIFT_DATA_VIEW_TABLE_CLASS,
   FORKLIFT_DATA_VIEW_TABLE_LAYOUT_CLASS,
@@ -67,6 +68,7 @@ const ForkliftHybridDataViewTable = <T,>({
     visibleColumns,
   });
   const columnSignature = visibleColumns.map(({ resourceFieldId: id }) => id).join();
+  const renderedColumnCount = getRenderedColumnCount(columns.length, hasCustomColumnWidths);
 
   return (
     <div className={FORKLIFT_DATA_VIEW_TABLE_LAYOUT_CLASS} ref={layoutRef}>
@@ -83,7 +85,7 @@ const ForkliftHybridDataViewTable = <T,>({
           <Tbody>
             {placeholder ? (
               <Tr>
-                <Td colSpan={columns.length}>
+                <Td colSpan={renderedColumnCount}>
                   <Bullseye>{placeholder}</Bullseye>
                 </Td>
               </Tr>
@@ -92,7 +94,7 @@ const ForkliftHybridDataViewTable = <T,>({
                 <RowComponent
                   isExpanded={expandedIds?.includes(toId ? toId(resourceData) : '')}
                   key={`${columnSignature}_${String(resourceData?.[uidFieldId as keyof T] ?? index)}`}
-                  length={Math.max(columns.length - 1, 1)}
+                  length={Math.max(renderedColumnCount - 1, 1)}
                   namespace={namespace}
                   resourceData={resourceData}
                   resourceFields={visibleColumns}

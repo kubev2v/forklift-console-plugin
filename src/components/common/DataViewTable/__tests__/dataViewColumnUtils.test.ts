@@ -1,7 +1,12 @@
 import type { ResourceField } from '@components/common/utils/types';
 
 import type { SortType } from '../../TableView/types';
-import { getActionCellProps, getBodyCellProps, toDataViewColumn } from '../dataViewColumnUtils';
+import {
+  getActionCellProps,
+  getBodyCellProps,
+  getRenderedColumnCount,
+  toDataViewColumn,
+} from '../dataViewColumnUtils';
 import { FORKLIFT_DATA_VIEW_TABLE_STICKY_CELL_CLASS } from '../forkliftDataViewTableClass';
 
 const activeSort: SortType = { isAsc: true, label: 'Name', resourceFieldId: 'name' };
@@ -19,6 +24,12 @@ const actionField: ResourceField = {
 };
 
 describe('dataViewColumnUtils', () => {
+  it('excludes the hidden spacer from default loading and expanded row spans', () => {
+    expect(getRenderedColumnCount(8, false)).toBe(7);
+    expect(getRenderedColumnCount(8, true)).toBe(8);
+    expect(getRenderedColumnCount(1, false)).toBe(1);
+  });
+
   it('lets DataViewTh control resizing without a conflicting CSS width or nowrap modifier', () => {
     const column = toDataViewColumn({
       actionScreenReaderText: 'Actions',

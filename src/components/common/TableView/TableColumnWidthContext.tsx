@@ -16,6 +16,7 @@ import type { ResourceField } from '../utils/types';
 import { useTableColumnWidths } from './useTableColumnWidths';
 
 type TableColumnWidthContextValue = {
+  captureColumnWidths: (widths: Record<string, number>) => void;
   columnLayoutKey: number;
   enabled: boolean;
   getResizableProps: (
@@ -27,6 +28,7 @@ type TableColumnWidthContextValue = {
 };
 
 const defaultContext: TableColumnWidthContextValue = {
+  captureColumnWidths: (): void => undefined,
   columnLayoutKey: 0,
   enabled: false,
   getResizableProps: () => undefined,
@@ -47,21 +49,34 @@ export const TableColumnWidthProvider: FC<TableColumnWidthProviderProps> = ({
   columnWidthsSettings,
   enabled,
 }): ReactElement => {
-  const { columnLayoutKey, getResizableProps, hasCustomColumnWidths, resetAllColumnWidths } =
-    useTableColumnWidths({
-      columnWidthsSettings,
-      enabled,
-    });
+  const {
+    captureColumnWidths,
+    columnLayoutKey,
+    getResizableProps,
+    hasCustomColumnWidths,
+    resetAllColumnWidths,
+  } = useTableColumnWidths({
+    columnWidthsSettings,
+    enabled,
+  });
 
   const value = useMemo(
     (): TableColumnWidthContextValue => ({
+      captureColumnWidths,
       columnLayoutKey,
       enabled,
       getResizableProps,
       hasCustomColumnWidths,
       resetAllColumnWidths,
     }),
-    [columnLayoutKey, enabled, getResizableProps, hasCustomColumnWidths, resetAllColumnWidths],
+    [
+      captureColumnWidths,
+      columnLayoutKey,
+      enabled,
+      getResizableProps,
+      hasCustomColumnWidths,
+      resetAllColumnWidths,
+    ],
   );
 
   return (

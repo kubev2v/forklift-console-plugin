@@ -72,6 +72,47 @@ describe('exact column width persistence', () => {
     },
   );
 
+  it.each(['mouseup', 'touchend', 'keyup', 'pagehide'])(
+    'saves the final pending width on %s before the debounce expires',
+    (eventType) => {
+      const { result, save } = renderWidths();
+      act(() => {
+        result.current
+          .getResizableProps(nameField, 'Name')
+          ?.onResize?.(resizeEvent, 'name', 624.125);
+      });
+      expect(save).not.toHaveBeenCalled();
+      act(() => {
+        window.dispatchEvent(new Event(eventType));
+      });
+      expect(save).toHaveBeenLastCalledWith({ name: 624.125 });
+      act(() => {
+        jest.runAllTimers();
+      });
+      expect(save).toHaveBeenCalledTimes(1);
+    },
+  );
+
+  it('saves pending widths when unmounting and does not restore canceled widths after Reset', () => {
+    const { result, save, unmount } = renderWidths();
+    act(() => {
+      result.current.getResizableProps(nameField, 'Name')?.onResize?.(resizeEvent, 'name', 79.125);
+    });
+    unmount();
+    expect(save).toHaveBeenLastCalledWith({ name: 79.125 });
+    const { result: resetResult, save: resetSave, unmount: resetUnmount } = renderWidths();
+    act(() => {
+      resetResult.current
+        .getResizableProps(nameField, 'Name')
+        ?.onResize?.(resizeEvent, 'name', 79.125);
+      resetResult.current.resetAllColumnWidths();
+      window.dispatchEvent(new Event('pagehide'));
+    });
+    resetUnmount();
+    jest.runAllTimers();
+    expect(resetSave).not.toHaveBeenCalled();
+  });
+
   it('ignores invalid saved widths instead of marking the table customized', () => {
     const { result } = renderWidths({ name: -1 });
 

@@ -7,8 +7,9 @@ const createHeaders = (): HTMLTableCellElement[] => {
   const table = document.createElement('table');
   table.dataset.columnWidthsCustomized = 'false';
   table.append(row);
-  return [112, 106, 198].map((width) => {
+  return [112, 106, 198].map((width, index) => {
     const header = document.createElement('th');
+    header.id = ['name', 'namespace', 'status'][index];
     header.style.minWidth = '100px';
     header.setAttribute('data-resizable-column', 'true');
     jest.spyOn(header, 'getBoundingClientRect').mockImplementation(() => {
@@ -52,8 +53,10 @@ describe('prepareColumnResize', () => {
       | MouseEvent<HTMLTableCellElement>
       | TouchEvent<HTMLTableCellElement>;
 
-    prepareColumnResize(event, 'Name');
+    const capture = jest.fn();
+    prepareColumnResize(event, 'Name', capture);
 
+    expect(capture).toHaveBeenCalledWith({ name: 112, namespace: 106, status: 198 });
     expect(headers.map((header) => header.style.minWidth)).toEqual(['112px', '106px', '198px']);
     expect(headers[0].closest('table')?.dataset.columnWidthsCustomized).toBe('true');
     expect(headers.map((header) => header.dataset.columnWidthFixed)).toEqual([

@@ -27,9 +27,8 @@ export const useDefaultColumnLayout = ({
     if (!container || !table || hasCustomColumnWidths) {
       return undefined;
     }
-    const headers = Array.from(
-      table.querySelectorAll<HTMLTableCellElement>('th[data-resizable-column="true"]'),
-    );
+    const tableHeaders = Array.from(table.tHead?.rows[0]?.cells ?? []);
+    const headers = tableHeaders.filter((header) => header.dataset.resizableColumn === 'true');
     const defaultLayout = createDefaultColumnLayout(table, container);
     let animationFrame: number | undefined;
     const needsMeasurement = (): boolean =>
@@ -63,7 +62,7 @@ export const useDefaultColumnLayout = ({
         animationFrame = requestAnimationFrame(refreshMeasurements);
       }
     });
-    for (const header of Array.from(table.querySelectorAll('thead th'))) observer.observe(header);
+    for (const header of tableHeaders) observer.observe(header);
     observer.observe(container);
     return (): void => {
       observer.disconnect();
