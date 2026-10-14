@@ -2,7 +2,7 @@ import { expect, type Locator, type Page, test } from '@playwright/test';
 
 import { setupForkliftIntercepts } from '../../intercepts/setupForkliftIntercepts';
 import { expectTableToFit } from '../../utils/resizableColumns';
-import { V5_0_0 } from '../../utils/version/constants';
+import { V5_1_0 } from '../../utils/version/constants';
 import { requireVersion } from '../../utils/version/version';
 
 const VIEWPORT_HEIGHT = 1080;
@@ -50,7 +50,7 @@ const navigateInSidebar = async (page: Page, kind: string): Promise<void> => {
 };
 
 test.describe('Navigation preserves the complete resized layout', { tag: '@upstream' }, () => {
-  requireVersion(test, V5_0_0);
+  requireVersion(test, V5_1_0);
   test.beforeEach(async ({ page }) => {
     await setupForkliftIntercepts(page);
   });

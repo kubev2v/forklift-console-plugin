@@ -4,6 +4,34 @@ import { isValidColumnWidth } from '../TableView/columnWidthUtils';
 
 import type { DefaultColumnWidth } from './defaultColumnWidthTypes';
 
+const distributeRemaining = (
+  indices: readonly number[],
+  remainingWidth: number,
+  minimums: readonly number[],
+  weights: readonly number[],
+  widths: number[],
+): void => {
+  if (isEmpty(indices)) {
+    return;
+  }
+  const weightTotal = indices.reduce((sum, index) => sum + weights[index], 0);
+  const constrained = indices.filter(
+    (index) => (remainingWidth * weights[index]) / weightTotal < minimums[index],
+  );
+  if (isEmpty(constrained)) {
+    for (const index of indices) {
+      widths[index] = (remainingWidth * weights[index]) / weightTotal;
+    }
+    return;
+  }
+  const constrainedTotal = constrained.reduce((sum, index) => {
+    widths[index] = minimums[index];
+    return sum + minimums[index];
+  }, 0);
+  const unconstrained = indices.filter((index) => !constrained.includes(index));
+  distributeRemaining(unconstrained, remainingWidth - constrainedTotal, minimums, weights, widths);
+};
+
 export const allocateDefaultColumnWidths = (
   availableWidth: number,
   columns: DefaultColumnWidth[],
@@ -22,27 +50,12 @@ export const allocateDefaultColumnWidths = (
   );
   const weights = columns.map(({ weight }) => (isValidColumnWidth(weight) ? weight : 1));
   const widths = columns.map(() => 0);
-  let remainingWidth = availableWidth;
-  let remainingColumns = columns.map((_column, index) => index);
-
-  while (!isEmpty(remainingColumns)) {
-    const weightTotal = remainingColumns.reduce((sum, index) => sum + weights[index], 0);
-    const widthToDistribute = remainingWidth;
-    const constrainedColumns = remainingColumns.filter(
-      (index) => (widthToDistribute * weights[index]) / weightTotal < minimums[index],
-    );
-    if (isEmpty(constrainedColumns)) {
-      for (const index of remainingColumns) {
-        widths[index] = (remainingWidth * weights[index]) / weightTotal;
-      }
-      remainingColumns = [];
-    } else {
-      for (const index of constrainedColumns) {
-        widths[index] = minimums[index];
-        remainingWidth -= minimums[index];
-      }
-      remainingColumns = remainingColumns.filter((index) => !constrainedColumns.includes(index));
-    }
-  }
+  distributeRemaining(
+    columns.map((_column, index) => index),
+    availableWidth,
+    minimums,
+    weights,
+    widths,
+  );
   return widths;
 };

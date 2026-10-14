@@ -10,7 +10,8 @@ import type { RowProps } from '@components/common/TableView/types';
 import { Tooltip } from '@patternfly/react-core';
 import { Td } from '@patternfly/react-table';
 
-import { usePageSelectionConfig, usePageSelectionState } from '../context/usePageSelectionContext';
+import { usePageSelectionConfig } from '../context/usePageSelectionConfig';
+import { usePageSelectionState } from '../context/usePageSelectionState';
 
 type SelectCheckboxTdProps<T> = Pick<RowProps<T>, 'resourceData' | 'resourceIndex'>;
 

@@ -3,7 +3,7 @@ import { expect, type Locator, type Page, test } from '@playwright/test';
 import { setupPlansIntercepts } from '../../intercepts/plans';
 import { setupProvidersIntercepts } from '../../intercepts/providers';
 import { expectTableToFit } from '../../utils/resizableColumns';
-import { V5_0_0 } from '../../utils/version/constants';
+import { V5_1_0 } from '../../utils/version/constants';
 import { requireVersion } from '../../utils/version/version';
 
 const VIEWPORT_HEIGHT = 1080;
@@ -53,7 +53,7 @@ const expectWidth = async (header: Locator, width: number): Promise<void> => {
 };
 
 test.describe('PatternFly rendered widths survive persistence', { tag: '@upstream' }, () => {
-  requireVersion(test, V5_0_0);
+  requireVersion(test, V5_1_0);
 
   test.beforeEach(async ({ page }) => {
     await setupPlansIntercepts(page);

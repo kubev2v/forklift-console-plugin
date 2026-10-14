@@ -2,11 +2,12 @@ import type { ReactElement } from 'react';
 
 import { PageSection } from '@patternfly/react-core';
 
+import type { StandardPageInnerViewProps } from '../utils/standardPageInnerViewTypes';
+
 import { PageContent } from './PageContent';
 import { PageHeader } from './PageHeader';
 import { PageTable } from './PageTable';
 import { PageToolbar } from './PageToolbar';
-import type { StandardPageInnerViewProps } from './standardPageInnerView.types';
 
 const StandardPageInnerView = <T,>({
   activeSort,

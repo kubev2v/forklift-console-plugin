@@ -3,7 +3,7 @@ import { expect, type Locator, type Page, test } from '@playwright/test';
 import { setupPlansIntercepts } from '../../intercepts/plans';
 import { setupProvidersIntercepts } from '../../intercepts/providers';
 import { expectLastResizeHandleVisible, expectTableToFit } from '../../utils/resizableColumns';
-import { V5_0_0 } from '../../utils/version/constants';
+import { V5_1_0 } from '../../utils/version/constants';
 import { requireVersion } from '../../utils/version/version';
 
 const LAYOUT_TOLERANCE_PX = 1;
@@ -64,7 +64,7 @@ const expectResetToPreserveTable = async (page: Page, table: Locator): Promise<v
 };
 
 test.describe('Resizable list columns', { tag: '@upstream' }, () => {
-  requireVersion(test, V5_0_0);
+  requireVersion(test, V5_1_0);
 
   test.beforeEach(async ({ page }) => {
     await setupPlansIntercepts(page);

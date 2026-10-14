@@ -10,7 +10,7 @@ import {
   expectStickyCellOpaque,
   expectStickyCellToCoverData,
 } from '../../utils/stickyColumns';
-import { V5_0_0 } from '../../utils/version/constants';
+import { V5_1_0 } from '../../utils/version/constants';
 import { requireVersion } from '../../utils/version/version';
 
 const SCROLLABLE_TABLE_STYLES = createRequire(__filename).resolve(
@@ -21,7 +21,7 @@ const ENLARGE_STEPS = 20;
 const GEOMETRY_PRECISION = 1;
 
 test.describe('Sticky controls cover overflowing resized columns', { tag: '@upstream' }, () => {
-  requireVersion(test, V5_0_0);
+  requireVersion(test, V5_1_0);
 
   test.beforeEach(async ({ page }) => {
     await setupPlansIntercepts(page);

@@ -84,10 +84,16 @@ export const createDefaultColumnLayout = (
         !Number.isFinite(previous) || Math.abs(width - previous) > COLUMN_MEASUREMENT_TOLERANCE_PX
       );
     });
+  const clearCachedHeaderMinWidths = (): void => {
+    for (const header of headers) {
+      header.style.removeProperty('min-width');
+    }
+  };
   const refresh = (): void => {
     if (table.getAttribute(DATA_COLUMN_WIDTHS_CUSTOMIZED_ATTR) === 'true') {
       return;
     }
+    clearCachedHeaderMinWidths();
     const widths = measureWidths();
     for (const [index, width] of widths.entries()) {
       getColumn(index).style.setProperty(FORKLIFT_DEFAULT_COLUMN_WIDTH_CSS_VAR, `${width}px`);

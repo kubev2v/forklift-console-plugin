@@ -1,3 +1,7 @@
+/**
+ * Resizable DataView table for StandardPage list rows rendered entirely through PatternFly
+ * DataView cells. Use `ForkliftHybridDataViewTable` when rows need expand/selection leading cells.
+ */
 import type { FC, ReactElement, ReactNode } from 'react';
 
 import { Bullseye } from '@patternfly/react-core';

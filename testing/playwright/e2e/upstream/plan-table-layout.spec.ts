@@ -5,7 +5,7 @@ import { setupForkliftIntercepts } from '../../intercepts/setupForkliftIntercept
 import { PlanDetailsPage } from '../../page-objects/PlanDetailsPage/PlanDetailsPage';
 import { expectTableToFit } from '../../utils/resizableColumns';
 import { MTV_NAMESPACE } from '../../utils/resource-manager/constants';
-import { V5_0_0 } from '../../utils/version/constants';
+import { V5_1_0 } from '../../utils/version/constants';
 import { requireVersion } from '../../utils/version/version';
 
 const VIEWPORT_HEIGHT = 1080;
@@ -14,7 +14,7 @@ const CONTROL_WIDTH_PX = 45;
 const WIDTH_TOLERANCE_PX = 1;
 
 test.describe('Plans table layout stability and controls', { tag: '@upstream' }, () => {
-  requireVersion(test, V5_0_0);
+  requireVersion(test, V5_1_0);
   test.beforeEach(async ({ page }) => {
     await setupForkliftIntercepts(page);
   });

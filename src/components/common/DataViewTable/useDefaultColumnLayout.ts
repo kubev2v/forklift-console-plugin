@@ -2,6 +2,7 @@ import { type RefObject, useLayoutEffect, useRef, useState } from 'react';
 
 import { COLUMN_MEASUREMENT_TOLERANCE_PX } from '../TableView/columnWidthConstants';
 
+import { DATA_RESIZABLE_COLUMN_ATTR } from './dataViewTableConstants';
 import { createDefaultColumnLayout } from './defaultColumnLayout';
 
 type UseDefaultColumnLayoutArgs = {
@@ -28,7 +29,9 @@ export const useDefaultColumnLayout = ({
       return undefined;
     }
     const tableHeaders = Array.from(table.tHead?.rows[0]?.cells ?? []);
-    const headers = tableHeaders.filter((header) => header.dataset.resizableColumn === 'true');
+    const headers = tableHeaders.filter(
+      (header) => header.getAttribute(DATA_RESIZABLE_COLUMN_ATTR) === 'true',
+    );
     const defaultLayout = createDefaultColumnLayout(table, container);
     let animationFrame: number | undefined;
     const needsMeasurement = (): boolean =>

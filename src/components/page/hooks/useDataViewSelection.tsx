@@ -13,7 +13,7 @@ import type {
 import { useForkliftTranslation } from '@utils/i18n';
 
 import SelectDisabledTooltip from '../components/SelectDisabledTooltip';
-import { useOptionalPageSelection } from '../context/usePageSelectionContext';
+import { useOptionalPageSelection } from '../context/useOptionalPageSelection';
 
 type UseDataViewSelectionResult<T> = {
   getLeadingCells: (entity: T, index: number) => DataViewTd[];

@@ -14,23 +14,6 @@
     --pf-v6-c-table__th--m-help--MinWidth: 0;
   }
 
-  // Inline cached minima must yield to default allocation; otherwise stale measurements cause overflow.
-  &[data-column-widths-customized='false'] th[data-resizable-column='true'],
-  th[data-action-column='true'] {
-    min-width: 0 !important;
-  }
-
-  // Empty control headers must not inherit a share of the data-column budget through cached minima.
-  [data-table-control-column] {
-    width: 0;
-    min-width: var(--pf-v6-c-table__sticky-cell--MinWidth) !important;
-  }
-
-  [data-table-control-column='expand']:first-child {
-    padding-inline-start: var(--pf-v6-c-table__toggle--PaddingInlineStart);
-    padding-inline-end: var(--pf-v6-c-table__toggle--PaddingInlineEnd);
-  }
-
   &[data-column-widths-customized='false'] colgroup[data-default-column-widths='true'] col {
     width: var(--forklift-default-column-width, auto);
   }
@@ -41,12 +24,17 @@
   }
 
   &[data-column-widths-customized='true'] [data-column-width-spacer='true'] {
-    min-width: 0 !important;
+    min-width: 0;
     padding: 0;
   }
 
   &[data-column-widths-customized='false'] [data-column-width-spacer='true'] {
     display: none;
+  }
+
+  [data-table-control-column='expand']:first-child {
+    padding-inline-start: var(--pf-v6-c-table__toggle--PaddingInlineStart);
+    padding-inline-end: var(--pf-v6-c-table__toggle--PaddingInlineEnd);
   }
 
   // Glass surfaces and late-loaded PF styles can make even the sticky token translucent.

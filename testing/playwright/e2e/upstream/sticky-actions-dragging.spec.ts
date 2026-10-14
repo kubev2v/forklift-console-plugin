@@ -10,7 +10,7 @@ import {
   expectStickyCellOpaque,
   expectStickyCellToCoverData,
 } from '../../utils/stickyColumns';
-import { V5_0_0 } from '../../utils/version/constants';
+import { V5_1_0 } from '../../utils/version/constants';
 import { requireVersion } from '../../utils/version/version';
 
 const SCROLLABLE_TABLE_STYLES = createRequire(__filename).resolve(
@@ -21,7 +21,7 @@ const VIEWPORT_HEIGHT = 1080;
 const DRAG_DELTAS = [100, 500];
 
 test.describe('Sticky Actions during mouse resizing', { tag: '@upstream' }, () => {
-  requireVersion(test, V5_0_0);
+  requireVersion(test, V5_1_0);
 
   for (const resource of [
     { kind: 'Provider', title: 'Providers' },

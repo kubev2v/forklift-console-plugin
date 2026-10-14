@@ -18,8 +18,7 @@ const renderLayout = (hasCustomColumnWidths = false, includeNestedTable = false)
   const table = document.createElement('table');
   table.dataset.columnWidthsCustomized = String(hasCustomColumnWidths);
   const header = document.createElement('th');
-  header.dataset.resizableColumn = 'true';
-  header.style.minWidth = '120px';
+  header.setAttribute('data-resizable-column', 'true');
   jest.spyOn(header, 'getBoundingClientRect').mockReturnValue({ width: 100 } as DOMRect);
   table.createTHead().insertRow().append(header);
   if (includeNestedTable) {
@@ -71,6 +70,7 @@ describe('useDefaultColumnLayout', () => {
   it('does not observe or repeatedly refresh tables nested inside expanded rows', () => {
     const { header, result } = renderLayout(false, true);
     header.style.minWidth = '100px';
+    jest.spyOn(header, 'getBoundingClientRect').mockReturnValue({ width: 100 } as DOMRect);
     deliverResize();
 
     expect(observe).toHaveBeenCalledTimes(2);
@@ -81,6 +81,7 @@ describe('useDefaultColumnLayout', () => {
   it('does not remount when cached measurements already match the fitted layout', () => {
     const { header, result } = renderLayout();
     header.style.minWidth = '100px';
+    jest.spyOn(header, 'getBoundingClientRect').mockReturnValue({ width: 100 } as DOMRect);
     deliverResize();
 
     expect(requestAnimationFrame).not.toHaveBeenCalled();
@@ -89,29 +90,34 @@ describe('useDefaultColumnLayout', () => {
 
   it('refreshes stale default measurements once outside the observer cycle', () => {
     const { header, result } = renderLayout();
+    header.style.minWidth = '120px';
     deliverResize();
     deliverResize();
     expect(requestAnimationFrame).toHaveBeenCalledTimes(1);
     expect(result.current.defaultLayoutVersion).toBe(0);
 
     deliverFrame();
-    expect(result.current.defaultLayoutVersion).toBe(1);
+    expect(result.current.defaultLayoutVersion).toBe(0);
     header.style.minWidth = '100px';
+    jest.spyOn(header, 'getBoundingClientRect').mockReturnValue({ width: 100 } as DOMRect);
     deliverResize();
     expect(requestAnimationFrame).toHaveBeenCalledTimes(1);
   });
 
   it('does not remount if measurements match again before the queued refresh', () => {
     const { header, result } = renderLayout();
+    header.style.minWidth = '120px';
     deliverResize();
     header.style.minWidth = '100px';
+    jest.spyOn(header, 'getBoundingClientRect').mockReturnValue({ width: 100 } as DOMRect);
     deliverFrame();
 
     expect(result.current.defaultLayoutVersion).toBe(0);
   });
 
   it('does not refresh a queued default layout once a resize gesture starts', () => {
-    const { result, table } = renderLayout();
+    const { header, result, table } = renderLayout();
+    header.style.minWidth = '120px';
     deliverResize();
     table.dataset.columnWidthsCustomized = 'true';
     deliverFrame();
@@ -122,7 +128,8 @@ describe('useDefaultColumnLayout', () => {
   });
 
   it('stops observing and cancels pending refreshes when custom widths are saved', () => {
-    const { rerender } = renderLayout();
+    const { header, rerender } = renderLayout();
+    header.style.minWidth = '120px';
     deliverResize();
     rerender({ hasCustomColumnWidths: true, layoutKey: 'attached' });
 

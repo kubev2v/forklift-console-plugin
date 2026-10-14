@@ -5,7 +5,7 @@ import { setupPlansIntercepts } from '../../intercepts/plans';
 import { setupProvidersIntercepts } from '../../intercepts/providers';
 import { setupStorageMapsIntercepts } from '../../intercepts/storageMaps';
 import { expectLastResizeHandleVisible, expectTableToFit } from '../../utils/resizableColumns';
-import { V5_0_0 } from '../../utils/version/constants';
+import { V5_1_0 } from '../../utils/version/constants';
 import { requireVersion } from '../../utils/version/version';
 
 const VIEWPORT_HEIGHT = 1080;
@@ -40,7 +40,7 @@ const expectWeightedWidths = async (table: Locator, compactId: string): Promise<
 };
 
 test.describe('Weighted default column widths', { tag: '@upstream' }, () => {
-  requireVersion(test, V5_0_0);
+  requireVersion(test, V5_1_0);
 
   test.beforeEach(async ({ page }) => {
     await setupPlansIntercepts(page);
