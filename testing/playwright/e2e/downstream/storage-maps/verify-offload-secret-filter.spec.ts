@@ -1,4 +1,3 @@
-import { getName } from '../../../../../src/utils/crds/common/selectors';
 import { providerOnlyFixtures as test } from '../../../fixtures/resourceFixtures';
 import { StorageMapCreatePage } from '../../../page-objects/StorageMapCreatePage';
 import { StorageMapsListPage } from '../../../page-objects/StorageMapsListPage';
@@ -67,11 +66,7 @@ test.describe('Storage Offloading - Secret Filtering', { tag: '@downstream' }, (
     await test.step('Fill form: name, project, providers', async () => {
       await createPage.fillMapName(`filter-test-sm-${Math.random().toString(36).substring(7)}`);
       await createPage.selectProject(MTV_NAMESPACE);
-      const providerName = getName(testProvider);
-      if (providerName === undefined) {
-        throw new Error('testProvider name is required');
-      }
-      await createPage.selectSourceProvider(providerName);
+      await createPage.selectSourceProvider(testProvider.metadata.name);
       await createPage.selectTargetProvider('host');
       await createPage.waitForMappingTableReady();
     });
