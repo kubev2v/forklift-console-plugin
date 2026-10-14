@@ -6,6 +6,48 @@ export const expectTableToFit = async (table: Locator): Promise<void> => {
   await expect
     .poll(() =>
       table.evaluate((element, tolerance) => {
+        const defaultColumnWidthsColgroupSelector = 'colgroup[data-default-column-widths="true"]';
+        const forkliftDefaultColumnWidthCssVar = '--forklift-default-column-width';
+
+        const resizableHeadersMatchLayout = (
+          tableElement: HTMLTableElement,
+          headers: HTMLTableCellElement[],
+        ): boolean => {
+          const customized = tableElement.getAttribute('data-column-widths-customized') === 'true';
+          if (customized) {
+            return headers.every((header) => {
+              const minWidth = parseFloat(header.style.minWidth);
+              return (
+                Number.isFinite(minWidth) &&
+                Math.abs(header.getBoundingClientRect().width - minWidth) < tolerance
+              );
+            });
+          }
+
+          const colgroup = tableElement.querySelector<HTMLTableColElement>(
+            defaultColumnWidthsColgroupSelector,
+          );
+          if (!colgroup) {
+            return false;
+          }
+          const cols = Array.from(colgroup.children) as HTMLTableColElement[];
+
+          return headers.every((header) => {
+            const row = header.parentElement;
+            if (!row) {
+              return false;
+            }
+            const headerIndex = Array.from(row.children).indexOf(header);
+            if (headerIndex < 0) {
+              return false;
+            }
+            const preferred = parseFloat(
+              cols[headerIndex]?.style.getPropertyValue(forkliftDefaultColumnWidthCssVar) ?? '',
+            );
+            return Number.isFinite(preferred) && preferred > 0;
+          });
+        };
+
         const container = element.parentElement;
         const tableRect = element.getBoundingClientRect();
         const containerRect = container?.getBoundingClientRect();
@@ -17,11 +59,7 @@ export const expectTableToFit = async (table: Locator): Promise<void> => {
           containerRect &&
           container.scrollWidth === container.clientWidth &&
           Math.abs(tableRect.width - containerRect.width) < tolerance &&
-          headers.every(
-            (header) =>
-              Math.abs(header.getBoundingClientRect().width - parseFloat(header.style.minWidth)) <
-              tolerance,
-          ),
+          resizableHeadersMatchLayout(element, headers),
         );
       }, LAYOUT_TOLERANCE_PX),
     )
