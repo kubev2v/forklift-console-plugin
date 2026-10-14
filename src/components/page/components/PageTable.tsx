@@ -1,17 +1,12 @@
 import { type FC, type ReactElement, useMemo } from 'react';
 
-import {
-  ErrorState,
-  Loading,
-  NoResultsFound,
-  NoResultsMatchFilter,
-} from '@components/common/Page/PageStates';
 import { TableView } from '@components/common/TableView/TableView';
 import type { RowProps, SortType, TableViewHeaderProps } from '@components/common/TableView/types';
 import type { ResourceField } from '@components/common/utils/types';
 import { isEmpty } from '@utils/helpers';
 import { useForkliftTranslation } from '@utils/i18n';
 
+import { buildPageTablePlaceholder } from './pageTablePlaceholder';
 import ResizablePageTable from './ResizablePageTable';
 
 type PageTableProps<T> = {
@@ -69,41 +64,29 @@ export const PageTable = <T,>({
     [loaded, error, finalFilteredData, sortedData],
   );
 
-  const placeholder = useMemo(() => {
-    if (!loaded) {
-      return <Loading title={t('Loading')} />;
-    }
-    if (errorFetchingData) {
-      return <ErrorState title={t('Unable to retrieve data')} />;
-    }
-    if (noResults) {
-      return customNoResultsFound ?? <NoResultsFound title={t('No results found')} />;
-    }
-    if (noMatchingResults) {
-      return (
-        customNoResultsMatchFilter ?? (
-          <NoResultsMatchFilter
-            clearAllFilters={clearAllFilters}
-            clearAllLabel={t('Clear all filters')}
-            description={t(
-              'No results match the filter criteria. Clear all filters and try again.',
-            )}
-            title={t('No results found')}
-          />
-        )
-      );
-    }
-    return null;
-  }, [
-    clearAllFilters,
-    customNoResultsFound,
-    customNoResultsMatchFilter,
-    errorFetchingData,
-    loaded,
-    noMatchingResults,
-    noResults,
-    t,
-  ]);
+  const placeholder = useMemo(
+    () =>
+      buildPageTablePlaceholder({
+        clearAllFilters,
+        customNoResultsFound,
+        customNoResultsMatchFilter,
+        errorFetchingData,
+        loaded,
+        noMatchingResults,
+        noResults,
+        t,
+      }),
+    [
+      clearAllFilters,
+      customNoResultsFound,
+      customNoResultsMatchFilter,
+      errorFetchingData,
+      loaded,
+      noMatchingResults,
+      noResults,
+      t,
+    ],
+  );
 
   if (resizableColumns) {
     return (
@@ -135,27 +118,7 @@ export const PageTable = <T,>({
       toId={toId}
       visibleColumns={visibleColumns}
     >
-      {!loaded && <Loading key="loading" title={t('Loading')} />}
-
-      {loaded && Boolean(errorFetchingData) && (
-        <ErrorState key="error" title={t('Unable to retrieve data')} />
-      )}
-
-      {noResults &&
-        (customNoResultsFound ?? <NoResultsFound key="no_result" title={t('No results found')} />)}
-
-      {noMatchingResults &&
-        (customNoResultsMatchFilter ?? (
-          <NoResultsMatchFilter
-            clearAllFilters={clearAllFilters}
-            clearAllLabel={t('Clear all filters')}
-            description={t(
-              'No results match the filter criteria. Clear all filters and try again.',
-            )}
-            key="no_match"
-            title={t('No results found')}
-          />
-        ))}
+      {placeholder}
     </TableView>
   );
 };

@@ -132,6 +132,7 @@
   /components/my-component/utils/
   /components/my-component/hooks/
   ```
+- **Constants vs utils**: Put shared literals (DOM `data-*` keys, attribute names, fixed pixel widths, field-id strings reused in multiple files) in `constants.ts` or `*Constants.ts` with **UPPERCASE_UNDERSCORE** names. Keep `*Utils.ts` / `*utils.ts` for **pure functions** only — do not define reusable string/number literals there.
 
 #### Styling
 - **Prefer SCSS** for styling to leverage nesting, variables, and mixins for maintainable styles.

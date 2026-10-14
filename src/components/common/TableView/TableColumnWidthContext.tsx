@@ -11,7 +11,6 @@ import {
 import type { DataViewThResizableProps } from '@patternfly/react-data-view/dist/esm/DataViewTh/DataViewTh';
 
 import type { ColumnWidthsSettings } from '../Page/types';
-import type { ResourceField } from '../utils/types';
 
 import { useTableColumnWidths } from './useTableColumnWidths';
 
@@ -40,36 +39,28 @@ type TableColumnWidthProviderProps = {
   children: ReactNode;
   columnWidthsSettings?: ColumnWidthsSettings;
   enabled: boolean;
-  visibleColumns: ResourceField[];
 };
 
 export const TableColumnWidthProvider: FC<TableColumnWidthProviderProps> = ({
   children,
   columnWidthsSettings,
   enabled,
-  visibleColumns,
 }): ReactElement => {
-  const widths = useTableColumnWidths({
-    columnWidthsSettings,
-    enabled,
-    visibleColumns,
-  });
+  const { columnLayoutKey, getResizableProps, hasCustomColumnWidths, resetAllColumnWidths } =
+    useTableColumnWidths({
+      columnWidthsSettings,
+      enabled,
+    });
 
   const value = useMemo(
     (): TableColumnWidthContextValue => ({
-      columnLayoutKey: widths.columnLayoutKey,
+      columnLayoutKey,
       enabled,
-      getResizableProps: widths.getResizableProps,
-      hasCustomColumnWidths: widths.hasCustomColumnWidths,
-      resetAllColumnWidths: widths.resetAllColumnWidths,
+      getResizableProps,
+      hasCustomColumnWidths,
+      resetAllColumnWidths,
     }),
-    [
-      enabled,
-      widths.columnLayoutKey,
-      widths.getResizableProps,
-      widths.hasCustomColumnWidths,
-      widths.resetAllColumnWidths,
-    ],
+    [columnLayoutKey, enabled, getResizableProps, hasCustomColumnWidths, resetAllColumnWidths],
   );
 
   return (

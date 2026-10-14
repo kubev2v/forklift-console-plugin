@@ -8,10 +8,10 @@ import { useTableColumnWidthContext } from './TableColumnWidthContext';
 
 const ResetColumnWidthsToolbar = (): ReactElement | null => {
   const { t } = useForkliftTranslation();
-  const { enabled, resetAllColumnWidths } = useTableColumnWidthContext();
+  const { enabled, hasCustomColumnWidths, resetAllColumnWidths } = useTableColumnWidthContext();
   const label = t('Reset column widths');
 
-  if (!enabled) {
+  if (!enabled || !hasCustomColumnWidths) {
     return null;
   }
 

@@ -4,9 +4,14 @@ import {
 } from '../TableView/columnWidthConstants';
 import { isValidColumnWidth } from '../TableView/columnWidthUtils';
 
+import {
+  DATA_COLUMN_WIDTH_SPACER_ATTR,
+  DATA_COLUMN_WIDTHS_CUSTOMIZED_ATTR,
+  DATA_DEFAULT_COLUMN_WIDTHS_ATTR,
+  DATA_RESIZABLE_COLUMN_ATTR,
+  FORKLIFT_DEFAULT_COLUMN_WIDTH_CSS_VAR,
+} from './dataViewTableConstants';
 import { allocateDefaultColumnWidths } from './defaultColumnWidthUtils';
-
-const DEFAULT_COLUMN_WIDTH_PROPERTY = '--forklift-default-column-width';
 
 type DefaultColumnLayout = {
   dispose: () => void;
@@ -14,17 +19,36 @@ type DefaultColumnLayout = {
   refresh: () => void;
 };
 
+type MeasuredHeaders = {
+  all: HTMLTableCellElement[];
+  controls: HTMLTableCellElement[];
+  data: HTMLTableCellElement[];
+};
+
+const measureTableHeaders = (table: HTMLTableElement): MeasuredHeaders =>
+  Array.from(table.tHead?.rows[0]?.cells ?? []).reduce<MeasuredHeaders>(
+    (acc, header) => {
+      if (header.hasAttribute(DATA_COLUMN_WIDTH_SPACER_ATTR)) {
+        return acc;
+      }
+      acc.all.push(header);
+      if (header.getAttribute(DATA_RESIZABLE_COLUMN_ATTR) === 'true') {
+        acc.data.push(header);
+      } else {
+        acc.controls.push(header);
+      }
+      return acc;
+    },
+    { all: [], controls: [], data: [] },
+  );
+
 export const createDefaultColumnLayout = (
   table: HTMLTableElement,
   container: HTMLElement,
 ): DefaultColumnLayout => {
-  const headers = Array.from(table.tHead?.rows[0]?.cells ?? []).filter(
-    (header) => !header.hasAttribute('data-column-width-spacer'),
-  );
-  const dataHeaders = headers.filter((header) => header.dataset.resizableColumn === 'true');
-  const controls = headers.filter((header) => header.dataset.resizableColumn !== 'true');
+  const { all: headers, controls, data: dataHeaders } = measureTableHeaders(table);
   const group = document.createElement('colgroup');
-  group.dataset.defaultColumnWidths = 'true';
+  group.setAttribute(DATA_DEFAULT_COLUMN_WIDTHS_ATTR, 'true');
   const columns = headers.map(() => group.appendChild(document.createElement('col')));
   // DataViewTableBasic does not expose a colgroup slot; this group never owns header sizing.
   table.prepend(group);
@@ -54,19 +78,19 @@ export const createDefaultColumnLayout = (
   const needsRefresh = (): boolean =>
     measureWidths().some((width, index) => {
       const previous = parseFloat(
-        getColumn(index).style.getPropertyValue(DEFAULT_COLUMN_WIDTH_PROPERTY),
+        getColumn(index).style.getPropertyValue(FORKLIFT_DEFAULT_COLUMN_WIDTH_CSS_VAR),
       );
       return (
         !Number.isFinite(previous) || Math.abs(width - previous) > COLUMN_MEASUREMENT_TOLERANCE_PX
       );
     });
   const refresh = (): void => {
-    if (table.dataset.columnWidthsCustomized === 'true') {
+    if (table.getAttribute(DATA_COLUMN_WIDTHS_CUSTOMIZED_ATTR) === 'true') {
       return;
     }
     const widths = measureWidths();
     for (const [index, width] of widths.entries()) {
-      getColumn(index).style.setProperty(DEFAULT_COLUMN_WIDTH_PROPERTY, `${width}px`);
+      getColumn(index).style.setProperty(FORKLIFT_DEFAULT_COLUMN_WIDTH_CSS_VAR, `${width}px`);
     }
   };
   refresh();

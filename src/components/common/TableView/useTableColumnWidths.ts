@@ -1,11 +1,17 @@
-import { useCallback, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
 import type { DataViewThResizableProps } from '@patternfly/react-data-view/dist/esm/DataViewTh/DataViewTh';
+import { createCancellableDebounce } from '@utils/debounce';
 import { isEmpty } from '@utils/helpers';
 
 import type { ColumnWidthsSettings } from '../Page/types';
 import type { ResourceField } from '../utils/types';
 
+import {
+  COLUMN_WIDTH_PERSIST_DEBOUNCE_MS,
+  RESIZE_COLUMN_WIDTH_INCREMENT,
+  RESIZE_COLUMN_WIDTH_SHIFT_INCREMENT,
+} from './columnWidthConstants';
 import {
   getMinWidthForField,
   isResizableField,
@@ -16,7 +22,6 @@ import {
 type UseTableColumnWidthsArgs = {
   columnWidthsSettings?: ColumnWidthsSettings;
   enabled: boolean;
-  visibleColumns: ResourceField[];
 };
 
 type UseTableColumnWidthsResult = {
@@ -46,20 +51,31 @@ export const useTableColumnWidths = ({
   const widthOverridesRef = useRef(widthOverrides);
   widthOverridesRef.current = widthOverrides;
 
-  const persistWidth = useCallback(
-    (columnId: string, width: number): void => {
-      if (!isValidColumnWidth(width)) {
-        return;
-      }
-      const next = { ...widthOverridesRef.current, [columnId]: width };
-      saveWidthsInSettings(next);
-      widthOverridesRef.current = next;
-      setResizeOverrides(next);
-    },
-    [saveWidthsInSettings],
+  const saveWidthsInSettingsRef = useRef(saveWidthsInSettings);
+  saveWidthsInSettingsRef.current = saveWidthsInSettings;
+
+  const debouncedSaveRef = useRef(
+    createCancellableDebounce((next: Record<string, number>) => {
+      saveWidthsInSettingsRef.current(next);
+    }, COLUMN_WIDTH_PERSIST_DEBOUNCE_MS),
   );
-  const persistWidthRef = useRef(persistWidth);
-  persistWidthRef.current = persistWidth;
+
+  useEffect(() => {
+    const debouncedSave = debouncedSaveRef.current;
+    return (): void => {
+      debouncedSave.cancel();
+    };
+  }, []);
+
+  const persistWidth = useCallback((columnId: string, width: number): void => {
+    if (!isValidColumnWidth(width)) {
+      return;
+    }
+    const next = { ...widthOverridesRef.current, [columnId]: width };
+    widthOverridesRef.current = next;
+    setResizeOverrides(next);
+    debouncedSaveRef.current(next);
+  }, []);
 
   const getResizableProps = useCallback(
     (field: ResourceField, columnLabel: string | null): DataViewThResizableProps | undefined => {
@@ -72,24 +88,25 @@ export const useTableColumnWidths = ({
       const label = columnLabel ?? columnId;
 
       return {
-        increment: 5,
+        increment: RESIZE_COLUMN_WIDTH_INCREMENT,
         isResizable: true,
         minWidth,
         onResize: (_event, _columnId, newWidth): void => {
-          persistWidthRef.current(columnId, newWidth);
+          persistWidth(columnId, newWidth);
         },
         resizeButtonAriaLabel: label,
-        shiftIncrement: 25,
+        shiftIncrement: RESIZE_COLUMN_WIDTH_SHIFT_INCREMENT,
         ...(persistedWidth === undefined ? {} : { width: persistedWidth }),
       };
     },
-    [enabled, widthOverrides],
+    [enabled, persistWidth, widthOverrides],
   );
 
   const resetAllColumnWidths = useCallback((): void => {
     if (isEmpty(widthOverridesRef.current)) {
       return;
     }
+    debouncedSaveRef.current.cancel();
     clearSettings();
     widthOverridesRef.current = {};
     setResizeOverrides({});

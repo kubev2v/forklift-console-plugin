@@ -3,10 +3,10 @@ import type { MouseEvent } from 'react';
 import type { ResourceField } from '@components/common/utils/types';
 import { act, renderHook, type RenderHookResult } from '@testing-library/react';
 
+import { COLUMN_WIDTH_PERSIST_DEBOUNCE_MS } from '../columnWidthConstants';
 import { useTableColumnWidths } from '../useTableColumnWidths';
 
 const nameField: ResourceField = { label: 'Name', resourceFieldId: 'name' };
-const visibleColumns = [nameField];
 const resizeEvent = {} as MouseEvent;
 
 type RenderWidthsResult = RenderHookResult<ReturnType<typeof useTableColumnWidths>, unknown> & {
@@ -21,13 +21,20 @@ const renderWidths = (data: Record<string, number> = {}): RenderWidthsResult => 
     useTableColumnWidths({
       columnWidthsSettings: { clear, data, save },
       enabled: true,
-      visibleColumns,
     }),
   );
   return { ...view, clear, save };
 };
 
 describe('column width reset', () => {
+  beforeEach(() => {
+    jest.useFakeTimers();
+  });
+
+  afterEach(() => {
+    jest.useRealTimers();
+  });
+
   it('does nothing when widths are already at their defaults', () => {
     const { clear, result } = renderWidths();
 
@@ -67,7 +74,11 @@ describe('column width reset', () => {
 
     act(() => {
       resize?.(resizeEvent, 'name', 200);
+      jest.advanceTimersByTime(COLUMN_WIDTH_PERSIST_DEBOUNCE_MS);
+    });
+    act(() => {
       resize?.(resizeEvent, 'name', 240);
+      jest.advanceTimersByTime(COLUMN_WIDTH_PERSIST_DEBOUNCE_MS);
       result.current.resetAllColumnWidths();
     });
 
@@ -84,7 +95,6 @@ describe('column width reset', () => {
       useTableColumnWidths({
         columnWidthsSettings: { clear, data: { name: 100 }, save: jest.fn() },
         enabled: true,
-        visibleColumns,
       }),
     );
 
@@ -103,6 +113,7 @@ describe('column width reset', () => {
 
     act(() => {
       result.current.getResizableProps(nameField, 'Name')?.onResize?.(resizeEvent, 'name', 200);
+      jest.advanceTimersByTime(COLUMN_WIDTH_PERSIST_DEBOUNCE_MS);
     });
 
     expect(result.current.resetAllColumnWidths).toBe(reset);
@@ -120,6 +131,7 @@ describe('column width reset', () => {
 
     act(() => {
       result.current.getResizableProps(nameField, 'Name')?.onResize?.(resizeEvent, 'name', 240);
+      jest.advanceTimersByTime(COLUMN_WIDTH_PERSIST_DEBOUNCE_MS);
     });
     act(() => {
       reset();

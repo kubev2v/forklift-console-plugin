@@ -32,34 +32,36 @@ const createButton = (header: HTMLTableCellElement, label?: string): HTMLButtonE
 };
 
 describe('prepareColumnResize', () => {
-  it.each(['mousedown', 'touchstart', 'keydown'])(
-    'rebases minimum widths to rendered widths before %s resizing',
-    (type) => {
-      const headers = createHeaders();
-      const button = createButton(headers[0], 'Name');
-      const icon = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-      button.append(icon);
-      const event = {
-        currentTarget: headers[0],
-        ...(type === 'keydown' ? { key: 'ArrowRight' } : {}),
-        target: icon,
-        type,
-      } as unknown as
-        | KeyboardEvent<HTMLTableCellElement>
-        | MouseEvent<HTMLTableCellElement>
-        | TouchEvent<HTMLTableCellElement>;
+  it.each([
+    ['mousedown', undefined],
+    ['touchstart', undefined],
+    ['keydown', 'ArrowRight'],
+    ['keydown', 'ArrowLeft'],
+  ] as const)('rebases minimum widths to rendered widths before %s resizing', (type, key) => {
+    const headers = createHeaders();
+    const button = createButton(headers[0], 'Name');
+    const icon = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+    button.append(icon);
+    const event = {
+      currentTarget: headers[0],
+      ...(key ? { key } : {}),
+      target: icon,
+      type,
+    } as unknown as
+      | KeyboardEvent<HTMLTableCellElement>
+      | MouseEvent<HTMLTableCellElement>
+      | TouchEvent<HTMLTableCellElement>;
 
-      prepareColumnResize(event, 'Name');
+    prepareColumnResize(event, 'Name');
 
-      expect(headers.map((header) => header.style.minWidth)).toEqual(['112px', '106px', '198px']);
-      expect(headers[0].closest('table')?.dataset.columnWidthsCustomized).toBe('true');
-      expect(headers.map((header) => header.dataset.columnWidthFixed)).toEqual([
-        'true',
-        'true',
-        'true',
-      ]);
-    },
-  );
+    expect(headers.map((header) => header.style.minWidth)).toEqual(['112px', '106px', '198px']);
+    expect(headers[0].closest('table')?.dataset.columnWidthsCustomized).toBe('true');
+    expect(headers.map((header) => header.dataset.columnWidthFixed)).toEqual([
+      'true',
+      'true',
+      'true',
+    ]);
+  });
 
   it('does not freeze the widths of selection or action columns', () => {
     const headers = createHeaders();

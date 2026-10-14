@@ -1,3 +1,8 @@
+/**
+ * DataView table for StandardPage rows that combine resizable columns with expand and/or
+ * selection leading cells (see `useDataViewSelection`). Use `ForkliftDataViewTable` when
+ * rows do not need expand or the hybrid leading-column layout.
+ */
 import type { FC, ReactElement, ReactNode } from 'react';
 
 import { Bullseye } from '@patternfly/react-core';

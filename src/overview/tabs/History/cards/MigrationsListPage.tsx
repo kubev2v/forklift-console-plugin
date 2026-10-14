@@ -4,6 +4,10 @@ import StandardPage from 'src/components/page/StandardPage';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { SwitchFilter } from '@components/common/Filter/SwitchFilter';
+import {
+  MEDIUM_COLUMN_WIDTH,
+  REGULAR_COLUMN_WIDTH,
+} from '@components/common/TableView/columnWidthConstants';
 import { FilterDefType, type ResourceField } from '@components/common/utils/types';
 import LoadingSuspend from '@components/LoadingSuspend';
 import {
@@ -40,6 +44,7 @@ const MigrationsListPage: FC = () => {
 
   const migrationFields: ResourceField[] = [
     {
+      defaultWidth: MEDIUM_COLUMN_WIDTH,
       filter: {
         placeholderLabel: t('Filter by migration'),
         type: FilterDefType.FreeText,
@@ -68,6 +73,7 @@ const MigrationsListPage: FC = () => {
       sortable: true,
     },
     {
+      defaultWidth: REGULAR_COLUMN_WIDTH,
       filter: {
         placeholderLabel: t('Filter by plan'),
         type: FilterDefType.FreeText,

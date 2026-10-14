@@ -8,7 +8,7 @@ import { TableColumnWidthProvider } from '../TableColumnWidthContext';
 const renderCell = (enabled: boolean, isAction = false): void => {
   const field: ResourceField = { isAction, label: 'Name', resourceFieldId: 'name' };
   render(
-    <TableColumnWidthProvider enabled={enabled} visibleColumns={[field]}>
+    <TableColumnWidthProvider enabled={enabled}>
       <table>
         <tbody>
           <tr>

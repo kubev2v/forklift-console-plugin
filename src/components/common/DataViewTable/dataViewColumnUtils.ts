@@ -9,10 +9,21 @@ import { buildSort } from '../TableView/sort';
 import type { SortType } from '../TableView/types';
 import type { ResourceField } from '../utils/types';
 
+import {
+  COLUMN_WIDTH_SPACER_ARIA_HIDDEN,
+  COLUMN_WIDTH_SPACER_ROLE,
+  DATA_ACTION_COLUMN_ATTR,
+  DATA_COLUMN_WIDTH_FIXED_ATTR,
+  DATA_COLUMN_WIDTH_SPACER_ATTR,
+  DATA_DEFAULT_COLUMN_MIN_WIDTH_ATTR,
+  DATA_DEFAULT_COLUMN_WEIGHT_ATTR,
+  DATA_RESIZABLE_COLUMN_ATTR,
+  SELECTION_COLUMN_WIDTH,
+} from './dataViewTableConstants';
 import { FORKLIFT_DATA_VIEW_TABLE_STICKY_CELL_CLASS } from './forkliftDataViewTableClass';
 import { prepareColumnResize } from './prepareColumnResize';
 
-export const SELECTION_COLUMN_WIDTH = '45px';
+export { SELECTION_COLUMN_WIDTH } from './dataViewTableConstants';
 
 const withStickyCellClass = (className?: string): string =>
   className
@@ -20,10 +31,10 @@ const withStickyCellClass = (className?: string): string =>
     : FORKLIFT_DATA_VIEW_TABLE_STICKY_CELL_CLASS;
 
 export const getColumnWidthSpacerProps = (): TdProps &
-  ThProps & { 'data-column-width-spacer': true } => ({
-  'aria-hidden': true,
-  'data-column-width-spacer': true,
-  role: 'presentation',
+  ThProps & { [DATA_COLUMN_WIDTH_SPACER_ATTR]: true } => ({
+  'aria-hidden': COLUMN_WIDTH_SPACER_ARIA_HIDDEN,
+  [DATA_COLUMN_WIDTH_SPACER_ATTR]: true,
+  role: COLUMN_WIDTH_SPACER_ROLE,
 });
 
 const getActionHeaderProps = (): ThProps => ({
@@ -75,16 +86,16 @@ export const toDataViewColumn = ({
 }: ToDataViewColumnArgs): DataViewTh => {
   const label = field.label ?? '';
   const headerProps: ThProps = {
-    ...(field.isAction ? { ...getActionHeaderProps(), 'data-action-column': true } : {}),
+    ...(field.isAction ? { ...getActionHeaderProps(), [DATA_ACTION_COLUMN_ATTR]: true } : {}),
     dataLabel: label || undefined,
     id: field.resourceFieldId ?? undefined,
     info: field.info,
     ...(resizableProps?.isResizable
       ? {
-          'data-column-width-fixed': resizableProps.width !== undefined,
-          'data-default-column-min-width': getMinWidthForField(field),
-          'data-default-column-weight': field.defaultWidth?.weight ?? 1,
-          'data-resizable-column': true,
+          [DATA_COLUMN_WIDTH_FIXED_ATTR]: resizableProps.width !== undefined,
+          [DATA_DEFAULT_COLUMN_MIN_WIDTH_ATTR]: getMinWidthForField(field),
+          [DATA_DEFAULT_COLUMN_WEIGHT_ATTR]: field.defaultWidth?.weight ?? 1,
+          [DATA_RESIZABLE_COLUMN_ATTR]: true,
           onKeyDownCapture: (event): void => {
             prepareColumnResize(event, resizableProps.resizeButtonAriaLabel);
           },

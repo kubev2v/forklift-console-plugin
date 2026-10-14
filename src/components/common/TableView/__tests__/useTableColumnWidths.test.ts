@@ -4,6 +4,7 @@ import type { ColumnWidthsSettings } from '@components/common/Page/types';
 import type { ResourceField } from '@components/common/utils/types';
 import { act, renderHook } from '@testing-library/react';
 
+import { COLUMN_WIDTH_PERSIST_DEBOUNCE_MS } from '../columnWidthConstants';
 import { useTableColumnWidths } from '../useTableColumnWidths';
 
 type WidthsHookProps = {
@@ -18,13 +19,20 @@ const nameField: ResourceField = {
 };
 
 const projectField: ResourceField = { label: 'Project', resourceFieldId: 'namespace' };
-const visibleColumns = [nameField, projectField];
 
 const resizeEvent = {} as MouseEvent;
 
 describe('useTableColumnWidths', () => {
+  beforeEach(() => {
+    jest.useFakeTimers();
+  });
+
+  afterEach(() => {
+    jest.useRealTimers();
+  });
+
   it('leaves unsaved widths to DataViewTh rather than imposing pixel defaults', () => {
-    const { result } = renderHook(() => useTableColumnWidths({ enabled: true, visibleColumns }));
+    const { result } = renderHook(() => useTableColumnWidths({ enabled: true }));
 
     expect(result.current.getResizableProps(nameField, 'Name')).toEqual(
       expect.objectContaining({ isResizable: true, minWidth: 100 }),
@@ -42,7 +50,6 @@ describe('useTableColumnWidths', () => {
           save: jest.fn(),
         },
         enabled: true,
-        visibleColumns,
       }),
     );
 
@@ -57,20 +64,25 @@ describe('useTableColumnWidths', () => {
       useTableColumnWidths({
         columnWidthsSettings: { clear: jest.fn(), data: { name: 240 }, save },
         enabled: true,
-        visibleColumns,
       }),
     );
     // PatternFly retains the resize callbacks from the initial render.
     const resizeName = result.current.getResizableProps(nameField, 'Name')?.onResize;
     const resizeProject = result.current.getResizableProps(projectField, 'Project')?.onResize;
 
-    act(() => resizeName?.(resizeEvent, 'name', 100));
-    act(() => resizeProject?.(resizeEvent, 'namespace', 100));
-    expect(save).toHaveBeenLastCalledWith({ name: 100, namespace: 100 });
+    act(() => {
+      resizeName?.(resizeEvent, 'name', 150);
+      resizeProject?.(resizeEvent, 'namespace', 160);
+      jest.advanceTimersByTime(COLUMN_WIDTH_PERSIST_DEBOUNCE_MS);
+    });
+    expect(save).toHaveBeenLastCalledWith({ name: 150, namespace: 160 });
 
-    act(() => resizeName?.(resizeEvent, 'name', 150));
-    expect(save).toHaveBeenLastCalledWith({ name: 150, namespace: 100 });
-    expect(result.current.getResizableProps(projectField, 'Project')).toMatchObject({ width: 100 });
+    act(() => {
+      resizeName?.(resizeEvent, 'name', 200);
+      jest.advanceTimersByTime(COLUMN_WIDTH_PERSIST_DEBOUNCE_MS);
+    });
+    expect(save).toHaveBeenLastCalledWith({ name: 200, namespace: 160 });
+    expect(result.current.getResizableProps(projectField, 'Project')).toMatchObject({ width: 160 });
     expect(result.current.columnLayoutKey).toBe(0);
     expect(result.current.hasCustomColumnWidths).toBe(true);
   });
@@ -81,7 +93,6 @@ describe('useTableColumnWidths', () => {
       useTableColumnWidths({
         columnWidthsSettings: { clear, data: { name: 100, namespace: 240 }, save: jest.fn() },
         enabled: true,
-        visibleColumns,
       }),
     );
 
@@ -103,7 +114,6 @@ describe('useTableColumnWidths', () => {
         useTableColumnWidths({
           columnWidthsSettings,
           enabled: true,
-          visibleColumns,
         }),
       { initialProps },
     );
@@ -118,10 +128,9 @@ describe('useTableColumnWidths', () => {
   });
 
   it('does not resize actions or disabled tables', () => {
-    const { result, rerender } = renderHook(
-      ({ enabled }) => useTableColumnWidths({ enabled, visibleColumns }),
-      { initialProps: { enabled: false } },
-    );
+    const { result, rerender } = renderHook(({ enabled }) => useTableColumnWidths({ enabled }), {
+      initialProps: { enabled: false },
+    });
     expect(result.current.getResizableProps(nameField, 'Name')).toBeUndefined();
 
     rerender({ enabled: true });

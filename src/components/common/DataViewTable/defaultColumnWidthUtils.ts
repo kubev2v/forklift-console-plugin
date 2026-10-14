@@ -35,13 +35,14 @@ export const allocateDefaultColumnWidths = (
       for (const index of remainingColumns) {
         widths[index] = (remainingWidth * weights[index]) / weightTotal;
       }
-      break;
+      remainingColumns = [];
+    } else {
+      for (const index of constrainedColumns) {
+        widths[index] = minimums[index];
+        remainingWidth -= minimums[index];
+      }
+      remainingColumns = remainingColumns.filter((index) => !constrainedColumns.includes(index));
     }
-    for (const index of constrainedColumns) {
-      widths[index] = minimums[index];
-      remainingWidth -= minimums[index];
-    }
-    remainingColumns = remainingColumns.filter((index) => !constrainedColumns.includes(index));
   }
   return widths;
 };

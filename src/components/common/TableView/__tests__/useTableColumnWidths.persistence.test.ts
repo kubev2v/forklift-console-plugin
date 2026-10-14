@@ -3,10 +3,10 @@ import type { MouseEvent } from 'react';
 import type { ResourceField } from '@components/common/utils/types';
 import { act, renderHook, type RenderHookResult } from '@testing-library/react';
 
+import { COLUMN_WIDTH_PERSIST_DEBOUNCE_MS } from '../columnWidthConstants';
 import { useTableColumnWidths } from '../useTableColumnWidths';
 
 const nameField: ResourceField = { label: 'Name', resourceFieldId: 'name' };
-const visibleColumns = [nameField];
 const resizeEvent = {} as MouseEvent;
 
 type RenderWidthsResult = RenderHookResult<ReturnType<typeof useTableColumnWidths>, unknown> & {
@@ -19,13 +19,20 @@ const renderWidths = (data: Record<string, number> = {}): RenderWidthsResult => 
     useTableColumnWidths({
       columnWidthsSettings: { clear: jest.fn(), data, save },
       enabled: true,
-      visibleColumns,
     }),
   );
   return { ...view, save };
 };
 
 describe('exact column width persistence', () => {
+  beforeEach(() => {
+    jest.useFakeTimers();
+  });
+
+  afterEach(() => {
+    jest.useRealTimers();
+  });
+
   it.each([79.125, 100, 184.125, 624.125, 1200])(
     'loads %spx without imposing storage bounds',
     (width) => {
@@ -43,6 +50,7 @@ describe('exact column width persistence', () => {
 
     act(() => {
       result.current.getResizableProps(nameField, 'Name')?.onResize?.(resizeEvent, 'name', width);
+      jest.advanceTimersByTime(COLUMN_WIDTH_PERSIST_DEBOUNCE_MS);
     });
 
     expect(save).toHaveBeenLastCalledWith({ name: width });

@@ -101,7 +101,6 @@ const StandardPageInner = <T,>(props: StandardPageInnerProps<T>): ReactElement =
     <TableColumnWidthProvider
       columnWidthsSettings={userSettings?.columnWidths}
       enabled={resizableColumns}
-      visibleColumns={innerData.visibleColumns}
     >
       <StandardPageInnerView
         {...viewProps}
