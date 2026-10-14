@@ -32,25 +32,25 @@ describe('useTableColumnWidths column visibility', () => {
   it('preserves widths by ID when resizing and restoring columns from settings', () => {
     const clear = jest.fn();
     const save = jest.fn();
+    const columnWidthsSettings = (
+      data: Record<string, number>,
+    ): VisibilityTestProps['columnWidthsSettings'] => ({ clear, data, save });
+
     const { result, rerender } = renderHook(
-      ({ columnWidthsSettings }: VisibilityTestProps) =>
+      ({ columnWidthsSettings: settings }: VisibilityTestProps) =>
         useTableColumnWidths({
-          columnWidthsSettings,
+          columnWidthsSettings: settings,
           enabled: true,
         }),
       {
         initialProps: {
-          columnWidthsSettings: {
-            clear,
-            data: { name: 624.125, status: 79.125 },
-            save,
-          },
+          columnWidthsSettings: columnWidthsSettings({ name: 624.125, status: 79.125 }),
         },
       },
     );
 
     rerender({
-      columnWidthsSettings: { clear, data: { name: 624.125, status: 79.125 }, save },
+      columnWidthsSettings: columnWidthsSettings({ name: 624.125, status: 79.125 }),
     });
     expect(result.current.getResizableProps(nameField, 'Name')).toMatchObject({ width: 624.125 });
     expect(result.current.getResizableProps(projectField, 'Project')).not.toHaveProperty('width');
@@ -66,11 +66,11 @@ describe('useTableColumnWidths column visibility', () => {
     expect(save).toHaveBeenLastCalledWith({ name: 624.125, namespace: 160, status: 79.125 });
 
     rerender({
-      columnWidthsSettings: {
-        clear,
-        data: { name: 624.125, namespace: 160, status: 79.125 },
-        save,
-      },
+      columnWidthsSettings: columnWidthsSettings({
+        name: 624.125,
+        namespace: 160,
+        status: 79.125,
+      }),
     });
     expect(result.current.getResizableProps(nameField, 'Name')).toMatchObject({ width: 624.125 });
     expect(result.current.getResizableProps(statusField, 'Status')).toMatchObject({
