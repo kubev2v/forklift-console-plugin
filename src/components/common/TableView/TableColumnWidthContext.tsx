@@ -11,6 +11,7 @@ import {
 import type { DataViewThResizableProps } from '@patternfly/react-data-view/dist/esm/DataViewTh/DataViewTh';
 
 import type { ColumnWidthsSettings } from '../Page/types';
+import type { ResourceField } from '../utils/types';
 
 import { useTableColumnWidths } from './useTableColumnWidths';
 

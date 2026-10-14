@@ -3,8 +3,17 @@ import type { MouseEvent } from 'react';
 import type { ResourceField } from '@components/common/utils/types';
 import { act, renderHook } from '@testing-library/react';
 
+import type { ColumnWidthsSettings } from '../../Page/types';
 import { COLUMN_WIDTH_PERSIST_DEBOUNCE_MS } from '../columnWidthConstants';
 import { useTableColumnWidths } from '../useTableColumnWidths';
+
+type VisibilityTestProps = {
+  columnWidthsSettings: ColumnWidthsSettings & {
+    clear: jest.Mock;
+    data: Record<string, number>;
+    save: jest.Mock;
+  };
+};
 
 const nameField: ResourceField = { label: 'Name', resourceFieldId: 'name' };
 const statusField: ResourceField = { label: 'Status', resourceFieldId: 'status' };
@@ -24,14 +33,18 @@ describe('useTableColumnWidths column visibility', () => {
     const clear = jest.fn();
     const save = jest.fn();
     const { result, rerender } = renderHook(
-      ({ columnWidthsSettings }) =>
+      ({ columnWidthsSettings }: VisibilityTestProps) =>
         useTableColumnWidths({
           columnWidthsSettings,
           enabled: true,
         }),
       {
         initialProps: {
-          columnWidthsSettings: { clear, data: { name: 624.125, status: 79.125 }, save },
+          columnWidthsSettings: {
+            clear,
+            data: { name: 624.125, status: 79.125 },
+            save,
+          },
         },
       },
     );

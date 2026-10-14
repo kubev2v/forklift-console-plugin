@@ -118,7 +118,7 @@ export const PageTable = <T,>({
       toId={toId}
       visibleColumns={visibleColumns}
     >
-      {placeholder}
+      {placeholder === null ? undefined : [placeholder]}
     </TableView>
   );
 };
