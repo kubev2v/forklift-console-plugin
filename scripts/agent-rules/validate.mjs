@@ -1,8 +1,8 @@
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import path from 'node:path';
-import { execFileSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
+import ignore from 'ignore';
 import { parse } from 'yaml';
 import {
   CANONICAL_RULES_DIR,
@@ -14,7 +14,7 @@ import {
 } from './generate.mjs';
 import { selectRules } from '../../.agents/skills/forklift-rules/scripts/select-rules.mjs';
 
-const GIT_EXECUTABLE = '/usr/bin/git';
+const gitignoreMatcher = ignore().add(fs.readFileSync(path.join(REPO_ROOT, '.gitignore'), 'utf8'));
 
 const migrationManifestPath = path.join(REPO_ROOT, '.agents/migration-manifest.json');
 const report = [];
@@ -177,12 +177,8 @@ const walkSkills = (skillsRoot) => {
 };
 
 const isIgnoredByGit = (relativePath) => {
-  try {
-    execFileSync(GIT_EXECUTABLE, ['check-ignore', '-q', relativePath], { cwd: REPO_ROOT, stdio: 'ignore' });
-    return true;
-  } catch {
-    return false;
-  }
+  const normalizedPath = relativePath.split(path.sep).join('/');
+  return gitignoreMatcher.ignores(normalizedPath);
 };
 
 const checkSkillReferences = () => {
