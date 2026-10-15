@@ -123,7 +123,7 @@ describe('buildNetworkMappings - edge cases', () => {
         },
       ],
       mockOpenShiftProvider,
-      [{ id: 'pod', name: 'Default network' }],
+      [],
       [],
     );
 
