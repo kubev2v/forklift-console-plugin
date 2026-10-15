@@ -1,0 +1,303 @@
+---
+description: oVirt provider - Engine API inventory, data model, REST API, storage domains, networks
+alwaysApply: false
+---
+
+# oVirt Provider
+
+> Analyzed from commit: `baf9c7bcc` on `2026-09-17`
+> Source paths: `pkg/controller/provider/container/ovirt/`, `pkg/controller/provider/model/ovirt/`, `pkg/controller/provider/web/ovirt/`
+
+Source: [forklift](https://github.com/kubev2v/forklift) backend — inventory collector + REST handlers run inside the **Inventory** controller.
+
+---
+
+## Package Purpose
+
+The oVirt provider connects to Red Hat Virtualization / oVirt Engine via the REST API v4, maintains a SQLite-backed inventory mirror, validates VMs asynchronously through the OPA policy agent, and exposes inventory over the Forklift REST API. Unlike vSphere's PropertyCollector push model, oVirt uses a **full initial load** followed by **event-driven incremental refresh** polling Engine audit events.
+
+```
+pkg/controller/provider/
+├── container/ovirt/   # Collector, REST client, adapters, policy watches
+├── model/ovirt/       # SQLite inventory models
+└── web/ovirt/         # Gin REST handlers
+```
+
+---
+
+## Key Types and Structs
+
+### Collector (`container/ovirt/collector.go`)
+
+```go
+type Collector struct {
+    provider  *api.Provider
+    db        libmodel.DB
+    client    *Client
+    parity    bool
+    lastEvent int
+    phase     string
+    watches   []*libmodel.Watch
+}
+```
+
+Constants: `RetryInterval` = 5s, `RefreshInterval` = 10s, `DefaultClientTimeout` = 30m (overridable via `spec.settings.ovirtClientTimeout`).
+
+Phases: `Started` → `Load` → `Loaded` → `Parity` → `Refresh`.
+
+### REST Client (`container/ovirt/client.go`)
+
+```go
+type Client struct {
+    url                   string
+    client                *libweb.Client
+    secret                *core.Secret
+    clientExpiration      time.Time
+    clientTimeout         time.Duration
+    accessTokenExpiration time.Time
+}
+```
+
+OAuth token from `{engine-url}/ovirt-engine/sso/oauth/token` with `grant_type=password`, `scope=ovirt-app-api`. API requests use `Version: 4` header. Token and client are recreated on expiry.
+
+### VM model (`model/ovirt/model.go`)
+
+```go
+type VM struct {
+    Base
+    Cluster, Host               string
+    RevisionValidated           int64
+    PolicyVersion               int
+    Status, GuestName, OSType   string
+    CpuSockets, CpuCores, CpuThreads int16
+    CpuAffinity                 []CpuPinning
+    CpuPinningPolicy            string  // none, manual, resize_and_pin_numa, dedicated, isolate_threads
+    Memory                      int64
+    DiskAttachments             []DiskAttachment
+    NICs                        []NIC
+    HostDevices, CDROMs, WatchDogs, Snapshots, Properties
+    Concerns                    []Concern  // OPA validation results
+    Guest                       Guest      // {distribution, fullVersion}
+    // ... BIOS, Display, HaEnabled, HasIllegalImages, etc.
+}
+
+type Disk struct {
+    Base
+    Shared, Profile, StorageDomain, Status, StorageType string
+    ActualSize, ProvisionedSize int64
+    Lun                         Lun  // for storageType=lun
+}
+
+type StorageDomain struct {
+    Base
+    DataCenter string
+    Type       string  // data, iso, export
+    Storage    struct { Type string }  // nfs, iscsi, fcp, glusterfs, posixfs, localfs
+    Available, Used int64
+}
+```
+
+### DiskAttachment / NIC
+
+```go
+type DiskAttachment struct {
+    ID, Interface, Disk string  // interface: virtio, virtio_scsi, ide, sata
+    SCSIReservation, Bootable bool
+}
+
+type NIC struct {
+    ID, Name, Interface, Profile, MAC string
+    Plugged bool
+    IpAddress []IpAddress
+}
+```
+
+---
+
+## Interfaces and Implementations
+
+| Interface | Location | Implementations |
+|-----------|----------|-----------------|
+| `Adapter` | `container/ovirt/model.go` | `DataCenterAdapter`, `StorageDomainAdapter`, `NICProfileAdapter`, `DiskProfileAdapter`, `NetworkAdapter`, `DiskAdapter`, `ClusterAdapter`, `ServerCPUAdapter`, `HostAdapter`, `VMAdapter` |
+| `libmodel.EventHandler` | `container/ovirt/watch.go` | `VMEventHandler`, `ClusterEventHandler`, `HostEventHandler`, `NICProfileHandler`, `DiskProfileHandler` |
+| `libweb.RequestHandler` | `web/ovirt/doc.go` | Provider, DataCenter, Cluster, Host, Network, NICProfile, DiskProfile, StorageDomain, Disk, ServerCpu, VM, Workload, Tree |
+
+Adapter load order (FK resolution): DataCenter → StorageDomain → NICProfile → DiskProfile → Network → Disk → Cluster → ServerCPU → Host → VM.
+
+| Engine API path | Adapter | `follow` params |
+|-----------------|---------|-----------------|
+| `datacenters` | DataCenterAdapter | — |
+| `storagedomains` | StorageDomainAdapter | — |
+| `vnicprofiles` | NICProfileAdapter | — |
+| `diskprofiles` | DiskProfileAdapter | — |
+| `networks` | NetworkAdapter | `vnic_profiles` |
+| `disks` | DiskAdapter | — (LUN disks re-fetched individually) |
+| `clusters` | ClusterAdapter | — |
+| `options/ServerCPUList` | ServerCPUAdapter | — |
+| `hosts` | HostAdapter | `network_attachments`, `nics` |
+| `vms` | VMAdapter | `disk_attachments`, `host_devices`, `snapshots`, `watchdogs`, `cdroms`, `nics` |
+
+---
+
+## Reconciliation / Execution Flow
+
+### Inventory collection
+
+```
+Connect (OAuth token + TLS)
+  → Started: GET events?max=1 (record lastEvent ID)
+  → Load: full inventory via adapter List() in FK order
+  → Loaded: first incremental refresh
+  → Parity: begin DB watches, set parity=true
+  → Refresh: poll events every 10s, apply changeSets
+```
+
+On error, retry after 5s. Refresh uses two phases: fetch events from Engine API (no DB lock), then apply changeSet in a single transaction.
+
+### Event-driven updates
+
+Events are queried via `GET events?search=type=<code> or ...&from=<lastEvent>`. Event codes map to adapters via `adapterMap`. Key groups: DataCenter (950/952/954), Network (942/1114/944), StorageDomain (956–964/981), vNIC Profile (1122–1126), DiskProfile (10120–10124), Cluster (809–813), Host (13/42–44/600/620/10453), VM (32–1152 + disk/NIC/snapshot events), Disk (2014–2042).
+
+### Policy validation (`watch.go`)
+
+Asynchronous, non-blocking OPA validation:
+
+1. **VM create/update** → latch triggers validation search
+2. **Periodic search** (`Settings.SearchInterval`) finds VMs where `revision != revisionValidated` OR `policyVersion != agent version`
+3. **Cluster/Host update** → sets `revisionValidated = 0` for affected VMs
+4. **NICProfile/DiskProfile update** → revalidates VMs referencing that profile
+5. Each VM sent to `/v1/data/io/konveyor/forklift/ovirt/validate` with expanded **Workload** payload
+6. Results batched (max 1024) and written back with `concerns[]`
+
+Validation never blocks inventory updates. Failures are logged; next scheduled search retries.
+
+---
+
+## Status Conditions
+
+| Condition | Set by | When |
+|-----------|--------|------|
+| VM `concerns[]` | OPA policy agent via `VMEventHandler` | Stored on VM model, not a Provider CR condition |
+| Provider `ConnectionFailed` | Provider controller | Collector cannot connect to Engine |
+
+Connection test (`Collector.Test()`): delegates to `client.connect()`.
+
+---
+
+## REST API Endpoints
+
+### Base path
+
+```
+/providers/ovirt/:provider
+```
+
+`:provider` = Provider CR UID.
+
+| Method | Path | Description |
+|--------|------|-------------|
+| `GET` | `/providers/ovirt` | List oVirt providers |
+| `GET` | `/providers/ovirt/:provider` | Provider details + inventory counts |
+| `GET` | `…/datacenters`, `…/datacenters/:id` | Data centers |
+| `GET` | `…/clusters`, `…/clusters/:id` | Clusters |
+| `GET` | `…/hosts`, `…/hosts/:id` | Hosts |
+| `GET` | `…/networks`, `…/networks/:id` | Networks |
+| `GET` | `…/nicprofiles`, `…/nicprofiles/:id` | vNIC profiles |
+| `GET` | `…/diskprofiles`, `…/diskprofiles/:id` | Disk profiles |
+| `GET` | `…/storagedomains`, `…/storagedomains/:id` | Storage domains |
+| `GET` | `…/disks`, `…/disks/:id` | Disks |
+| `GET` | `…/servercpus`, `…/servercpus/:id` | Server CPU options (by cluster version) |
+| `GET` | `…/vms`, `…/vms/:vm` | VMs |
+| `GET` | `…/workloads/:vm` | Expanded VM (policy validation payload) |
+| `GET` | `…/tree/cluster` | DC → Cluster → Host/VM hierarchy |
+
+### Query parameters
+
+- `?detail=` — `0` = minimal, `1` = summary, `2+`/`all` = full
+- `?name=` — filter by hierarchical path (`datacenter/cluster/vm-name`)
+- `X-Watch` header — WebSocket watch on list endpoints
+
+### Provider detail response (`detail > 0`)
+
+```json
+{
+  "datacenterCount": 2,
+  "clusterCount": 4,
+  "hostCount": 8,
+  "vmCount": 150,
+  "networkCount": 6,
+  "storageDomainCount": 3
+}
+```
+
+### VM detail levels
+
+| Level | Fields |
+|-------|--------|
+| 0 | `id`, `revision`, `path`, `name`, `description`, `selfLink` |
+| 1 | + `cluster`, `status`, `host`, `revisionValidated`, `nics`, `diskAttachments`, `concerns` |
+| 2+ | + CPU/memory/BIOS/display/snapshots/hostDevices/guest/osType/customCpuModel/etc. |
+
+### Workload endpoint
+
+`GET …/workloads/:vm` resolves disk attachments → disks + disk profiles, NICs → NIC profiles, plus host, cluster, datacenter, and server CPU objects.
+
+---
+
+## Integration Points
+
+| Caller / callee | Direction | Purpose |
+|-----------------|-----------|---------|
+| `pkg/controller/provider/controller.go` | → collector | Start/stop collector per Provider CR |
+| `pkg/controller/validation/policy` | ← `VMEventHandler` | OPA validate + rules_version |
+| `pkg/controller/plan/adapter/ovirt/` | reads inventory DB | Migration client operations |
+| `pkg/controller/provider/controller.go` | → `web/ovirt` handlers | Inventory HTTP via provider controller web registry |
+| oVirt Engine REST API v4 | external | Inventory source |
+
+Registry: `pkg/controller/provider/container/doc.go` → `ovirt.New()`, `pkg/controller/provider/web/doc.go` → `ovirt.Handlers()`.
+
+---
+
+## Configuration
+
+| Setting | Source | Notes |
+|---------|--------|-------|
+| Provider `spec.url` | Provider CR | Engine base URL |
+| Secret `user`, `password` | K8s Secret | Engine credentials |
+| Secret `cacert` | K8s Secret | PEM CA certificate (required unless insecure) |
+| Secret `insecureSkipVerify` | K8s Secret | Skip TLS verification |
+| `spec.settings["ovirtClientTimeout"]` | Provider CR | HTTP client timeout (Go duration string) |
+| `settings.Settings.SearchInterval` | operator | VM policy validation sweep interval |
+
+---
+
+## Error Patterns
+
+| Scenario | Behavior |
+|----------|----------|
+| Connection/token failure | Retry every 5s; Provider → `ConnectionFailed` |
+| Event apply failure | Logged; continue processing remaining events |
+| Tx commit failure | ChangeSet rolled back |
+| Policy validation failure | Logged; picked up on next scheduled search |
+| LUN disk collection | Individual re-fetch for logical unit details |
+
+---
+
+## Frontend Relevance
+
+| Backend field / behavior | Frontend usage |
+|--------------------------|----------------|
+| `provider.type=ovirt` | Provider list/create wizard (`OvirtUrl`, `OvirtUsername`, `OvirtPassword`) |
+| `GET /providers/ovirt/:uid` with `detail>0` | Provider details counts (`vmCount`, `storageDomainCount`, etc.) |
+| `GET …/vms?detail=1` | Plan wizard VM table (status, concerns, diskAttachments) |
+| `GET …/storagedomains` | Storage map source storage domains |
+| `GET …/networks`, `…/nicprofiles` | Network map source networks / vNIC profiles |
+| `concerns[]{category,label,assessment}` | Migration readiness warnings from OPA |
+| `status` (`up`, `down`, `suspended`) | VM power/state display |
+| `diskAttachments[].interface` | Disk bus type for migration planning |
+| `disk.storageType` (`image`/`lun`) | LUN/RDM-style disk warnings |
+| `hasIllegalImages` | VM readiness indicator |
+| `cpuPinningPolicy` | CPU pinning policy display |
+| `GET …/tree/cluster` | Hierarchical VM picker |
+| `GET …/workloads/:vm` | Deep inspection / policy payload (not typically called from UI) |
+| `nicprofiles[].passThrough` | SR-IOV indicator |

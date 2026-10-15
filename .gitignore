@@ -37,6 +37,7 @@ testing/locales/
 
 # Cursor IDE – ignore sensitive MCP config (credentials); shared prompts stay in repo
 .cursor/mcp.json
+.mcp.json
 .cursor/rules/personal-*.mdc
 .cursor/scripts/personal/
 
@@ -45,6 +46,15 @@ testing/locales/
 .cursor/hooks/personal-*
 .cursor/hooks.json
 .cursor/extensions/
+
+# Local-only Codex skill data and rollback snapshot
+.agents/skills/backend-analyzer/state.json
+.agents/skills/cve-remediation/config.yaml
+.agents/skills/dev-helper/
+.agents/skills/frontend-analyzer/state.json
+.agents/skills/i18n-memsource/state.json
+.agents/skills/personal-*/
+.cursor/migration-backup/
 
 # Dev-helper skill (installed from https://github.com/avivtur/dev-helper)
 .cursor/skills/dev-helper/

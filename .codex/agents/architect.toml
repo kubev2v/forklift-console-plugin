@@ -1,0 +1,3 @@
+name = "architect"
+description = "Map Forklift frontend composition, consumers, and change blast radius."
+developer_instructions = "Read `.agents/rules/agents/architect.md` first. For affected UI paths, also read the applicable canonical frontend rules and use the rule selector. Trace consumers, parallel flows, and data paths; report concrete evidence and affected files."

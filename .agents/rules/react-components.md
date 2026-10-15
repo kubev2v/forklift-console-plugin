@@ -1,0 +1,201 @@
+---
+description: React component patterns and PatternFly usage
+globs: "**/*.tsx"
+alwaysApply: false
+---
+
+# React Component Patterns (Supplement)
+
+For core React conventions (functional components, FC type, imports, hooks rules), see **AGENTS.md**. This rule adds PatternFly and Console SDK patterns.
+
+---
+
+## 1. PatternFly Component Usage
+
+### Use Enums for Variants
+```typescript
+import { Button, ButtonVariant } from '@patternfly/react-core';
+
+// Always use enum, not string literal
+<Button variant={ButtonVariant.primary}>Save</Button>
+<Button variant={ButtonVariant.link}>Cancel</Button>
+```
+
+### Custom Select Component
+Always use the project's custom Select wrapper for consistency:
+```typescript
+import Select from '@components/common/Select';
+// NOT: import { Select } from '@patternfly/react-core';
+```
+
+### Use `PF_LABEL_STATUS` for Status Props
+Use the shared constants instead of string literals for PatternFly `status` props:
+```typescript
+import { PF_LABEL_STATUS, type PfLabelStatus } from '@utils/constants';
+
+// ✅ Good
+<Label status={PF_LABEL_STATUS.DANGER}>Error</Label>
+<Icon status={PF_LABEL_STATUS.WARNING}>...</Icon>
+
+// ❌ Bad
+<Label status="danger">Error</Label>
+```
+
+### Use `STATUS_ICONS` for Status Icons
+Use the shared status icon map instead of manually wrapping icons with hardcoded colors:
+```typescript
+import { STATUS_ICONS } from '@components/status/statusIcons';
+
+// ✅ Good - uses PF6 Icon status prop, respects theming
+{STATUS_ICONS.danger}
+{STATUS_ICONS.warning}
+
+// ❌ Bad - hardcoded hex colors break in dark mode
+<ExclamationCircleIcon color="#C9190B" />
+```
+
+### Common PatternFly Patterns
+```typescript
+import {
+  Alert,
+  AlertVariant,
+  EmptyState,
+  EmptyStateVariant,
+  Spinner,
+  Title,
+} from '@patternfly/react-core';
+```
+
+---
+
+## 2. Console SDK Integration
+
+### Watching Resources
+```typescript
+import { useK8sWatchResource } from '@utils/hooks/useK8sWatchResource';
+
+const [providers, loaded, error] = useK8sWatchResource<V1beta1Provider[]>({
+  groupVersionKind: ProviderModelGroupVersionKind,
+  isList: true,
+  namespaced: true,
+  namespace,
+});
+```
+
+### Resource Operations
+```typescript
+import { k8sCreate, k8sUpdate, k8sDelete, k8sPatch } from '@openshift-console/dynamic-plugin-sdk';
+```
+
+### Active Namespace
+```typescript
+import { useActiveNamespace } from '@openshift-console/dynamic-plugin-sdk';
+const [activeNamespace] = useActiveNamespace();
+```
+
+---
+
+## 3. Component Inside Order
+
+1. Translation hook (`useForkliftTranslation`)
+2. Router hooks (`useParams`, `useNavigate`)
+3. Data fetching hooks (`useK8sWatchResource`)
+4. Local state (`useState`)
+5. Derived values (`useMemo`)
+6. Callbacks (`useCallback`)
+7. Effects (`useEffect`)
+8. Early returns (loading, error, empty states)
+9. Main JSX return
+
+---
+
+## 4. State Handling
+
+### Loading State
+```typescript
+import LoadingSuspend from '@components/LoadingSuspend';
+
+<LoadingSuspend obj={data} loaded={loaded} loadError={error}>
+  <MyContent data={data} />
+</LoadingSuspend>
+```
+
+### Empty State Check
+```typescript
+import { isEmpty } from '@utils/helpers';
+
+if (isEmpty(providers)) {
+  return <EmptyState variant={EmptyStateVariant.lg}>...</EmptyState>;
+}
+```
+
+---
+
+## 5. Forms
+
+### react-hook-form Pattern
+```typescript
+import { useForm, FormProvider } from 'react-hook-form';
+
+const methods = useForm<FormValues>({ defaultValues });
+const { control, handleSubmit, formState: { errors } } = methods;
+```
+
+---
+
+## 6. Modals
+
+Always use the shared `ModalForm` component (`@components/ModalForm/ModalForm`) when creating new modals. It handles:
+- Modal shell (open/close, variant, position)
+- Loading state on confirm button
+- Error display (catches thrown errors automatically)
+- Confirm/Cancel buttons with proper variants
+- `closeOverlay` on success
+
+Launch modals with Console SDK `useOverlay` and type them as `OverlayComponent`. Pass `closeOverlay` through to `ModalForm`:
+
+```typescript
+import ModalForm from '@components/ModalForm/ModalForm';
+import { useOverlay } from '@openshift-console/dynamic-plugin-sdk';
+import type { OverlayComponent } from '@openshift-console/dynamic-plugin-sdk/lib/app/modal-support/OverlayProvider';
+
+const MyModal: OverlayComponent<MyModalProps> = ({ closeOverlay, myData }) => {
+  const handleConfirm = useCallback(async () => {
+    await doSomething(myData);
+    // throw new Error('message') on failure -- ModalForm catches and displays it
+  }, [myData]);
+
+  return (
+    <ModalForm
+      closeOverlay={closeOverlay}
+      title={t('My title')}
+      onConfirm={handleConfirm}
+      confirmLabel={t('Confirm')}
+      isDisabled={!isValid}
+      variant={ModalVariant.large}
+    >
+      {/* Modal body content */}
+    </ModalForm>
+  );
+};
+
+// Launcher:
+const launchOverlay = useOverlay();
+launchOverlay(MyModal, { myData });
+```
+
+Do NOT use raw `Modal` + `ModalHeader` + `ModalBody` + `ModalFooter` + manual error/loading state.
+Do NOT use deprecated `useModal` / `ModalComponent`.
+
+**Exception — nested sub-views:** A modal may render a nested raw PatternFly `Modal` when Esc/close must mean “back to the parent view” rather than dismiss the overlay (e.g. `AffinityEditModal` inside `AffinityModal`). Pass `onCancel` to that nested modal’s `onClose`; do not wire it to `closeOverlay`.
+
+---
+
+## 7. Test Identifiers
+
+Use `testId` prop for test selectors:
+```typescript
+<Button testId="create-plan-button" variant={ButtonVariant.primary}>
+  {t('Create plan')}
+</Button>
+```

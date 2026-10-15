@@ -1,0 +1,184 @@
+---
+description: Forklift Console Plugin project context and domain knowledge
+alwaysApply: true
+---
+
+# Forklift Console Plugin - Domain Context
+
+For coding standards, conventions, and development commands, see **AGENTS.md** at the project root.
+
+This rule provides Forklift-specific domain knowledge not covered there.
+
+---
+
+## What Is Forklift
+
+Forklift (Migration Toolkit for Virtualization) migrates virtual machines from external providers to OpenShift Virtualization (KubeVirt). This plugin is an OpenShift Console dynamic plugin providing the web UI.
+
+### Tech Stack
+- **React 17** with **TypeScript** (strict mode)
+- **PatternFly 6** for UI components
+- **i18next** for internationalization
+- **react-hook-form** for form handling
+- **Jest** for unit testing, **Playwright** for E2E
+- **Webpack** for bundling
+- **npm** as package manager
+
+---
+
+## Core CRDs
+
+All CRDs belong to group `forklift.konveyor.io`, version `v1beta1`. Types are imported from `@forklift-ui/types`.
+
+### Provider
+Represents a source or target infrastructure connection.
+
+- **Source types**: `vsphere` (VMware), `ovirt` (RHV), `openstack`, `ova` (file uploads), `hyperv` (Hyper-V), `ec2` (AWS EC2 -- available on AWS-platform clusters only, gated by `useClusterIsAwsPlatform`)
+- **Target type**: `openshift` (OpenShift Virtualization)
+- **Tech Preview providers** (`ec2`, `hyperv`): Use `isTechPreviewProvider()` from `src/providers/utils/constants.ts` and show `TechPreviewLabel` from `@components/PreviewLabels/TechPreviewLabel` wherever the provider type or a tech-preview feature is surfaced (provider list/create, hooks, scripts, deep inspection modal).
+- **Backend phases** (Go controller): Ready, Staging, ValidationFailed, ConnectionFailed
+- **Frontend additions** (UI enum in `src/utils/types.ts`): ApplianceManagementEnabled, Unknown
+- Manages credentials, inventory discovery, default transfer network
+
+### Plan
+Defines a migration plan selecting VMs and their mappings.
+
+- **Migration types**: Cold (power off), Warm (incremental with cutover), Live, Conversion
+- **Backend conditions** (Go controller): Ready, Executing, Succeeded, Failed
+- **Frontend statuses** (UI enum in `src/plans/details/components/PlanStatus/utils/types.ts`): Ready, Executing, Completed, Paused, Incomplete, CannotStart, Canceled, Archived, Unknown
+- References NetworkMap, StorageMap, and optional Hooks
+- Specifies target namespace and power state settings
+- **Per-VM disk exclusion (vSphere):** `spec.vms[].excludeDisks` — array of vSphere bus addresses (e.g. `scsi0:1`); edited in plan details Virtual machines tab (not plan-level)
+
+### Migration
+Represents an active migration execution, created when a Plan starts.
+
+- Tracks per-VM status: Succeeded, Running, Failed, Canceled, Paused, CantStart
+- Creates Pods, Jobs, DataVolumes, and PVCs for migration operations
+- **Pipeline steps** (visible in UI): Initialize, DiskTransfer, DiskAllocation, ImageConversion, Cutover, VirtualMachineCreation, WaitForGuestReboots, PreHook, PostHook, PreflightInspection, WaitForFinalSnapshotConsolidation
+- **WaitForGuestReboots**: Post-migration setup phase for Windows VMs. Gated by `WindowsWaitForGuestReboot` flag (requires `WindowsWaitForReboot` setting enabled, target power state not "off", Windows VM detected via inventory, and guest conversion enabled). Creates a pod that monitors the VM serial console for guest reboot completion. Runs after VMCreation, before PostHook. The UI maps pipeline step names to display names via `getPipelineStepDisplayName()` in `src/plans/details/.../MigrationStatusVirtualMachineList/utils/utils.ts`.
+
+### NetworkMap
+Maps source networks to target networks. Referenced by Plans.
+
+### StorageMap
+Maps source storage to target storage. Referenced by Plans.
+
+- Supports offload plugins: `vsphereXcopyConfig` (vSphere XCOPY) and `csiVolumeImport` (CSI Volume Import; MTV-5483). Form ↔ CR transforms must round-trip the selected plugin key — never hardcode XCOPY.
+- Integrates with storage vendors (IBM FlashSystem, NetApp ONTAP, Dell PowerFlex/PowerMax/PowerStore, HPE Primera/3PAR, Pure Storage, Hitachi, Infinidat)
+
+### Conversion
+Represents a conversion or deep-inspection operation on a VM.
+
+- **Conversion types**: `DeepInspection` (pre-migration analysis), `Inspection`, `InPlace`, `Remote`
+- **Phases**: Pending, Running, Succeeded, Failed, Canceled
+- **Stages**: CreatingPod, CreatingSnapshot, WaitingForSnapshot, PodRunning, FetchingResults, RemovingSnapshot, WaitingForSnapshotRemoval, Finished
+- Stores inspection results (`status.inspectionResult`) with OS info, filesystem details, and compatibility concerns
+- Types defined locally in `src/utils/crds/conversion/` (pending upstream `@forklift-ui/types` export)
+- Constants and selectors: `CONVERSION_PHASE`, `CONVERSION_TYPE`, `getInspectionStatus`, `hasInspectionPassed`
+- **Note**: Backend returns `all_checks_passed` in snake_case — use the `hasInspectionPassed` selector to handle both casings
+
+### CopyAppliance / CopyApplianceTemplate
+Manages vSphere copy appliances used for disk copy operations (not Hyper-V; not copy-offload).
+
+- **CopyApplianceTemplate**: Namespaced template (provider namespace) defining vSphere placement (datastore, folder, network, resource pool); SSH secret names live on provider status
+- **CopyAppliance**: Namespaced appliance instance created from a template; shown on migration Virtual Machines resources tab
+- Types/GVKs/models from `@forklift-ui/types` (`CopyApplianceModelGroupVersionKind`, `CopyApplianceTemplateModel`, …)
+- Provider selectors live in `src/utils/crds/providers/selectors.ts` (`getCopyApplianceTemplateName`, placement getters, `getCopyApplianceSSHPrivateSecret` / `getCopyApplianceSSHPublicSecret`)
+- Provider status fields: `copyApplianceSSHPrivateSecret`, `copyApplianceSSHPublicSecret`
+- Placement create/update uses JSON Patch (`add` / `replace` / `remove`) via `buildCopyApplianceSettingPatch` / `copyAppliancePlacementConfig` under provider DetailsSection
+- Clearing placement settings must use JSON Patch `remove`, not empty-string replace
+
+### Hook
+Pre/post migration scripts executed as containers (`quay.io/konveyor/hook-runner`). Referenced in Plan VM specifications.
+
+### Host
+Represents ESXi hosts for direct disk transfer operations with vSphere providers.
+
+### ForkliftController
+Operator configuration resource controlling feature flags: `feature_copy_appliance`, `feature_copy_offload`, `feature_ocp_live_migration`, `feature_volume_populator`.
+
+---
+
+## Migration Flow
+
+```
+Source Provider --> Plan (with NetworkMap + StorageMap) --> Migration --> VirtualMachine on OpenShift
+```
+
+1. Connect source and target Providers
+2. Create NetworkMap and StorageMap for the migration
+3. Create a Plan selecting VMs and referencing the mappings
+4. Start the Plan, which creates a Migration resource
+5. Migration creates worker Pods/Jobs that transfer disks via DataVolumes
+6. VMs are created on the target OpenShift cluster
+
+---
+
+## Project Structure
+
+```
+src/
+  providers/     # Provider CRUD, details, inventory
+  plans/         # Plan CRUD, details, migration management
+  networkMaps/   # Network mapping management
+  storageMaps/   # Storage mapping management
+  overview/      # Dashboard and overview pages
+  components/    # Shared/reusable UI components
+  utils/         # Shared utilities, hooks, CRD helpers
+  test-utils/    # Testing utilities
+```
+
+---
+
+## Key Patterns
+
+- GVK constants: `ProviderModelGroupVersionKind`, `PlanModelGroupVersionKind`, etc.
+- Use `useK8sWatchResource` from `@utils/hooks/useK8sWatchResource` for resource watching
+- Use `k8sCreate`, `k8sUpdate`, `k8sPatch`, `k8sDelete` for operations
+- Jira project: **MTV** (tickets are MTV-XXXX)
+
+---
+
+## OVA Inventory API Field Casing (MTV-5734)
+
+The OVA backend returns **different field casing** depending on context:
+
+- **Standalone endpoints** (`GET /providers/ova/:uid/storages`, `.../networks`): return **camelCase** `id`, `name` — matches `@forklift-ui/types` TypeScript types.
+- **Embedded objects** within VM responses (`GET /providers/ova/:uid/vms?detail=N`): `disks[]` and `networks[]` use **PascalCase** (`ID`, `Name`, `DiskId`, `FilePath`…) — does NOT match TypeScript types.
+
+This means `disk.id` and `network.id` are `undefined` at runtime on VM-embedded objects. Always access via raw cast with fallback:
+
+```typescript
+const id = (disk as unknown as { ID?: string }).ID ?? disk.id;
+```
+
+---
+
+## Do / Don't
+
+- **Do:** Use GVK constants, useK8sWatchResource, k8s* for operations
+- **Do:** Check provider phase before plan creation; handle async statuses
+- **Do:** Verify actual API responses when investigating field-name bugs — type analysis alone is insufficient
+- **Do:** Scope Plan "Migration resources" watches by both `plan` and `migration` labels (`useMigrationResources` + `useLatestPlanMigration`) — plan-only matching mixes resources across restarts (MTV-6091)
+- **Do:** Use `buildProviderInventoryPath` for provider inventory GETs — root fetches (empty `subPath`) must send `?detail=1` so derived counts (`vmCount`, `networkCount`, `storageCount`) populate. Hyper-V `AddDerived` skips those fields when `Detail == 0`. Do not Hyper-V-gate the query param. SubPath callers keep their own detail (e.g. `hosts?detail=4`).
+- **Don't:** Import from feature code in shared (`components/`, `utils/`)
+- **Don't:** Assume resources are always loaded — handle loading/error/empty
+- **Don't:** Assume `@forklift-ui/types` field names match API field names for OVA embedded objects
+- **Don't:** Reuse `usePlanMigration` to scope migration resources — it only returns `Running=True`; use `useLatestPlanMigration` for Failed/Succeeded/restartable views
+
+---
+
+## Rule Maintenance
+
+When implementing a new feature that introduces concepts, patterns, CRDs, provider types, statuses, or conventions **not already covered** by the existing rules (this file, `AGENTS.md`, or any file under `.agents/rules/`), you **must** update the relevant rule file as part of the same change. Examples:
+
+- New CRD or resource type -- add it to this file under **Core CRDs**.
+- New provider type or status -- add it to this file and to `agents/forklift-expert.mdc`.
+- New shared hook, utility, or component pattern -- add it to `AGENTS.md` or the matching file-specific rule.
+- New testing pattern or tooling -- update `testing.mdc`.
+- New i18n utility or namespace change -- update `i18n.mdc`.
+- New workflow or development process -- add or update the relevant file under `workflows/`.
+- New reusable screen type or MTV layout pattern -- add a row to `agents/forklift-ux-patterns.mdc`.
+
+Keeping the rules accurate ensures every team member and AI assistant works with up-to-date project knowledge.
