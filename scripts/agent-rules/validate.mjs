@@ -14,6 +14,8 @@ import {
 } from './generate.mjs';
 import { selectRules } from '../../.agents/skills/forklift-rules/scripts/select-rules.mjs';
 
+const GIT_EXECUTABLE = '/usr/bin/git';
+
 const migrationManifestPath = path.join(REPO_ROOT, '.agents/migration-manifest.json');
 const report = [];
 const fail = (message) => {
@@ -176,7 +178,7 @@ const walkSkills = (skillsRoot) => {
 
 const isIgnoredByGit = (relativePath) => {
   try {
-    execFileSync('git', ['check-ignore', '-q', relativePath], { cwd: REPO_ROOT, stdio: 'ignore' });
+    execFileSync(GIT_EXECUTABLE, ['check-ignore', '-q', relativePath], { cwd: REPO_ROOT, stdio: 'ignore' });
     return true;
   } catch {
     return false;

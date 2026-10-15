@@ -3,7 +3,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { loadCanonicalRules } from '../../../../scripts/agent-rules/generate.mjs';
 
-export const splitGlobList = (globs) => {
+const splitGlobList = (globs) => {
   if (Array.isArray(globs)) return globs;
   if (typeof globs !== 'string' || globs.trim() === '') return [];
 
