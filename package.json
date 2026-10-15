@@ -33,6 +33,8 @@
     "test:coverage": "TZ=UTC jest --coverage",
     "test:updateSnapshot": "TZ=UTC jest --updateSnapshot",
     "test:e2e": "npm --prefix testing run test:e2e",
+    "agent-rules:generate": "node scripts/agent-rules/generate.mjs",
+    "agent-setup:validate": "node scripts/agent-rules/validate.mjs",
     "console": "bash ./ci/start-console.sh",
     "console:stop": "bash ./ci/stop-console.sh",
     "cluster:up": "bash ./ci/deploy-all.sh",
@@ -146,6 +148,7 @@
     "mini-svg-data-uri": "^1.4.4",
     "monaco-editor": "^0.52.2",
     "ocp-plugin-i18n-scripts": "^1.0.2",
+    "picomatch": "^4.0.5",
     "prettier": "^3.5.3",
     "react-redux": "~9.2.0",
     "sass": "^1.86.0",
@@ -162,7 +165,8 @@
     "webpack": "^5.103.0",
     "webpack-bundle-analyzer": "^4.10.2",
     "webpack-cli": "^6.0.1",
-    "webpack-dev-server": "^5.2.0"
+    "webpack-dev-server": "^5.2.0",
+    "yaml": "^2.9.0"
   },
   "overrides": {
     "dompurify": ">=3.4.13",

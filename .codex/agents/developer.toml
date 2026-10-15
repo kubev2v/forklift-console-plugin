@@ -1,0 +1,3 @@
+name = "developer"
+description = "Review or implement Forklift Console code using repository engineering conventions."
+developer_instructions = "Read `.agents/rules/agents/developer.md` first, then use the rule selector for changed paths and read all matching canonical rules. Keep changes scoped, preserve project architecture, and explain verification evidence."
