@@ -14,6 +14,12 @@
     --pf-v6-c-table__th--m-help--MinWidth: 0;
   }
 
+  // PatternFly can cache distributed space as an inline control-header minimum.
+  th[data-action-column='true'],
+  th[data-table-control-column] {
+    min-width: 0 !important;
+  }
+
   &[data-column-widths-customized='false'] colgroup[data-default-column-widths='true'] col {
     width: var(--forklift-default-column-width, auto);
   }
