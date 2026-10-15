@@ -1,5 +1,11 @@
 import type { KeyboardEvent, MouseEvent, TouchEvent } from 'react';
 
+import {
+  DATA_COLUMN_WIDTH_SPACER_ATTR,
+  DATA_DEFAULT_COLUMN_WIDTHS_ATTR,
+  DATA_RESIZABLE_COLUMN_ATTR,
+} from './dataViewTableConstants';
+
 type ColumnResizeEvent =
   | KeyboardEvent<HTMLTableCellElement>
   | MouseEvent<HTMLTableCellElement>
@@ -22,10 +28,12 @@ export const prepareColumnResize = (
     return;
   }
 
+  const table = event.currentTarget.closest('table');
+  table?.querySelector(`colgroup[${DATA_DEFAULT_COLUMN_WIDTHS_ATTR}="true"]`)?.remove();
+
+  const row = event.currentTarget.parentElement;
   const headers = Array.from(
-    event.currentTarget.parentElement?.querySelectorAll<HTMLTableCellElement>(
-      'th[data-resizable-column="true"]',
-    ) ?? [],
+    row?.querySelectorAll<HTMLTableCellElement>(`th[${DATA_RESIZABLE_COLUMN_ATTR}="true"]`) ?? [],
   );
   // Auto layout redistributes spare space after shrinking. Rebase resizable minimums before
   // PatternFly calculates the drag offset so the first move does not add that space twice.
@@ -35,9 +43,34 @@ export const prepareColumnResize = (
       headers.flatMap((header, index) => (header.id ? [[header.id, widths[index]]] : [])),
     ),
   );
+  const activeHeader = event.currentTarget;
   for (const [index, header] of headers.entries()) {
-    header.style.minWidth = `${widths[index]}px`;
+    const width = widths[index];
+    header.style.minWidth = `${width}px`;
+    if (header !== activeHeader) {
+      header.style.maxWidth = `${width}px`;
+    }
     header.setAttribute('data-column-width-fixed', 'true');
   }
-  event.currentTarget.closest('table')?.setAttribute('data-column-widths-customized', 'true');
+
+  const pinControlColumnWidth = (header: HTMLTableCellElement, width: number): void => {
+    header.style.minWidth = `${width}px`;
+    header.style.maxWidth = `${width}px`;
+  };
+
+  for (const child of Array.from(row?.children ?? [])) {
+    if (child instanceof HTMLTableCellElement) {
+      const header = child;
+      if (header.getAttribute(DATA_RESIZABLE_COLUMN_ATTR) !== 'true') {
+        if (header.hasAttribute(DATA_COLUMN_WIDTH_SPACER_ATTR)) {
+          header.style.minWidth = '0';
+          header.style.maxWidth = '0';
+        } else {
+          pinControlColumnWidth(header, header.getBoundingClientRect().width);
+        }
+      }
+    }
+  }
+
+  table?.setAttribute('data-column-widths-customized', 'true');
 };

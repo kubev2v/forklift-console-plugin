@@ -66,14 +66,13 @@ describe('prepareColumnResize', () => {
     ]);
   });
 
-  it('does not freeze the widths of selection or action columns', () => {
+  it('pins selection and action columns so spare width does not leak during resize', () => {
     const headers = createHeaders();
     const row = headers[0].parentElement;
-    const controls = ['45px', '0px'].map((minWidth) => {
+    const controls = [45, 61].map((width) => {
       const header = document.createElement('th');
-      header.style.minWidth = minWidth;
       row?.append(header);
-      jest.spyOn(header, 'getBoundingClientRect');
+      jest.spyOn(header, 'getBoundingClientRect').mockReturnValue({ width } as DOMRect);
       return header;
     });
 
@@ -85,9 +84,9 @@ describe('prepareColumnResize', () => {
       'Name',
     );
 
-    expect(controls.map((header) => header.style.minWidth)).toEqual(['45px', '0px']);
+    expect(controls.map((header) => header.style.minWidth)).toEqual(['45px', '61px']);
+    expect(controls.map((header) => header.style.maxWidth)).toEqual(['45px', '61px']);
     for (const header of controls) {
-      expect(jest.spyOn(header, 'getBoundingClientRect')).not.toHaveBeenCalled();
       expect(header.dataset.columnWidthFixed).toBeUndefined();
     }
   });

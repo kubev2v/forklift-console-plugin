@@ -112,9 +112,10 @@ export const createDefaultColumnLayout = (
         !Number.isFinite(previous) || Math.abs(width - previous) > COLUMN_MEASUREMENT_TOLERANCE_PX
       );
     });
-  const clearCachedHeaderMinWidths = (): void => {
+  const clearCachedHeaderStyles = (): void => {
     for (const header of headers) {
       header.style.removeProperty('min-width');
+      header.style.removeProperty('max-width');
     }
   };
   const clearColumnWidthVars = (): void => {
@@ -129,7 +130,7 @@ export const createDefaultColumnLayout = (
     if (table.getAttribute(DATA_COLUMN_WIDTHS_CUSTOMIZED_ATTR) === 'true') {
       return;
     }
-    clearCachedHeaderMinWidths();
+    clearCachedHeaderStyles();
     clearColumnWidthVars();
     const controlWidths = controls.map((header) => getControlColumnWidth(header));
     const widths = measureWidths();
@@ -139,7 +140,9 @@ export const createDefaultColumnLayout = (
     for (const [index, control] of controls.entries()) {
       const headerIndex = headers.indexOf(control);
       if (headerIndex >= 0) {
-        setColumnWidthVar(headerIndex, controlWidths[index]);
+        const controlWidth = controlWidths[index];
+        setColumnWidthVar(headerIndex, controlWidth);
+        control.style.maxWidth = `${controlWidth}px`;
       }
     }
   };
