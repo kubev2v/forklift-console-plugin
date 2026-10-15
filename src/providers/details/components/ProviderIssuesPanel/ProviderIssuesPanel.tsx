@@ -89,6 +89,7 @@ const ProviderIssuesPanel: FC<ProviderIssuesPanelProps> = ({
         dataSource={[providerIssuesPanelData, loaded, loadError]}
         fieldsMetadata={providerIssuesPanelFields}
         namespace={namespace}
+        resizableColumns
         showManageColumns={false}
         userSettings={userSettings}
       />

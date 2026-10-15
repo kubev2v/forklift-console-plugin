@@ -2,6 +2,7 @@ import { DEFAULT_PER_PAGE } from '@components/common/Page/usePagination';
 import { MTVConsole } from '@utils/console';
 import { isEmpty } from '@utils/helpers';
 
+import { sanitizeColumnWidths } from '../TableView/columnWidthUtils';
 import {
   loadFromLocalStorage,
   removeFromLocalStorage,
@@ -11,6 +12,7 @@ import {
 import type { UserSettings } from './types';
 
 type StoredUserSettings = {
+  columnWidths?: unknown;
   fields?: unknown;
   filters?: Record<string, unknown>;
   perPage?: unknown;
@@ -67,9 +69,19 @@ const sanitizeFields = (fields: unknown): { isVisible?: boolean; resourceFieldId
  */
 export const loadUserSettings = ({ pageId }: { pageId: string }): UserSettings => {
   const key = `${process.env.PLUGIN_NAME}/${pageId}`;
-  const { fields, filters, perPage } = parseOrClean(key);
+  const { columnWidths, fields, filters, perPage } = parseOrClean(key);
 
   return {
+    columnWidths: {
+      clear: (): void => {
+        const { columnWidths: _columnWidths, ...rest } = parseOrClean(key);
+        saveRestOrRemoveKey(key, rest);
+      },
+      data: sanitizeColumnWidths(columnWidths),
+      save: (newWidths): void => {
+        saveToLocalStorage(key, JSON.stringify({ ...parseOrClean(key), columnWidths: newWidths }));
+      },
+    },
     fields: {
       clear: (): void => {
         const { fields: _keyFields, ...rest } = parseOrClean(key);

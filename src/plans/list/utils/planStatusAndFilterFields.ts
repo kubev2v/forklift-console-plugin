@@ -1,6 +1,10 @@
 import { getPlanStatus } from 'src/plans/details/components/PlanStatus/utils/planStatusResolver';
 import { getPlanMigrationType } from 'src/plans/details/utils/utils';
 
+import {
+  COMPACT_COLUMN_WIDTH,
+  REGULAR_COLUMN_WIDTH,
+} from '@components/common/TableView/columnWidthConstants';
 import { FilterDefType, type ResourceField } from '@components/common/utils/types';
 import type { V1beta1Plan } from '@forklift-ui/types';
 import { t } from '@utils/i18n';
@@ -39,6 +43,7 @@ export const planStatusAndFilterFields: ResourceField[] = [
     resourceFieldId: null,
   },
   {
+    defaultWidth: REGULAR_COLUMN_WIDTH,
     filter: {
       placeholderLabel: t('Filter by status'),
       type: FilterDefType.Enum,
@@ -51,6 +56,7 @@ export const planStatusAndFilterFields: ResourceField[] = [
     sortable: true,
   },
   {
+    defaultWidth: COMPACT_COLUMN_WIDTH,
     filter: {
       placeholderLabel: t('Filter by type'),
       type: FilterDefType.Enum,

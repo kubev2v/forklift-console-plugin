@@ -1,3 +1,9 @@
+import {
+  COMPACT_COLUMN_WIDTH,
+  MEDIUM_COLUMN_WIDTH,
+  REGULAR_COLUMN_WIDTH,
+  WIDE_COLUMN_WIDTH,
+} from '@components/common/TableView/columnWidthConstants';
 import { FilterDefType, type ResourceField } from '@components/common/utils/types';
 import type { V1beta1Plan } from '@forklift-ui/types';
 import { t } from '@utils/i18n';
@@ -10,6 +16,7 @@ import {
 
 export const planIdentityFields: ResourceField[] = [
   {
+    defaultWidth: WIDE_COLUMN_WIDTH,
     filter: {
       placeholderLabel: t('Filter by name'),
       type: FilterDefType.FreeText,
@@ -23,6 +30,7 @@ export const planIdentityFields: ResourceField[] = [
     width: PLAN_FIELD_WIDTH_PERCENTAGE,
   },
   {
+    defaultWidth: MEDIUM_COLUMN_WIDTH,
     filter: {
       placeholderLabel: t('Filter by project'),
       type: FilterDefType.FreeText,
@@ -36,6 +44,7 @@ export const planIdentityFields: ResourceField[] = [
     width: PLAN_FIELD_WIDTH_PERCENTAGE,
   },
   {
+    defaultWidth: REGULAR_COLUMN_WIDTH,
     filter: {
       placeholderLabel: t('Filter by source'),
       type: FilterDefType.FreeText,
@@ -48,6 +57,7 @@ export const planIdentityFields: ResourceField[] = [
     width: PLAN_FIELD_WIDTH_PERCENTAGE,
   },
   {
+    defaultWidth: REGULAR_COLUMN_WIDTH,
     filter: {
       placeholderLabel: t('Filter by target'),
       type: FilterDefType.FreeText,
@@ -60,6 +70,7 @@ export const planIdentityFields: ResourceField[] = [
     width: PLAN_FIELD_WIDTH_PERCENTAGE,
   },
   {
+    defaultWidth: COMPACT_COLUMN_WIDTH,
     isVisible: true,
     jsonPath: (plan: unknown) => (plan as V1beta1Plan)?.spec?.vms?.length ?? 0,
     label: t('Virtual machines'),

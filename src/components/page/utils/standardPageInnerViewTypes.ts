@@ -4,8 +4,8 @@ import type { RowProps, TableViewHeaderProps } from '@components/common/TableVie
 import type { ResourceField } from '@components/common/utils/types';
 import type { TableSortContextProps } from '@components/TableSortContext';
 
-import type { PageContent } from './PageContent';
-import type { PageToolbar } from './PageToolbar';
+import type { PageContent } from '../components/PageContent';
+import type { PageToolbar } from '../components/PageToolbar';
 
 export type StandardPageInnerViewProps<T> = {
   activeSort: TableSortContextProps['activeSort'];
@@ -36,6 +36,7 @@ export type StandardPageInnerViewProps<T> = {
   page: number;
   pageDataIds: string[];
   renderedGlobalActions: ReactElement[];
+  resizableColumns?: boolean;
   RowComponent: FC<RowProps<T>>;
   selectedFilters: Record<string, string[]>;
   selectedIds?: string[];

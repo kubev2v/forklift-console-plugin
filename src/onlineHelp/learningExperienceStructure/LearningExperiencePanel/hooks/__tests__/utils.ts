@@ -52,7 +52,7 @@ export const createMockDebouncedFn = (
   let capturedFn: ((position: number) => void) | null = null;
 
   mockCreateCancellableDebounce.mockImplementation((fn) => {
-    capturedFn = fn as (position: number) => void;
+    capturedFn = fn;
     const debouncedFn = jest.fn((...args: unknown[]) => {
       capturedFn?.(...(args as [number]));
     });

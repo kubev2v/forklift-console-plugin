@@ -144,6 +144,7 @@ const PlanConcernsPanel: FC<PlanConcernsPanelProps> = ({
         dataSource={[planConcernsConditionsPanelData ?? [], loaded, loadError]}
         fieldsMetadata={planConcernsPanelFields}
         namespace={namespace}
+        resizableColumns
         showManageColumns={false}
         userSettings={userSettings}
       />

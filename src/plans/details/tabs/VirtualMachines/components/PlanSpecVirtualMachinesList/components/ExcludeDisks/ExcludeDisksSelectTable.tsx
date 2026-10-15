@@ -61,6 +61,7 @@ const ExcludeDisksSelectTable: FC<ExcludeDisksSelectTableProps> = ({
       noPadding
       onSelect={onSelect}
       pagination={10}
+      resizableColumns
       selectedIds={selectedIds}
       showManageColumns={false}
       testId="exclude-disks-select-table"

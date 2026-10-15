@@ -150,8 +150,10 @@ export const TEST_DATA = {
 
 // API Endpoints Constants
 export const API_ENDPOINTS = {
+  allNetworkMaps: '/api/kubernetes/apis/forklift.konveyor.io/v1beta1/networkmaps?limit=250',
   allPlans: '/api/kubernetes/apis/forklift.konveyor.io/v1beta1/plans?limit=250',
   allProviders: '/api/kubernetes/apis/forklift.konveyor.io/v1beta1/providers?limit=250',
+  allStorageMaps: '/api/kubernetes/apis/forklift.konveyor.io/v1beta1/storagemaps?limit=250',
   datastores: (providerType: string, uid: string) =>
     `**/forklift-inventory/providers/${providerType}/${uid}/datastores?detail=1`,
   folders: (providerType: string, uid: string) =>

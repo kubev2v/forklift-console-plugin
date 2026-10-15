@@ -124,6 +124,7 @@ export const ProviderVirtualMachinesList: FC<ProviderVirtualMachinesListProps> =
       extraSupportedMatchers={extraSupportedMatchers}
       fieldsMetadata={fieldsMetadata}
       namespace={namespace}
+      resizableColumns
       title={title ?? t('Virtual machines')}
       userSettings={userSettings}
       {...getStandardPageProps()}

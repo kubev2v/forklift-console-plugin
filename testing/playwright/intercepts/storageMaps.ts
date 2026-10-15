@@ -1,4 +1,4 @@
-import type { Page } from '@playwright/test';
+import type { Page, Route } from '@playwright/test';
 
 import { API_ENDPOINTS, TEST_DATA } from '../fixtures/test-data';
 import { MTV_NAMESPACE } from '../utils/resource-manager/constants';
@@ -177,14 +177,35 @@ export const setupStorageMapsIntercepts = async (page: Page) => {
     },
   );
 
-  await page.route(API_ENDPOINTS.storageMaps, async (route) => {
+  const storageMapsListResponse = {
+    apiVersion: 'forklift.konveyor.io/v1beta1',
+    items: [storageMapData1, storageMapData2],
+    kind: 'StorageMapList',
+    metadata: {
+      continue: '',
+      remainingItemCount: 0,
+      resourceVersion: '12345',
+    },
+  };
+
+  const fulfillStorageMapsList = async (route: Route): Promise<void> => {
+    if (route.request().method() !== 'GET') {
+      await route.continue();
+      return;
+    }
     await route.fulfill({
-      body: JSON.stringify({
-        apiVersion: 'forklift.konveyor.io/v1beta1',
-        items: [storageMapData1, storageMapData2],
-      }),
+      body: JSON.stringify(storageMapsListResponse),
       contentType: 'application/json',
       status: 200,
     });
-  });
+  };
+
+  await page.route(API_ENDPOINTS.storageMaps, fulfillStorageMapsList);
+
+  await page.route(API_ENDPOINTS.allStorageMaps, fulfillStorageMapsList);
+
+  await page.route(
+    /\/api\/kubernetes\/apis\/forklift\.konveyor\.io\/v1beta1\/storagemaps(?:\?|$)/u,
+    fulfillStorageMapsList,
+  );
 };

@@ -1,10 +1,17 @@
 import { type FC, memo, type ReactElement, useRef } from 'react';
 
+import { useDataViewCellScope } from '@components/common/DataViewTable/DataViewCellScope';
+import {
+  getExpandCellProps,
+  getSelectionCellProps,
+} from '@components/common/DataViewTable/dataViewControlColumnUtils';
+import { useTableColumnWidthContext } from '@components/common/TableView/TableColumnWidthContext';
 import type { RowProps } from '@components/common/TableView/types';
 import { Tooltip } from '@patternfly/react-core';
 import { Td } from '@patternfly/react-table';
 
-import { usePageSelectionConfig, usePageSelectionState } from '../context/usePageSelectionContext';
+import { usePageSelectionConfig } from '../context/usePageSelectionConfig';
+import { usePageSelectionState } from '../context/usePageSelectionState';
 
 type SelectCheckboxTdProps<T> = Pick<RowProps<T>, 'resourceData' | 'resourceIndex'>;
 
@@ -12,8 +19,9 @@ const SelectCheckboxTd = <T,>({
   resourceData,
   resourceIndex,
 }: SelectCheckboxTdProps<T>): ReactElement | null => {
-  const { canSelectRef, getSelectDisabledReasonRef, toggleSelectForRef, toIdRef } =
+  const { canSelectRef, getSelectDisabledReasonRef, hasExpansion, toggleSelectForRef, toIdRef } =
     usePageSelectionConfig<T>();
+  const { enabled } = useTableColumnWidthContext();
   const { selectedIds } = usePageSelectionState();
   const selectRef = useRef<HTMLTableCellElement>(null);
   const itemId = toIdRef.current?.(resourceData) ?? '';
@@ -26,6 +34,7 @@ const SelectCheckboxTd = <T,>({
   return (
     <>
       <Td
+        {...(enabled ? getSelectionCellProps(hasExpansion) : {})}
         data-testid="row-select-checkbox"
         ref={selectRef}
         select={{
@@ -49,12 +58,14 @@ const ExpandToggleTd = <T,>({
   resourceIndex,
 }: ExpandToggleTdProps<T>): ReactElement => {
   const { toggleExpandForRef, toIdRef } = usePageSelectionConfig<T>();
+  const { enabled } = useTableColumnWidthContext();
   const { expandedIds } = usePageSelectionState();
   const itemId = toIdRef.current?.(resourceData) ?? '';
   const isExpanded = expandedIds?.includes(itemId) ?? false;
 
   return (
     <Td
+      {...(enabled ? getExpandCellProps() : {})}
       expand={{
         isExpanded,
         onToggle: () => {
@@ -80,6 +91,11 @@ const SelectionRowCell = memo(
 const SelectionRow = <T,>(props: RowProps<T>): ReactElement => {
   const { cellRef, hasExpansion, hasSelection } = usePageSelectionConfig<T>();
   const CellComponent = cellRef.current;
+  const scope = useDataViewCellScope();
+
+  if (scope) {
+    return CellComponent ? <SelectionRowCell CellComponent={CellComponent} {...props} /> : <></>;
+  }
 
   return (
     <>

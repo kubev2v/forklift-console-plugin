@@ -2,7 +2,7 @@ import type { FC, ReactElement } from 'react';
 
 import type { GlobalActionToolbarProps } from '@components/common/utils/types';
 
-import { usePageSelectionState } from '../context/usePageSelectionContext';
+import { usePageSelectionState } from '../context/usePageSelectionState';
 
 /** Wraps a toolbar action so it receives current selectedIds from PageSelectionContext. */
 export const createToolbarActionWithSelection = <T,>(

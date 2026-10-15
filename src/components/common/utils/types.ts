@@ -56,6 +56,8 @@ type OpenApiJsonResourcePath =
 export type ResourceField = {
   compareFn?: (a: string, b: string, locale: string) => number;
   defaultSortDirection?: SortDirection;
+  // Relative sizing preferences for initial/reset resizable layouts, not persisted pixel widths.
+  defaultWidth?: { minWidth: number; weight: number };
   filter?: FilterDef | null;
   info?: ThProps['info'];
   isAction?: boolean;

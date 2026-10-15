@@ -1,0 +1,59 @@
+.forklift-data-view-table-layout {
+  min-width: 0;
+  width: 100%;
+}
+
+.forklift-data-view-table {
+  --pf-v6-c-table--m-truncate--cell--MinWidth: 0;
+  --pf-v6-c-table__text--m-truncate--MinWidth: 0;
+
+  background-color: var(--pf-v6-c-table--BackgroundColor);
+
+  th[data-resizable-column='true'] {
+    --pf-v6-c-table__sort--MinWidth: 0;
+    --pf-v6-c-table__th--m-help--MinWidth: 0;
+  }
+
+  // PatternFly can cache distributed space as an inline control-header minimum.
+  th[data-action-column='true'],
+  th[data-table-control-column] {
+    min-width: 0 !important;
+  }
+
+  &[data-column-widths-customized='false'] colgroup[data-default-column-widths='true'] col {
+    width: var(--forklift-default-column-width, auto);
+  }
+
+  // A zero preferred width leaves PatternFly's live minimum as the resized column's exact size.
+  &[data-column-widths-customized='true'] [data-column-width-fixed='true'] {
+    width: 0;
+  }
+
+  &[data-column-widths-customized='true'] [data-column-width-spacer='true'] {
+    // DataViewTh caches the visible spacer width inline on reload; it must remain shrinkable.
+    min-width: 0 !important;
+    padding: 0;
+    width: 100%;
+  }
+
+  &[data-column-widths-customized='true'] th[data-action-column='true'],
+  &[data-column-widths-customized='true'] th[data-table-control-column] {
+    width: 0;
+  }
+
+  &[data-column-widths-customized='false'] [data-column-width-spacer='true'] {
+    display: none;
+  }
+
+  [data-table-control-column='expand']:first-child {
+    padding-inline-start: var(--pf-v6-c-table__toggle--PaddingInlineStart);
+    padding-inline-end: var(--pf-v6-c-table__toggle--PaddingInlineEnd);
+  }
+
+  // Glass surfaces and late-loaded PF styles can make even the sticky token translucent.
+  & &__sticky-cell,
+  th[data-action-column='true'],
+  [data-table-control-column] {
+    background-color: rgb(from var(--pf-v6-c-table__sticky-cell--BackgroundColor) r g b / 1);
+  }
+}

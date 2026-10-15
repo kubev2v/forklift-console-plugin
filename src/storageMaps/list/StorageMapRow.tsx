@@ -2,8 +2,9 @@ import type { FC, ReactElement } from 'react';
 import type { RowProps } from 'src/components/common/TableView/types';
 import { createStatusCell } from 'src/components/table/utils/createStatusCell';
 
+import TableRow from '@components/common/DataViewTable/TableRow';
+import ResizableTd from '@components/common/TableView/ResizableTd';
 import type { ResourceField } from '@components/common/utils/types';
-import { Td, Tr } from '@patternfly/react-table';
 import { renderResourceRowCells } from '@utils/renderResourceRowCells';
 import type { StorageMapData } from '@utils/storage/types';
 
@@ -41,14 +42,19 @@ const renderTd = ({
 
   const CellRenderer = cellRenderers?.[fieldId] ?? ((): ReactElement => <></>);
   return (
-    <Td dataLabel={fieldId} key={fieldId}>
+    <ResizableTd
+      columnId={fieldId}
+      dataLabel={fieldId}
+      key={fieldId}
+      resourceFields={resourceFields}
+    >
       <CellRenderer data={resourceData} fieldId={fieldId} fields={resourceFields} />
-    </Td>
+    </ResizableTd>
   );
 };
 
 const ProviderRow: FC<RowProps<StorageMapData>> = ({ resourceData, resourceFields }) => (
-  <Tr>{renderResourceRowCells(resourceFields, resourceData, renderTd)}</Tr>
+  <TableRow>{renderResourceRowCells(resourceFields, resourceData, renderTd)}</TableRow>
 );
 
 export default ProviderRow;

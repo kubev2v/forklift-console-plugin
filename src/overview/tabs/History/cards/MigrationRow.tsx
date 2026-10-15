@@ -6,6 +6,7 @@ import { getMigrationVMsStatusCounts } from 'src/plans/details/components/PlanSt
 import VMStatusIconsRow from 'src/plans/details/components/PlanStatus/VMStatusIconsRow';
 import { getMigrationStatusLabel } from 'src/plans/details/tabs/Details/components/MigrationsSection/components/utils/utils';
 
+import TableRow from '@components/common/DataViewTable/TableRow';
 import { ConsoleTimestamp } from '@components/ConsoleTimestamp/ConsoleTimestamp';
 import {
   MigrationModelGroupVersionKind,
@@ -14,7 +15,6 @@ import {
   type V1beta1Plan,
 } from '@forklift-ui/types';
 import { Split } from '@patternfly/react-core';
-import { Tr } from '@patternfly/react-table';
 import { getName, getNamespace, getUID } from '@utils/crds/common/selectors';
 
 type MigrationRowProps = RowProps<V1beta1Migration> & {
@@ -60,7 +60,7 @@ const MigrationRow: FC<MigrationRowProps> = ({
     ),
   };
   return (
-    <Tr>
+    <TableRow>
       {resourceFields.map(({ resourceFieldId }) => (
         <VisibleTableData
           fieldId={resourceFieldId ?? ''}
@@ -70,7 +70,7 @@ const MigrationRow: FC<MigrationRowProps> = ({
           {rowFields[resourceFieldId as keyof typeof rowFields]}
         </VisibleTableData>
       ))}
-    </Tr>
+    </TableRow>
   );
 };
 

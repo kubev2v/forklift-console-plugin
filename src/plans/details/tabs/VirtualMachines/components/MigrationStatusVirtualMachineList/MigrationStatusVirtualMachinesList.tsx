@@ -75,6 +75,7 @@ const MigrationStatusVirtualMachinesList: FC<MigrationStatusVirtualMachinesListP
         GlobalActionToolbarItems={actions}
         onExpand={setExpandedIds}
         onSelect={onSelect}
+        resizableColumns
         selectedIds={selectedIds}
         title={t('Virtual machines')}
         toId={toId}

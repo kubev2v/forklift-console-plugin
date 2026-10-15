@@ -2,11 +2,12 @@ import type { ReactElement } from 'react';
 
 import { PageSection } from '@patternfly/react-core';
 
+import type { StandardPageInnerViewProps } from '../utils/standardPageInnerViewTypes';
+
 import { PageContent } from './PageContent';
 import { PageHeader } from './PageHeader';
 import { PageTable } from './PageTable';
 import { PageToolbar } from './PageToolbar';
-import type { StandardPageInnerViewProps } from './standardPageInnerView.types';
 
 const StandardPageInnerView = <T,>({
   activeSort,
@@ -36,6 +37,7 @@ const StandardPageInnerView = <T,>({
   page,
   pageDataIds,
   renderedGlobalActions,
+  resizableColumns,
   RowComponent,
   selectedFilters,
   selectedIds,
@@ -85,6 +87,7 @@ const StandardPageInnerView = <T,>({
           page={page}
           pageDataIds={pageDataIds}
           renderedGlobalActions={renderedGlobalActions}
+          resizableColumns={resizableColumns}
           selectedFilters={selectedFilters}
           selectedIds={selectedIds}
           setFields={setFields}
@@ -110,6 +113,7 @@ const StandardPageInnerView = <T,>({
         header={header}
         loaded={loaded}
         namespace={namespace}
+        resizableColumns={resizableColumns}
         RowComponent={RowComponent}
         setActiveSort={setActiveSort}
         sortedData={sortedData}

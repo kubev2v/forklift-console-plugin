@@ -1,7 +1,7 @@
 import { type FC, type ReactNode, useMemo } from 'react';
 
+import ResizableTd from '@components/common/TableView/ResizableTd';
 import type { ResourceField } from '@components/common/utils/types';
-import { Td } from '@patternfly/react-table';
 
 type VisibleTableDataProps = {
   children: ReactNode;
@@ -26,9 +26,14 @@ const VisibleTableData: FC<VisibleTableDataProps> = ({
   }
 
   return (
-    <Td className={className} dataLabel={fieldId}>
+    <ResizableTd
+      className={className}
+      columnId={fieldId}
+      dataLabel={fieldId}
+      resourceFields={resourceFields}
+    >
       {children}
-    </Td>
+    </ResizableTd>
   );
 };
 
