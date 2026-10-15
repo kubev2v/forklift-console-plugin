@@ -1,4 +1,4 @@
-import type { Page } from '@playwright/test';
+import type { Page, Route } from '@playwright/test';
 
 import { API_ENDPOINTS, TEST_DATA } from '../fixtures/test-data';
 import { MTV_NAMESPACE } from '../utils/resource-manager/constants';
@@ -212,25 +212,15 @@ export const setupNetworkMapsIntercepts = async (page: Page) => {
   const networkMapsListResponse = {
     apiVersion: 'forklift.konveyor.io/v1beta1',
     items: [networkMapData1, networkMapData2],
+    kind: 'NetworkMapList',
+    metadata: {
+      continue: '',
+      remainingItemCount: 0,
+      resourceVersion: '12345',
+    },
   };
 
-  await page.route(API_ENDPOINTS.networkMaps, async (route) => {
-    await route.fulfill({
-      body: JSON.stringify(networkMapsListResponse),
-      contentType: 'application/json',
-      status: 200,
-    });
-  });
-
-  await page.route(API_ENDPOINTS.allNetworkMaps, async (route) => {
-    await route.fulfill({
-      body: JSON.stringify(networkMapsListResponse),
-      contentType: 'application/json',
-      status: 200,
-    });
-  });
-
-  await page.route('**/api/kubernetes/**/*networkmaps*', async (route) => {
+  const fulfillNetworkMapsList = async (route: Route): Promise<void> => {
     if (route.request().method() !== 'GET') {
       await route.continue();
       return;
@@ -240,5 +230,14 @@ export const setupNetworkMapsIntercepts = async (page: Page) => {
       contentType: 'application/json',
       status: 200,
     });
-  });
+  };
+
+  await page.route(API_ENDPOINTS.networkMaps, fulfillNetworkMapsList);
+
+  await page.route(API_ENDPOINTS.allNetworkMaps, fulfillNetworkMapsList);
+
+  await page.route(
+    /\/api\/kubernetes\/apis\/forklift\.konveyor\.io\/v1beta1\/networkmaps(?:\?|$)/u,
+    fulfillNetworkMapsList,
+  );
 };

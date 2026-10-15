@@ -5,11 +5,15 @@ import {
 import { isValidColumnWidth } from '../TableView/columnWidthUtils';
 
 import {
+  DATA_ACTION_COLUMN_ATTR,
   DATA_COLUMN_WIDTH_SPACER_ATTR,
   DATA_COLUMN_WIDTHS_CUSTOMIZED_ATTR,
+  DATA_CONTROL_COLUMN_ATTR,
   DATA_DEFAULT_COLUMN_WIDTHS_ATTR,
   DATA_RESIZABLE_COLUMN_ATTR,
+  EXPANSION_COLUMN_WIDTH,
   FORKLIFT_DEFAULT_COLUMN_WIDTH_CSS_VAR,
+  SELECTION_COLUMN_WIDTH,
 } from './dataViewTableConstants';
 import { allocateDefaultColumnWidths } from './defaultColumnWidthUtils';
 
@@ -42,6 +46,30 @@ const measureTableHeaders = (table: HTMLTableElement): MeasuredHeaders =>
     { all: [], controls: [], data: [] },
   );
 
+const parsePx = (value: string): number => parseFloat(value);
+
+const getControlColumnWidth = (header: HTMLTableCellElement): number => {
+  const controlType = header.getAttribute(DATA_CONTROL_COLUMN_ATTR);
+  if (controlType === 'expand') {
+    return parsePx(EXPANSION_COLUMN_WIDTH);
+  }
+  if (controlType === 'select') {
+    return parsePx(SELECTION_COLUMN_WIDTH);
+  }
+  if (header.hasAttribute(DATA_ACTION_COLUMN_ATTR)) {
+    const actionControl = header.querySelector('button');
+    if (actionControl) {
+      const style = getComputedStyle(header);
+      return (
+        actionControl.getBoundingClientRect().width +
+        parseFloat(style.paddingInlineStart) +
+        parseFloat(style.paddingInlineEnd)
+      );
+    }
+  }
+  return header.getBoundingClientRect().width;
+};
+
 export const createDefaultColumnLayout = (
   table: HTMLTableElement,
   container: HTMLElement,
@@ -56,7 +84,7 @@ export const createDefaultColumnLayout = (
   const measureWidths = (): number[] => {
     const availableWidth =
       container.getBoundingClientRect().width -
-      controls.reduce((sum, header) => sum + header.getBoundingClientRect().width, 0);
+      controls.reduce((sum, header) => sum + getControlColumnWidth(header), 0);
     if (availableWidth <= 0) {
       return [];
     }
@@ -103,7 +131,7 @@ export const createDefaultColumnLayout = (
     }
     clearCachedHeaderMinWidths();
     clearColumnWidthVars();
-    const controlWidths = controls.map((header) => header.getBoundingClientRect().width);
+    const controlWidths = controls.map((header) => getControlColumnWidth(header));
     const widths = measureWidths();
     for (const [index, width] of widths.entries()) {
       setColumnWidthVar(headers.indexOf(dataHeaders[index]), width);

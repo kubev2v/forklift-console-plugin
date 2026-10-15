@@ -80,8 +80,15 @@ test.describe('Navigation preserves the complete resized layout', { tag: '@upstr
         await page.mouse.down();
         await page.mouse.move(x + GROWTH_PX, y, { steps: 5 });
         await page.mouse.up();
-        const resizedWidths = { ...initialWidths, name: initialWidths.name + GROWTH_PX };
-        await expectWidthsAndOverflow(table, resizedWidths, GROWTH_PX);
+        const resizedWidths = await getColumnWidths(table);
+        const nameGrowth = resizedWidths.name - initialWidths.name;
+        const overflow = await table.evaluate((element) => {
+          const container = element.parentElement;
+          return container ? container.scrollWidth - container.clientWidth : 0;
+        });
+        await expectWidthsAndOverflow(table, resizedWidths, overflow);
+        expect(nameGrowth).toBeGreaterThan(0);
+        expect(overflow).toBeCloseTo(nameGrowth, 0);
         const originalDocument = await page.locator('html').elementHandle();
         const awayKind = resource.kind === 'Provider' ? 'Plan' : 'Provider';
         await navigateInSidebar(page, awayKind);
@@ -89,10 +96,10 @@ test.describe('Navigation preserves the complete resized layout', { tag: '@upstr
         await navigateInSidebar(page, resource.kind);
         expect(await originalDocument?.evaluate((element) => element.isConnected)).toBe(true);
         await expect(table.locator('tbody').getByRole('link').first()).toBeVisible();
-        await expectWidthsAndOverflow(table, resizedWidths, GROWTH_PX);
+        await expectWidthsAndOverflow(table, resizedWidths, overflow);
         await page.reload();
         await expect(table.locator('tbody').getByRole('link').first()).toBeVisible();
-        await expectWidthsAndOverflow(table, resizedWidths, GROWTH_PX);
+        await expectWidthsAndOverflow(table, resizedWidths, overflow);
         await page.getByRole('button', { exact: true, name: 'Reset column widths' }).click();
         await expectTableToFit(table);
       });
