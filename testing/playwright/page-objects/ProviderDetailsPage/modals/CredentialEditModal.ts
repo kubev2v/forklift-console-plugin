@@ -19,6 +19,7 @@ export class CredentialEditModal extends BaseModal {
   readonly passwordToggleButton: Locator;
   readonly skipCertificateRadio: Locator;
   readonly usernameInput: Locator;
+  readonly verifyCertificateTitle: Locator;
 
   constructor(page: Page) {
     super(page, page.getByRole('dialog'));
@@ -43,6 +44,13 @@ export class CredentialEditModal extends BaseModal {
     this.fetchCertificateButton = this.page.getByRole('button', {
       name: 'Fetch certificate from URL',
     });
+    this.verifyCertificateTitle = this.page.getByText('Verify certificate', { exact: true });
+  }
+
+  private get verifyCertificateModal(): Locator {
+    return this.page
+      .locator('.pf-v5-c-modal-box, .pf-v6-c-modal-box')
+      .filter({ hasText: 'Verify certificate' });
   }
 
   async clearCaCertificate(): Promise<void> {
@@ -60,7 +68,7 @@ export class CredentialEditModal extends BaseModal {
 
   async clickFetchCertificate(): Promise<void> {
     await this.fetchCertificateButton.click();
-    await expect(this.page.getByRole('heading', { name: 'Verify certificate' })).toBeVisible();
+    await expect(this.verifyCertificateTitle).toBeVisible();
   }
 
   async close(): Promise<void> {
@@ -69,10 +77,8 @@ export class CredentialEditModal extends BaseModal {
   }
 
   async closeVerifyCertificateModal(): Promise<void> {
-    const verifyModal = this.page
-      .getByRole('dialog')
-      .filter({ has: this.page.getByRole('heading', { name: 'Verify certificate' }) });
-    await verifyModal.getByRole('button', { name: 'Close' }).click();
+    const verifyModal = this.verifyCertificateModal;
+    await verifyModal.locator('button[aria-label="Close"]').click();
     await expect(verifyModal).not.toBeVisible();
   }
 
@@ -197,9 +203,7 @@ export class CredentialEditModal extends BaseModal {
   }
 
   async verifyVerifyCertificateModalDetails(): Promise<void> {
-    const verifyModal = this.page
-      .getByRole('dialog')
-      .filter({ has: this.page.getByRole('heading', { name: 'Verify certificate' }) });
+    const verifyModal = this.verifyCertificateModal;
     const issuer = verifyModal.locator('#issuer');
     const fingerprint = verifyModal.locator('#fingerprint');
     const expiration = verifyModal.locator('#expiration');
