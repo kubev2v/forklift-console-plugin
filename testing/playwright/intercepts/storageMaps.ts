@@ -177,12 +177,34 @@ export const setupStorageMapsIntercepts = async (page: Page) => {
     },
   );
 
+  const storageMapsListResponse = {
+    apiVersion: 'forklift.konveyor.io/v1beta1',
+    items: [storageMapData1, storageMapData2],
+  };
+
   await page.route(API_ENDPOINTS.storageMaps, async (route) => {
     await route.fulfill({
-      body: JSON.stringify({
-        apiVersion: 'forklift.konveyor.io/v1beta1',
-        items: [storageMapData1, storageMapData2],
-      }),
+      body: JSON.stringify(storageMapsListResponse),
+      contentType: 'application/json',
+      status: 200,
+    });
+  });
+
+  await page.route(API_ENDPOINTS.allStorageMaps, async (route) => {
+    await route.fulfill({
+      body: JSON.stringify(storageMapsListResponse),
+      contentType: 'application/json',
+      status: 200,
+    });
+  });
+
+  await page.route('**/api/kubernetes/**/*storagemaps*', async (route) => {
+    if (route.request().method() !== 'GET') {
+      await route.continue();
+      return;
+    }
+    await route.fulfill({
+      body: JSON.stringify(storageMapsListResponse),
       contentType: 'application/json',
       status: 200,
     });

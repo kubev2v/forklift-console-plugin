@@ -51,7 +51,7 @@ describe('defaultColumnLayout', () => {
     const { container, name, table } = createFixture();
     const layout = createDefaultColumnLayout(table, container);
 
-    expect(getWidths(table)).toEqual(['', '670.5px', '223.5px', '']);
+    expect(getWidths(table)).toEqual(['45px', '670.5px', '223.5px', '61px']);
     expect(name.style.width).toBe('');
     expect(name.style.minWidth).toBe('');
     expect(layout.needsRefresh()).toBe(false);
@@ -64,7 +64,7 @@ describe('defaultColumnLayout', () => {
 
     expect(layout.needsRefresh()).toBe(true);
     layout.refresh();
-    expect(getWidths(table)).toEqual(['', '445.5px', '148.5px', '']);
+    expect(getWidths(table)).toEqual(['45px', '445.5px', '148.5px', '61px']);
     expect(layout.needsRefresh()).toBe(false);
   });
 
@@ -75,7 +75,7 @@ describe('defaultColumnLayout', () => {
 
     expect(layout.needsRefresh()).toBe(true);
     layout.refresh();
-    expect(getWidths(table)).toEqual(['', '658.5px', '219.5px', '']);
+    expect(getWidths(table)).toEqual(['45px', '658.5px', '219.5px', '77px']);
   });
 
   it('stops changing preferences synchronously when resizing begins', () => {
@@ -85,7 +85,7 @@ describe('defaultColumnLayout', () => {
     jest.spyOn(container, 'getBoundingClientRect').mockReturnValue({ width: 700 } as DOMRect);
     layout.refresh();
 
-    expect(getWidths(table)).toEqual(['', '670.5px', '223.5px', '']);
+    expect(getWidths(table)).toEqual(['45px', '670.5px', '223.5px', '61px']);
     layout.dispose();
     expect(table.querySelector('colgroup')).toBeNull();
   });

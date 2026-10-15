@@ -209,12 +209,34 @@ export const setupNetworkMapsIntercepts = async (page: Page) => {
     },
   );
 
+  const networkMapsListResponse = {
+    apiVersion: 'forklift.konveyor.io/v1beta1',
+    items: [networkMapData1, networkMapData2],
+  };
+
   await page.route(API_ENDPOINTS.networkMaps, async (route) => {
     await route.fulfill({
-      body: JSON.stringify({
-        apiVersion: 'forklift.konveyor.io/v1beta1',
-        items: [networkMapData1, networkMapData2],
-      }),
+      body: JSON.stringify(networkMapsListResponse),
+      contentType: 'application/json',
+      status: 200,
+    });
+  });
+
+  await page.route(API_ENDPOINTS.allNetworkMaps, async (route) => {
+    await route.fulfill({
+      body: JSON.stringify(networkMapsListResponse),
+      contentType: 'application/json',
+      status: 200,
+    });
+  });
+
+  await page.route('**/api/kubernetes/**/*networkmaps*', async (route) => {
+    if (route.request().method() !== 'GET') {
+      await route.continue();
+      return;
+    }
+    await route.fulfill({
+      body: JSON.stringify(networkMapsListResponse),
       contentType: 'application/json',
       status: 200,
     });

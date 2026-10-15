@@ -89,14 +89,30 @@ export const createDefaultColumnLayout = (
       header.style.removeProperty('min-width');
     }
   };
+  const clearColumnWidthVars = (): void => {
+    for (const column of columns) {
+      column.style.removeProperty(FORKLIFT_DEFAULT_COLUMN_WIDTH_CSS_VAR);
+    }
+  };
+  const setColumnWidthVar = (headerIndex: number, width: number): void => {
+    columns[headerIndex]?.style.setProperty(FORKLIFT_DEFAULT_COLUMN_WIDTH_CSS_VAR, `${width}px`);
+  };
   const refresh = (): void => {
     if (table.getAttribute(DATA_COLUMN_WIDTHS_CUSTOMIZED_ATTR) === 'true') {
       return;
     }
     clearCachedHeaderMinWidths();
+    clearColumnWidthVars();
+    const controlWidths = controls.map((header) => header.getBoundingClientRect().width);
     const widths = measureWidths();
     for (const [index, width] of widths.entries()) {
-      getColumn(index).style.setProperty(FORKLIFT_DEFAULT_COLUMN_WIDTH_CSS_VAR, `${width}px`);
+      setColumnWidthVar(headers.indexOf(dataHeaders[index]), width);
+    }
+    for (const [index, control] of controls.entries()) {
+      const headerIndex = headers.indexOf(control);
+      if (headerIndex >= 0) {
+        setColumnWidthVar(headerIndex, controlWidths[index]);
+      }
     }
   };
   refresh();
