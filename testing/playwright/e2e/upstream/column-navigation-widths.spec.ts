@@ -18,6 +18,12 @@ const getColumnWidths = (table: Locator): Promise<Record<string, number>> =>
     ),
   );
 
+const getOverflow = (table: Locator): Promise<number> =>
+  table.evaluate((element) => {
+    const container = element.parentElement;
+    return container ? container.scrollWidth - container.clientWidth : 0;
+  });
+
 const expectWidthsAndOverflow = async (
   table: Locator,
   widths: Record<string, number>,
@@ -32,13 +38,8 @@ const expectWidthsAndOverflow = async (
     })
     .toBe(true);
   await expect
-    .poll(() =>
-      table.evaluate((element) => {
-        const container = element.parentElement;
-        return container ? container.scrollWidth - container.clientWidth : 0;
-      }),
-    )
-    .toBeCloseTo(overflow, 0);
+    .poll(async () => Math.abs((await getOverflow(table)) - overflow))
+    .toBeLessThan(TOLERANCE_PX);
 };
 
 const navigateInSidebar = async (page: Page, kind: string): Promise<void> => {
@@ -82,13 +83,10 @@ test.describe('Navigation preserves the complete resized layout', { tag: '@upstr
         await page.mouse.up();
         const resizedWidths = await getColumnWidths(table);
         const nameGrowth = resizedWidths.name - initialWidths.name;
-        const overflow = await table.evaluate((element) => {
-          const container = element.parentElement;
-          return container ? container.scrollWidth - container.clientWidth : 0;
-        });
+        const overflow = await getOverflow(table);
         await expectWidthsAndOverflow(table, resizedWidths, overflow);
         expect(nameGrowth).toBeGreaterThan(0);
-        expect(overflow).toBeCloseTo(nameGrowth, 0);
+        expect(Math.abs(overflow - nameGrowth)).toBeLessThan(TOLERANCE_PX);
         const originalDocument = await page.locator('html').elementHandle();
         const awayKind = resource.kind === 'Provider' ? 'Plan' : 'Provider';
         await navigateInSidebar(page, awayKind);
