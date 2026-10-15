@@ -3,11 +3,17 @@ import { Controller, useFormContext } from 'react-hook-form';
 
 import Select from '@components/common/Select';
 import { Divider, SelectList, SelectOption } from '@patternfly/react-core';
-import { DEFAULT_NETWORK } from '@utils/constants';
+import { POD } from '@utils/constants';
 import { isEmpty } from '@utils/helpers';
 import { useForkliftTranslation } from '@utils/i18n';
 import { IgnoreNetwork } from '@utils/mappings/constants';
 import type { MappingValue } from '@utils/types';
+
+const toOptionLabel = (network: MappingValue, defaultNetworkLabel: string): string =>
+  network.id === POD || network.name === defaultNetworkLabel ? defaultNetworkLabel : network.name;
+
+const isPodNetworkOption = (network: MappingValue, defaultNetworkLabel: string): boolean =>
+  toOptionLabel(network, defaultNetworkLabel) === defaultNetworkLabel;
 
 type TargetNetworkFieldProps = {
   emptyStateMessage?: string;
@@ -32,6 +38,7 @@ const TargetNetworkField: FC<TargetNetworkFieldProps> = ({
 }) => {
   const { control, trigger } = useFormContext();
   const { t } = useForkliftTranslation();
+  const defaultNetworkLabel = t('Default network');
 
   const networksEntries = useMemo(() => {
     const entries = Array.isArray(targetNetworks)
@@ -40,12 +47,13 @@ const TargetNetworkField: FC<TargetNetworkFieldProps> = ({
 
     if (hideNonNadTargets) {
       return entries.filter(
-        ([key, network]) => key !== 'podNetwork' && network.name !== DEFAULT_NETWORK,
+        ([key, network]) =>
+          key !== 'podNetwork' && !isPodNetworkOption(network, defaultNetworkLabel),
       );
     }
 
     return entries;
-  }, [targetNetworks, hideNonNadTargets]);
+  }, [defaultNetworkLabel, hideNonNadTargets, targetNetworks]);
 
   const hasNetworks = useMemo(() => !isEmpty(networksEntries), [networksEntries]);
   const showIgnore = showIgnoreNetworkOption && !hideNonNadTargets;
@@ -58,54 +66,59 @@ const TargetNetworkField: FC<TargetNetworkFieldProps> = ({
     <Controller
       control={control}
       name={fieldId}
-      render={({ field }) => (
-        <Select
-          id={fieldId}
-          isDisabled={isDisabled}
-          onSelect={async (_event, value) => {
-            field.onChange(value);
-            if (triggerFieldId) {
-              await trigger(triggerFieldId);
-              return;
-            }
+      render={({ field }) => {
+        const selected = field.value as MappingValue | undefined;
+        const selectedLabel = selected ? toOptionLabel(selected, defaultNetworkLabel) : undefined;
 
-            await trigger();
-          }}
-          placeholder={t('Select target network')}
-          ref={field.ref}
-          testId={testId ?? `target-network-${fieldId}`}
-          value={(field.value as MappingValue)?.name}
-        >
-          <SelectList>
-            {hasNetworks ? (
-              <>
-                {networksEntries.map(([key, network]) => (
-                  <SelectOption key={key} value={network}>
-                    {network.name}
-                  </SelectOption>
-                ))}
-                {showIgnore && (
-                  <>
-                    <Divider />
-                    <SelectOption
-                      key={IgnoreNetwork.Type}
-                      value={{ id: IgnoreNetwork.Type, name: IgnoreNetwork.Label }}
-                    >
-                      {IgnoreNetwork.Label}
+        return (
+          <Select
+            id={fieldId}
+            isDisabled={isDisabled}
+            onSelect={async (_event, value) => {
+              field.onChange(value);
+              if (triggerFieldId) {
+                await trigger(triggerFieldId);
+                return;
+              }
+
+              await trigger();
+            }}
+            placeholder={t('Select target network')}
+            ref={field.ref}
+            testId={testId ?? `target-network-${fieldId}`}
+            value={selectedLabel}
+          >
+            <SelectList>
+              {hasNetworks ? (
+                <>
+                  {networksEntries.map(([key, network]) => (
+                    <SelectOption key={key} value={network}>
+                      {toOptionLabel(network, defaultNetworkLabel)}
                     </SelectOption>
-                  </>
-                )}
-              </>
-            ) : (
-              <SelectOption isDisabled key="empty">
-                {hideNonNadTargets
-                  ? noNadMessage
-                  : (emptyStateMessage ?? t('No networks available'))}
-              </SelectOption>
-            )}
-          </SelectList>
-        </Select>
-      )}
+                  ))}
+                  {showIgnore && (
+                    <>
+                      <Divider />
+                      <SelectOption
+                        key={IgnoreNetwork.Type}
+                        value={{ id: IgnoreNetwork.Type, name: IgnoreNetwork.Label }}
+                      >
+                        {IgnoreNetwork.Label}
+                      </SelectOption>
+                    </>
+                  )}
+                </>
+              ) : (
+                <SelectOption isDisabled key="empty">
+                  {hideNonNadTargets
+                    ? noNadMessage
+                    : (emptyStateMessage ?? t('No networks available'))}
+                </SelectOption>
+              )}
+            </SelectList>
+          </Select>
+        );
+      }}
     />
   );
 };

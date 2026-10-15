@@ -3,6 +3,44 @@ import { NetworkMapFieldId } from '@utils/mappings/networkMap';
 import { validateNetworkMap } from '../utils';
 
 describe('validateNetworkMap with VLAN-qualified entries', () => {
+  it('matches a legacy source by name when its ID is missing', () => {
+    const result = validateNetworkMap({
+      usedSourceNetworks: [{ id: 'network-a', name: 'Lab-External' }],
+      values: [
+        {
+          [NetworkMapFieldId.SourceNetwork]: { name: 'Lab-External' },
+          [NetworkMapFieldId.TargetNetwork]: { id: 'ns1', name: 'ns1/nad-a' },
+        },
+      ],
+      vms: {},
+      oVirtNicProfiles: [],
+    });
+
+    expect(result).toBeUndefined();
+  });
+
+  it('requires VLAN presence and value to match when falling back to names', () => {
+    const validateLegacyMapping = (vlan?: string): string | undefined =>
+      validateNetworkMap({
+        usedSourceNetworks: [{ id: 'network-a', name: 'Lab-External', vlan: '100' }],
+        values: [
+          {
+            [NetworkMapFieldId.SourceNetwork]: {
+              name: 'Lab-External',
+              ...(vlan ? { vlan } : {}),
+            },
+            [NetworkMapFieldId.TargetNetwork]: { id: 'ns1', name: 'ns1/nad-a' },
+          },
+        ],
+        vms: {},
+        oVirtNicProfiles: [],
+      });
+
+    expect(validateLegacyMapping()).toBeDefined();
+    expect(validateLegacyMapping('200')).toBeDefined();
+    expect(validateLegacyMapping('100')).toBeUndefined();
+  });
+
   it('returns undefined when all VLAN-qualified networks are mapped', () => {
     const usedSourceNetworks = [
       { id: 'net-a', name: 'Lab-External (VLAN 100)', vlan: '100' },
@@ -64,5 +102,21 @@ describe('validateNetworkMap with VLAN-qualified entries', () => {
       oVirtNicProfiles: [],
     });
     expect(result).toBeDefined();
+  });
+
+  it('matches mapped sources by id when the displayed label is stale', () => {
+    const result = validateNetworkMap({
+      usedSourceNetworks: [{ id: 'pod', name: 'Default network' }],
+      values: [
+        {
+          [NetworkMapFieldId.SourceNetwork]: { id: 'pod', name: 'Red predeterminada' },
+          [NetworkMapFieldId.TargetNetwork]: { id: '', name: 'Default network' },
+        },
+      ],
+      vms: {},
+      oVirtNicProfiles: [],
+    });
+
+    expect(result).toBeUndefined();
   });
 });

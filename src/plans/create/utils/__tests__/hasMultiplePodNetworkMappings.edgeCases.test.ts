@@ -1,5 +1,5 @@
 import { describe, expect, it } from '@jest/globals';
-import { DefaultNetworkLabel } from '@utils/mappings/constants';
+import { getDefaultNetworkLabel } from '@utils/mappings/constants';
 
 import {
   hasMultiplePodNetworkMappings,
@@ -11,11 +11,11 @@ describe('hasMultiplePodNetworkMappings - edgeCases', () => {
     const networkMap = [
       {
         sourceNetwork: { id: 'n1', name: 'n1' },
-        targetNetwork: { name: DefaultNetworkLabel.Source },
+        targetNetwork: { name: getDefaultNetworkLabel() },
       },
       {
         sourceNetwork: { id: 'n2', name: 'n2' },
-        targetNetwork: { name: DefaultNetworkLabel.Source },
+        targetNetwork: { name: getDefaultNetworkLabel() },
       },
     ] as never;
 
@@ -35,7 +35,7 @@ describe('hasMultiplePodNetworkMappings - edgeCases', () => {
     const networkMap = [
       {
         sourceNetwork: { id: 'n1', name: 'n1' },
-        targetNetwork: { name: DefaultNetworkLabel.Source },
+        targetNetwork: { name: getDefaultNetworkLabel() },
       },
     ] as never;
 
@@ -67,7 +67,7 @@ describe('hasMultiplePodNetworkMappings - edgeCases', () => {
   it('hasPodNetworkMappings detects pod network targets', () => {
     expect(hasPodNetworkMappings([])).toBe(false);
     expect(
-      hasPodNetworkMappings([{ targetNetwork: { name: DefaultNetworkLabel.Source } }] as never),
+      hasPodNetworkMappings([{ targetNetwork: { name: getDefaultNetworkLabel() } }] as never),
     ).toBe(true);
   });
 });

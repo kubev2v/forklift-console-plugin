@@ -9,7 +9,7 @@ import {
   MenuToggle,
   type MenuToggleElement,
 } from '@patternfly/react-core';
-import { DEFAULT_NETWORK } from '@utils/constants';
+import { useForkliftTranslation } from '@utils/i18n';
 
 import { getNetworkName } from './utils/getNetworkName';
 
@@ -24,6 +24,8 @@ const ProviderDefaultTransferNetworkDropdown: FC<ProviderDefaultTransferNetworkD
   provider,
   value,
 }) => {
+  const { t } = useForkliftTranslation();
+  const defaultNetworkLabel = t('Default network');
   const [isOpen, setIsOpen] = useState(false);
   const onToggleClick = (): void => {
     setIsOpen((open) => !open);
@@ -41,14 +43,14 @@ const ProviderDefaultTransferNetworkDropdown: FC<ProviderDefaultTransferNetworkD
 
   const dropdownItems = [
     <DropdownItem
-      description={DEFAULT_NETWORK}
-      key={DEFAULT_NETWORK}
+      description={defaultNetworkLabel}
+      key="default-network"
       onClick={() => {
         onChange('');
       }}
       value={0}
     >
-      {DEFAULT_NETWORK}
+      {defaultNetworkLabel}
     </DropdownItem>,
     ...(networks ?? []).map((network) => (
       <DropdownItem

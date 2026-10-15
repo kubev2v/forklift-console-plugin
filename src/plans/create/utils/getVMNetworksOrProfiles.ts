@@ -1,5 +1,5 @@
 import type { OVirtNicProfile, ProviderVirtualMachine } from '@forklift-ui/types';
-import { DefaultNetworkLabel } from '@utils/mappings/constants';
+import { getDefaultNetworkLabel } from '@utils/mappings/constants';
 import { PROVIDER_TYPES } from '@utils/providers/constants';
 import { getEc2SubnetIds, isEc2Vm } from '@utils/types/ec2Inventory';
 import { getNutanixSubnetIds, isNutanixVm } from '@utils/types/nutanixInventory';
@@ -30,7 +30,7 @@ const getNetworksForVM = (vm: ProviderVirtualMachine): string[] => {
         return [];
       }
       return networks.map((network) =>
-        network?.pod ? DefaultNetworkLabel.Source : (network?.multus?.networkName ?? network?.name),
+        network?.pod ? getDefaultNetworkLabel() : (network?.multus?.networkName ?? network?.name),
       );
     }
     case PROVIDER_TYPES.hyperv:

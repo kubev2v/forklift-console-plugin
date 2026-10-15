@@ -3,7 +3,7 @@ import { useFormContext, useWatch } from 'react-hook-form';
 
 import type { V1beta1NetworkMap } from '@forklift-ui/types';
 import { Alert, AlertVariant } from '@patternfly/react-core';
-import { DEFAULT_NETWORK } from '@utils/constants';
+import { POD } from '@utils/constants';
 import { NetworkMapFieldId } from '@utils/crds/maps/types';
 import { useForkliftTranslation } from '@utils/i18n';
 import { IgnoreNetwork } from '@utils/mappings/constants';
@@ -16,6 +16,7 @@ type PlanOwnerAlertProps = {
 
 export const PlanOwnerAlert: FC<PlanOwnerAlertProps> = ({ networkMap }) => {
   const { t } = useForkliftTranslation();
+  const defaultNetworkLabel = t('Default network');
   const { control } = useFormContext<NetworkEditFormValues>();
   const watchedMappings = useWatch({
     control,
@@ -30,10 +31,11 @@ export const PlanOwnerAlert: FC<PlanOwnerAlertProps> = ({ networkMap }) => {
   const hasMultusTarget = useMemo(
     () =>
       watchedMappings?.some((mapping) => {
-        const targetName = mapping?.[NetworkMapFieldId.TargetNetwork]?.name;
-        return targetName && targetName !== DEFAULT_NETWORK && targetName !== IgnoreNetwork.Label;
+        const target = mapping?.[NetworkMapFieldId.TargetNetwork];
+        const isDefaultTarget = target?.id === POD || target?.name === defaultNetworkLabel;
+        return Boolean(target?.name) && !isDefaultTarget && target?.name !== IgnoreNetwork.Label;
       }),
-    [watchedMappings],
+    [defaultNetworkLabel, watchedMappings],
   );
 
   if (!isOwnedByPlan || !hasMultusTarget) {

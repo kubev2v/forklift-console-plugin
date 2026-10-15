@@ -1,5 +1,5 @@
 import type { OVirtNicProfile, ProviderVirtualMachine } from '@forklift-ui/types';
-import { DefaultNetworkLabel } from '@utils/mappings/constants';
+import { isDefaultNetworkTarget } from '@utils/mappings/constants';
 import type { NetworkMapping } from '@utils/mappings/networkMap';
 
 import { getVMNetworksOrProfiles } from './getVMNetworksOrProfiles';
@@ -11,7 +11,7 @@ export const hasMultiplePodNetworkMappings = (
 ): boolean => {
   const netIdsMappedToPodNet = new Set(
     networkMap
-      ?.filter(({ targetNetwork }) => targetNetwork?.name === DefaultNetworkLabel.Source)
+      ?.filter(({ targetNetwork }) => isDefaultNetworkTarget(targetNetwork))
       ?.map(({ sourceNetwork }) => sourceNetwork?.id) ?? [],
   );
 
@@ -29,5 +29,5 @@ export const hasMultiplePodNetworkMappings = (
 };
 
 export const hasPodNetworkMappings = (networkMap: NetworkMapping[]): boolean => {
-  return networkMap.some(({ targetNetwork }) => targetNetwork?.name === DefaultNetworkLabel.Source);
+  return networkMap.some(({ targetNetwork }) => isDefaultNetworkTarget(targetNetwork));
 };

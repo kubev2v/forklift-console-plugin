@@ -13,7 +13,7 @@ import { NetworkMapFieldId } from '@utils/crds/maps/types';
 import { isEmpty } from '@utils/helpers';
 import type { InventoryNetwork } from '@utils/hooks/useNetworks';
 import { useForkliftTranslation } from '@utils/i18n';
-import { defaultNetMapping } from '@utils/mappings/networkMap';
+import { getDefaultNetMapping } from '@utils/mappings/networkMap';
 import type { MappingValue } from '@utils/types';
 
 import type { NetworkEditFormValues } from '../utils/types';
@@ -79,10 +79,7 @@ const NetworkMapEditFieldTable = ({
             Boolean(loadError),
           label: t('Add mapping'),
           onClick: () => {
-            append({
-              [NetworkMapFieldId.SourceNetwork]: defaultNetMapping[NetworkMapFieldId.SourceNetwork],
-              [NetworkMapFieldId.TargetNetwork]: defaultNetMapping[NetworkMapFieldId.TargetNetwork],
-            });
+            append(getDefaultNetMapping());
           },
         }}
         fieldRows={networkMappingFields.map((field, index) => ({

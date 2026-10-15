@@ -10,21 +10,11 @@ import type {
   V1NetworkAttachmentDefinition,
   VSphereNetwork,
 } from '@forklift-ui/types';
-import { DEFAULT_NETWORK, POD } from '@utils/constants';
+import { POD } from '@utils/constants';
+import { useForkliftTranslation } from '@utils/i18n';
 import type { Ec2Network } from '@utils/types/ec2Inventory';
 
 import useProviderInventory from './useProviderInventory';
-
-const podNetwork: InventoryNetwork = {
-  id: POD,
-  name: DEFAULT_NETWORK,
-  namespace: '',
-  object: undefined,
-  providerType: 'openshift',
-  selfLink: '',
-  uid: POD,
-  version: '',
-};
 
 export type InventoryNetwork =
   | (Omit<OpenShiftNetworkAttachmentDefinition, 'object'> & {
@@ -39,6 +29,8 @@ export type InventoryNetwork =
 export const useSourceNetworks = (
   provider: V1beta1Provider | undefined,
 ): [InventoryNetwork[], boolean, Error | null] => {
+  const { t } = useForkliftTranslation();
+  const defaultNetworkLabel = t('Default network');
   const providerType: ProviderType = provider?.spec?.type as ProviderType;
   const {
     error,
@@ -56,11 +48,20 @@ export const useSourceNetworks = (
       : [];
 
     if (Array.isArray(networks) && provider?.spec?.type === 'openshift') {
-      networksList.push(podNetwork);
+      networksList.push({
+        id: POD,
+        name: defaultNetworkLabel,
+        namespace: '',
+        object: undefined,
+        providerType: 'openshift',
+        selfLink: '',
+        uid: POD,
+        version: '',
+      });
     }
 
     return networksList;
-  }, [networks, provider?.spec?.type, providerType]);
+  }, [defaultNetworkLabel, networks, provider?.spec?.type, providerType]);
 
   return [typedNetworks, loading, error];
 };

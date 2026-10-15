@@ -7,16 +7,20 @@ import type {
   V1beta1NetworkMapSpecMapSource,
   V1beta1Provider,
 } from '@forklift-ui/types';
-import { DEFAULT_NETWORK, IGNORED, MULTUS, POD } from '@utils/constants';
+import { IGNORED, MULTUS, POD } from '@utils/constants';
 import type { NetworkMapping } from '@utils/crds/maps/types';
-import { IgnoreNetwork } from '@utils/mappings/constants';
+import {
+  getDefaultNetworkLabel,
+  IgnoreNetwork,
+  isDefaultNetworkTarget,
+} from '@utils/mappings/constants';
 import { PROVIDER_TYPES } from '@utils/providers/constants';
 import type { MappingValue } from '@utils/types';
 
 type NetworkMapSource = V1beta1NetworkMapSpecMapSource & { vlan?: string };
 
 const getDestination = (targetNetwork: MappingValue): V1beta1NetworkMapSpecMapDestination => {
-  if (targetNetwork.name === DEFAULT_NETWORK) {
+  if (isDefaultNetworkTarget(targetNetwork)) {
     return { type: POD };
   }
 
@@ -58,7 +62,7 @@ export const buildNetworkMappings = (
     const destination = getDestination(targetNetwork);
 
     if (isOpenShiftProvider) {
-      const isPodSourceNetwork = sourceNetwork.name === DEFAULT_NETWORK;
+      const isPodSourceNetwork = isDefaultNetworkTarget(sourceNetwork);
       const source: V1beta1NetworkMapSpecMapSource = isPodSourceNetwork
         ? { type: POD }
         : { name: sourceNetwork.name.replace(/^\//gu, '') };
@@ -88,14 +92,15 @@ export const buildNetworkMappings = (
 
 const openShiftNetworkAttachmentDefinitionToName = (
   net: OpenShiftNetworkAttachmentDefinition,
-): string => (net?.namespace ? `${net?.namespace}/${net?.name}` : (net?.name ?? DEFAULT_NETWORK));
+): string =>
+  net?.namespace ? `${net?.namespace}/${net?.name}` : (net?.name ?? getDefaultNetworkLabel());
 
 const getSourceNetName = (
   source: V1beta1NetworkMapSpecMapSource,
   isOpenShiftProvider: boolean,
 ): string => {
   if (isOpenShiftProvider && source?.type === POD) {
-    return DEFAULT_NETWORK;
+    return getDefaultNetworkLabel();
   }
 
   return source?.name ?? source?.id ?? '';
@@ -118,7 +123,7 @@ const getDestinationNetName = (
     return IgnoreNetwork.Label;
   }
 
-  return DEFAULT_NETWORK;
+  return getDefaultNetworkLabel();
 };
 
 export const getMappingValues = (
@@ -137,17 +142,19 @@ export const getMappingValues = (
     const sourceNet = mapping.source;
     const destNet = mapping.destination;
     const { vlan } = sourceNet as NetworkMapSource;
+    const openShiftSourceId =
+      sourceNet.type === POD
+        ? POD
+        : (sourceNetworks.find((net) => net.name === sourceNet.name)?.id ?? '');
 
     const sourceNetwork: MappingValue = {
-      id: isOpenShiftProvider
-        ? (sourceNetworks.find((net) => net.name === sourceNet.name)?.id ?? '')
-        : (sourceNet.id ?? ''),
+      id: isOpenShiftProvider ? openShiftSourceId : (sourceNet.id ?? ''),
       name: getSourceNetName(sourceNet, isOpenShiftProvider),
       ...(vlan ? { vlan } : {}),
     };
 
     const targetNetwork: MappingValue = {
-      id: destNet.namespace ?? '',
+      id: destNet.type === POD ? POD : (destNet.namespace ?? ''),
       name: getDestinationNetName(destinationNetworks, destNet),
     };
 

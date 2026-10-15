@@ -1,3 +1,5 @@
-import { DEFAULT_NETWORK } from '@utils/constants';
+import { isEmpty } from '@utils/helpers';
+import { getDefaultNetworkLabel } from '@utils/mappings/constants';
 
-export const getNetworkName = (value: string | undefined): string => value ?? DEFAULT_NETWORK;
+export const getNetworkName = (value: string | undefined): string =>
+  isEmpty(value) ? getDefaultNetworkLabel() : (value ?? '');

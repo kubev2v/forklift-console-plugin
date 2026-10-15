@@ -13,7 +13,7 @@ import type { OVirtNicProfile, ProviderVirtualMachine } from '@forklift-ui/types
 import { Stack } from '@patternfly/react-core';
 import { NetworkMapFieldId } from '@utils/crds/maps/types';
 import { useForkliftTranslation } from '@utils/i18n';
-import { defaultNetMapping, ignoreNetMapping } from '@utils/mappings/networkMap';
+import { getDefaultNetMapping, ignoreNetMapping } from '@utils/mappings/networkMap';
 import type { MappingValue } from '@utils/types';
 
 import type { PlanNetworkEditFormValues } from '../utils/types';
@@ -55,14 +55,13 @@ const PlanNetworkMapFieldsTable: FC<PlanNetworkMapFieldsTableProps> = ({
     control,
     name: NetworkMapFieldId.NetworkMap,
     rules: {
-      validate: (values) => {
-        return validateNetworkMap({
+      validate: (values) =>
+        validateNetworkMap({
           oVirtNicProfiles,
           usedSourceNetworks,
           values,
           vms,
-        });
-      },
+        }),
     },
   });
 
@@ -103,11 +102,12 @@ const PlanNetworkMapFieldsTable: FC<PlanNetworkMapFieldsTableProps> = ({
           isDisabled: isLoading || Boolean(loadError),
           label: t('Add mapping'),
           onClick: async () => {
+            const defaultMapping = getDefaultNetMapping();
             append({
-              [NetworkMapFieldId.SourceNetwork]: defaultNetMapping[NetworkMapFieldId.SourceNetwork],
+              [NetworkMapFieldId.SourceNetwork]: defaultMapping[NetworkMapFieldId.SourceNetwork],
               [NetworkMapFieldId.TargetNetwork]: hasPodNetworkMappings(networkMappings)
                 ? ignoreNetMapping[NetworkMapFieldId.TargetNetwork]
-                : defaultNetMapping[NetworkMapFieldId.TargetNetwork],
+                : defaultMapping[NetworkMapFieldId.TargetNetwork],
             });
 
             await trigger();

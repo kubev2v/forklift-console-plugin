@@ -1,8 +1,9 @@
-import { buildNetworkMappings } from '../buildNetworkMappings';
+import { buildNetworkMappings, getMappingValues } from '../buildNetworkMappings';
 
 import {
-  DEFAULT_NETWORK,
+  getDefaultNetworkLabel,
   mockNetworkMapping,
+  mockOpenShiftProvider,
   mockVMwareProvider,
   NetworkMapFieldId,
 } from './buildNetworkMappings.fixtures';
@@ -102,7 +103,7 @@ describe('buildNetworkMappings - edge cases', () => {
       mockNetworkMapping,
       {
         [NetworkMapFieldId.SourceNetwork]: { name: 'source-network-2' },
-        [NetworkMapFieldId.TargetNetwork]: { name: DEFAULT_NETWORK },
+        [NetworkMapFieldId.TargetNetwork]: { name: getDefaultNetworkLabel() },
       },
     ];
 
@@ -111,5 +112,21 @@ describe('buildNetworkMappings - edge cases', () => {
     expect(result).toHaveLength(2);
     expect(result[0].destination.type).toBe('multus');
     expect(result[1].destination.type).toBe('pod');
+  });
+
+  it('should preserve the POD source id when restoring an OpenShift mapping', () => {
+    const result = getMappingValues(
+      [
+        {
+          source: { type: 'pod' },
+          destination: { type: 'pod' },
+        },
+      ],
+      mockOpenShiftProvider,
+      [],
+      [],
+    );
+
+    expect(result[0].sourceNetwork).toEqual({ id: 'pod', name: getDefaultNetworkLabel() });
   });
 });

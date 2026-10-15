@@ -1,6 +1,6 @@
 import type { V1beta1Provider } from '@forklift-ui/types';
-import { DEFAULT_NETWORK, POD } from '@utils/constants';
-import { IgnoreNetwork } from '@utils/mappings/constants';
+import { POD } from '@utils/constants';
+import { getDefaultNetworkLabel, IgnoreNetwork } from '@utils/mappings/constants';
 import { NetworkMapFieldId, type NetworkMapping } from '@utils/mappings/networkMap';
 import { PROVIDER_TYPES } from '@utils/providers/constants';
 
@@ -40,7 +40,7 @@ export const multusMapping: NetworkMapping = {
 
 export const podTargetMapping: NetworkMapping = {
   [NetworkMapFieldId.SourceNetwork]: { id: 'net-2', name: 'Mgmt' },
-  [NetworkMapFieldId.TargetNetwork]: { name: DEFAULT_NETWORK },
+  [NetworkMapFieldId.TargetNetwork]: { id: POD, name: getDefaultNetworkLabel() },
 };
 
 export const ignoreTargetMapping: NetworkMapping = {

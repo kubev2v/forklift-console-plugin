@@ -1,6 +1,5 @@
-import { DEFAULT_NETWORK } from '@utils/constants';
 import { t } from '@utils/i18n';
-import { IgnoreNetwork } from '@utils/mappings/constants';
+import { getDefaultNetworkTarget, IgnoreNetwork } from '@utils/mappings/constants';
 import type { MappingValue } from '@utils/types';
 
 export enum NetworkMapFieldId {
@@ -24,10 +23,10 @@ export type NetworkMapping = {
   [NetworkMapFieldId.TargetNetwork]: MappingValue;
 };
 
-export const defaultNetMapping: NetworkMapping = {
+export const getDefaultNetMapping = (): NetworkMapping => ({
   [NetworkMapFieldId.SourceNetwork]: { name: '' },
-  [NetworkMapFieldId.TargetNetwork]: { name: DEFAULT_NETWORK },
-};
+  [NetworkMapFieldId.TargetNetwork]: getDefaultNetworkTarget(),
+});
 
 export const ignoreNetMapping: NetworkMapping = {
   [NetworkMapFieldId.SourceNetwork]: { name: '' },

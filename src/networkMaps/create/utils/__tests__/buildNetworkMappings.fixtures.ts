@@ -1,6 +1,6 @@
 import type { V1beta1Provider } from '@forklift-ui/types';
-import { DEFAULT_NETWORK } from '@utils/constants';
 import { NetworkMapFieldId } from '@utils/crds/maps/types';
+import { getDefaultNetworkLabel } from '@utils/mappings/constants';
 import { PROVIDER_TYPES } from '@utils/providers/constants';
 
 export const mockOpenShiftProvider: V1beta1Provider = {
@@ -28,4 +28,4 @@ export const mockNetworkMapping = {
   [NetworkMapFieldId.TargetNetwork]: { name: 'target-network', id: 'target-ns' },
 };
 
-export { DEFAULT_NETWORK, NetworkMapFieldId };
+export { getDefaultNetworkLabel, NetworkMapFieldId };
