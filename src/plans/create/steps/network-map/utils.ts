@@ -12,6 +12,7 @@ import type { MappingValue } from '@utils/types';
 
 import type { CategorizedSourceMappings, ProviderNetwork } from '../../types';
 import { hasMultiplePodNetworkMappings } from '../../utils/hasMultiplePodNetworkMappings';
+import { isSameNetworkSource } from '../../utils/networkMappingSources';
 import { getMapResourceLabel } from '../utils';
 
 import { getHypervVlanQualifiedNetworks } from './hypervVlanNetworks';
@@ -26,14 +27,6 @@ type ValidateNetworkMapParams = {
   usedSourceNetworks: MappingValue[];
   values: NetworkMapping[];
   vms: Record<string, ProviderVirtualMachine>;
-};
-
-const getSourceKey = (source: MappingValue): string | undefined => {
-  if (source.vlan) {
-    return `${source.id ?? source.name}:vlan=${source.vlan}`;
-  }
-
-  return source.id?.trim() ? source.id : source.name;
 };
 
 export const getNetworkMapFieldId = (id: keyof NetworkMapping, index: number): NetworkMappingId =>
@@ -84,14 +77,10 @@ export const validateNetworkMap = (
   validateNetworkMapParams: ValidateNetworkMapParams,
 ): string | undefined => {
   const { oVirtNicProfiles, usedSourceNetworks, values, vms } = validateNetworkMapParams;
-  const mappedSourceKeys = new Set(
-    values
-      .map((value) => getSourceKey(value[NetworkMapFieldId.SourceNetwork]))
-      .filter((key): key is string => Boolean(key?.trim())),
-  );
+  const mappedSources = values.map((value) => value[NetworkMapFieldId.SourceNetwork]);
 
   const hasUnmappedNetwork = !usedSourceNetworks.every((sourceNetwork) =>
-    mappedSourceKeys.has(getSourceKey(sourceNetwork) ?? ''),
+    mappedSources.some((mappedSource) => isSameNetworkSource(mappedSource, sourceNetwork)),
   );
   if (hasUnmappedNetwork) {
     return t('All networks detected on the selected VMs require a mapping.');

@@ -136,7 +136,7 @@ describe('useInitializeMappings - autoMap', () => {
     expect(updated.map((row) => row.sourceNetwork.name)).toEqual(['src-a', 'src-b']);
   });
 
-  it('matches sources by id when their translated names change', () => {
+  it('refreshes a mapped source label when its translated name changes', () => {
     renderHook(() => {
       useInitializeMappings({
         currentMap: [
@@ -152,6 +152,15 @@ describe('useInitializeMappings - autoMap', () => {
       });
     });
 
-    expect(mockSetValue).not.toHaveBeenCalled();
+    expect(mockSetValue).toHaveBeenCalledWith(
+      NetworkMapFieldId.NetworkMap,
+      [
+        {
+          [NetworkMapFieldId.SourceNetwork]: { id: 'pod', name: 'Réseau par défaut' },
+          [NetworkMapFieldId.TargetNetwork]: defaultTarget,
+        },
+      ],
+      { shouldDirty: false, shouldValidate: true },
+    );
   });
 });

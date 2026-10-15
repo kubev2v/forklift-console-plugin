@@ -6,6 +6,11 @@ import type { MappingValue } from '@utils/types';
 
 import type { MappingFieldIds } from '../types';
 import { fillUnmappedSources } from '../utils/fillUnmappedSources';
+import {
+  getNetworkSourceKey,
+  isSameNetworkSource,
+  refreshNetworkSourceLabels,
+} from '../utils/networkMappingSources';
 
 type UseInitializeMappingsParams<T extends Record<string, unknown>> = {
   currentMap: T[] | undefined;
@@ -14,14 +19,6 @@ type UseInitializeMappingsParams<T extends Record<string, unknown>> = {
   fieldIds: MappingFieldIds;
   isLoading: boolean;
   usedSources: MappingValue[];
-};
-
-const getSourceKey = (source: MappingValue): string | undefined => {
-  if (source.vlan) {
-    return `${source.id ?? source.name}:vlan=${source.vlan}`;
-  }
-
-  return source.id?.trim() ? source.id : source.name;
 };
 
 /**
@@ -39,19 +36,15 @@ export const useInitializeMappings = <T extends Record<string, unknown>>({
   const hasInitializedRef = useRef(false);
   const autoMappedSourcesRef = useRef(new Set<string>());
 
-  const mappedSourceKeys = useMemo(() => {
+  const mappedSources = useMemo(() => {
     if (!currentMap?.length) {
-      return new Set<string>();
+      return [];
     }
 
-    return new Set(
-      currentMap
-        .map((mapping) => {
-          const sourceField = mapping[fieldIds.sourceField] as MappingValue | undefined;
-          return sourceField ? getSourceKey(sourceField) : undefined;
-        })
-        .filter((key): key is string => Boolean(key?.trim())),
-    );
+    return currentMap.flatMap((mapping) => {
+      const sourceField = mapping[fieldIds.sourceField] as MappingValue | undefined;
+      return sourceField ? [sourceField] : [];
+    });
   }, [currentMap, fieldIds.sourceField]);
 
   const unmappedSources = useMemo(() => {
@@ -62,10 +55,10 @@ export const useInitializeMappings = <T extends Record<string, unknown>>({
     return usedSources.filter(
       (source) =>
         source.name?.trim() &&
-        !mappedSourceKeys.has(getSourceKey(source) ?? '') &&
-        !autoMappedSourcesRef.current.has(getSourceKey(source) ?? ''),
+        !mappedSources.some((mappedSource) => isSameNetworkSource(mappedSource, source)) &&
+        !autoMappedSourcesRef.current.has(getNetworkSourceKey(source) ?? ''),
     );
-  }, [usedSources, mappedSourceKeys]);
+  }, [usedSources, mappedSources]);
 
   const targetValue = useMemo(
     (): MappingValue => ({
@@ -97,12 +90,17 @@ export const useInitializeMappings = <T extends Record<string, unknown>>({
       hasInitializedRef.current = true;
     }
 
+    const refreshedMappings = refreshNetworkSourceLabels(
+      currentMap ?? [],
+      fieldIds.sourceField,
+      usedSources,
+    );
+
     if (!isEmpty(unmappedSources)) {
       clearErrors(fieldIds.mapField);
 
-      const existingMappings = [...(currentMap ?? [])];
       const updatedMappings = fillUnmappedSources({
-        existingMappings,
+        existingMappings: refreshedMappings.mappings,
         fieldIds,
         targetValue,
         unmappedSources,
@@ -116,11 +114,16 @@ export const useInitializeMappings = <T extends Record<string, unknown>>({
       }, 0);
 
       for (const source of unmappedSources) {
-        const sourceKey = getSourceKey(source);
+        const sourceKey = getNetworkSourceKey(source);
         if (sourceKey) {
           autoMappedSourcesRef.current.add(sourceKey);
         }
       }
+    } else if (refreshedMappings.hasUpdates) {
+      setValue(fieldIds.mapField, refreshedMappings.mappings, {
+        shouldDirty: false,
+        shouldValidate: true,
+      });
     }
 
     return (): void => {
@@ -137,6 +140,6 @@ export const useInitializeMappings = <T extends Record<string, unknown>>({
     trigger,
     clearErrors,
     currentMap,
-    usedSources?.length,
+    usedSources,
   ]);
 };
