@@ -6,6 +6,9 @@ const createHeaders = (): HTMLTableCellElement[] => {
   const row = document.createElement('tr');
   const table = document.createElement('table');
   table.dataset.columnWidthsCustomized = 'false';
+  const group = document.createElement('colgroup');
+  group.dataset.defaultColumnWidths = 'true';
+  table.append(group);
   table.append(row);
   return [112, 106, 198].map((width, index) => {
     const header = document.createElement('th');
@@ -16,6 +19,7 @@ const createHeaders = (): HTMLTableCellElement[] => {
       // All reads must precede writes, or later measurements include redistributed space.
       expect(row.firstElementChild?.getAttribute('style')).toBe('min-width: 100px;');
       expect(table.dataset.columnWidthsCustomized).toBe('false');
+      expect(group.parentElement).toBe(table);
       return { width } as DOMRect;
     });
     row.append(header);
@@ -59,6 +63,7 @@ describe('prepareColumnResize', () => {
     expect(capture).toHaveBeenCalledWith({ name: 112, namespace: 106, status: 198 });
     expect(headers.map((header) => header.style.minWidth)).toEqual(['112px', '106px', '198px']);
     expect(headers[0].closest('table')?.dataset.columnWidthsCustomized).toBe('true');
+    expect(headers[0].closest('table')?.querySelector('colgroup')).toBeNull();
     expect(headers.map((header) => header.dataset.columnWidthFixed)).toEqual([
       'true',
       'true',
@@ -66,15 +71,16 @@ describe('prepareColumnResize', () => {
     ]);
   });
 
-  it('pins selection and action columns so spare width does not leak during resize', () => {
+  it('leaves selection, spacer and Actions widths to their natural layout', () => {
     const headers = createHeaders();
     const row = headers[0].parentElement;
-    const controls = [45, 61].map((width) => {
+    const controls = [45, 0, 61].map((width) => {
       const header = document.createElement('th');
       row?.append(header);
       jest.spyOn(header, 'getBoundingClientRect').mockReturnValue({ width } as DOMRect);
       return header;
     });
+    controls[1].dataset.columnWidthSpacer = 'true';
 
     prepareColumnResize(
       {
@@ -84,8 +90,8 @@ describe('prepareColumnResize', () => {
       'Name',
     );
 
-    expect(controls.map((header) => header.style.minWidth)).toEqual(['45px', '61px']);
-    expect(controls.map((header) => header.style.maxWidth)).toEqual(['45px', '61px']);
+    expect(controls.map((header) => header.style.minWidth)).toEqual(['', '', '']);
+    expect(controls.map((header) => header.style.maxWidth)).toEqual(['', '', '']);
     for (const header of controls) {
       expect(header.dataset.columnWidthFixed).toBeUndefined();
     }

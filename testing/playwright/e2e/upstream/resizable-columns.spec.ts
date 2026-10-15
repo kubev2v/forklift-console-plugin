@@ -85,9 +85,8 @@ test.describe('Resizable list columns', { tag: '@upstream' }, () => {
         await expectLastResizeHandleVisible(table);
         await expectResetToPreserveTable(page, table);
         const name = table.locator('th#name');
-        const { x, y } = await startResize(page, name);
-        await page.mouse.move(x + SMALL_DRAG_PX * 10, y);
-        await page.mouse.up();
+        const project = table.locator('th#namespace');
+        await expectSmoothGrowth(page, name, project);
         expect(
           await table.evaluate((element) => {
             const container = element.parentElement;
@@ -130,6 +129,12 @@ test.describe('Resizable list columns', { tag: '@upstream' }, () => {
 
     await page.reload();
     await expect(table.locator('tbody').getByRole('link').first()).toBeVisible();
+    const spacer = table.locator('th[data-column-width-spacer="true"]');
+    const spareWidth = await getWidth(spacer);
+    expect(spareWidth).toBeGreaterThan(SMALL_DRAG_PX * 10);
     await expectSmoothGrowth(page, name, project);
+    expect(Math.abs((await getWidth(spacer)) - spareWidth + SMALL_DRAG_PX * 10)).toBeLessThan(
+      LAYOUT_TOLERANCE_PX,
+    );
   });
 });

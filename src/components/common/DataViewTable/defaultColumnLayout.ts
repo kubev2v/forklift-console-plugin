@@ -142,7 +142,6 @@ export const createDefaultColumnLayout = (
       if (headerIndex >= 0) {
         const controlWidth = controlWidths[index];
         setColumnWidthVar(headerIndex, controlWidth);
-        control.style.maxWidth = `${controlWidth}px`;
       }
     }
   };
