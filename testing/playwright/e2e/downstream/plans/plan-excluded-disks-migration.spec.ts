@@ -5,10 +5,8 @@ import type {
 import { expect } from '@playwright/test';
 
 import { providerOnlyFixtures as test } from '../../../fixtures/resourceFixtures';
-import { CreatePlanWizardPage } from '../../../page-objects/CreatePlanWizard/CreatePlanWizardPage';
 import { PlanDetailsPage } from '../../../page-objects/PlanDetailsPage/PlanDetailsPage';
 import {
-  createPlanTestData,
   NetworkTargets,
   SourceNetworks,
   SourceStorages,
@@ -41,32 +39,37 @@ test.describe('vSphere excluded disk cold migration', { tag: ['@downstream', '@s
   });
 
   test('excludes the data disk and boots the migrated VM', async ({
+    createCustomPlan,
     page,
     resourceManager,
-    testProvider,
   }) => {
-    const planData = createPlanTestData({
-      additionalPlanSettings: { preserveStaticIPs: false, targetPowerState: 'on' },
-      networkMap: {
-        mappings: [
-          { source: SourceNetworks.VM_NETWORK, target: NetworkTargets.DEFAULT },
-          { source: SourceNetworks.MGMT_NETWORK, target: NetworkTargets.IGNORE },
-        ],
-      },
-      sourceProvider: testProvider?.metadata?.name ?? '',
-      storageMap: {
-        isPreexisting: false,
-        mappings: [
-          {
-            source: SourceStorages.MTV_TLV2_RELEASE_V8,
-            target: StorageClasses.OCS_RBD_VIRTUALIZATION,
-          },
-        ],
-        name: `excluded-disks-storage-map-${Date.now()}`,
-      },
-      virtualMachines: [{ folder: 'vm', sourceName: SOURCE_VM }],
-    });
     const planPage = new PlanDetailsPage(page);
+    const planData = await test.step('Create a cold Plan for the two-disk source VM', async () => {
+      const plan = await createCustomPlan({
+        additionalPlanSettings: { preserveStaticIPs: false, targetPowerState: 'on' },
+        networkMap: {
+          mappings: [
+            { source: SourceNetworks.VM_NETWORK, target: NetworkTargets.DEFAULT },
+            { source: SourceNetworks.MGMT_NETWORK, target: NetworkTargets.IGNORE },
+          ],
+        },
+        storageMap: {
+          isPreexisting: false,
+          mappings: [
+            {
+              source: SourceStorages.MTV_TLV2_RELEASE_V8,
+              target: StorageClasses.OCS_RBD_VIRTUALIZATION,
+            },
+          ],
+          name: `excluded-disks-storage-map-${Date.now()}`,
+        },
+        virtualMachines: [{ folder: 'vm', sourceName: SOURCE_VM }],
+      });
+      await planPage.waitForPlanEditable();
+      await planPage.virtualMachinesTab.navigateToVirtualMachinesTab();
+      return plan.testData;
+    });
+
     const getExcludedDisks = async (): Promise<unknown> => {
       const plan = await resourceManager.fetchPlan(planData.planName);
       expect(plan, 'Plan should exist while checking excluded disks').not.toBeNull();
@@ -74,15 +77,6 @@ test.describe('vSphere excluded disk cold migration', { tag: ['@downstream', '@s
       expect(planVm, 'Plan should contain the selected VM').toBeDefined();
       return planVm && 'excludeDisks' in planVm ? planVm.excludeDisks : undefined;
     };
-
-    await test.step('Create a cold Plan for the two-disk source VM', async () => {
-      const wizard = new CreatePlanWizardPage(page, resourceManager);
-      await wizard.navigate();
-      await wizard.waitForWizardLoad();
-      await wizard.fillAndSubmit(planData);
-      await planPage.waitForPlanEditable();
-      await planPage.virtualMachinesTab.navigateToVirtualMachinesTab();
-    });
 
     await test.step('Save only the secondary disk as excluded', async () => {
       const modal = await planPage.virtualMachinesTab.openExcludeDisksDialog(SOURCE_VM);
