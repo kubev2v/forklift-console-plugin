@@ -14,12 +14,14 @@ export const SKIP_HAPPY_PATH_LEFTOVER_CLEANUP_ENV = 'SKIP_HAPPY_PATH_LEFTOVER_CL
 
 /** Source VM names used as target names when a previous run skipped rename. */
 export const HAPPY_PATH_LEFTOVER_EXACT_VM_NAMES: readonly string[] = [
+  'mtv-rhel8-warm-2disks2nics',
   'mtv-rhel8-warm-sanity',
   'mtv-win2019-79',
 ];
 
 /** Happy-path rename pattern: `${sourceName}-renamed-${Date.now()}`. */
 export const HAPPY_PATH_LEFTOVER_VM_NAME_PREFIXES = [
+  'mtv-rhel8-warm-2disks2nics-renamed-',
   'mtv-rhel8-warm-sanity-renamed-',
   'mtv-win2019-79-renamed-',
 ] as const;
