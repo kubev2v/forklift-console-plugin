@@ -358,8 +358,7 @@ test.describe.serial('Plans - VSphere to Host Happy Path Cold Migration', () => 
       const cnvVMPage = new VirtualMachineDetailsPage(page);
 
       await test.step('Navigate to plan VM tab', async () => {
-        await plansPage.navigateFromMainMenu();
-        await plansPage.waitForPageLoad();
+        await plansPage.navigateDirectly();
         await plansPage.navigateToPlan(planName);
         await planDetailsPage.verifyPlanTitle(planName);
         await planDetailsPage.virtualMachinesTab.navigateToVirtualMachinesTab();
@@ -380,8 +379,7 @@ test.describe.serial('Plans - VSphere to Host Happy Path Cold Migration', () => 
           await cnvVMPage.waitForPageLoad(vmName);
           await cnvVMPage.verifySmokeOverview(vmName);
 
-          await plansPage.navigateFromMainMenu();
-          await plansPage.waitForPageLoad();
+          await plansPage.navigateDirectly();
           await plansPage.navigateToPlan(planName);
           await planDetailsPage.verifyPlanTitle(planName);
           await planDetailsPage.virtualMachinesTab.navigateToVirtualMachinesTab();
