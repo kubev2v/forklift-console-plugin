@@ -183,7 +183,7 @@ export class VirtualMachinesTab extends VirtualMachinesTable {
     await this.dismissOpenModals();
     await this.getVMActionsMenu(vmName).click();
     const menuItem = this.page.getByTestId('edit-vm-exclude-disks-menu-item');
-    await expect(menuItem).toBeEnabled({ timeout: 120_000 });
+    await expect(menuItem).not.toHaveClass(/pf-m-disabled/u, { timeout: 120_000 });
     await menuItem.click();
     await this.editVmExcludeDisksModal.root.waitFor({ state: 'visible' });
     return this.editVmExcludeDisksModal;
