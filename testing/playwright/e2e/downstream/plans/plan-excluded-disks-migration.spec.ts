@@ -67,10 +67,12 @@ test.describe('vSphere excluded disk cold migration', { tag: ['@downstream', '@s
       virtualMachines: [{ folder: 'vm', sourceName: SOURCE_VM }],
     });
     const planPage = new PlanDetailsPage(page);
-    const getExcludedDisks = async (): Promise<string[] | undefined> => {
+    const getExcludedDisks = async (): Promise<unknown> => {
       const plan = await resourceManager.fetchPlan(planData.planName);
       expect(plan, 'Plan should exist while checking excluded disks').not.toBeNull();
-      return (plan?.spec?.vms?.[0] as { excludeDisks?: string[] } | undefined)?.excludeDisks;
+      const planVm = plan?.spec?.vms?.[0];
+      expect(planVm, 'Plan should contain the selected VM').toBeDefined();
+      return planVm && 'excludeDisks' in planVm ? planVm.excludeDisks : undefined;
     };
 
     await test.step('Create a cold Plan for the two-disk source VM', async () => {
