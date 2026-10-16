@@ -195,8 +195,7 @@ test.describe.serial('Plans - VSphere to Host Happy Path Cold Migration', () => 
       const plansPage = new PlansListPage(page);
       const planDetailsPage = new PlanDetailsPage(page);
 
-      await plansPage.navigateFromMainMenu();
-      await plansPage.waitForPageLoad();
+      await plansPage.navigateDirectly();
       await plansPage.navigateToPlan(planName);
       await planDetailsPage.virtualMachinesTab.navigateToVirtualMachinesTab();
 
@@ -242,8 +241,7 @@ test.describe.serial('Plans - VSphere to Host Happy Path Cold Migration', () => 
       const plansPage = new PlansListPage(page);
       const planDetailsPage = new PlanDetailsPage(page);
 
-      await plansPage.navigateFromMainMenu();
-      await plansPage.waitForPageLoad();
+      await plansPage.navigateDirectly();
       await plansPage.navigateToPlan(planName);
       await planDetailsPage.verifyPlanTitle(planName);
 
