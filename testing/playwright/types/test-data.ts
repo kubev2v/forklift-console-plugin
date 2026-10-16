@@ -53,6 +53,7 @@ export const SourceStorages = {
   MTV_NFS_PSI_RDU2_V8: 'mtv-nfs-psi-rdu2-v8',
   MTV_NFS_RHOS_V8: 'mtv-nfs-rhos-v8',
   MTV_NFS_US_V8: 'mtv-nfs-us-v8',
+  MTV_TLV2_RELEASE_V8: 'mtv-tlv2-release-v8',
 } as const;
 
 export const Ec2SourceStorages = {
