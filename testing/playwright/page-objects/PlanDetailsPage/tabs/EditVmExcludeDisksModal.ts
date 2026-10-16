@@ -25,8 +25,8 @@ export class EditVmExcludeDisksModal {
 
   async waitForDisks(busAddresses: string[]): Promise<void> {
     await expect(this.root).toBeVisible();
-    for (const address of busAddresses) {
-      await expect(this.diskCheckbox(address)).toBeVisible();
-    }
+    await Promise.all(
+      busAddresses.map((address) => expect(this.diskCheckbox(address)).toBeVisible()),
+    );
   }
 }
