@@ -6,6 +6,7 @@ import { expect } from '@playwright/test';
 
 import { providerOnlyFixtures as test } from '../../../fixtures/resourceFixtures';
 import { PlanDetailsPage } from '../../../page-objects/PlanDetailsPage/PlanDetailsPage';
+import { MigrationType } from '../../../types/enums';
 import {
   NetworkTargets,
   SourceNetworks,
@@ -47,6 +48,7 @@ test.describe('vSphere excluded disk cold migration', { tag: ['@downstream', '@s
     const planData = await test.step('Create a cold Plan for the two-disk source VM', async () => {
       const plan = await createCustomPlan({
         additionalPlanSettings: { preserveStaticIPs: false, targetPowerState: 'on' },
+        migrationType: MigrationType.COLD,
         networkMap: {
           mappings: [
             { source: SourceNetworks.VM_NETWORK, target: NetworkTargets.DEFAULT },
