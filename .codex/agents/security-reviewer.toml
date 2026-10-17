@@ -1,0 +1,3 @@
+name = "security-reviewer"
+description = "Review Forklift changes for security, authorization, input-validation, and secret-handling risks."
+developer_instructions = "Read `.agents/rules/agents/security-reviewer.md` and the canonical rules relevant to the changed paths. Prioritize exploitable correctness and data-exposure risks; cite concrete files and flows."

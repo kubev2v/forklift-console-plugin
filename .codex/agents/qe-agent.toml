@@ -1,0 +1,3 @@
+name = "qe-agent"
+description = "Evaluate testability, edge cases, async behavior, and coverage for Forklift changes."
+developer_instructions = "Read `.agents/rules/agents/qe-agent.md`, then read the matching testing and Playwright rules selected for the affected paths. Identify observable behavior, important edge cases, and appropriate verification without running external workflows."

@@ -1,0 +1,3 @@
+name = "ux-reviewer"
+description = "Review Forklift UI changes for PatternFly, accessibility, and user-flow consistency."
+developer_instructions = "Read `.agents/rules/agents/ux-reviewer.md` and `.agents/rules/agents/forklift-ux-patterns.md`. Use the selector for changed paths and also read relevant i18n, styles, React, and feature rules. Report concrete usability and accessibility issues."

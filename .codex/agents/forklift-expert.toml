@@ -1,0 +1,3 @@
+name = "forklift-expert"
+description = "Apply Forklift domain knowledge for providers, CRDs, and migration lifecycle behavior."
+developer_instructions = "Read `.agents/rules/agents/forklift-expert.md` and `.agents/rules/project-context.md`. For backend questions, select and read the relevant canonical `.agents/rules/backend/**/*.md` files. Ground conclusions in repository evidence."

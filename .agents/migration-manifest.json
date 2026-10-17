@@ -1,0 +1,340 @@
+{
+  "createdAt": "2026-10-15",
+  "backup": ".cursor/migration-backup/2026-10-15-pre-migration/",
+  "rules": [
+    {
+      "cursorWrapper": ".cursor/rules/agents/architect.mdc",
+      "canonical": ".agents/rules/agents/architect.md"
+    },
+    {
+      "cursorWrapper": ".cursor/rules/agents/developer.mdc",
+      "canonical": ".agents/rules/agents/developer.md"
+    },
+    {
+      "cursorWrapper": ".cursor/rules/agents/forklift-expert.mdc",
+      "canonical": ".agents/rules/agents/forklift-expert.md"
+    },
+    {
+      "cursorWrapper": ".cursor/rules/agents/forklift-ux-patterns.mdc",
+      "canonical": ".agents/rules/agents/forklift-ux-patterns.md"
+    },
+    {
+      "cursorWrapper": ".cursor/rules/agents/qe-agent.mdc",
+      "canonical": ".agents/rules/agents/qe-agent.md"
+    },
+    {
+      "cursorWrapper": ".cursor/rules/agents/security-reviewer.mdc",
+      "canonical": ".agents/rules/agents/security-reviewer.md"
+    },
+    {
+      "cursorWrapper": ".cursor/rules/agents/ux-reviewer.mdc",
+      "canonical": ".agents/rules/agents/ux-reviewer.md"
+    },
+    {
+      "cursorWrapper": ".cursor/rules/backend/api-types.mdc",
+      "canonical": ".agents/rules/backend/api-types.md"
+    },
+    {
+      "cursorWrapper": ".cursor/rules/backend/architecture.mdc",
+      "canonical": ".agents/rules/backend/architecture.md"
+    },
+    {
+      "cursorWrapper": ".cursor/rules/backend/infrastructure/hook-controller.mdc",
+      "canonical": ".agents/rules/backend/infrastructure/hook-controller.md"
+    },
+    {
+      "cursorWrapper": ".cursor/rules/backend/infrastructure/host-controller.mdc",
+      "canonical": ".agents/rules/backend/infrastructure/host-controller.md"
+    },
+    {
+      "cursorWrapper": ".cursor/rules/backend/infrastructure/monitoring.mdc",
+      "canonical": ".agents/rules/backend/infrastructure/monitoring.md"
+    },
+    {
+      "cursorWrapper": ".cursor/rules/backend/infrastructure/rest-api.mdc",
+      "canonical": ".agents/rules/backend/infrastructure/rest-api.md"
+    },
+    {
+      "cursorWrapper": ".cursor/rules/backend/infrastructure/shared-libraries.mdc",
+      "canonical": ".agents/rules/backend/infrastructure/shared-libraries.md"
+    },
+    {
+      "cursorWrapper": ".cursor/rules/backend/infrastructure/virt-v2v.mdc",
+      "canonical": ".agents/rules/backend/infrastructure/virt-v2v.md"
+    },
+    {
+      "cursorWrapper": ".cursor/rules/backend/infrastructure/webhooks.mdc",
+      "canonical": ".agents/rules/backend/infrastructure/webhooks.md"
+    },
+    {
+      "cursorWrapper": ".cursor/rules/backend/mappings/network-map.mdc",
+      "canonical": ".agents/rules/backend/mappings/network-map.md"
+    },
+    {
+      "cursorWrapper": ".cursor/rules/backend/mappings/storage-map.mdc",
+      "canonical": ".agents/rules/backend/mappings/storage-map.md"
+    },
+    {
+      "cursorWrapper": ".cursor/rules/backend/operator/operator.mdc",
+      "canonical": ".agents/rules/backend/operator/operator.md"
+    },
+    {
+      "cursorWrapper": ".cursor/rules/backend/plans/migration-pipeline.mdc",
+      "canonical": ".agents/rules/backend/plans/migration-pipeline.md"
+    },
+    {
+      "cursorWrapper": ".cursor/rules/backend/plans/plan-adapters.mdc",
+      "canonical": ".agents/rules/backend/plans/plan-adapters.md"
+    },
+    {
+      "cursorWrapper": ".cursor/rules/backend/plans/plan-controller.mdc",
+      "canonical": ".agents/rules/backend/plans/plan-controller.md"
+    },
+    {
+      "cursorWrapper": ".cursor/rules/backend/plans/scheduler.mdc",
+      "canonical": ".agents/rules/backend/plans/scheduler.md"
+    },
+    {
+      "cursorWrapper": ".cursor/rules/backend/providers/ec2.mdc",
+      "canonical": ".agents/rules/backend/providers/ec2.md"
+    },
+    {
+      "cursorWrapper": ".cursor/rules/backend/providers/hyperv.mdc",
+      "canonical": ".agents/rules/backend/providers/hyperv.md"
+    },
+    {
+      "cursorWrapper": ".cursor/rules/backend/providers/ocp.mdc",
+      "canonical": ".agents/rules/backend/providers/ocp.md"
+    },
+    {
+      "cursorWrapper": ".cursor/rules/backend/providers/openstack.mdc",
+      "canonical": ".agents/rules/backend/providers/openstack.md"
+    },
+    {
+      "cursorWrapper": ".cursor/rules/backend/providers/ova.mdc",
+      "canonical": ".agents/rules/backend/providers/ova.md"
+    },
+    {
+      "cursorWrapper": ".cursor/rules/backend/providers/ovirt.mdc",
+      "canonical": ".agents/rules/backend/providers/ovirt.md"
+    },
+    {
+      "cursorWrapper": ".cursor/rules/backend/providers/provider-controller.mdc",
+      "canonical": ".agents/rules/backend/providers/provider-controller.md"
+    },
+    {
+      "cursorWrapper": ".cursor/rules/backend/providers/vsphere.mdc",
+      "canonical": ".agents/rules/backend/providers/vsphere.md"
+    },
+    {
+      "cursorWrapper": ".cursor/rules/frontend/mappings.mdc",
+      "canonical": ".agents/rules/frontend/mappings.md"
+    },
+    {
+      "cursorWrapper": ".cursor/rules/frontend/overview.mdc",
+      "canonical": ".agents/rules/frontend/overview.md"
+    },
+    {
+      "cursorWrapper": ".cursor/rules/frontend/plans.mdc",
+      "canonical": ".agents/rules/frontend/plans.md"
+    },
+    {
+      "cursorWrapper": ".cursor/rules/frontend/providers.mdc",
+      "canonical": ".agents/rules/frontend/providers.md"
+    },
+    {
+      "cursorWrapper": ".cursor/rules/frontend/shared-components.mdc",
+      "canonical": ".agents/rules/frontend/shared-components.md"
+    },
+    {
+      "cursorWrapper": ".cursor/rules/i18n.mdc",
+      "canonical": ".agents/rules/i18n.md"
+    },
+    {
+      "cursorWrapper": ".cursor/rules/project-context.mdc",
+      "canonical": ".agents/rules/project-context.md"
+    },
+    {
+      "cursorWrapper": ".cursor/rules/react-components.mdc",
+      "canonical": ".agents/rules/react-components.md"
+    },
+    {
+      "cursorWrapper": ".cursor/rules/selectors.mdc",
+      "canonical": ".agents/rules/selectors.md"
+    },
+    {
+      "cursorWrapper": ".cursor/rules/styles.mdc",
+      "canonical": ".agents/rules/styles.md"
+    },
+    {
+      "cursorWrapper": ".cursor/rules/taking-screenshots.mdc",
+      "canonical": ".agents/rules/taking-screenshots.md"
+    },
+    {
+      "cursorWrapper": ".cursor/rules/team-review.mdc",
+      "canonical": ".agents/rules/team-review.md"
+    },
+    {
+      "cursorWrapper": ".cursor/rules/testing.mdc",
+      "canonical": ".agents/rules/testing.md"
+    },
+    {
+      "cursorWrapper": ".cursor/rules/typescript.mdc",
+      "canonical": ".agents/rules/typescript.md"
+    },
+    {
+      "cursorWrapper": ".cursor/rules/workflows/debugging.mdc",
+      "canonical": ".agents/rules/workflows/debugging.md"
+    },
+    {
+      "cursorWrapper": ".cursor/rules/workflows/feature-development.mdc",
+      "canonical": ".agents/rules/workflows/feature-development.md"
+    },
+    {
+      "cursorWrapper": ".cursor/rules/workflows/jira-workflow.mdc",
+      "canonical": ".agents/rules/workflows/jira-workflow.md"
+    },
+    {
+      "cursorWrapper": ".cursor/rules/workflows/new-component.mdc",
+      "canonical": ".agents/rules/workflows/new-component.md"
+    },
+    {
+      "cursorWrapper": ".cursor/rules/workflows/playwright-testing.mdc",
+      "canonical": ".agents/rules/workflows/playwright-testing.md"
+    },
+    {
+      "cursorWrapper": ".cursor/rules/workflows/pr-preparation.mdc",
+      "canonical": ".agents/rules/workflows/pr-preparation.md"
+    },
+    {
+      "cursorWrapper": ".cursor/rules/workflows/ticket-workflow.mdc",
+      "canonical": ".agents/rules/workflows/ticket-workflow.md"
+    }
+  ],
+  "skills": [
+    {
+      "from": ".cursor/skills/backend-analyzer/",
+      "to": ".agents/skills/backend-analyzer/"
+    },
+    {
+      "from": ".cursor/skills/frontend-analyzer/",
+      "to": ".agents/skills/frontend-analyzer/"
+    },
+    {
+      "from": ".cursor/skills/i18n-memsource/",
+      "to": ".agents/skills/i18n-memsource/"
+    },
+    {
+      "from": ".cursor/skills/types-update/",
+      "to": ".agents/skills/types-update/"
+    },
+    {
+      "from": ".cursor/skills/waiting-for-build/",
+      "to": ".agents/skills/waiting-for-build/"
+    },
+    {
+      "from": ".cursor/skills/personal-bug-report/",
+      "to": ".agents/skills/bug-report/",
+      "note": "sanitized tracked copy; original is in snapshot"
+    },
+    {
+      "from": ".cursor/skills/personal-cve-remediation/",
+      "to": ".agents/skills/cve-remediation/",
+      "note": "sanitized tracked copy; original is in snapshot"
+    },
+    {
+      "from": ".cursor/skills/personal-konflux-deps-update-remediation/",
+      "to": ".agents/skills/konflux-deps-update-remediation/",
+      "note": "sanitized tracked copy; original is in snapshot"
+    },
+    {
+      "from": ".cursor/skills/personal-pr-monitor/",
+      "to": ".agents/skills/pr-monitor/",
+      "note": "sanitized tracked copy; original is in snapshot"
+    },
+    {
+      "from": ".cursor/skills/personal-reviewer/",
+      "to": ".agents/skills/reviewer/",
+      "note": "sanitized tracked copy; original is in snapshot"
+    },
+    {
+      "from": ".cursor/skills/dev-helper/",
+      "to": ".agents/skills/dev-helper/",
+      "note": "local clone; ignored by Git"
+    }
+  ],
+  "devHelperClone": {
+    "branch": "feat/design-structural-layout",
+    "preMigrationDirtyFiles": [
+      "SKILL.md",
+      "examples/lessons.example/implementation.md"
+    ],
+    "migrationPathRewritesApplied": true,
+    "postMigrationDirtyFiles": [
+      "M README.md",
+      " M SETUP.md",
+      " M SKILL.md",
+      " M dashboard/src/extension.ts",
+      " M dashboard/src/orchestratorPrompt.ts",
+      " M dashboard/src/providers/DashboardViewProvider.ts",
+      " M dashboard/webview-ui/src/components/SetupChecklist.tsx",
+      " M docs/CONTEXT-TIERS.md",
+      " M docs/GOLD-EVAL.md",
+      " M docs/LESSONS.md",
+      " M docs/TOKEN-OPTIMIZATION.md",
+      " M examples/lessons.example/implementation.md",
+      " M examples/phases-rules.example/01-triage.md",
+      " M examples/phases-rules.example/02-investigate.md",
+      " M examples/phases-rules.example/04-reproduce.md",
+      " M examples/phases-rules.example/06-design-solution.md",
+      " M examples/phases-rules.example/07-implement.md",
+      " M examples/phases-rules.example/08-verify.md",
+      " M examples/phases-rules.example/10-send-pr.md",
+      " M examples/phases-rules.example/11-monitor-pr.md",
+      " M examples/phases-rules.example/11b-learn.md",
+      " M phases-rules/01-triage.md",
+      " M phases-rules/02-investigate.md",
+      " M phases-rules/04-reproduce.md",
+      " M phases-rules/06-design-solution.md",
+      " M phases-rules/07-implement.md",
+      " M phases-rules/08-verify.md",
+      " M phases-rules/10-send-pr.md",
+      " M phases-rules/11-monitor-pr.md",
+      " M phases-rules/11b-learn.md",
+      " M phases/01-triage.md",
+      " M phases/02-investigate.md",
+      " M phases/03-ask-more-info.md",
+      " M phases/04-reproduce.md",
+      " M phases/05-jira-track.md",
+      " M phases/06-design-solution.md",
+      " M phases/07-implement.md",
+      " M phases/08-verify.md",
+      " M phases/09-e2e-test.md",
+      " M phases/10-send-pr.md",
+      " M phases/11-monitor-pr.md",
+      " M phases/11b-learn.md",
+      " M phases/12-track-jira-merged.md",
+      " M phases/orchestrator-brief.md",
+      " M phases/prompts/README.md",
+      " M phases/prompts/design.md",
+      " M phases/prompts/implement-verify.md",
+      " M phases/prompts/post-merge.md",
+      " M phases/prompts/reproduce.md",
+      " M phases/prompts/triage-investigate.md",
+      " M phases/quick-ref.md",
+      " M reference.md",
+      " M repo-pr-lessons/SKILL.md",
+      " M scripts/_config.sh",
+      " M scripts/eval-orchestrator.sh",
+      " M scripts/measure-session.sh",
+      "?? references/"
+    ]
+  },
+  "localState": [
+    ".agents/skills/backend-analyzer/state.json",
+    ".agents/skills/frontend-analyzer/state.json",
+    ".agents/skills/i18n-memsource/state.json",
+    ".agents/skills/cve-remediation/config.yaml",
+    ".agents/skills/personal-i18n-memsource/SETUP.md"
+  ]
+}
