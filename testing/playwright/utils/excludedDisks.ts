@@ -20,14 +20,14 @@ const PLAN_SPEC_TIMEOUT_MS = 60_000;
 const getExcludedDisks = async (
   resourceManager: ResourceManager,
   planName: string,
-): Promise<unknown> => {
+): Promise<string[] | undefined> => {
   const plan = await resourceManager.fetchPlan(planName);
   expect(plan, 'Plan should exist while checking excluded disks').not.toBeNull();
   const planVm = plan?.spec?.vms?.[0];
   expect(planVm?.name, 'First Plan VM should be the two-disk source').toContain(
     EXCLUDED_DISK_SOURCE_VM,
   );
-  return planVm && 'excludeDisks' in planVm ? planVm.excludeDisks : undefined;
+  return planVm?.excludeDisks;
 };
 
 export const saveExcludedDataDisk = async (

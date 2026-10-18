@@ -1,6 +1,7 @@
 import { expect, type Locator, type Page } from '@playwright/test';
 
 import type { PlanTestData } from '../../../types/test-data';
+import { K8S_RECONCILE_TIMEOUT } from '../../../utils/resource-manager/constants';
 import { VirtualMachinesTable } from '../../common/VirtualMachinesTable';
 import { AddVirtualMachinesModal } from '../modals/AddVirtualMachinesModal';
 
@@ -183,7 +184,7 @@ export class VirtualMachinesTab extends VirtualMachinesTable {
     await this.dismissOpenModals();
     await this.getVMActionsMenu(vmName).click();
     const menuItem = this.page.getByTestId('edit-vm-exclude-disks-menu-item');
-    await expect(menuItem).not.toHaveClass(/pf-m-disabled/u, { timeout: 120_000 });
+    await expect(menuItem).not.toHaveClass(/pf-m-disabled/u, { timeout: K8S_RECONCILE_TIMEOUT });
     await menuItem.click();
     await this.editVmExcludeDisksModal.root.waitFor({ state: 'visible' });
     return this.editVmExcludeDisksModal;

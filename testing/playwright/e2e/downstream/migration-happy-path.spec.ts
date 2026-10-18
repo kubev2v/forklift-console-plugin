@@ -63,6 +63,7 @@ import {
 } from '../../utils/version/version';
 
 const targetProjectName = `${HAPPY_PATH_TARGET_NAMESPACE_PREFIX}${Date.now()}`;
+const EXCLUDED_DISK_EDIT_TIMEOUT_MS = PLAN_READY_TIMEOUT + 5 * 60_000;
 const WINDOWS_SOURCE_VM = 'mtv-win2019-79';
 
 test.describe.serial('Plans - VSphere to Host Happy Path Cold Migration', () => {
@@ -191,7 +192,7 @@ test.describe.serial('Plans - VSphere to Host Happy Path Cold Migration', () => 
     async ({ page }) => {
       requireVersion(test, V5_0_0);
       requireCNVVersion(test, CNV_4_21_0);
-      test.setTimeout(PLAN_READY_TIMEOUT + 5 * 60_000);
+      test.setTimeout(EXCLUDED_DISK_EDIT_TIMEOUT_MS);
       const plansPage = new PlansListPage(page);
       const planDetailsPage = new PlanDetailsPage(page);
 
@@ -253,9 +254,7 @@ test.describe.serial('Plans - VSphere to Host Happy Path Cold Migration', () => 
           expect(planResource?.spec?.warm).toBe(false);
           const rhelPlanVm = planResource?.spec?.vms?.[0];
           expect(rhelPlanVm?.name).toContain(EXCLUDED_DISK_SOURCE_VM);
-          expect(
-            rhelPlanVm && 'excludeDisks' in rhelPlanVm ? rhelPlanVm.excludeDisks : undefined,
-          ).toEqual([EXCLUDED_DATA_DISK_BUS_ADDRESS]);
+          expect(rhelPlanVm?.excludeDisks).toEqual([EXCLUDED_DATA_DISK_BUS_ADDRESS]);
           const windowsPlanVm = planResource?.spec?.vms?.[1];
           expect(windowsPlanVm?.name).toContain(WINDOWS_SOURCE_VM);
           expect(windowsPlanVm?.targetPowerState).toBe('off');
