@@ -35,7 +35,7 @@ import {
   EXCLUDED_DISK_SOURCE_VM,
   saveExcludedDataDisk,
   verifyExcludedDiskTarget,
-} from '../../utils/excludedDiskHappyPath';
+} from '../../utils/excludedDisks';
 import {
   formatMigrationTimeoutDetail,
   getMigrationTimeoutUiStatus,
@@ -85,8 +85,6 @@ test.describe.serial('Plans - VSphere to Host Happy Path Cold Migration', () => 
   const providerName = `test-vsphere-provider-${Date.now()}`;
   const planName = `${providerName}-plan`;
   let testPlanData: PlanTestData;
-  let excludedDiskSupported = false;
-  let excludedDiskConfigured = false;
 
   test(
     'should create a new vsphere provider',
@@ -129,7 +127,7 @@ test.describe.serial('Plans - VSphere to Host Happy Path Cold Migration', () => 
       const createWizard = new CreatePlanWizardPage(page, resourceManager);
       const planDetailsPage = new PlanDetailsPage(page);
 
-      excludedDiskSupported = isVersionAtLeast(V5_0_0) && isCNVVersionAtLeast(CNV_4_21_0);
+      const excludedDiskSupported = isVersionAtLeast(V5_0_0) && isCNVVersionAtLeast(CNV_4_21_0);
       const rhelSourceName = excludedDiskSupported
         ? EXCLUDED_DISK_SOURCE_VM
         : 'mtv-rhel8-warm-sanity';
@@ -190,7 +188,8 @@ test.describe.serial('Plans - VSphere to Host Happy Path Cold Migration', () => 
     'should save, clear, and restore the RHEL data-disk exclusion',
     { tag: ['@downstream'] },
     async ({ page }) => {
-      test.skip(!excludedDiskSupported, 'Requires MTV 5.0 and CNV 4.21');
+      requireVersion(test, V5_0_0);
+      requireCNVVersion(test, CNV_4_21_0);
       test.setTimeout(PLAN_READY_TIMEOUT + 5 * 60_000);
       const plansPage = new PlansListPage(page);
       const planDetailsPage = new PlanDetailsPage(page);
@@ -223,7 +222,6 @@ test.describe.serial('Plans - VSphere to Host Happy Path Cold Migration', () => 
       await test.step('Clear and restore the persisted exclusion', async () => {
         await clearAndRestoreExcludedDataDisk(planDetailsPage, resourceManager, planName);
       });
-      excludedDiskConfigured = true;
     },
   );
 
@@ -233,10 +231,12 @@ test.describe.serial('Plans - VSphere to Host Happy Path Cold Migration', () => 
       tag: ['@downstream', '@slow'],
     },
     async ({ page }) => {
+      const excludedDiskSourceSelected =
+        testPlanData.virtualMachines?.[0]?.sourceName === EXCLUDED_DISK_SOURCE_VM;
       test.setTimeout(
         HAPPY_PATH_MIGRATION_TIMEOUT_MS +
           HAPPY_PATH_TEST_OVERHEAD_MS +
-          (excludedDiskConfigured ? EXCLUDED_DISK_GUEST_BOOT_TIMEOUT_MS : 0),
+          (excludedDiskSourceSelected ? EXCLUDED_DISK_GUEST_BOOT_TIMEOUT_MS : 0),
       );
       const plansPage = new PlansListPage(page);
       const planDetailsPage = new PlanDetailsPage(page);
@@ -247,7 +247,7 @@ test.describe.serial('Plans - VSphere to Host Happy Path Cold Migration', () => 
 
       // Abort early on MAC conflict — leftover VMs from a previous run must be cleaned up first.
       const planResource = await resourceManager.fetchPlan(planName);
-      if (excludedDiskConfigured) {
+      if (excludedDiskSourceSelected) {
         expect(planResource?.spec?.warm).toBe(false);
         const rhelPlanVm = planResource?.spec?.vms?.[0];
         expect(rhelPlanVm?.name).toContain(EXCLUDED_DISK_SOURCE_VM);
@@ -325,7 +325,7 @@ test.describe.serial('Plans - VSphere to Host Happy Path Cold Migration', () => 
         expect(vmResource?.metadata?.namespace).toBe(testPlanData.targetProject.name);
       }
 
-      if (excludedDiskConfigured) {
+      if (excludedDiskSourceSelected) {
         const rhelTargetName = testPlanData.virtualMachines?.[0]?.targetName;
         expect(rhelTargetName, 'RHEL VM should have a target name').toBeTruthy();
         if (rhelTargetName) {
