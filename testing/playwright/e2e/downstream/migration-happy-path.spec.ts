@@ -31,6 +31,7 @@ import {
 } from '../../types/test-data';
 import {
   clearAndRestoreExcludedDataDisk,
+  EXCLUDED_DATA_DISK_BUS_ADDRESS,
   EXCLUDED_DISK_GUEST_BOOT_TIMEOUT_MS,
   EXCLUDED_DISK_SOURCE_VM,
   saveExcludedDataDisk,
@@ -248,15 +249,17 @@ test.describe.serial('Plans - VSphere to Host Happy Path Cold Migration', () => 
       // Abort early on MAC conflict — leftover VMs from a previous run must be cleaned up first.
       const planResource = await resourceManager.fetchPlan(planName);
       if (excludedDiskSourceSelected) {
-        expect(planResource?.spec?.warm).toBe(false);
-        const rhelPlanVm = planResource?.spec?.vms?.[0];
-        expect(rhelPlanVm?.name).toContain(EXCLUDED_DISK_SOURCE_VM);
-        expect(
-          rhelPlanVm && 'excludeDisks' in rhelPlanVm ? rhelPlanVm.excludeDisks : undefined,
-        ).toEqual(['scsi0:1']);
-        const windowsPlanVm = planResource?.spec?.vms?.[1];
-        expect(windowsPlanVm?.name).toContain(WINDOWS_SOURCE_VM);
-        expect(windowsPlanVm?.targetPowerState).toBe('off');
+        await test.step('Verify persisted excluded-disk Plan settings', async () => {
+          expect(planResource?.spec?.warm).toBe(false);
+          const rhelPlanVm = planResource?.spec?.vms?.[0];
+          expect(rhelPlanVm?.name).toContain(EXCLUDED_DISK_SOURCE_VM);
+          expect(
+            rhelPlanVm && 'excludeDisks' in rhelPlanVm ? rhelPlanVm.excludeDisks : undefined,
+          ).toEqual([EXCLUDED_DATA_DISK_BUS_ADDRESS]);
+          const windowsPlanVm = planResource?.spec?.vms?.[1];
+          expect(windowsPlanVm?.name).toContain(WINDOWS_SOURCE_VM);
+          expect(windowsPlanVm?.targetPowerState).toBe('off');
+        });
       }
       const hasMacConflict = planResource?.status?.conditions?.some(
         (condition) => condition.type === 'MacConflicts' && condition.status === 'True',
@@ -326,16 +329,17 @@ test.describe.serial('Plans - VSphere to Host Happy Path Cold Migration', () => 
       }
 
       if (excludedDiskSourceSelected) {
-        const rhelTargetName = testPlanData.virtualMachines?.[0]?.targetName;
-        expect(rhelTargetName, 'RHEL VM should have a target name').toBeTruthy();
-        if (rhelTargetName) {
-          await test.step('Verify only the boot disk remains and the RHEL guest is healthy', () =>
-            verifyExcludedDiskTarget(
+        await test.step('Verify only the boot disk remains and the RHEL guest is healthy', async () => {
+          const rhelTargetName = testPlanData.virtualMachines?.[0]?.targetName;
+          expect(rhelTargetName, 'RHEL VM should have a target name').toBeTruthy();
+          if (rhelTargetName) {
+            await verifyExcludedDiskTarget(
               resourceManager,
               rhelTargetName,
               testPlanData.targetProject.name,
-            ));
-        }
+            );
+          }
+        });
       }
     },
   );
