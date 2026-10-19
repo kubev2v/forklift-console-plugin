@@ -44,7 +44,7 @@ RESPONSE=$(curl -s -u "${JIRA_EMAIL}:${JIRA_API_TOKEN}" \
   "${JIRA_BASE_URL}/rest/api/2/issue")
 
 KEY=$(echo "$RESPONSE" | jq -r '.key // empty')
-if [ -z "$KEY" ]; then
+if [[ -z "$KEY" ]]; then
   echo "ERROR: Failed to create ticket" >&2
   echo "$RESPONSE" | jq . >&2
   exit 1

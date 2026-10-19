@@ -8,6 +8,8 @@ COMMENTABLE="${OUT_DIR}/commentable-lines.txt"
 MAX_COMMENT_LEN=500
 PERSPECTIVES=("Developer" "QE" "UX" "Architect" "Security" "Forklift expert")
 MIN_PERSPECTIVES=3
+REVIEW_EVENT_APPROVE="APPROVE"
+REVIEW_EVENT_COMMENT="COMMENT"
 
 errors=()
 
@@ -37,7 +39,7 @@ done
 
 # --- event must be APPROVE or COMMENT (never REQUEST_CHANGES) -----------------
 event=$(jq -r '.event' "$REVIEW")
-if [[ "$event" != "APPROVE" && "$event" != "COMMENT" ]]; then
+if [[ "$event" != "$REVIEW_EVENT_APPROVE" && "$event" != "$REVIEW_EVENT_COMMENT" ]]; then
   errors+=("event must be APPROVE or COMMENT, got: ${event}")
 fi
 
@@ -51,16 +53,13 @@ fi
 # APPROVE only when there are zero change-suggestion inline comments.
 # COMMENT when any inline comment requests changes.
 comment_count=$(jq '.comments | length' "$REVIEW")
-if [[ "$event" == "APPROVE" && "$comment_count" -gt 0 ]]; then
+if [[ "$event" == "$REVIEW_EVENT_APPROVE" && "$comment_count" -gt 0 ]]; then
   errors+=("event APPROVE is not allowed with inline comments (${comment_count}); use COMMENT when requesting changes")
 fi
-if [[ "$event" == "COMMENT" && "$comment_count" -eq 0 ]]; then
-  # Body-only change requests are allowed; require at least one perspective bullet
-  if [[ ! "$body" =~ \*\*\[[A-Za-z\ ]+\]\*\* ]]; then
-    errors+=("event COMMENT with empty comments requires at least one **[Perspective]** body item, or use APPROVE")
-  fi
+if [[ "$event" == "$REVIEW_EVENT_COMMENT" && "$comment_count" -eq 0 && ! "$body" =~ \*\*\[[A-Za-z\ ]+\]\*\* ]]; then
+  errors+=("event COMMENT with empty comments requires at least one **[Perspective]** body item, or use APPROVE")
 fi
-if [[ "$event" == "APPROVE" && "$body" =~ Please\ address ]]; then
+if [[ "$event" == "$REVIEW_EVENT_APPROVE" && "$body" =~ Please\ address ]]; then
   errors+=("event APPROVE body must not ask to address comments; use COMMENT")
 fi
 
@@ -137,10 +136,10 @@ has_finding=false
 if [[ "$comment_count" -gt 0 ]]; then
   has_finding=true
 fi
-if [[ "$event" == "COMMENT" && "$body" =~ \*\*\[[A-Za-z\ ]+\]\*\* ]]; then
+if [[ "$event" == "$REVIEW_EVENT_COMMENT" && "$body" =~ \*\*\[[A-Za-z\ ]+\]\*\* ]]; then
   has_finding=true
 fi
-if [[ "$event" == "APPROVE" && "$comment_count" -eq 0 ]]; then
+if [[ "$event" == "$REVIEW_EVENT_APPROVE" && "$comment_count" -eq 0 ]]; then
   :
 elif [[ "$has_finding" == "true" && "${#unique_perspectives[@]}" -lt "$MIN_PERSPECTIVES" ]]; then
   errors+=("Only ${#unique_perspectives[@]} perspective(s) found (${unique_perspectives[*]:-none}), need at least ${MIN_PERSPECTIVES} of: ${PERSPECTIVES[*]}")
@@ -148,10 +147,12 @@ fi
 
 # --- Report --------------------------------------------------------------------
 if [[ ${#errors[@]} -gt 0 ]]; then
-  echo "VALIDATION FAILED (${#errors[@]} error(s)):"
-  for err in "${errors[@]}"; do
-    echo "  - ${err}"
-  done
+  {
+    echo "VALIDATION FAILED (${#errors[@]} error(s)):"
+    for err in "${errors[@]}"; do
+      echo "  - ${err}"
+    done
+  } >&2
   exit 1
 fi
 

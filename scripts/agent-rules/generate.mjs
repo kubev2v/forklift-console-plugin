@@ -31,7 +31,7 @@ export const parseRule = (content, filePath = '<rule>') => {
     throw new Error(`${filePath}: description must be a non-empty string`);
   }
   if (typeof metadata.alwaysApply !== 'boolean') {
-    throw new Error(`${filePath}: alwaysApply must be a boolean`);
+    throw new TypeError(`${filePath}: alwaysApply must be a boolean`);
   }
   if (
     metadata.globs !== undefined &&

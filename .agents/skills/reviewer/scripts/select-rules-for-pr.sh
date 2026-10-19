@@ -70,6 +70,7 @@ while IFS= read -r path; do
     *.scss) has_scss=true ;;
     *.tsx) has_tsx=true ;;
     *.ts) has_ts=true ;;
+    *) ;;
   esac
 done < "$PATHS_FILE"
 

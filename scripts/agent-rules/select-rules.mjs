@@ -3,30 +3,38 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { loadCanonicalRules } from './generate.mjs';
 
+const pushTrimmedPattern = (patterns, segment) => {
+  const trimmed = segment.trim();
+  if (trimmed) patterns.push(trimmed);
+};
+
+const updateDelimiterDepth = (character, depths) => {
+  if (character === '{') depths.brace += 1;
+  if (character === '}') depths.brace = Math.max(0, depths.brace - 1);
+  if (character === '[') depths.bracket += 1;
+  if (character === ']') depths.bracket = Math.max(0, depths.bracket - 1);
+};
+
 export const splitGlobList = (globs) => {
   if (Array.isArray(globs)) return globs;
   if (typeof globs !== 'string' || globs.trim() === '') return [];
 
   const patterns = [];
   let current = '';
-  let braceDepth = 0;
-  let bracketDepth = 0;
+  const depths = { brace: 0, bracket: 0 };
 
   for (const character of globs) {
-    if (character === '{') braceDepth += 1;
-    if (character === '}') braceDepth = Math.max(0, braceDepth - 1);
-    if (character === '[') bracketDepth += 1;
-    if (character === ']') bracketDepth = Math.max(0, bracketDepth - 1);
-
-    if (character === ',' && braceDepth === 0 && bracketDepth === 0) {
-      if (current.trim()) patterns.push(current.trim());
+    updateDelimiterDepth(character, depths);
+    const atTopLevel = depths.brace === 0 && depths.bracket === 0;
+    if (character === ',' && atTopLevel) {
+      pushTrimmedPattern(patterns, current);
       current = '';
-    } else {
-      current += character;
+      continue;
     }
+    current += character;
   }
 
-  if (current.trim()) patterns.push(current.trim());
+  pushTrimmedPattern(patterns, current);
   return patterns;
 };
 

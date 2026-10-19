@@ -25,6 +25,7 @@ USAGE
 
 PR="${1:?Missing PR_NUMBER. Run with --help for usage.}"
 INTERVAL="${2:-600}"
+AWK_PRINT_FIELD2='{print $2}'
 
 if [[ "$PR" == "--help" || "$PR" == "-h" ]]; then
   usage
@@ -40,18 +41,18 @@ while true; do
   OUTPUT=$("$PR_MONITOR" "$PR" 2>&1) || true
   echo "$OUTPUT" | tail -12
 
-  STATE=$(echo "$OUTPUT" | grep "^State:" | awk -F': ' '{print $2}' | awk '{print $1}')
+  STATE=$(echo "$OUTPUT" | grep "^State:" | awk -F': ' "$AWK_PRINT_FIELD2" | awk '{print $1}')
 
   if [[ "$STATE" == "MERGED" ]]; then
     echo "MERGE_COMPLETE: PR #${PR} is already merged!"
     exit 0
   fi
 
-  APPROVED=$(echo "$OUTPUT" | grep "^Approved:" | awk -F': ' '{print $2}')
-  CI=$(echo "$OUTPUT" | grep "^CI Passing:" | awk -F': ' '{print $2}')
-  CONFLICTS=$(echo "$OUTPUT" | grep "^Conflicts:" | awk -F': ' '{print $2}')
-  REBASE=$(echo "$OUTPUT" | grep "^Needs Rebase:" | awk -F': ' '{print $2}' | awk '{print $1}')
-  THREADS=$(echo "$OUTPUT" | grep "^Unresolved Threads:" | awk -F': ' '{print $2}')
+  APPROVED=$(echo "$OUTPUT" | grep "^Approved:" | awk -F': ' "$AWK_PRINT_FIELD2")
+  CI=$(echo "$OUTPUT" | grep "^CI Passing:" | awk -F': ' "$AWK_PRINT_FIELD2")
+  CONFLICTS=$(echo "$OUTPUT" | grep "^Conflicts:" | awk -F': ' "$AWK_PRINT_FIELD2")
+  REBASE=$(echo "$OUTPUT" | grep "^Needs Rebase:" | awk -F': ' "$AWK_PRINT_FIELD2" | awk '{print $1}')
+  THREADS=$(echo "$OUTPUT" | grep "^Unresolved Threads:" | awk -F': ' "$AWK_PRINT_FIELD2")
 
   echo "  >> approved=$APPROVED ci=$CI conflicts=$CONFLICTS rebase=$REBASE threads=$THREADS"
 
@@ -62,7 +63,7 @@ while true; do
       echo "MERGE_COMPLETE: PR #${PR} submitted to merge queue!"
       exit 0
     else
-      echo "ERROR: gh pr merge failed (exit $?). Will retry next iteration."
+      echo "ERROR: gh pr merge failed (exit $?). Will retry next iteration." >&2
     fi
   fi
 

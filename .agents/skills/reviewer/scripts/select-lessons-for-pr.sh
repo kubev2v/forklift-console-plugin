@@ -37,6 +37,7 @@ while IFS= read -r path; do
     testing/playwright/*) printf '%s\n' Playwright e2e >> "$keywords_file" ;;
     src/components/common/TableView/*) printf '%s\n' TableView column >> "$keywords_file" ;;
     src/components/common/DataViewTable/*) printf '%s\n' DataViewTable resizable columnWidth >> "$keywords_file" ;;
+    *) ;;
   esac
   base=$(basename "$path" | sed 's/\.[^.]*$//')
   if [[ ${#base} -ge 5 ]]; then

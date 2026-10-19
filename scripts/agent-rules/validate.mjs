@@ -5,7 +5,6 @@ import { fileURLToPath } from 'node:url';
 import ignore from 'ignore';
 import { parse } from 'yaml';
 import {
-  CANONICAL_RULES_DIR,
   CURSOR_RULES_DIR,
   REPO_ROOT,
   generateCursorRules,
@@ -166,6 +165,36 @@ const checkCanonicalRuleReferences = (rules) => {
   pass('canonical rules contain no .mdc wrapper references');
 };
 
+const resolveSkillSymlinkTarget = (absolutePath) => {
+  try {
+    return fs.realpathSync(absolutePath);
+  } catch {
+    fail(`Broken skill symlink: ${path.relative(REPO_ROOT, absolutePath)}`);
+    return undefined;
+  }
+};
+
+const collectSkillEntry = (entry, directory, skillFiles, visit) => {
+  if (entry.name === '.git' || entry.name === 'node_modules') return;
+  const absolutePath = path.join(directory, entry.name);
+  if (entry.isSymbolicLink()) {
+    const target = resolveSkillSymlinkTarget(absolutePath);
+    if (!target) return;
+    const relativeTarget = path.relative(REPO_ROOT, target);
+    if (relativeTarget.startsWith('..')) {
+      fail(`Skill symlink escapes repository: ${path.relative(REPO_ROOT, absolutePath)}`);
+      return;
+    }
+    if (fs.statSync(target).isDirectory()) visit(target);
+    return;
+  }
+  if (entry.isDirectory()) {
+    visit(absolutePath);
+    return;
+  }
+  if (entry.isFile() && entry.name === 'SKILL.md') skillFiles.push(absolutePath);
+};
+
 const walkSkills = (skillsRoot) => {
   const skillFiles = [];
   const visitedDirectories = new Set();
@@ -181,31 +210,11 @@ const walkSkills = (skillsRoot) => {
     visitedDirectories.add(realDirectory);
 
     for (const entry of fs.readdirSync(directory, { withFileTypes: true })) {
-      if (entry.name === '.git' || entry.name === 'node_modules') continue;
-      const absolutePath = path.join(directory, entry.name);
-      if (entry.isSymbolicLink()) {
-        let target;
-        try {
-          target = fs.realpathSync(absolutePath);
-        } catch {
-          fail(`Broken skill symlink: ${path.relative(REPO_ROOT, absolutePath)}`);
-          continue;
-        }
-        const relativeTarget = path.relative(REPO_ROOT, target);
-        if (relativeTarget.startsWith('..')) {
-          fail(`Skill symlink escapes repository: ${path.relative(REPO_ROOT, absolutePath)}`);
-          continue;
-        }
-        if (fs.statSync(target).isDirectory()) visit(target);
-      } else if (entry.isDirectory()) {
-        visit(absolutePath);
-      } else if (entry.isFile() && entry.name === 'SKILL.md') {
-        skillFiles.push(absolutePath);
-      }
+      collectSkillEntry(entry, directory, skillFiles, visit);
     }
   };
   visit(skillsRoot);
-  return skillFiles.sort();
+  return skillFiles.sort((left, right) => left.localeCompare(right));
 };
 
 const isIgnoredByGit = (relativePath) => {
@@ -213,63 +222,77 @@ const isIgnoredByGit = (relativePath) => {
   return gitignoreMatcher.ignores(normalizedPath);
 };
 
+const STALE_CURSOR_SKILL_PATH = /\.cursor\/(?:rules|skills)\//u;
+const INCOMPATIBLE_TOOL_PATTERN =
+  /\bAskQuestion(?: tool)?\b|required_permissions|StrReplace tools|Cursor sandbox blocks writes/u;
+const LOCAL_SCRIPT_EXTENSION = /\.(?:sh|py|js|mjs|ts|tsx)$/u;
+const LOCAL_REFERENCE_EXTENSION = /\.(?:md|mdx|mdc|yaml|yml|json|toml)$/u;
+const SKILL_REFERENCE_PREFIXES = ['references/', 'assets/', '.agents/rules/'];
+
+const findSkillRoot = (skillsRoot, fileDirectory) => {
+  let currentDirectory = fileDirectory;
+  while (currentDirectory.startsWith(`${skillsRoot}${path.sep}`) || currentDirectory === skillsRoot) {
+    if (fs.existsSync(path.join(currentDirectory, 'SKILL.md'))) return currentDirectory;
+    currentDirectory = path.dirname(currentDirectory);
+  }
+  return fileDirectory;
+};
+
+const collectMarkdownLinkFailures = (skillFile, fileDirectory, content, failures) => {
+  const markdownLinks = [...content.matchAll(/\]\(([^)]+)\)/gu)];
+  for (const [, rawTarget] of markdownLinks) {
+    const target = rawTarget.trim().split(/\s+/u, 1)[0].replace(/^<|>$/gu, '');
+    if (!target || /^(?:https?:|mailto:|#)/u.test(target) || /[${}]/u.test(target)) continue;
+    const absoluteTarget = target.startsWith('.agents/')
+      ? path.resolve(REPO_ROOT, target)
+      : path.resolve(fileDirectory, target);
+    if (!absoluteTarget.startsWith(`${REPO_ROOT}${path.sep}`) && absoluteTarget !== REPO_ROOT) continue;
+    if (!fs.existsSync(absoluteTarget)) failures.push(`${skillFile}: missing Markdown reference ${target}`);
+  }
+};
+
+const codePathTargetExists = (candidate, fileDirectory, skillRoot) => {
+  const pathBases = candidate.startsWith('.agents/')
+    ? [REPO_ROOT]
+    : [fileDirectory, skillRoot, REPO_ROOT];
+  return pathBases.some((base) => {
+    const absoluteTarget = path.resolve(base, candidate);
+    const staticPrefix = absoluteTarget.split(/[${}<]/u, 1)[0];
+    return fs.existsSync(staticPrefix);
+  });
+};
+
+const collectCodePathFailures = (skillFile, fileDirectory, skillRoot, content, failures) => {
+  const codePaths = [...content.matchAll(/`([^`]+)`/gu)].map(([, token]) => token.trim());
+  for (const token of codePaths) {
+    const candidate = token.split(/\s+/u, 1)[0].replace(/^\(|\)$/gu, '');
+    if (/[*{}<>…]/u.test(candidate)) continue;
+    const isScript = LOCAL_SCRIPT_EXTENSION.test(candidate) &&
+      (candidate.startsWith('scripts/') || candidate.startsWith('.agents/skills/'));
+    const isReference = LOCAL_REFERENCE_EXTENSION.test(candidate) &&
+      SKILL_REFERENCE_PREFIXES.some((prefix) => candidate.startsWith(prefix));
+    if (!isScript && !isReference) continue;
+    if (!codePathTargetExists(candidate, fileDirectory, skillRoot)) {
+      failures.push(`${skillFile}: missing script reference ${candidate}`);
+    }
+  }
+};
+
 const checkSkillReferences = () => {
-  const stalePathPattern = /\.cursor\/(?:rules|skills)\//u;
-  const incompatibleToolPattern = /\bAskQuestion(?: tool)?\b|required_permissions|StrReplace tools|Cursor sandbox blocks writes/u;
-  const localScriptExtension = /\.(?:sh|py|js|mjs|ts|tsx)$/u;
-  const localReferenceExtension = /\.(?:md|mdx|mdc|yaml|yml|json|toml)$/u;
   const failures = [];
   const skillsRoot = path.join(REPO_ROOT, '.agents/skills');
-  const markdownFiles = walkFiles(path.join(REPO_ROOT, '.agents/skills'), {
+  const markdownFiles = walkFiles(skillsRoot, {
     skip: new Set(['.git', 'node_modules', 'state', 'audit', 'lessons']),
   }).filter((file) => file.endsWith('.md') || file.endsWith('.mdx'));
 
-  const findSkillRoot = (fileDirectory) => {
-    let currentDirectory = fileDirectory;
-    while (currentDirectory.startsWith(`${skillsRoot}${path.sep}`) || currentDirectory === skillsRoot) {
-      if (fs.existsSync(path.join(currentDirectory, 'SKILL.md'))) return currentDirectory;
-      currentDirectory = path.dirname(currentDirectory);
-    }
-    return fileDirectory;
-  };
-
   for (const skillFile of markdownFiles) {
     const fileDirectory = path.dirname(skillFile);
-    const skillRoot = findSkillRoot(fileDirectory);
+    const skillRoot = findSkillRoot(skillsRoot, fileDirectory);
     const content = fs.readFileSync(skillFile, 'utf8');
-    if (stalePathPattern.test(content)) failures.push(`${skillFile}: stale Cursor rules/skills path`);
-    if (incompatibleToolPattern.test(content)) failures.push(`${skillFile}: stale client-specific tool instruction`);
-
-    const markdownLinks = [...content.matchAll(/\]\(([^)]+)\)/gu)];
-    for (const [, rawTarget] of markdownLinks) {
-      const target = rawTarget.trim().split(/\s+/u, 1)[0].replace(/^<|>$/gu, '');
-      if (!target || /^(?:https?:|mailto:|#)/u.test(target) || /[${}]/u.test(target)) continue;
-      const absoluteTarget = target.startsWith('.agents/')
-        ? path.resolve(REPO_ROOT, target)
-        : path.resolve(fileDirectory, target);
-      if (!absoluteTarget.startsWith(`${REPO_ROOT}${path.sep}`) && absoluteTarget !== REPO_ROOT) continue;
-      if (!fs.existsSync(absoluteTarget)) failures.push(`${skillFile}: missing Markdown reference ${target}`);
-    }
-
-    const codePaths = [...content.matchAll(/`([^`]+)`/gu)].map(([, token]) => token.trim());
-    for (const token of codePaths) {
-      const candidate = token.split(/\s+/u, 1)[0].replace(/^\(|\)$/gu, '');
-      if (/[*{}<>…]/u.test(candidate)) continue;
-      const isScript = localScriptExtension.test(candidate) &&
-        (candidate.startsWith('scripts/') || candidate.startsWith('.agents/skills/'));
-      const isReference = localReferenceExtension.test(candidate) &&
-        ['references/', 'assets/', '.agents/rules/'].some((prefix) => candidate.startsWith(prefix));
-      if (!isScript && !isReference) continue;
-      const pathBases = candidate.startsWith('.agents/')
-        ? [REPO_ROOT]
-        : [fileDirectory, skillRoot, REPO_ROOT];
-      const targetExists = pathBases.some((base) => {
-        const absoluteTarget = path.resolve(base, candidate);
-        const staticPrefix = absoluteTarget.split(/[${}<]/u, 1)[0];
-        return fs.existsSync(staticPrefix);
-      });
-      if (!targetExists) failures.push(`${skillFile}: missing script reference ${candidate}`);
-    }
+    if (STALE_CURSOR_SKILL_PATH.test(content)) failures.push(`${skillFile}: stale Cursor rules/skills path`);
+    if (INCOMPATIBLE_TOOL_PATTERN.test(content)) failures.push(`${skillFile}: stale client-specific tool instruction`);
+    collectMarkdownLinkFailures(skillFile, fileDirectory, content, failures);
+    collectCodePathFailures(skillFile, fileDirectory, skillRoot, content, failures);
   }
 
   if (failures.length > 0) throw new Error(failures.join('\n'));
