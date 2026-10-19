@@ -29,6 +29,8 @@ const getNetworksForVM = (vm: ProviderVirtualMachine) => {
     }
     case PROVIDER_TYPES.hyperv:
       return vm?.networks?.map((network) => network?.id) ?? [];
+    case 'nutanix':
+      return [];
     case PROVIDER_TYPES.ova: {
       // The OVA backend returns embedded network objects with PascalCase field names (ID),
       // while @forklift-ui/types defines them as camelCase (id). Access ID directly

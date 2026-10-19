@@ -7,6 +7,7 @@ export const PROVIDERS: Record<ExtendedProviderType, string> =
     ? {
         ec2: 'Amazon EC2',
         hyperv: 'HyperV',
+        nutanix: 'Nutanix AHV',
         openshift: 'OpenShift',
         openstack: 'OpenStack',
         ova: 'OVA',
@@ -16,6 +17,7 @@ export const PROVIDERS: Record<ExtendedProviderType, string> =
     : {
         ec2: 'Amazon EC2',
         hyperv: 'HyperV',
+        nutanix: 'Nutanix AHV',
         openshift: 'KubeVirt',
         openstack: 'OpenStack',
         ova: 'OVA',

@@ -88,6 +88,8 @@ multiqueue
 multus
 nads
 nbde
+nutanix
+Nutanix
 netapp
 networkattachmentdefinitions
 networkmaps

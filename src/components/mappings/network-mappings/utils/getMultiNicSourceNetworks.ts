@@ -38,6 +38,7 @@ const getVmNicNetworkIds = (
           return profileNetwork ?? nic?.profile;
         }) ?? []
       ).filter((id): id is string => Boolean(id));
+    case 'nutanix':
     case PROVIDER_TYPES.openstack:
     case PROVIDER_TYPES.openshift:
     case PROVIDER_TYPES.ova:

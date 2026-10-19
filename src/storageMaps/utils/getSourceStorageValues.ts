@@ -150,6 +150,7 @@ const getStoragesUsedBySelectedVms = (selectedVMs: ProviderVirtualMachine[] | nu
         storageIds = getOpenshiftVolumeNames(vm);
         break;
 
+      case 'nutanix':
       case PROVIDER_TYPES.openstack:
       default:
       // Use empty array
