@@ -1,6 +1,6 @@
 ---
 name: pr-monitor
-description: Monitor open PRs for CI failures, review comments, merge conflicts, and merge readiness. Supports single-PR mode (given a PR number/URL) or batch mode (scans all PRs in the dev-helper monitoring list). Addresses review feedback by replying to each comment individually, fixes CI issues, rebases when behind main, and captures learnings on approval. Use when the user mentions check my PR, monitor PR, monitor my PRs, PR status, scan all PRs, review comments, CI failing, or provides a PR URL/number.
+description: Monitor open PRs for CI failures, SonarCloud findings, review comments, merge conflicts, and merge readiness. Supports single-PR mode (given a PR number/URL) or batch mode (scans all PRs in the dev-helper monitoring list). Addresses review feedback by replying to each comment individually, fixes CI issues, rebases when behind main, and captures learnings on approval. Use when the user mentions check my PR, monitor PR, monitor my PRs, PR status, scan all PRs, review comments, CI failing, or provides a PR URL/number.
 ---
 
 # PR Monitor
@@ -67,6 +67,31 @@ Use `pr-monitor.sh` for structured PR data:
 ```bash
 .agents/skills/dev-helper/scripts/pr-monitor.sh ${PR_NUMBER} ${TICKET_KEY}
 ```
+
+When CI is failing, the script output includes failing check names, assessment
+(`STATUS` / `ACTION`), and review threads.
+
+### SonarCloud findings
+
+If **SonarCloud Code Analysis** is failing, `pr-monitor.sh` automatically runs:
+
+```bash
+.agents/skills/pr-monitor/scripts/sonar-pr-issues.sh ${PR_NUMBER}
+```
+
+and prints `FLAG: SONAR_ISSUES`. Use that list during **Phase 11.4** (fix CI):
+address each file/line/rule, commit, push, then wait for Sonar to re-run.
+
+Fetch issues only (without full PR monitor):
+
+```bash
+.agents/skills/pr-monitor/scripts/sonar-pr-issues.sh ${PR_NUMBER}
+```
+
+Browser view:
+`https://sonarcloud.io/project/issues?pullRequest=${PR_NUMBER}&resolved=false&id=kubev2v_forklift-console-plugin`
+
+Full workflow: `.agents/skills/dev-helper/phases/11-monitor-pr.md` → **11.4 SonarCloud Code Analysis**.
 
 ## Babysit until merge
 
