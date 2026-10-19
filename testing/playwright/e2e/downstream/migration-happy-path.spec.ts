@@ -233,8 +233,10 @@ test.describe.serial('Plans - VSphere to Host Happy Path Cold Migration', () => 
       tag: ['@downstream', '@slow'],
     },
     async ({ page }) => {
-      const excludedDiskSourceSelected =
-        testPlanData.virtualMachines?.[0]?.sourceName === EXCLUDED_DISK_SOURCE_VM;
+      const excludedDiskSource = testPlanData.virtualMachines?.find(
+        (vm) => vm.sourceName === EXCLUDED_DISK_SOURCE_VM,
+      );
+      const excludedDiskSourceSelected = excludedDiskSource !== undefined;
       test.setTimeout(
         HAPPY_PATH_MIGRATION_TIMEOUT_MS +
           HAPPY_PATH_TEST_OVERHEAD_MS +
@@ -252,10 +254,11 @@ test.describe.serial('Plans - VSphere to Host Happy Path Cold Migration', () => 
       if (excludedDiskSourceSelected) {
         await test.step('Verify persisted excluded-disk Plan settings', () => {
           expect(planResource?.spec?.warm).toBe(false);
-          const rhelPlanVm = planResource?.spec?.vms?.[0];
+          const planVms = planResource?.spec?.vms ?? [];
+          const rhelPlanVm = planVms.find((vm) => vm.name?.includes(EXCLUDED_DISK_SOURCE_VM));
           expect(rhelPlanVm?.name).toContain(EXCLUDED_DISK_SOURCE_VM);
           expect(rhelPlanVm?.excludeDisks).toEqual([EXCLUDED_DATA_DISK_BUS_ADDRESS]);
-          const windowsPlanVm = planResource?.spec?.vms?.[1];
+          const windowsPlanVm = planVms.find((vm) => vm.name?.includes(WINDOWS_SOURCE_VM));
           expect(windowsPlanVm?.name).toContain(WINDOWS_SOURCE_VM);
           expect(windowsPlanVm?.targetPowerState).toBe('off');
         });
@@ -329,7 +332,7 @@ test.describe.serial('Plans - VSphere to Host Happy Path Cold Migration', () => 
 
       if (excludedDiskSourceSelected) {
         await test.step('Verify only the boot disk remains and the RHEL guest is healthy', async () => {
-          const rhelTargetName = testPlanData.virtualMachines?.[0]?.targetName;
+          const rhelTargetName = excludedDiskSource?.targetName;
           expect(rhelTargetName, 'RHEL VM should have a target name').toBeTruthy();
           if (rhelTargetName) {
             await verifyExcludedDiskTarget(

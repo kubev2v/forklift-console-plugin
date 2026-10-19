@@ -13,8 +13,7 @@ export class EditVmExcludeDisksModal {
 
   diskCheckbox(busAddress: string): Locator {
     const table = this.root.getByTestId('exclude-disks-select-table');
-    const addressCell = table.getByRole('gridcell', { exact: true, name: busAddress });
-    return table.getByRole('row').filter({ has: addressCell }).getByRole('checkbox');
+    return table.getByRole('row').filter({ hasText: busAddress }).getByRole('checkbox');
   }
 
   get saveButton(): Locator {

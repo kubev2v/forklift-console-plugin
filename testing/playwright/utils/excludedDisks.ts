@@ -23,8 +23,8 @@ const getExcludedDisks = async (
 ): Promise<string[] | undefined> => {
   const plan = await resourceManager.fetchPlan(planName);
   expect(plan, 'Plan should exist while checking excluded disks').not.toBeNull();
-  const planVm = plan?.spec?.vms?.[0];
-  expect(planVm?.name, 'First Plan VM should be the two-disk source').toContain(
+  const planVm = plan?.spec?.vms?.find((vm) => vm.name?.includes(EXCLUDED_DISK_SOURCE_VM));
+  expect(planVm?.name, 'Plan should contain the two-disk source').toContain(
     EXCLUDED_DISK_SOURCE_VM,
   );
   return planVm?.excludeDisks;
