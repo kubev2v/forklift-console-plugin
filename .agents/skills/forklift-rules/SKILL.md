@@ -20,7 +20,7 @@ Run `npm run agent-setup:validate` after editing rules, skills, or `.codex/` con
 1. Select rules for the paths you are about to change:
 
 ```bash
-node .agents/skills/forklift-rules/scripts/select-rules.mjs --files src/plans/example.tsx
+node scripts/agent-rules/select-rules.mjs --files src/plans/example.tsx
 ```
 
 You may also pass positional paths after flags, or use `--json` for machine-readable output.
