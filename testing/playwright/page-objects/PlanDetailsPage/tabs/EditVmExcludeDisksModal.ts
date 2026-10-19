@@ -1,11 +1,9 @@
 import { expect, type Locator, type Page } from '@playwright/test';
 
 export class EditVmExcludeDisksModal {
-  private readonly page: Page;
   readonly root: Locator;
 
   constructor(page: Page) {
-    this.page = page;
     this.root = page.getByTestId('edit-vm-exclude-disks-modal');
   }
 

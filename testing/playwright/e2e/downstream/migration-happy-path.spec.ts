@@ -250,7 +250,7 @@ test.describe.serial('Plans - VSphere to Host Happy Path Cold Migration', () => 
       // Abort early on MAC conflict — leftover VMs from a previous run must be cleaned up first.
       const planResource = await resourceManager.fetchPlan(planName);
       if (excludedDiskSourceSelected) {
-        await test.step('Verify persisted excluded-disk Plan settings', async () => {
+        await test.step('Verify persisted excluded-disk Plan settings', () => {
           expect(planResource?.spec?.warm).toBe(false);
           const rhelPlanVm = planResource?.spec?.vms?.[0];
           expect(rhelPlanVm?.name).toContain(EXCLUDED_DISK_SOURCE_VM);
