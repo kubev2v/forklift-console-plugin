@@ -249,8 +249,8 @@
     },
     {
       "from": ".cursor/skills/personal-pr-monitor/",
-      "to": ".agents/skills/pr-monitor/",
-      "note": "sanitized tracked copy; original is in snapshot"
+      "to": ".agents/skills/dev-helper/skills/pr-monitor/",
+      "note": "standalone skill; phase 11 lives in dev-helper"
     },
     {
       "from": ".cursor/skills/personal-reviewer/",
@@ -260,7 +260,7 @@
     {
       "from": ".cursor/skills/dev-helper/",
       "to": ".agents/skills/dev-helper/",
-      "note": "local clone; ignored by Git"
+      "note": "vendored; runtime state/config gitignored"
     }
   ],
   "localState": [
@@ -268,6 +268,10 @@
     ".agents/skills/frontend-analyzer/state.json",
     ".agents/skills/i18n-memsource/state.json",
     ".agents/skills/cve-remediation/config.yaml",
-    ".agents/skills/personal-i18n-memsource/SETUP.md"
+    ".agents/skills/personal-i18n-memsource/SETUP.md",
+    ".agents/skills/dev-helper/state/",
+    ".agents/skills/dev-helper/dev-helper.config.json",
+    ".agents/skills/dev-helper/audit/",
+    ".agents/skills/dev-helper/repo-pr-lessons/"
   ]
 }

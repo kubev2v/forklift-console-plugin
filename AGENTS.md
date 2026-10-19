@@ -727,16 +727,33 @@ This avoids re-implementation work and keeps knip from flagging the file as unus
 
 ## Dev-Helper Skill
 
-The [dev-helper](https://github.com/avivtur/dev-helper) skill automates
-the full ticket lifecycle from Jira triage to merged PR. Install it once:
+The **dev-helper** skill (`.agents/skills/dev-helper/`) automates the full ticket
+lifecycle from Jira triage to merged PR. **PR monitor** is the same phase 11 flow,
+invokable standalone via `.agents/skills/dev-helper/skills/pr-monitor/SKILL.md`.
+
+Copy local config once (not committed):
 
 ```bash
-git clone https://github.com/avivtur/dev-helper .agents/skills/dev-helper
 cp .agents/skills/dev-helper/examples/config.full.json .agents/skills/dev-helper/dev-helper.config.json
 cp -r .agents/skills/dev-helper/examples/phases-rules.example/ .agents/skills/dev-helper/phases-rules/
 ```
 
-See the [dev-helper SETUP.md](https://github.com/avivtur/dev-helper/blob/main/SETUP.md) for full instructions.
+### Shared skills catalog
+
+| Skill | When to use | First step |
+|-------|-------------|------------|
+| `forklift-rules` | Before implementation/review — select canonical rules | `node scripts/agent-rules/select-rules.mjs --files …` |
+| `dev-helper` | Full MTV ticket lifecycle | Read `.agents/skills/dev-helper/SKILL.md` |
+| `pr-monitor` | Check/fix PR only (phase 11) | `.agents/skills/dev-helper/scripts/pr-monitor.sh <PR>` |
+| `reviewer` | Multi-perspective PR review | `.agents/skills/reviewer/scripts/gather-context.sh <PR>` |
+| `i18n-memsource` | Upload/download translations | Read skill `SKILL.md` |
+| `types-update` | Bump `@forklift-ui/types` | Read skill `SKILL.md` |
+| `waiting-for-build` | Sprint build queue | Read skill `SKILL.md` |
+| `bug-report` | File MTV UI bugs in Jira | Read skill `SKILL.md` |
+| `cve-remediation` | CVE fix workflow | Read skill `SKILL.md` |
+| `backend-analyzer` / `frontend-analyzer` | Refresh `.agents/rules` knowledge | Read skill `SKILL.md` |
+
+See [dev-helper SETUP.md](.agents/skills/dev-helper/SETUP.md) for config and state CLI.
 
 ---
 

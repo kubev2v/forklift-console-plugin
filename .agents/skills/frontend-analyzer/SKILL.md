@@ -91,4 +91,4 @@ After all agents complete:
 1. Run `npm run agent-rules:generate` to refresh the Cursor wrappers
 2. Update `state.json` with new date
 3. Verify all 5 files exist and are under 400 lines
-3. Spot-check cross-references between files for consistency
+4. Spot-check cross-references between files for consistency

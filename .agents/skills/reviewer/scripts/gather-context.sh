@@ -42,8 +42,8 @@ FILES_TABLE=$(echo "$PR_FILES_JSON" | jq -r '.[] | "| \(.filename) | +\(.additio
 # --- 3. Full diff --------------------------------------------------------------
 DIFF=$(gh pr diff "$PR" --repo "$REPO" 2>/dev/null || true)
 if [[ -z "$DIFF" ]]; then
-  git fetch origin "${HEAD_SHA}" "${BASE_SHA}" 2>/dev/null || true
-  DIFF=$(git diff "${BASE_SHA}...${HEAD_SHA}" 2>/dev/null || echo "(diff unavailable)")
+  git fetch origin "${HEAD}" "${BASE}" 2>/dev/null || true
+  DIFF=$(git diff "${BASE_SHA}...${COMMIT}" 2>/dev/null || echo "(diff unavailable)")
 fi
 echo "$DIFF" > "${OUT_DIR}/diff.patch"
 

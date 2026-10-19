@@ -1,0 +1,13 @@
+{
+  "profile": "strict",
+  "minTaskDispatches": 4,
+  "maxParentNpmTest": 0,
+  "maxSkillMdReads": 0,
+  "maxLegacyPhaseReads": 0,
+  "maxPlaywrightMcp": 0,
+  "maxRepoRootStateWrites": 0,
+  "minimal": {
+    "minTaskDispatches": 1,
+    "maxParentNpmTest": 0
+  }
+}

@@ -102,7 +102,7 @@ For each PR in sequence:
 1. Checkout PR branch (clean tree).
 2. Apply findings from `/tmp/pr-review-<PR>/review.json`.
 3. Commit (`-s`, `Resolves: <ticket>`) and push if needed.
-4. Run **pr-monitor** (single-PR) — do not post self-review JSON.
+4. Run **pr-monitor** (`.agents/skills/dev-helper/skills/pr-monitor/SKILL.md`, single-PR) — do not post self-review JSON.
 5. Next PR.
 
 If review was `APPROVE`, still run pr-monitor.

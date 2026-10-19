@@ -174,8 +174,18 @@ const resolveSkillSymlinkTarget = (absolutePath) => {
   }
 };
 
+const DEV_HELPER_RUNTIME_DIRS = new Set([
+  'audit',
+  'dashboard',
+  'lessons',
+  'repo-pr-lessons',
+  'state',
+  'summaries',
+]);
+
 const collectSkillEntry = (entry, directory, skillFiles, visit) => {
   if (entry.name === '.git' || entry.name === 'node_modules') return;
+  if (DEV_HELPER_RUNTIME_DIRS.has(entry.name)) return;
   const absolutePath = path.join(directory, entry.name);
   if (entry.isSymbolicLink()) {
     const target = resolveSkillSymlinkTarget(absolutePath);
@@ -282,7 +292,7 @@ const checkSkillReferences = () => {
   const failures = [];
   const skillsRoot = path.join(REPO_ROOT, '.agents/skills');
   const markdownFiles = walkFiles(skillsRoot, {
-    skip: new Set(['.git', 'node_modules', 'state', 'audit', 'lessons']),
+    skip: new Set(['.git', 'node_modules', 'state', 'audit', 'lessons', 'dashboard', 'summaries', 'repo-pr-lessons']),
   }).filter((file) => file.endsWith('.md') || file.endsWith('.mdx'));
 
   for (const skillFile of markdownFiles) {
@@ -328,11 +338,13 @@ const checkSkills = () => {
     assert.ok(!isIgnoredByGit(relativeSkillPath), `Shared skill must not be ignored: ${name}`);
   }
 
-  for (const name of ['dev-helper', 'repo-pr-lessons']) {
-    if (names.has(name)) {
-      const relativeSkillPath = path.relative(REPO_ROOT, names.get(name));
-      assert.ok(isIgnoredByGit(relativeSkillPath), `Local-only skill must be ignored: ${name}`);
-    }
+  assert.ok(names.has('dev-helper'), 'Missing dev-helper skill');
+  const devHelperSkillPath = path.relative(REPO_ROOT, names.get('dev-helper'));
+  assert.ok(!isIgnoredByGit(devHelperSkillPath), 'dev-helper skill must be tracked in Git');
+
+  if (names.has('repo-pr-lessons')) {
+    const repoPrLessonsPath = path.relative(REPO_ROOT, names.get('repo-pr-lessons'));
+    assert.ok(isIgnoredByGit(repoPrLessonsPath), 'repo-pr-lessons must stay gitignored (local batch tool)');
   }
 
   for (const name of ['konflux-deps-update-remediation', 'reviewer']) {
@@ -348,7 +360,10 @@ const checkSkills = () => {
     '.agents/skills/i18n-memsource/state.json',
     '.agents/skills/cve-remediation/config.yaml',
     '.agents/skills/personal-i18n-memsource/SETUP.md',
-    '.agents/skills/dev-helper/',
+    '.agents/skills/dev-helper/state/',
+    '.agents/skills/dev-helper/dev-helper.config.json',
+    '.agents/skills/dev-helper/audit/',
+    '.agents/skills/dev-helper/repo-pr-lessons/',
   ];
   for (const statePath of statePaths) {
     assert.ok(isIgnoredByGit(statePath), `Local data must be ignored by Git: ${statePath}`);
