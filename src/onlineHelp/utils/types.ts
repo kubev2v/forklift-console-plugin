@@ -1,7 +1,5 @@
-import type { ComponentClass, ReactNode } from 'react';
+import type { ComponentClass, ReactNode, SVGProps } from 'react';
 import type { ProviderTypes } from 'src/providers/utils/constants';
-
-import type { SVGIconProps } from '@patternfly/react-icons/dist/esm/createIcon';
 
 export enum ListStyleType {
   CIRCLE = 'circle',
@@ -25,7 +23,7 @@ export type LearningExperienceSubTopic = {
 
 export type LearningExperienceTopic = {
   description: ReactNode;
-  icon: ComponentClass<SVGIconProps>;
+  icon: ComponentClass<SVGProps<SVGSVGElement>>;
   id: string;
   title: ReactNode;
   expandable?: boolean;

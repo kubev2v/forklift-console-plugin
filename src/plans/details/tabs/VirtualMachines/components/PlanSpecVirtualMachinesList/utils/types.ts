@@ -26,6 +26,7 @@ export enum PlanSpecVirtualMachinesTableResourceId {
   Concerns = 'concerns',
   InspectionStatus = 'inspectionStatus',
   InstanceType = 'instanceType',
+  ExcludeDisks = 'excludeDisks',
   MigrateSharedDisks = 'migrateSharedDisks',
   VMTargetName = 'vmTargetName',
   TargetPowerState = 'targetPowerState',

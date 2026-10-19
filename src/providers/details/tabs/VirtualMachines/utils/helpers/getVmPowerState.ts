@@ -86,6 +86,7 @@ export const getVmPowerState = (vm: ProviderVirtualMachine | Ec2VM | undefined):
       return getHypervVmPowerState(vm as HypervVM);
     case 'ec2':
       return getEc2VmPowerState(vm as Ec2VM);
+    case 'nutanix':
     case 'ova':
       return 'off';
     default:

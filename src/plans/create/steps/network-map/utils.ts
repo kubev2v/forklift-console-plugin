@@ -63,6 +63,8 @@ const toNetworksOrProfiles = (vm: ProviderVirtualMachine): string[] => {
     }
     case PROVIDER_TYPES.hyperv:
       return vm?.networks?.map((network) => network?.id) ?? [];
+    case 'nutanix':
+      return [];
     default:
       return [];
   }
