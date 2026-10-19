@@ -50,15 +50,7 @@ testing/locales/
 # Local-only Codex skill data and rollback snapshot
 .agents/skills/backend-analyzer/state.json
 .agents/skills/cve-remediation/config.yaml
-# dev-helper skill (tracked); runtime and local config stay untracked
-.agents/skills/dev-helper/.git/
-.agents/skills/dev-helper/state/
-.agents/skills/dev-helper/audit/
-.agents/skills/dev-helper/summaries/
-.agents/skills/dev-helper/lessons/
-.agents/skills/dev-helper/dev-helper.config.json
-.agents/skills/dev-helper/repo-pr-lessons/
-.agents/skills/dev-helper/dashboard/
+.agents/skills/dev-helper/
 .agents/skills/frontend-analyzer/state.json
 .agents/skills/i18n-memsource/state.json
 .agents/skills/personal-*/

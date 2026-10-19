@@ -1,9 +1,0 @@
-{
-  "jira": {
-    "baseUrl": "https://redhat.atlassian.net",
-    "projectKey": "YOUR_PROJECT"
-  },
-  "github": {
-    "repo": "your-org/your-repo"
-  }
-}

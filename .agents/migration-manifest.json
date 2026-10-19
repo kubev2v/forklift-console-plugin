@@ -250,7 +250,7 @@
     {
       "from": ".cursor/skills/personal-pr-monitor/",
       "to": ".agents/skills/dev-helper/skills/pr-monitor/",
-      "note": "standalone skill; phase 11 lives in dev-helper"
+      "note": "lives in local dev-helper clone (skills/pr-monitor); not tracked in this repo"
     },
     {
       "from": ".cursor/skills/personal-reviewer/",
@@ -260,7 +260,7 @@
     {
       "from": ".cursor/skills/dev-helper/",
       "to": ".agents/skills/dev-helper/",
-      "note": "vendored; runtime state/config gitignored"
+      "note": "local clone from https://github.com/avivtur/dev-helper; ignored by Git"
     }
   ],
   "localState": [
@@ -269,9 +269,6 @@
     ".agents/skills/i18n-memsource/state.json",
     ".agents/skills/cve-remediation/config.yaml",
     ".agents/skills/personal-i18n-memsource/SETUP.md",
-    ".agents/skills/dev-helper/state/",
-    ".agents/skills/dev-helper/dev-helper.config.json",
-    ".agents/skills/dev-helper/audit/",
-    ".agents/skills/dev-helper/repo-pr-lessons/"
+    ".agents/skills/dev-helper/"
   ]
 }
