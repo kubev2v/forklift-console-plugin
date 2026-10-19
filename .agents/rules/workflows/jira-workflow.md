@@ -7,7 +7,7 @@ alwaysApply: false
 
 Invoke with: *"get my tickets"*, *"show sprint issues"*, *"update ticket"*, *"search jira"*, *"create a ticket"*, *"report a bug"*
 
-This workflow covers Jira MCP operations. For the full development workflow (ticket to PR), see `feature-development.mdc`.
+This workflow covers Jira MCP operations. For the full development workflow (ticket to PR), see `feature-development.md`.
 
 ---
 

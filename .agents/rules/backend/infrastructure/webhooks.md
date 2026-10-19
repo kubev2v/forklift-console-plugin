@@ -18,7 +18,7 @@ The forklift-api process runs Kubernetes admission webhooks over TLS. It validat
 
 ```
 pkg/forklift-api/api.go  →  ForkliftApi.Execute()
-  ├── goroutine: serveServices()   → :8444 (REST services, see rest-api.mdc)
+  ├── goroutine: serveServices()   → :8444 (REST services, see rest-api.md)
   └── serveWebhooks()              → :8443 (admission webhooks)
 ```
 

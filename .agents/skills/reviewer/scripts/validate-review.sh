@@ -56,7 +56,7 @@ if [[ "$event" == "APPROVE" && "$comment_count" -gt 0 ]]; then
 fi
 if [[ "$event" == "COMMENT" && "$comment_count" -eq 0 ]]; then
   # Body-only change requests are allowed; require at least one perspective bullet
-  if [[ ! "$body" =~ \*\*\[[A-Za-z]+\]\*\* ]]; then
+  if [[ ! "$body" =~ \*\*\[[A-Za-z\ ]+\]\*\* ]]; then
     errors+=("event COMMENT with empty comments requires at least one **[Perspective]** body item, or use APPROVE")
   fi
 fi

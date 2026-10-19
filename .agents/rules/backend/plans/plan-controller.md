@@ -120,7 +120,7 @@ execute(plan)
 ├─ Find pending migrations (sorted by creationTimestamp, then name)
 ├─ If no active + pending exists → select first pending, create new snapshot
 ├─ If no migration at all → delete Executing condition, checkConversionResumable → return
-├─ runner.Run() — execute the migration (see migration-pipeline.mdc)
+├─ runner.Run() — execute the migration (see migration-pipeline.md)
 ├─ Reflect snapshot conditions (Executing/Succeeded/Failed/Canceled) onto plan.Status
 └─ checkConversionResumable(plan)
 ```
@@ -338,7 +338,7 @@ The console plugin watches **Plan** CRs for validation and migration progress; *
 | Backend field | Frontend type / location |
 |---|---|
 | `plan.status.conditions[]` | `V1beta1PlanStatusConditions` — drives plan status badge, alerts, wizard gating |
-| `plan.status.migration.vms[]` | `V1beta1PlanStatusMigrationVms` — VM list, pipeline, progress (see migration-pipeline.mdc) |
+| `plan.status.migration.vms[]` | `V1beta1PlanStatusMigrationVms` — VM list, pipeline, progress (see migration-pipeline.md) |
 | `plan.status.migration.history[]` | Snapshots (not directly rendered; conditions are reflected to plan) |
 | `plan.status.netAppShiftDestination` | Boolean flag set during NetApp Shift validation |
 | `plan.spec.archived` | Archive toggle; combined with `Archived` condition in `isPlanArchived()` |
@@ -388,4 +388,4 @@ Ensurer and cleanup use labels from `context.Labeler`: `plan`, `migration`, `vmI
 - Plan status: `src/plans/details/components/PlanStatus/`
 - Plan conditions alert: plan details tabs
 - Migration history: `src/overview/tabs/History/` (reads Migration CR `status.started`/`completed`)
-- Do **not** use `usePlanMigration` for resource scoping — use `useLatestPlanMigration` (see project-context.mdc MTV-6091)
+- Do **not** use `usePlanMigration` for resource scoping — use `useLatestPlanMigration` (see `.agents/rules/project-context.md` MTV-6091)

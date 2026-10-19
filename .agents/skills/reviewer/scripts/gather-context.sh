@@ -6,12 +6,14 @@ REPO=$(gh repo view --json nameWithOwner -q '.nameWithOwner')
 OUT_DIR="/tmp/pr-review-${PR}"
 CONTEXT="${OUT_DIR}/context.md"
 
-rm -rf "$OUT_DIR"
-mkdir -p "$OUT_DIR"
+mkdir -p "${OUT_DIR}/perspectives"
+for artifact in context.md diff.patch commentable-lines.txt commit-sha.txt repo-slug.txt pr-url.txt author.txt pr-title.txt changed-paths.txt; do
+  rm -f "${OUT_DIR}/${artifact}"
+done
 
 # --- 1. PR metadata -----------------------------------------------------------
 META=$(gh pr view "$PR" --repo "$REPO" --json \
-  title,body,author,files,additions,deletions,headRefName,baseRefName,state,url,headRefOid)
+  title,body,author,additions,deletions,headRefName,baseRefName,baseRefOid,headRefOid,state,url)
 
 TITLE=$(echo "$META"   | jq -r '.title')
 AUTHOR=$(echo "$META"  | jq -r '.author.login')
@@ -20,25 +22,29 @@ URL=$(echo "$META"     | jq -r '.url')
 BASE=$(echo "$META"    | jq -r '.baseRefName')
 HEAD=$(echo "$META"    | jq -r '.headRefName')
 COMMIT=$(echo "$META"  | jq -r '.headRefOid')
+BASE_SHA=$(echo "$META" | jq -r '.baseRefOid')
 ADDS=$(echo "$META"    | jq -r '.additions')
 DELS=$(echo "$META"    | jq -r '.deletions')
-FILE_COUNT=$(echo "$META" | jq -r '.files | length')
 BODY=$(echo "$META"    | jq -r '.body // ""')
+
+PR_FILES_JSON=$(gh api "repos/${REPO}/pulls/${PR}/files?per_page=100" --paginate)
+FILE_COUNT=$(echo "$PR_FILES_JSON" | jq 'length')
+echo "$PR_FILES_JSON" | jq -r '.[].filename' > "${OUT_DIR}/changed-paths.txt"
 
 echo "$COMMIT" > "${OUT_DIR}/commit-sha.txt"
 echo "$REPO" > "${OUT_DIR}/repo-slug.txt"
 echo "$URL" > "${OUT_DIR}/pr-url.txt"
 echo "$AUTHOR" > "${OUT_DIR}/author.txt"
 printf '%s' "$TITLE" > "${OUT_DIR}/pr-title.txt"
-mkdir -p "${OUT_DIR}/perspectives"
 
-echo "$META" | jq -r '.files[].path' > "${OUT_DIR}/changed-paths.txt"
-
-# --- 2. Changed files list ----------------------------------------------------
-FILES_TABLE=$(echo "$META" | jq -r '.files[] | "| \(.path) | +\(.additions)/-\(.deletions) |"')
+FILES_TABLE=$(echo "$PR_FILES_JSON" | jq -r '.[] | "| \(.filename) | +\(.additions)/-\(.deletions) |"')
 
 # --- 3. Full diff --------------------------------------------------------------
-DIFF=$(gh pr diff "$PR" --repo "$REPO" 2>/dev/null || echo "(diff unavailable)")
+DIFF=$(gh pr diff "$PR" --repo "$REPO" 2>/dev/null || true)
+if [[ -z "$DIFF" ]]; then
+  git fetch origin "${HEAD_SHA}" "${BASE_SHA}" 2>/dev/null || true
+  DIFF=$(git diff "${BASE_SHA}...${HEAD_SHA}" 2>/dev/null || echo "(diff unavailable)")
+fi
 echo "$DIFF" > "${OUT_DIR}/diff.patch"
 
 # --- 4. Existing reviews -------------------------------------------------------

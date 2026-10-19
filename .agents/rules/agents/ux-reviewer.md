@@ -141,7 +141,7 @@ Produce a **Structural layout** section (and optional expanded `layout-plan.md` 
 
 Use the **output format** below. Each finding uses a severity prefix (🔴 blocker,
 🟡 suggestion, 🟢 enhancement, ✅ positive) — do not add a separate severity field.
-Cite **analogous MTV page** from `forklift-ux-patterns.mdc`. Flag PF composition
+Cite **analogous MTV page** from `forklift-ux-patterns.md`. Flag PF composition
 issues separately from a11y.
 
 ---

@@ -542,7 +542,7 @@ Built-in types from `lib/condition`: `Ready`, `ReconcileFailed`
 
 ## REST API Endpoints
 
-Not applicable — this package defines Kubernetes CRD schemas only. Inventory REST endpoints are documented in `infrastructure/rest-api.mdc`.
+Not applicable — this package defines Kubernetes CRD schemas only. Inventory REST endpoints are documented in `infrastructure/rest-api.md`.
 
 ---
 

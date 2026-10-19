@@ -13,7 +13,7 @@ When reviewing code or implementing features, automatically consider all team pe
 
 ### Jira Ticket Recognition
 
-When a user sends a Jira ticket URL (e.g., `https://issues.redhat.com/browse/MTV-XXXXX`) or an MTV-XXXX reference, **fetch the ticket and present an analysis** -- but do NOT start writing code until the user confirms the approach. Follow the detailed workflow in `workflows/ticket-workflow.mdc`.
+When a user sends a Jira ticket URL (e.g., `https://issues.redhat.com/browse/MTV-XXXXX`) or an MTV-XXXX reference, **fetch the ticket and present an analysis** -- but do NOT start writing code until the user confirms the approach. Follow the detailed workflow in `workflows/ticket-workflow.md`.
 
 ### Quick vs Deep Reviews
 - **Quick Review** (default): High-level feedback from all perspectives

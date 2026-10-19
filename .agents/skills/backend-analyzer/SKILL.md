@@ -159,5 +159,5 @@ One agent per provider type plus one for the common controller. Each provider ag
 After all phases complete:
 1. Run `npm run agent-rules:generate` to refresh the Cursor wrappers
 2. Update `state.json` with new commit SHA and date
-2. Run a cross-reference validation to check integration point consistency
+3. Run a cross-reference validation to check integration point consistency
 3. Update `.agents/rules/agents/forklift-expert.md` routing table

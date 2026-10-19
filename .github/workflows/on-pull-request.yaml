@@ -55,6 +55,12 @@ jobs:
       - name: Lint, test i18n files
         run: npm run test:i18n
 
+      - name: Validate agent rules and skills layout
+        run: npm run agent-setup:validate
+
+      - name: Agent rules unit tests
+        run: npm run test:agent-rules
+
       - name: Knip
         run: npm run knip
 

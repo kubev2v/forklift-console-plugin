@@ -16,7 +16,7 @@ This rule provides Forklift-specific domain knowledge not covered there.
 Forklift (Migration Toolkit for Virtualization) migrates virtual machines from external providers to OpenShift Virtualization (KubeVirt). This plugin is an OpenShift Console dynamic plugin providing the web UI.
 
 ### Tech Stack
-- **React 17** with **TypeScript** (strict mode)
+- **React 18** with **TypeScript** (strict mode; aligned with OpenShift Console host)
 - **PatternFly 6** for UI components
 - **i18next** for internationalization
 - **react-hook-form** for form handling
@@ -174,11 +174,11 @@ const id = (disk as unknown as { ID?: string }).ID ?? disk.id;
 When implementing a new feature that introduces concepts, patterns, CRDs, provider types, statuses, or conventions **not already covered** by the existing rules (this file, `AGENTS.md`, or any file under `.agents/rules/`), you **must** update the relevant rule file as part of the same change. Examples:
 
 - New CRD or resource type -- add it to this file under **Core CRDs**.
-- New provider type or status -- add it to this file and to `agents/forklift-expert.mdc`.
+- New provider type or status -- add it to this file and to `.agents/rules/agents/forklift-expert.md`, then run `npm run agent-rules:generate` for Cursor wrappers.
 - New shared hook, utility, or component pattern -- add it to `AGENTS.md` or the matching file-specific rule.
-- New testing pattern or tooling -- update `testing.mdc`.
-- New i18n utility or namespace change -- update `i18n.mdc`.
+- New testing pattern or tooling -- update `testing.md`.
+- New i18n utility or namespace change -- update `i18n.md`.
 - New workflow or development process -- add or update the relevant file under `workflows/`.
-- New reusable screen type or MTV layout pattern -- add a row to `agents/forklift-ux-patterns.mdc`.
+- New reusable screen type or MTV layout pattern -- add a row to `agents/forklift-ux-patterns.md`.
 
 Keeping the rules accurate ensures every team member and AI assistant works with up-to-date project knowledge.

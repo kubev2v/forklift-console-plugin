@@ -71,7 +71,7 @@ src/{feature}/components/{component-name}/
 5. Default export
 
 ### Inside Component Function
-Follow the component order from `react-components.mdc` (translation, router, data, state, derived, callbacks, effects, returns, JSX).
+Follow the component order from `react-components.md` (translation, router, data, state, derived, callbacks, effects, returns, JSX).
 
 ### Key Rules
 - Never use default/star imports for React: `import { useState, type FC } from 'react'`

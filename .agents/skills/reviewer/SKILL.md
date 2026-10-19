@@ -109,16 +109,16 @@ If review was `APPROVE`, still run pr-monitor.
 
 ## Review checklist (subagents)
 
-Apply at the chosen strictness. Detail lives in agent `.mdc` files; reminders:
+Apply at the chosen strictness. Detail lives in `.agents/rules/` (canonical `.md`); reminders:
 
 ### Developer
 - `type` not `interface`; no `any`; explicit return types; `isEmpty()`; `??` not `||`; no barrel files; feature → shared → external
 - Shared literals (`data-*` keys, field ids, fixed widths) in `constants.ts` / `*Constants.ts`, not in `*Utils.ts` (AGENTS.md **Constants vs utils**)
-- Selectors for CRD property access ([selectors.mdc](.agents/rules/selectors.md))
+- Selectors for CRD property access ([selectors.md](.agents/rules/selectors.md))
 
 ### QE
 - Tests for new exports; edge cases; async/races; form ↔ CR round-trip; API failure paths
-- Playwright when E2E paths change ([playwright-testing.mdc](.agents/rules/workflows/playwright-testing.md))
+- Playwright when E2E paths change ([playwright-testing.md](.agents/rules/workflows/playwright-testing.md))
 
 ### UX
 - i18n utilities; loading/empty/error; PatternFly enums; custom `Select`; keyboard a11y
@@ -127,7 +127,7 @@ Apply at the chosen strictness. Detail lives in agent `.mdc` files; reminders:
 - Consumer grep; parallel flows (wizard vs standalone); backwards-compatible types
 
 ### Security
-- Input validation, RBAC, secrets exposure (see security-reviewer.mdc)
+- Input validation, RBAC, secrets exposure (see `.agents/rules/agents/security-reviewer.md`)
 
 ### Forklift expert
 - GVK/selectors, provider phases, migration pipeline, inventory/API casing pitfalls
@@ -196,7 +196,7 @@ After you post or correct a review, turn recurring **coding-standard** feedback 
 1. From `posted-review.json` or your inline comments, extract themes (not one-off nits).
 2. Search: `.agents/skills/dev-helper/scripts/lessons-grep.sh "<keywords>"` — skip duplicates.
 3. Append new bullets under `## Lessons` in the matching theme file in `.agents/skills/dev-helper/lessons/` (see `docs/LESSONS.md` schema). Mirror important entries in `examples/lessons.example/` for teammates.
-4. If the rule belongs in team docs (not grep lessons), update **AGENTS.md** or the relevant `.agents/rules/*.md` (e.g. `styles.mdc` for SCSS, `typescript.mdc` for TS patterns).
+4. If the rule belongs in team docs (not grep lessons), update **AGENTS.md** or the relevant `.agents/rules/*.md` (e.g. `styles.md` for SCSS, `typescript.md` for TS patterns).
 5. Optional: queue a batch in `lessons/pending/review-<PR>-<date>.md` for `approve lessons batch`.
 
 Subagents and `select-lessons-for-pr.sh` will surface these on the next PR that touches similar paths (e.g. `TableView`, `data-*` attributes, SCSS).

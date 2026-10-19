@@ -7,7 +7,7 @@ alwaysApply: false
 
 Invoke with: *"as forklift expert"*, *"as migration expert"*, *"domain review"*, *"migration review"*
 
-> **Canonical source:** For the list of CRDs and provider types, see `project-context.mdc`. This agent expands on that with implementation details, status handling, and common pitfalls.
+> **Canonical source:** For the list of CRDs and provider types, see `.agents/rules/project-context.md` (Cursor loads the generated wrapper under `.cursor/rules/`). This agent expands on that with implementation details, status handling, and common pitfalls.
 >
 > **Backend deep-dive:** Detailed Go backend knowledge is available in `.agents/rules/backend/`. Use the routing table below to load the relevant file when answering backend questions.
 
@@ -161,7 +161,7 @@ Your approach:
 **Storage Features**
 - Source storage identified by provider-specific ID (datastore, storage domain, etc.)
 - Target is an OpenShift StorageClass
-- Supports copy offload plugins (e.g., vSphere XCOPY) for faster transfers
+- Supports copy offload plugins (e.g., vSphere XCOPY, `csiVolumeImport` / MTV-5483) for faster transfers; persist the selected plugin key through form ↔ CR round-trip
 - Storage vendor integrations: IBM FlashSystem, NetApp ONTAP, Dell PowerFlex/PowerMax/PowerStore, HPE Primera/3PAR, Pure Storage FlashArray, Hitachi Vantara, Infinidat Infinibox
 
 **Key Patterns**
@@ -211,6 +211,8 @@ Your approach:
 
 **Feature Flags**
 - `feature_copy_offload` - Enable storage copy offload
+- `feature_copy_appliance` - Enable vSphere copy appliance flows (CopyAppliance / CopyApplianceTemplate)
+- `feature_ova_appliance_management` - OVA appliance management (operator-gated)
 - `feature_ocp_live_migration` - Enable OpenShift live migration
 - `feature_volume_populator` - Enable volume populator support
 
@@ -322,41 +324,46 @@ Your approach:
 - 409: Conflict (resource modified)
 - 422: Validation error (invalid plan configuration)
 
+**Console pitfalls (see also project-context Do/Don't)**
+- OVA embedded VM disks/networks use PascalCase API fields (`ID`, `Name`) — cast/narrow at runtime; do not assume camelCase from `@forklift-ui/types` alone
+- Scope migration resource watches with plan **and** migration UID via `useLatestPlanMigration`; avoid plan-only label selectors across failed runs (MTV-6091)
+- Provider inventory counts: use `buildProviderInventoryPath` with `?detail=1` when the UI needs totals
+
 ---
 
 ## Backend Knowledge Routing Table
 
-When answering questions about backend behavior, read the relevant `.mdc` file from `.agents/rules/backend/`:
+When answering questions about backend behavior, read the relevant `.md` file from `.agents/rules/backend/`:
 
 | Topic | Load file |
 |-------|-----------|
-| Architecture, entry points, deployment roles | `backend/architecture.mdc` |
-| CRD types, phase constants, conditions framework | `backend/api-types.mdc` |
-| Provider reconciliation, credentials, inventory lifecycle | `backend/providers/provider-controller.mdc` |
-| vSphere inventory, VDDK, ESXi, vCenter API | `backend/providers/vsphere.mdc` |
-| oVirt Engine API, storage domains | `backend/providers/ovirt.mdc` |
-| OpenStack Keystone/Nova/Glance/Neutron | `backend/providers/openstack.mdc` |
-| OVA file parsing, NFS, OVAProviderServer | `backend/providers/ova.mdc` |
-| Hyper-V SMB/PowerShell, HyperVProviderServer | `backend/providers/hyperv.mdc` |
-| EC2 AWS SDK, AMI, platform gating | `backend/providers/ec2.mdc` |
-| Nutanix Prism inventory, adapter (see also plan-adapters, api-types) | `backend/providers/provider-controller.mdc`, `backend/plans/plan-adapters.mdc`, `backend/api-types.mdc` |
-| Azure disk snapshot migration, adapter (see plan-adapters) | `backend/plans/plan-adapters.mdc`, `backend/api-types.mdc` |
-| OpenShift target provider, namespaces, StorageClass | `backend/providers/ocp.mdc` |
-| Conversion CR (deep inspection / in-place) | `backend/api-types.mdc`, `backend/architecture.mdc` |
-| Plan validation, conditions, lifecycle | `backend/plans/plan-controller.mdc` |
-| Provider adapters, Builder/Client interfaces | `backend/plans/plan-adapters.mdc` |
-| Migration phases, itineraries, disk transfer, KubeVirt | `backend/plans/migration-pipeline.mdc` |
-| VM scheduling, concurrency, MaxInFlight | `backend/plans/scheduler.mdc` |
-| NetworkMap validation, source/target mapping | `backend/mappings/network-map.mdc` |
-| StorageMap, offload plugins, vendor integrations | `backend/mappings/storage-map.mdc` |
-| Admission webhooks (validating + mutating) | `backend/infrastructure/webhooks.mdc` |
-| Inventory REST API endpoints, per-provider routes | `backend/infrastructure/rest-api.mdc` |
-| virt-v2v conversion, inspection, customization | `backend/infrastructure/virt-v2v.mdc` |
-| Condition framework, inventory containers, lib/ | `backend/infrastructure/shared-libraries.mdc` |
-| Prometheus metrics, monitoring | `backend/infrastructure/monitoring.mdc` |
-| ESXi host controller | `backend/infrastructure/host-controller.mdc` |
-| Pre/post migration hooks | `backend/infrastructure/hook-controller.mdc` |
-| Operator deployment, feature flags, images | `backend/operator/operator.mdc` |
+| Architecture, entry points, deployment roles | `backend/architecture.md` |
+| CRD types, phase constants, conditions framework | `backend/api-types.md` |
+| Provider reconciliation, credentials, inventory lifecycle | `backend/providers/provider-controller.md` |
+| vSphere inventory, VDDK, ESXi, vCenter API | `backend/providers/vsphere.md` |
+| oVirt Engine API, storage domains | `backend/providers/ovirt.md` |
+| OpenStack Keystone/Nova/Glance/Neutron | `backend/providers/openstack.md` |
+| OVA file parsing, NFS, OVAProviderServer | `backend/providers/ova.md` |
+| Hyper-V SMB/PowerShell, HyperVProviderServer | `backend/providers/hyperv.md` |
+| EC2 AWS SDK, AMI, platform gating | `backend/providers/ec2.md` |
+| Nutanix Prism inventory, adapter (see also plan-adapters, api-types) | `backend/providers/provider-controller.md`, `backend/plans/plan-adapters.md`, `backend/api-types.md` |
+| Azure disk snapshot migration, adapter (see plan-adapters) | `backend/plans/plan-adapters.md`, `backend/api-types.md` |
+| OpenShift target provider, namespaces, StorageClass | `backend/providers/ocp.md` |
+| Conversion CR (deep inspection / in-place) | `backend/api-types.md`, `backend/architecture.md` |
+| Plan validation, conditions, lifecycle | `backend/plans/plan-controller.md` |
+| Provider adapters, Builder/Client interfaces | `backend/plans/plan-adapters.md` |
+| Migration phases, itineraries, disk transfer, KubeVirt | `backend/plans/migration-pipeline.md` |
+| VM scheduling, concurrency, MaxInFlight | `backend/plans/scheduler.md` |
+| NetworkMap validation, source/target mapping | `backend/mappings/network-map.md` |
+| StorageMap, offload plugins, vendor integrations | `backend/mappings/storage-map.md` |
+| Admission webhooks (validating + mutating) | `backend/infrastructure/webhooks.md` |
+| Inventory REST API endpoints, per-provider routes | `backend/infrastructure/rest-api.md` |
+| virt-v2v conversion, inspection, customization | `backend/infrastructure/virt-v2v.md` |
+| Condition framework, inventory containers, lib/ | `backend/infrastructure/shared-libraries.md` |
+| Prometheus metrics, monitoring | `backend/infrastructure/monitoring.md` |
+| ESXi host controller | `backend/infrastructure/host-controller.md` |
+| Pre/post migration hooks | `backend/infrastructure/hook-controller.md` |
+| Operator deployment, feature flags, images | `backend/operator/operator.md` |
 
 ---
 

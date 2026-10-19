@@ -114,7 +114,7 @@ Implement these recommendations?
    git commit -m "Resolves: MTV-XXXX | Brief description of the change"
    ```
 
-3. Create PR description using the template from `pr-preparation.mdc`
+3. Create PR description using the template from `pr-preparation.md`
 
 ---
 

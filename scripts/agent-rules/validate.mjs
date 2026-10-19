@@ -8,11 +8,14 @@ import {
   CANONICAL_RULES_DIR,
   CURSOR_RULES_DIR,
   REPO_ROOT,
+  generateCursorRules,
   loadCanonicalRules,
   parseRule,
   renderCursorWrapper,
 } from './generate.mjs';
-import { selectRules } from '../../.agents/skills/forklift-rules/scripts/select-rules.mjs';
+import { selectRules } from './select-rules.mjs';
+
+const CANONICAL_MDC_REFERENCE = /\.mdc(?:[`'")\s]|$)/u;
 
 const gitignoreMatcher = ignore().add(fs.readFileSync(path.join(REPO_ROOT, '.gitignore'), 'utf8'));
 
@@ -56,7 +59,11 @@ const checkRuleFiles = () => {
   assert.deepEqual(manifestRulePaths, canonicalRulePaths, 'Manifest canonical paths do not match discovered rules');
   assert.equal(new Set(manifestWrapperPaths).size, manifestWrapperPaths.length, 'Duplicate manifest wrapper paths');
   assert.deepEqual(manifestWrapperPaths, actualWrapperPaths, 'Manifest wrapper paths do not match discovered wrappers');
-  assert.equal(manifest.rules.length, 52, 'Migration manifest should contain the 52 original rules');
+  assert.equal(
+    manifest.rules.length,
+    canonicalRulePaths.length,
+    'Migration manifest rule count must match discovered canonical rules',
+  );
 
   assert.equal(actualWrapperPaths.length, rules.length, 'Cursor wrapper count does not match canonical rule count');
 
@@ -136,7 +143,27 @@ const checkSelectorCases = (rules) => {
   assert.deepEqual(noFiles.always.map(({ relativePath }) => relativePath), ['project-context.md']);
   assert.ok(noFiles.descriptionCandidates.some(({ relativePath }) => relativePath === 'backend/providers/ocp.md'));
   assert.equal(noFiles.matched.length, 0, 'No path-scoped rules should load without paths');
+  const workflowRule = getByPath('workflows/feature-development.md');
+  if (workflowRule) {
+    const workflowResult = selectRules(rules, []);
+    assert.ok(
+      workflowResult.descriptionCandidates.some(({ relativePath }) => relativePath === workflowRule.relativePath),
+      'feature-development should be a description-based candidate without file paths',
+    );
+  }
   pass('tested positive and negative path cases for all six glob rules');
+};
+
+const checkCanonicalRuleReferences = (rules) => {
+  const failures = [];
+  for (const rule of rules) {
+    const content = fs.readFileSync(rule.absolutePath, 'utf8');
+    if (CANONICAL_MDC_REFERENCE.test(content)) {
+      failures.push(rule.relativePath);
+    }
+  }
+  assert.equal(failures.length, 0, `Canonical rules must not reference .mdc wrappers:\n${failures.join('\n')}`);
+  pass('canonical rules contain no .mdc wrapper references');
 };
 
 const walkSkills = (skillsRoot) => {
@@ -162,6 +189,11 @@ const walkSkills = (skillsRoot) => {
           target = fs.realpathSync(absolutePath);
         } catch {
           fail(`Broken skill symlink: ${path.relative(REPO_ROOT, absolutePath)}`);
+          continue;
+        }
+        const relativeTarget = path.relative(REPO_ROOT, target);
+        if (relativeTarget.startsWith('..')) {
+          fail(`Skill symlink escapes repository: ${path.relative(REPO_ROOT, absolutePath)}`);
           continue;
         }
         if (fs.statSync(target).isDirectory()) visit(target);
@@ -334,7 +366,10 @@ const checkCodexFiles = () => {
 
 const main = () => {
   const rules = checkRuleFiles();
+  checkCanonicalRuleReferences(rules);
   checkSelectorCases(rules);
+  generateCursorRules({ check: true });
+  pass('generate.mjs --check: Cursor wrappers match canonical frontmatter');
   checkSkills();
   checkCodexFiles();
   console.log(report.join('\n'));

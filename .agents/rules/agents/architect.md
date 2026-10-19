@@ -30,12 +30,12 @@ The agent loads the relevant knowledge files, traces the component tree, and ret
 ### Bug Investigation
 > "Blast radius: the TableView filter is broken"
 
-The agent loads `shared-components.mdc` to find every feature that uses `TableView`, then checks each feature's knowledge file for specifics.
+The agent loads `shared-components.md` to find every feature that uses `TableView`, then checks each feature's knowledge file for specifics.
 
 ### Change Impact Analysis
 > "Component map for the Plan create wizard"
 
-The agent loads `plans.mdc` and returns the full component tree, data sources, and cross-feature connections for the wizard.
+The agent loads `plans.md` and returns the full component tree, data sources, and cross-feature connections for the wizard.
 
 ---
 
@@ -55,7 +55,7 @@ Load the relevant knowledge file(s) based on the topic:
 | Backend provider controller behavior | `.agents/rules/backend/providers/*.md` |
 | Backend plan controller and migration pipeline | `.agents/rules/backend/plans/*.md` |
 
-**Always load `shared-components.mdc`** alongside any feature file -- shared component changes have the widest blast radius.
+**Always load `shared-components.md`** alongside any feature file -- shared component changes have the widest blast radius.
 
 ---
 
@@ -65,7 +65,7 @@ When analyzing a change, work through this checklist:
 
 1. **Identify the primary component(s)** being changed
 2. **Check the feature knowledge file** for the component tree and data sources
-3. **Check `shared-components.mdc`** for the "used by" index of any shared components involved
+3. **Check `shared-components.md`** for the "used by" index of any shared components involved
 4. **Trace cross-feature connections** -- does this feature reference or get referenced by another?
 5. **Check data sources** -- if a hook or K8s watch changes, which components consume it?
 6. **List all affected files** with their role (page, component, hook, utility, test, style)
@@ -79,4 +79,4 @@ To regenerate the knowledge files from current source code, use the Frontend Ana
 
 > "Refresh frontend knowledge files"
 
-This runs parallel analysis agents across the codebase and updates all `.mdc` files under `.agents/rules/frontend/`.
+This runs parallel analysis agents across the codebase and updates all `.md` files under `.agents/rules/frontend/`.

@@ -85,7 +85,7 @@ I will:
 ## 4. Phase 3: Implement
 
 ### Create Components
-Following `new-component.mdc` workflow:
+Following `new-component.md` workflow:
 - Proper folder structure
 - TypeScript types (using `type`, not `interface`)
 - SCSS styles with BEM
@@ -124,7 +124,7 @@ Following `new-component.mdc` workflow:
 ```
 "Test my changes in the browser"
 ```
-Using Playwright MCP (see `playwright-testing.mdc`):
+Using Playwright MCP (see `playwright-testing.md`):
 1. Navigate to the affected page
 2. Verify new functionality
 3. Check loading/error states
@@ -142,7 +142,7 @@ npm run lint && npm test
 ```
 "Review my changes"
 ```
-Using `team-review.mdc`:
+Using `team-review.md`:
 - **Developer**: Code quality, patterns
 - **UX**: Accessibility, states
 - **QE**: Edge cases, test coverage
@@ -162,7 +162,7 @@ npm run lint && npm test && npm run i18n
 ```
 
 ### Create PR
-Following `pr-preparation.mdc`:
+Following `pr-preparation.md`:
 - Descriptive title
 - Complete description with Jira link
 - Demo screenshots/video
@@ -225,12 +225,12 @@ Following `pr-preparation.mdc`:
 
 ### Rules Applied
 - **AGENTS.md**: Project coding standards
-- **team-review.mdc**: Multi-perspective review
-- **ticket-workflow.mdc**: Agent tracking for tickets
-- **pr-preparation.mdc**: PR checklist
+- **team-review.md**: Multi-perspective review
+- **ticket-workflow.md**: Agent tracking for tickets
+- **pr-preparation.md**: PR checklist
 
 ### Workflows Referenced
-- `new-component.mdc`: Creating components
-- `debugging.mdc`: When issues arise
-- `jira-workflow.mdc`: Jira operations
-- `playwright-testing.mdc`: Interactive testing
+- `new-component.md`: Creating components
+- `debugging.md`: When issues arise
+- `jira-workflow.md`: Jira operations
+- `playwright-testing.md`: Interactive testing
