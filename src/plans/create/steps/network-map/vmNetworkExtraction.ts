@@ -26,8 +26,14 @@ const toNetworksOrProfiles = (vm: ProviderVirtualMachine): string[] => {
       return vm?.nics?.map((nic) => nic?.profile) ?? [];
     }
     case PROVIDER_TYPES.openshift: {
+      const vmNamespace = vm?.object?.metadata?.namespace;
+
       return (vm?.object?.spec?.template?.spec?.networks ?? []).reduce((acc: string[], network) => {
-        const networkName = network?.multus?.networkName ?? network?.name;
+        const multusNetworkName = network?.multus?.networkName;
+        const networkName =
+          multusNetworkName && vmNamespace && !multusNetworkName.includes('/')
+            ? `${vmNamespace}/${multusNetworkName}`
+            : (multusNetworkName ?? network?.name);
 
         if (network?.pod) {
           acc.push(getDefaultNetworkLabel());

@@ -1,8 +1,41 @@
+import { PROVIDER_TYPES } from '@utils/providers/constants';
+
 import { getSourceNetworkValues } from '../utils';
 
 import { makeHypervVm } from './vlanUtils.fixtures';
 
 describe('getSourceNetworkValues', () => {
+  it('categorizes an unqualified OpenShift Multus network in the VM namespace as used', () => {
+    const availableNetworks = [
+      {
+        id: 'nad-id',
+        name: 'vlan16',
+        namespace: 'utv00',
+        providerType: PROVIDER_TYPES.openshift,
+      },
+    ] as never[];
+    const vms = [
+      {
+        providerType: PROVIDER_TYPES.openshift,
+        object: {
+          metadata: { namespace: 'utv00' },
+          spec: {
+            template: {
+              spec: {
+                networks: [{ name: 'vlan16', multus: { networkName: 'vlan16' } }],
+              },
+            },
+          },
+        },
+      },
+    ] as never[];
+
+    const result = getSourceNetworkValues(availableNetworks, vms, []);
+
+    expect(result.used).toEqual([{ id: 'nad-id', name: 'utv00/vlan16' }]);
+    expect(result.other).toEqual([]);
+  });
+
   it('excludes plain network from used/other when VLAN-qualified entries exist', () => {
     const availableNetworks = [
       { id: 'net-a', name: 'Lab-External' },
