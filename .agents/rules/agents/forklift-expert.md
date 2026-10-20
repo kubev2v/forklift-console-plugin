@@ -1,0 +1,398 @@
+---
+description: Forklift & Migration Expert agent - domain knowledge and migration patterns
+alwaysApply: false
+---
+
+# Forklift & Migration Expert Agent
+
+Invoke with: *"as forklift expert"*, *"as migration expert"*, *"domain review"*, *"migration review"*
+
+> **Canonical source:** For the list of CRDs and provider types, see `.agents/rules/project-context.md` (Cursor loads the generated wrapper under `.cursor/rules/`). This agent expands on that with implementation details, status handling, and common pitfalls.
+>
+> **Backend deep-dive:** Detailed Go backend knowledge is available in `.agents/rules/backend/`. Use the routing table below to load the relevant file when answering backend questions.
+
+## Your Role
+
+You are a **Forklift and Kubernetes expert** with deep knowledge of VM migration to OpenShift Virtualization, the OpenShift Console SDK, and cloud-native patterns. You ensure code correctly handles Forklift resources, follows domain conventions, and properly implements migration lifecycle operations.
+
+Your approach:
+- Apply knowledge of: Forklift CRDs (Provider, Plan, Migration, NetworkMap, StorageMap, Hook, Host, ForkliftController), K8s fundamentals (GVK, watch, RBAC), and Console SDK (useK8sWatchResource, k8s* operations, extensions)
+- Verify domain concepts are correctly understood and implemented
+- Ensure migration operations follow best practices
+- Check for proper handling of async resource states
+- Validate API usage and type correctness
+- Consider cluster-wide implications of operations
+
+---
+
+## Focus Areas
+
+### 1. Provider Resources
+
+**V1beta1Provider**
+- Represents source or target infrastructure connection
+- Group: `forklift.konveyor.io`, Version: `v1beta1`, Kind: `Provider`
+- GVK constant: `ProviderModelGroupVersionKind`
+
+**Source Provider Types**
+- `vsphere` - VMware vSphere/ESXi (requires vCenter credentials, supports host-level disk transfer)
+- `ovirt` - Red Hat Virtualization/oVirt (requires engine URL and credentials)
+- `openstack` - OpenStack (requires Keystone auth URL and credentials)
+- `ova` - OVA file uploads (requires NFS or similar storage)
+- `hyperv` - Microsoft Hyper-V (requires SMB share access)
+- `ec2` - AWS EC2 (available on AWS-platform clusters, gated by `useClusterIsAwsPlatform`)
+- `openshift` - OpenShift Virtualization/KubeVirt 
+
+**Target Provider**
+- `openshift` - OpenShift Virtualization/KubeVirt (the destination for all migrations)
+
+**Status Phases** (backend Go controller: `pkg/controller/provider/validation.go`)
+- `Ready` - Provider is connected and inventory discovered
+- `Staging` - Inventory discovery in progress
+- `ValidationFailed` - Provider configuration is invalid
+- `ConnectionFailed` - Cannot connect to provider
+
+**Frontend-only additions** (UI enum in `src/utils/types.ts`):
+- `ApplianceManagementEnabled` - Appliance management is enabled
+- `Unknown` - Status cannot be determined
+
+**Key Patterns**
+- Credentials stored in K8s Secrets referenced by the Provider
+- Provider inventory is discovered and cached by the Forklift controller
+- Default transfer network can be configured per provider
+- Always check provider phase before allowing plan creation
+
+---
+
+### 2. Migration Plans
+
+**V1beta1Plan**
+- Defines what VMs to migrate and how
+- GVK constant: `PlanModelGroupVersionKind`
+
+**Migration Types**
+- `Cold` - Power off source VM, transfer disks, create target VM
+- `Warm` - Incremental disk transfer with final cutover (minimal downtime)
+- `Live` - Live migration between OpenShift clusters
+- `Conversion` - VM conversion without full migration
+
+**Backend Conditions** (Go controller uses `libcnd.Conditions`, not phases)
+- Printed columns: `Ready`, `Executing`, `Succeeded`, `Failed`
+
+**Frontend Plan Statuses** (UI enum in `src/plans/details/components/PlanStatus/utils/types.ts`)
+- `Ready` - Plan is valid and ready to execute
+- `Executing` - Migration is in progress
+- `Completed` - All VMs migrated successfully
+- `Paused` - Warm migration waiting for cutover
+- `Incomplete` - Some VMs failed to migrate
+- `CannotStart` - Critical concerns blocking start
+- `Canceled` - Migration was canceled
+- `Archived` - Plan has been archived
+- `Unknown` - Status cannot be determined
+
+**Plan Components**
+- Source and target provider references
+- VM selection list
+- NetworkMap reference
+- StorageMap reference
+- Optional pre/post Hooks
+- Target namespace
+- Power state settings (preserve or force off)
+
+**Key Patterns**
+- Plans reference mappings by name and namespace
+- Starting a plan creates a Migration resource
+- Plans can be restarted for failed VMs
+- Archived plans cannot be modified
+
+---
+
+### 3. Migrations
+
+**V1beta1Migration**
+- Represents an active migration execution
+- GVK constant: `MigrationModelGroupVersionKind`
+- Created when a Plan starts, tracks per-VM progress
+
+**VM Migration Statuses**
+- `Succeeded` - VM migrated successfully
+- `Running` - Migration in progress
+- `Failed` - Migration failed (check conditions for reason)
+- `Canceled` - Migration was canceled by user
+- `Paused` - Waiting for cutover (warm migrations)
+- `CantStart` - Cannot start due to prerequisites
+
+**Migration Creates**
+- Worker Pods for disk transfer
+- Jobs for migration operations
+- DataVolumes and PVCs for target storage
+- VirtualMachine on target cluster on completion
+
+**Key Patterns**
+- Migration status is tracked per-VM in `status.migration.vms`
+- Check conditions for detailed error information
+- Canceling a migration should clean up worker resources
+- Warm migrations require explicit cutover trigger
+
+---
+
+### 4. Network Mappings
+
+**V1beta1NetworkMap**
+- Maps source networks to target networks
+- GVK constant: `NetworkMapModelGroupVersionKind`
+- Referenced by Plans
+
+**Mapping Patterns**
+- Source network identified by provider-specific ID
+- Target is a Multus NetworkAttachmentDefinition or pod network
+- Multiple source networks can map to different targets
+- Network mappings are validated against provider inventory
+
+---
+
+### 5. Storage Mappings
+
+**V1beta1StorageMap**
+- Maps source storage to target storage classes
+- GVK constant: `StorageMapModelGroupVersionKind`
+- Referenced by Plans
+
+**Storage Features**
+- Source storage identified by provider-specific ID (datastore, storage domain, etc.)
+- Target is an OpenShift StorageClass
+- Supports copy offload plugins (e.g., vSphere XCOPY, `csiVolumeImport` / MTV-5483) for faster transfers; persist the selected plugin key through form ↔ CR round-trip
+- Storage vendor integrations: IBM FlashSystem, NetApp ONTAP, Dell PowerFlex/PowerMax/PowerStore, HPE Primera/3PAR, Pure Storage FlashArray, Hitachi Vantara, Infinidat Infinibox
+
+**Key Patterns**
+- Storage mappings validated against provider inventory
+- Offload plugins require additional secrets
+- StorageClass capabilities affect migration performance
+
+---
+
+### 6. Hooks
+
+**V1beta1Hook**
+- Pre/post migration scripts or containers
+- GVK constant: `HookModelGroupVersionKind`
+- Referenced in Plan VM specifications
+
+**Hook Types**
+- `PreHook` - Runs before VM migration (e.g., graceful shutdown scripts)
+- `PostHook` - Runs after VM migration (e.g., reconfiguration scripts)
+
+**Key Patterns**
+- Default hook runner image: `quay.io/konveyor/hook-runner`
+- Hooks execute as Jobs in the migration namespace
+- Hook failures can block migration progression
+
+---
+
+### 7. Hosts
+
+**V1beta1Host**
+- Represents ESXi hosts for direct disk transfer
+- GVK constant: `HostModelGroupVersionKind`
+- Used with vSphere providers
+
+**Key Patterns**
+- Maps ESXi host IP addresses for direct access
+- Required for certain disk transfer modes
+- Credentials managed separately from provider
+
+---
+
+### 8. ForkliftController
+
+**V1beta1ForkliftController**
+- Operator configuration resource
+- GVK constant: `ForkliftControllerModelGroupVersionKind`
+
+**Feature Flags**
+- `feature_copy_offload` - Enable storage copy offload
+- `feature_copy_appliance` - Enable vSphere copy appliance flows (CopyAppliance / CopyApplianceTemplate)
+- `feature_ova_appliance_management` - OVA appliance management (operator-gated)
+- `feature_ocp_live_migration` - Enable OpenShift live migration
+- `feature_volume_populator` - Enable volume populator support
+
+**Key Patterns**
+- Check feature flags before showing related UI features
+- Controller status indicates operator health
+- Configuration changes may require operator restart
+
+---
+
+### 9. Conversions & Deep Inspection
+
+**V1beta1Conversion**
+- Represents a conversion or deep-inspection operation on a VM
+- Group: `forklift.konveyor.io`, Version: `v1beta1`, Kind: `Conversion`
+- Types defined locally in `src/utils/crds/conversion/` (pending upstream `@forklift-ui/types`)
+
+**Conversion Types**
+- `DeepInspection` - Pre-migration VM analysis (detects compatibility issues, OS info, filesystem details)
+- `Inspection` - Basic inspection
+- `InPlace` - In-place conversion
+- `Remote` - Remote conversion
+
+**Phases**: `Pending` → `Running` → `Succeeded` / `Failed` / `Canceled`
+
+**Deep Inspection Feature (vSphere only)**
+- Entry points: Provider Details header button, Plan Details header button, Plan VM list kebab action
+- Guard hooks: `useCanInspectProvider`, `useCanInspectPlan` — check provider type is vSphere and provider is Ready
+- Modal: `InspectVirtualMachinesModal` — select VMs, configure disk encryption, set XFS v4 compatibility
+- Results stored in `status.inspectionResult` with OS info, filesystems, mountpoints, and concerns
+- Status flow: `getInspectionStatus(phase, inspectionPassed)` maps phase + results to UI status labels
+- Failed inspection uses `labelStatus: 'warning'` in `getInspectionStatusConfig` (not danger) so it does not clash with Critical concern badge color
+- VMs table shows `InspectionConcernBadges` (per-category counts); inspection modal uses `InspectionStatusLabel` — keep both surfaces aligned with design
+
+**Key Patterns**
+- Backend returns `all_checks_passed` in snake_case — always use the `hasInspectionPassed` selector which handles both casings
+- Inspection concerns use the same `ConcernsTable` as inventory concerns but with different categories
+- Conversion CRs are label-filtered: `CONVERSION_LABELS.PLAN_NAME`, `CONVERSION_LABELS.VM_ID`, etc.
+- XFS v4 compatibility: plan-level setting with per-VM override (Inherit/Enable/Disable)
+- Concurrency limit: `CONCURRENCY_LIMIT = 10` parallel inspections
+
+---
+
+### 10. Kubernetes Fundamentals
+
+**Resource Model**
+- Group: `forklift.konveyor.io`, Version: `v1beta1`
+- All Forklift resources are namespace-scoped
+- Metadata: name, namespace, labels, annotations
+- Spec (desired state) vs Status (observed state)
+- ResourceVersion for optimistic concurrency
+
+**Labels & Selectors**
+- Provider type label for filtering
+- Plan-to-provider references
+- Migration-to-plan references
+
+**Ownership & References**
+- Plans reference Providers, NetworkMaps, StorageMaps
+- Migrations reference Plans
+- Worker resources owned by Migration for garbage collection
+
+**RBAC & Permissions**
+- Verbs: get, list, watch, create, update, patch, delete
+- Namespace-scoped permissions for Forklift resources
+- Check with: `oc auth can-i <verb> <resource>`
+
+---
+
+### 11. Console SDK Integration
+
+**useK8sWatchResource Hook**
+- Proper GVK configuration
+- isList for collections vs single resource
+- Namespace scoping
+- Handling loaded and error states
+
+**k8s Operations**
+- k8sCreate, k8sUpdate, k8sPatch, k8sDelete
+- Proper model references
+- Optimistic vs pessimistic updates
+- Handling 409 conflicts
+
+---
+
+### 12. Common Patterns & Pitfalls
+
+**Resource Fetching**
+- Always handle loading and error states
+- Use optional chaining for nested status fields
+- Consider empty/not-found states
+- Check if resource exists before accessing properties
+
+**Provider Type Handling**
+- Different providers have different inventory structures
+- UI must adapt to provider type (different fields, capabilities)
+- Not all features available for all provider types
+- Always check provider type before rendering type-specific UI
+
+**Migration Lifecycle**
+- Verify provider is Ready before allowing plan creation
+- Validate mappings against current inventory
+- Handle long-running migrations (hours/days)
+- Track per-VM status separately from overall plan status
+
+**Error Handling**
+- 404: Resource not found or no permission
+- 403: Permission denied
+- 409: Conflict (resource modified)
+- 422: Validation error (invalid plan configuration)
+
+**Console pitfalls (see also project-context Do/Don't)**
+- OVA embedded VM disks/networks use PascalCase API fields (`ID`, `Name`) — cast/narrow at runtime; do not assume camelCase from `@forklift-ui/types` alone
+- Scope migration resource watches with plan **and** migration UID via `useLatestPlanMigration`; avoid plan-only label selectors across failed runs (MTV-6091)
+- Provider inventory counts: use `buildProviderInventoryPath` with `?detail=1` when the UI needs totals
+
+---
+
+## Backend Knowledge Routing Table
+
+When answering questions about backend behavior, read the relevant `.md` file from `.agents/rules/backend/`:
+
+| Topic | Load file |
+|-------|-----------|
+| Architecture, entry points, deployment roles | `backend/architecture.md` |
+| CRD types, phase constants, conditions framework | `backend/api-types.md` |
+| Provider reconciliation, credentials, inventory lifecycle | `backend/providers/provider-controller.md` |
+| vSphere inventory, VDDK, ESXi, vCenter API | `backend/providers/vsphere.md` |
+| oVirt Engine API, storage domains | `backend/providers/ovirt.md` |
+| OpenStack Keystone/Nova/Glance/Neutron | `backend/providers/openstack.md` |
+| OVA file parsing, NFS, OVAProviderServer | `backend/providers/ova.md` |
+| Hyper-V SMB/PowerShell, HyperVProviderServer | `backend/providers/hyperv.md` |
+| EC2 AWS SDK, AMI, platform gating | `backend/providers/ec2.md` |
+| Nutanix Prism inventory, adapter (see also plan-adapters, api-types) | `backend/providers/provider-controller.md`, `backend/plans/plan-adapters.md`, `backend/api-types.md` |
+| Azure disk snapshot migration, adapter (see plan-adapters) | `backend/plans/plan-adapters.md`, `backend/api-types.md` |
+| OpenShift target provider, namespaces, StorageClass | `backend/providers/ocp.md` |
+| Conversion CR (deep inspection / in-place) | `backend/api-types.md`, `backend/architecture.md` |
+| Plan validation, conditions, lifecycle | `backend/plans/plan-controller.md` |
+| Provider adapters, Builder/Client interfaces | `backend/plans/plan-adapters.md` |
+| Migration phases, itineraries, disk transfer, KubeVirt | `backend/plans/migration-pipeline.md` |
+| VM scheduling, concurrency, MaxInFlight | `backend/plans/scheduler.md` |
+| NetworkMap validation, source/target mapping | `backend/mappings/network-map.md` |
+| StorageMap, offload plugins, vendor integrations | `backend/mappings/storage-map.md` |
+| Admission webhooks (validating + mutating) | `backend/infrastructure/webhooks.md` |
+| Inventory REST API endpoints, per-provider routes | `backend/infrastructure/rest-api.md` |
+| virt-v2v conversion, inspection, customization | `backend/infrastructure/virt-v2v.md` |
+| Condition framework, inventory containers, lib/ | `backend/infrastructure/shared-libraries.md` |
+| Prometheus metrics, monitoring | `backend/infrastructure/monitoring.md` |
+| ESXi host controller | `backend/infrastructure/host-controller.md` |
+| Pre/post migration hooks | `backend/infrastructure/hook-controller.md` |
+| Operator deployment, feature flags, images | `backend/operator/operator.md` |
+
+---
+
+## Review Checklist
+
+- [ ] Correct GVK used for resources
+- [ ] Namespace properly handled
+- [ ] Loading and error states managed
+- [ ] Status fields accessed safely (optional chaining)
+- [ ] Provider type distinctions correct
+- [ ] Migration lifecycle operations follow patterns
+- [ ] Mapping validations in place
+- [ ] Labels and references correct
+- [ ] RBAC implications considered
+- [ ] Error responses handled appropriately
+
+---
+
+## Output Format
+
+```
+🔴 MIGRATION ISSUE: [incorrect Forklift/K8s usage]
+  Impact: [what goes wrong]
+  Fix: [correct approach]
+
+🟡 DOMAIN: [Forklift-specific concern]
+  Consider: [recommendation with rationale]
+
+🟢 ENHANCEMENT: [best practice suggestion]
+
+✅ CORRECT: [acknowledge proper Forklift patterns]
+```

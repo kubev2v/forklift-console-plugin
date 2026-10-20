@@ -1,6 +1,10 @@
 # AI Assistant Guidelines for Forklift Console Plugin
 
-> **Project overview, tech stack, and domain knowledge:** See `.cursor/rules/project-context.mdc` for Forklift-specific context (CRDs, providers, migration flow, architecture). This file focuses on coding standards and conventions.
+> **Project overview, tech stack, and domain knowledge:** See `.agents/rules/project-context.md` for Forklift-specific context (CRDs, providers, migration flow, architecture). This file focuses on coding standards and conventions.
+
+## Codex-only rule routing
+
+When using Codex in this repository, use `$forklift-rules` to select and read the applicable canonical rules under `.agents/rules/` before implementation, review, design, or Forklift-specific recommendations. Cursor continues to use its native `.cursor/rules/*.mdc` triggers; this routing instruction does not replace them.
 
 ---
 
@@ -507,9 +511,9 @@ npm run i18n
 Translation files are located in `locales/en/plugin__forklift-console-plugin.json`.
 
 For Memsource upload/download, use the shared skill
-`.cursor/skills/i18n-memsource/SKILL.md`. Optional per-developer CLI/auth setup:
+`.agents/skills/i18n-memsource/SKILL.md`. Optional per-developer CLI/auth setup:
 copy `personal-setup.example.md` to gitignored
-`.cursor/skills/personal-i18n-memsource/SETUP.md`.
+`.agents/skills/personal-i18n-memsource/SETUP.md`.
 
 ---
 
@@ -723,16 +727,31 @@ This avoids re-implementation work and keeps knip from flagging the file as unus
 
 ## Dev-Helper Skill
 
-The [dev-helper](https://github.com/avivtur/dev-helper) Cursor AI skill automates
-the full ticket lifecycle from Jira triage to merged PR. Install it once:
+The [dev-helper](https://github.com/avivtur/dev-helper) skill automates the full
+ticket lifecycle from Jira triage to merged PR. It is **not** committed in this
+repo — clone it locally (PR monitor is phase 11 / `skills/pr-monitor` inside that
+clone). Upstream: [github.com/avivtur/dev-helper](https://github.com/avivtur/dev-helper).
 
 ```bash
-git clone https://github.com/avivtur/dev-helper .cursor/skills/dev-helper
-cp .cursor/skills/dev-helper/examples/config.full.json .cursor/skills/dev-helper/dev-helper.config.json
-cp -r .cursor/skills/dev-helper/examples/phases-rules.example/ .cursor/skills/dev-helper/phases-rules/
+git clone https://github.com/avivtur/dev-helper .agents/skills/dev-helper
+cp .agents/skills/dev-helper/examples/config.full.json .agents/skills/dev-helper/dev-helper.config.json
+cp -r .agents/skills/dev-helper/examples/phases-rules.example/ .agents/skills/dev-helper/phases-rules/
 ```
 
-See the [dev-helper SETUP.md](https://github.com/avivtur/dev-helper/blob/main/SETUP.md) for full instructions.
+### Shared skills catalog (tracked in this repo)
+
+| Skill | When to use | First step |
+|-------|-------------|------------|
+| `forklift-rules` | Before implementation/review — select canonical rules | `node scripts/agent-rules/select-rules.mjs --files …` |
+| `reviewer` | Multi-perspective PR review | `.agents/skills/reviewer/scripts/gather-context.sh <PR>` |
+| `i18n-memsource` | Upload/download translations | Read skill `SKILL.md` |
+| `types-update` | Bump `@forklift-ui/types` | Read skill `SKILL.md` |
+| `waiting-for-build` | Sprint build queue | Read skill `SKILL.md` |
+| `bug-report` | File MTV UI bugs in Jira | Read skill `SKILL.md` |
+| `cve-remediation` | CVE fix workflow | Read skill `SKILL.md` |
+| `backend-analyzer` / `frontend-analyzer` | Refresh `.agents/rules` knowledge | Read skill `SKILL.md` |
+
+**Local-only (gitignored):** `dev-helper`, `pr-monitor` (sub-skill under dev-helper).
 
 ---
 

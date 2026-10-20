@@ -6,51 +6,38 @@ See [AGENTS.md](AGENTS.md) for comprehensive coding standards, best practices, a
 
 ## Project Context & Domain Knowledge
 
-Additional specialized knowledge is available in `.cursor/rules/`:
+**Canonical rule bodies** live under `.agents/rules/`. **Cursor** loads thin generated wrappers from `.cursor/rules/*.mdc` (`npm run agent-rules:generate`). **Codex** uses `.codex/` plus the `forklift-rules` skill to select canonical `.md` files.
 
 ### Core Context
-- **Project Context:** `.cursor/rules/project-context.mdc` - Forklift domain, CRDs, migration flow, architecture
-- **Code Style:** `.cursor/rules/styles.mdc` - SCSS conventions and PatternFly variables
+- **Project Context:** `.agents/rules/project-context.md`
+- **Code Style:** `.agents/rules/styles.md`
 
 ### Specialized Agents (Load when needed)
-- **Forklift Expert:** `.cursor/rules/agents/forklift-expert.mdc` - Deep domain knowledge, migration patterns
-- **Developer:** `.cursor/rules/agents/developer.mdc` - Development best practices
-- **QE Agent:** `.cursor/rules/agents/qe-agent.mdc` - Testing and quality patterns
-- **UX Reviewer:** `.cursor/rules/agents/ux-reviewer.mdc` - UI/UX guidelines
-- **Security Reviewer:** `.cursor/rules/agents/security-reviewer.mdc` - Security review checklist
+- **Forklift Expert:** `.agents/rules/agents/forklift-expert.md`
+- **Developer:** `.agents/rules/agents/developer.md`
+- **QE Agent:** `.agents/rules/agents/qe-agent.md`
+- **UX Reviewer:** `.agents/rules/agents/ux-reviewer.md`
+- **Security Reviewer:** `.agents/rules/agents/security-reviewer.md`
 
 ### Backend Knowledge (For backend questions)
-See routing table in `.cursor/rules/agents/forklift-expert.mdc` for complete backend file reference.
-Key files:
-- Architecture: `.cursor/rules/backend/architecture.mdc`
-- API Types: `.cursor/rules/backend/api-types.mdc`
-- Providers: `.cursor/rules/backend/providers/*.mdc`
-- Plans: `.cursor/rules/backend/plans/*.mdc`
+See routing table in `.agents/rules/agents/forklift-expert.md`. Key files under `.agents/rules/backend/`.
 
 ### Workflows (Reference for process questions)
-- PR Preparation: `.cursor/rules/workflows/pr-preparation.mdc`
-- Feature Development: `.cursor/rules/workflows/feature-development.mdc`
-- Debugging: `.cursor/rules/workflows/debugging.mdc`
-- Playwright Testing: `.cursor/rules/workflows/playwright-testing.mdc`
-- Jira Workflow: `.cursor/rules/workflows/jira-workflow.mdc`
-- Ticket Workflow: `.cursor/rules/workflows/ticket-workflow.mdc`
+Under `.agents/rules/workflows/` (e.g. `pr-preparation.md`, `feature-development.md`, `playwright-testing.md`).
 
 ### Language-Specific Rules (Load based on file type)
-- TypeScript: `.cursor/rules/typescript.mdc` (glob: `**/*.ts`)
-- React Components: `.cursor/rules/react-components.mdc` (glob: `**/*.tsx`)
-- Testing: `.cursor/rules/testing.mdc` (glob: `**/*.test.ts`, `**/*.test.tsx`)
-- i18n: `.cursor/rules/i18n.mdc` - Translation utilities and patterns
+Under `.agents/rules/` (`typescript.md`, `react-components.md`, `testing.md`, `i18n.md`).
 
 ## Workflows & Skills
 
-Cursor skills in `.cursor/skills/` contain executable workflows.
+Shared skills live in `.agents/skills/` (Cursor may symlink or copy from `.cursor/skills/`).
 
 ### Team/Shared Skills (tracked in Git)
-- **i18n/Translation:** `.cursor/skills/i18n-memsource/SKILL.md` - Memsource upload/download workflow
-  - Optional personal overlay (gitignored): copy `personal-setup.example.md` → `.cursor/skills/personal-i18n-memsource/SETUP.md` for CLI path and auth
-- **Backend Analysis:** `.cursor/skills/backend-analyzer/SKILL.md` - Analyze Go backend codebase
-- **Type Updates:** `.cursor/skills/types-update/SKILL.md` - Update @forklift-ui/types
-- **Build Tracking:** `.cursor/skills/waiting-for-build/SKILL.md` - Automate QE sprint transition (Waiting for Build → ON_QA)
+- **i18n/Translation:** `.agents/skills/i18n-memsource/SKILL.md`
+- **Backend Analysis:** `.agents/skills/backend-analyzer/SKILL.md`
+- **Type Updates:** `.agents/skills/types-update/SKILL.md`
+- **Build Tracking:** `.agents/skills/waiting-for-build/SKILL.md`
+- **Rule routing (Codex):** `.agents/skills/forklift-rules/SKILL.md` — run `npm run agent-setup:validate` after rule/skill changes
 
 For full workflow details, read the relevant SKILL.md file.
 
@@ -58,14 +45,14 @@ For full workflow details, read the relevant SKILL.md file.
 
 **For Claude Code:**
 1. Always load `AGENTS.md` first for core standards
-2. Load `.cursor/rules/project-context.mdc` for Forklift domain knowledge
-3. Load specialized agent files when their expertise is needed (e.g., forklift-expert for migration questions)
-4. Load language-specific rules based on file globs
-5. Reference workflow files when user asks about processes (PR prep, debugging, etc.)
+2. Load `.agents/rules/project-context.md` for Forklift domain knowledge
+3. Edit canonical `.agents/rules/**/*.md` only; run `npm run agent-rules:generate` to refresh Cursor wrappers
+4. Load specialized agent files when their expertise is needed
+5. Reference workflow files under `.agents/rules/workflows/` for process questions
 6. Adapt skill workflows to Claude Code tools as needed
 
 **On-Demand Loading Pattern:**
-- User asks migration question → Read `.cursor/rules/agents/forklift-expert.mdc`
-- Working on SCSS → Read `.cursor/rules/styles.mdc`
-- Backend question about providers → Read `.cursor/rules/backend/providers/*.mdc`
-- Preparing a PR → Read `.cursor/rules/workflows/pr-preparation.mdc`
+- User asks migration question → Read `.agents/rules/agents/forklift-expert.md`
+- Working on SCSS → Read `.agents/rules/styles.md`
+- Backend question about providers → Read `.agents/rules/backend/providers/*.md`
+- Preparing a PR → Read `.agents/rules/workflows/pr-preparation.md`
