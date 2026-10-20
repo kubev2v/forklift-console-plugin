@@ -2,7 +2,6 @@ import type {
   OpenShiftNetworkAttachmentDefinition,
   ProviderVirtualMachine,
 } from '@forklift-ui/types';
-
 import { PROVIDER_TYPES } from '@utils/providers/constants';
 
 import { getSourceNetworkValues } from '../utils';
@@ -32,17 +31,24 @@ const makeOpenShiftVm = (
   networkName: string,
   multusNetworkName: string,
 ): ProviderVirtualMachine => ({
+  id: 'vm-id',
+  name: 'test-vm',
+  namespace,
   object: {
     metadata: { namespace },
     spec: {
       template: {
         spec: {
+          domain: { devices: {} },
           networks: [{ name: networkName, multus: { networkName: multusNetworkName } }],
         },
       },
     },
   },
   providerType: PROVIDER_TYPES.openshift,
+  selfLink: '',
+  uid: '',
+  version: '',
 });
 
 describe('getSourceNetworkValues', () => {
