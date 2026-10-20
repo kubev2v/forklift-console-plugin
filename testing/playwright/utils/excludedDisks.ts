@@ -63,6 +63,7 @@ export const clearAndRestoreExcludedDataDisk = async (
   await expect(modal.saveButton).toBeDisabled();
   await modal.diskCheckbox(EXCLUDED_DATA_DISK_BUS_ADDRESS).uncheck();
   await modal.saveButton.click();
+  await expect(modal.root).not.toBeVisible();
   await expect
     .poll(() => getExcludedDisks(resourceManager, planName), { timeout: PLAN_SPEC_TIMEOUT_MS })
     .toBeUndefined();
@@ -71,6 +72,7 @@ export const clearAndRestoreExcludedDataDisk = async (
   await modal.waitForDisks([BOOT_DISK_BUS_ADDRESS, EXCLUDED_DATA_DISK_BUS_ADDRESS]);
   await modal.diskCheckbox(EXCLUDED_DATA_DISK_BUS_ADDRESS).check();
   await modal.saveButton.click();
+  await expect(modal.root).not.toBeVisible();
   await expect
     .poll(() => getExcludedDisks(resourceManager, planName), { timeout: PLAN_SPEC_TIMEOUT_MS })
     .toEqual([EXCLUDED_DATA_DISK_BUS_ADDRESS]);
