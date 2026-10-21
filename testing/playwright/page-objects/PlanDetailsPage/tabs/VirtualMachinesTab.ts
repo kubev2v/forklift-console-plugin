@@ -1,22 +1,26 @@
 import { expect, type Locator, type Page } from '@playwright/test';
 
 import type { PlanTestData } from '../../../types/test-data';
+import { K8S_RECONCILE_TIMEOUT } from '../../../utils/resource-manager/constants';
 import { VirtualMachinesTable } from '../../common/VirtualMachinesTable';
 import { AddVirtualMachinesModal } from '../modals/AddVirtualMachinesModal';
 
 import { ConcernsHelpers } from './ConcernsHelpers';
+import { EditVmExcludeDisksModal } from './EditVmExcludeDisksModal';
 import { PlanVmInstanceTypeModal } from './PlanVmInstanceTypeModal';
 import { PostMigrationSetupHelpers } from './PostMigrationSetupHelpers';
 
 /** VirtualMachines tab for Plan Details page (flat grid, no folder hierarchy). */
 export class VirtualMachinesTab extends VirtualMachinesTable {
   readonly concerns: ConcernsHelpers;
+  readonly editVmExcludeDisksModal: EditVmExcludeDisksModal;
   readonly editVmInstanceTypeModal: PlanVmInstanceTypeModal;
   readonly postMigrationSetup: PostMigrationSetupHelpers;
 
   constructor(page: Page) {
     super(page, page.locator('main'));
     this.concerns = new ConcernsHelpers(page);
+    this.editVmExcludeDisksModal = new EditVmExcludeDisksModal(page);
     this.editVmInstanceTypeModal = new PlanVmInstanceTypeModal(page);
     this.postMigrationSetup = new PostMigrationSetupHelpers(page);
   }
@@ -174,6 +178,16 @@ export class VirtualMachinesTab extends VirtualMachinesTable {
     await this.page.locator('[data-test-id="horizontal-link-Virtual machines"]').click();
     await this.page.waitForURL((url) => url.toString().endsWith('/vms'));
     await this.table.waitForTableLoad();
+  }
+
+  async openExcludeDisksDialog(vmName: string): Promise<EditVmExcludeDisksModal> {
+    await this.dismissOpenModals();
+    await this.getVMActionsMenu(vmName).click();
+    const menuItem = this.page.getByTestId('edit-vm-exclude-disks-menu-item');
+    await expect(menuItem).not.toHaveClass(/pf-m-disabled/u, { timeout: K8S_RECONCILE_TIMEOUT });
+    await menuItem.click();
+    await this.editVmExcludeDisksModal.root.waitFor({ state: 'visible' });
+    return this.editVmExcludeDisksModal;
   }
 
   async openInstanceTypeDialog(vmName: string): Promise<void> {

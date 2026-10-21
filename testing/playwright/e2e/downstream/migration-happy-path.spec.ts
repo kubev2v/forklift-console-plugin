@@ -4,7 +4,7 @@ import { join } from 'path';
 import type { V1beta1Plan } from '@forklift-ui/types';
 import { expect, test } from '@playwright/test';
 
-import { EndpointType, ProviderType } from '../../types/enums';
+import { EndpointType, MigrationType, ProviderType } from '../../types/enums';
 
 const providersPath = join(__dirname, '../../../.providers.json');
 if (!existsSync(providersPath)) {
@@ -22,10 +22,21 @@ import { ProviderDetailsPage } from '../../page-objects/ProviderDetailsPage/Prov
 import {
   createPlanTestData,
   NetworkTargets,
+  type PlanTestData,
   type ProviderConfig,
   type ProviderData,
   SourceNetworks,
+  SourceStorages,
+  StorageClasses,
 } from '../../types/test-data';
+import {
+  clearAndRestoreExcludedDataDisk,
+  EXCLUDED_DATA_DISK_BUS_ADDRESS,
+  EXCLUDED_DISK_GUEST_BOOT_TIMEOUT_MS,
+  EXCLUDED_DISK_SOURCE_VM,
+  saveExcludedDataDisk,
+  verifyExcludedDiskTarget,
+} from '../../utils/excludedDisks';
 import {
   formatMigrationTimeoutDetail,
   getMigrationTimeoutUiStatus,
@@ -42,10 +53,18 @@ import {
 } from '../../utils/resource-manager/constants';
 import { ResourceManager } from '../../utils/resource-manager/ResourceManager';
 import { testLog } from '../../utils/testLog';
-import { CNV_4_21_0, V2_10_5, V2_12_0 } from '../../utils/version/constants';
-import { isVersionInStreams, requireCNVVersion, requireVersion } from '../../utils/version/version';
+import { CNV_4_21_0, V2_10_5, V2_12_0, V5_0_0 } from '../../utils/version/constants';
+import {
+  isCNVVersionAtLeast,
+  isVersionAtLeast,
+  isVersionInStreams,
+  requireCNVVersion,
+  requireVersion,
+} from '../../utils/version/version';
 
 const targetProjectName = `${HAPPY_PATH_TARGET_NAMESPACE_PREFIX}${Date.now()}`;
+const EXCLUDED_DISK_EDIT_TIMEOUT_MS = PLAN_READY_TIMEOUT + 5 * 60_000;
+const WINDOWS_SOURCE_VM = 'mtv-win2019-79';
 
 test.describe.serial('Plans - VSphere to Host Happy Path Cold Migration', () => {
   requireVersion(test, V2_10_5);
@@ -67,37 +86,7 @@ test.describe.serial('Plans - VSphere to Host Happy Path Cold Migration', () => 
 
   const providerName = `test-vsphere-provider-${Date.now()}`;
   const planName = `${providerName}-plan`;
-
-  // Jenkins uses vsphere-8.0.1 (10.6.46.250): mtv-feature-win2019 is absent there.
-  // Prefer VMs present on both 8.0.1 and 8.0.3 with no Critical concerns.
-  const testPlanData = createPlanTestData({
-    // preserveStaticIPs requires powered-on VMs with VMware tools — disabling to avoid a critical plan concern.
-    additionalPlanSettings: { preserveStaticIPs: false },
-    networkMap: {
-      mappings: [
-        // Selected lab VMs (mtv-rhel8-warm-sanity, mtv-win2019-79) only attach "VM Network".
-        { source: SourceNetworks.VM_NETWORK, target: NetworkTargets.DEFAULT },
-      ],
-    },
-    planName,
-    sourceProvider: providerName,
-    targetProject: {
-      isPreexisting: false,
-      name: targetProjectName,
-    },
-    virtualMachines: [
-      {
-        folder: 'vm',
-        sourceName: 'mtv-rhel8-warm-sanity',
-        targetName: `mtv-rhel8-warm-sanity-renamed-${Date.now()}`,
-      },
-      {
-        folder: 'vm',
-        sourceName: 'mtv-win2019-79',
-        targetName: `mtv-win2019-79-renamed-${Date.now()}`,
-      },
-    ],
-  });
+  let testPlanData: PlanTestData;
 
   test(
     'should create a new vsphere provider',
@@ -140,6 +129,47 @@ test.describe.serial('Plans - VSphere to Host Happy Path Cold Migration', () => 
       const createWizard = new CreatePlanWizardPage(page, resourceManager);
       const planDetailsPage = new PlanDetailsPage(page);
 
+      const excludedDiskSupported = isVersionAtLeast(V5_0_0) && isCNVVersionAtLeast(CNV_4_21_0);
+      const rhelSourceName = excludedDiskSupported
+        ? EXCLUDED_DISK_SOURCE_VM
+        : 'mtv-rhel8-warm-sanity';
+      testPlanData = createPlanTestData({
+        additionalPlanSettings: { preserveStaticIPs: false },
+        migrationType: MigrationType.COLD,
+        networkMap: {
+          mappings: [
+            { source: SourceNetworks.VM_NETWORK, target: NetworkTargets.DEFAULT },
+            ...(excludedDiskSupported
+              ? [{ source: SourceNetworks.MGMT_NETWORK, target: NetworkTargets.IGNORE }]
+              : []),
+          ],
+        },
+        planName,
+        sourceProvider: providerName,
+        targetProject: {
+          isPreexisting: false,
+          name: targetProjectName,
+        },
+        virtualMachines: [
+          {
+            folder: 'vm',
+            sourceName: rhelSourceName,
+            targetName: `${rhelSourceName}-renamed-${Date.now()}`,
+          },
+          {
+            folder: 'vm',
+            sourceName: WINDOWS_SOURCE_VM,
+            targetName: `${WINDOWS_SOURCE_VM}-renamed-${Date.now()}`,
+          },
+        ],
+      });
+      if (excludedDiskSupported) {
+        testPlanData.storageMap.mappings?.push({
+          source: SourceStorages.MTV_TLV2_RELEASE_V8,
+          target: StorageClasses.OCS_RBD_VIRTUALIZATION,
+        });
+      }
+
       await providerDetailsPage.navigate(providerName, MTV_NAMESPACE);
       await providerDetailsPage.waitForInventoryReady();
       await providerDetailsPage.clickCreatePlanButton();
@@ -157,22 +187,82 @@ test.describe.serial('Plans - VSphere to Host Happy Path Cold Migration', () => 
   );
 
   test(
+    'should save, clear, and restore the RHEL data-disk exclusion',
+    { tag: ['@downstream'] },
+    async ({ page }) => {
+      requireVersion(test, V5_0_0);
+      requireCNVVersion(test, CNV_4_21_0);
+      test.setTimeout(EXCLUDED_DISK_EDIT_TIMEOUT_MS);
+      const plansPage = new PlansListPage(page);
+      const planDetailsPage = new PlanDetailsPage(page);
+
+      await plansPage.navigateDirectly();
+      await plansPage.navigateToPlan(planName);
+      await planDetailsPage.virtualMachinesTab.navigateToVirtualMachinesTab();
+
+      await test.step('Set RHEL target on and Windows target off', async () => {
+        const vmTab = planDetailsPage.virtualMachinesTab;
+        await vmTab.enableColumn('Target power state');
+        await vmTab.openPowerStateDialog(EXCLUDED_DISK_SOURCE_VM);
+        await vmTab.powerStateModalSelect.click();
+        await vmTab.powerStateOptionOn.click();
+        await vmTab.powerStateModalSaveButton.click();
+        await expect(vmTab.editTargetPowerStateModal).not.toBeVisible();
+        await vmTab.waitForVMPowerState(EXCLUDED_DISK_SOURCE_VM, 'Powered on');
+
+        await vmTab.openPowerStateDialog(WINDOWS_SOURCE_VM);
+        await vmTab.powerStateModalSelect.click();
+        await vmTab.powerStateOptionOff.click();
+        await vmTab.powerStateModalSaveButton.click();
+        await expect(vmTab.editTargetPowerStateModal).not.toBeVisible();
+        await vmTab.waitForVMPowerState(WINDOWS_SOURCE_VM, 'Powered off');
+      });
+
+      await test.step('Save only the data disk as excluded', async () => {
+        await saveExcludedDataDisk(planDetailsPage, resourceManager, planName);
+      });
+      await test.step('Clear and restore the persisted exclusion', async () => {
+        await clearAndRestoreExcludedDataDisk(planDetailsPage, resourceManager, planName);
+      });
+    },
+  );
+
+  test(
     'should run cold migration',
     {
       tag: ['@downstream', '@slow'],
     },
     async ({ page }) => {
-      test.setTimeout(HAPPY_PATH_MIGRATION_TIMEOUT_MS + HAPPY_PATH_TEST_OVERHEAD_MS);
+      const excludedDiskSource = testPlanData.virtualMachines?.find(
+        (vm) => vm.sourceName === EXCLUDED_DISK_SOURCE_VM,
+      );
+      const excludedDiskSourceSelected = excludedDiskSource !== undefined;
+      test.setTimeout(
+        HAPPY_PATH_MIGRATION_TIMEOUT_MS +
+          HAPPY_PATH_TEST_OVERHEAD_MS +
+          (excludedDiskSourceSelected ? EXCLUDED_DISK_GUEST_BOOT_TIMEOUT_MS : 0),
+      );
       const plansPage = new PlansListPage(page);
       const planDetailsPage = new PlanDetailsPage(page);
 
-      await plansPage.navigateFromMainMenu();
-      await plansPage.waitForPageLoad();
+      await plansPage.navigateDirectly();
       await plansPage.navigateToPlan(planName);
       await planDetailsPage.verifyPlanTitle(planName);
 
       // Abort early on MAC conflict — leftover VMs from a previous run must be cleaned up first.
       const planResource = await resourceManager.fetchPlan(planName);
+      if (excludedDiskSourceSelected) {
+        await test.step('Verify persisted excluded-disk Plan settings', () => {
+          expect(planResource?.spec?.warm).toBe(false);
+          const planVms = planResource?.spec?.vms ?? [];
+          const rhelPlanVm = planVms.find((vm) => vm.name?.includes(EXCLUDED_DISK_SOURCE_VM));
+          expect(rhelPlanVm?.name).toContain(EXCLUDED_DISK_SOURCE_VM);
+          expect(rhelPlanVm?.excludeDisks).toEqual([EXCLUDED_DATA_DISK_BUS_ADDRESS]);
+          const windowsPlanVm = planVms.find((vm) => vm.name?.includes(WINDOWS_SOURCE_VM));
+          expect(windowsPlanVm?.name).toContain(WINDOWS_SOURCE_VM);
+          expect(windowsPlanVm?.targetPowerState).toBe('off');
+        });
+      }
       const hasMacConflict = planResource?.status?.conditions?.some(
         (condition) => condition.type === 'MacConflicts' && condition.status === 'True',
       );
@@ -239,6 +329,20 @@ test.describe.serial('Plans - VSphere to Host Happy Path Cold Migration', () => 
         expect(vmResource?.metadata?.name).toBe(migratedVMName);
         expect(vmResource?.metadata?.namespace).toBe(testPlanData.targetProject.name);
       }
+
+      if (excludedDiskSourceSelected) {
+        await test.step('Verify only the boot disk remains and the RHEL guest is healthy', async () => {
+          const rhelTargetName = excludedDiskSource?.targetName;
+          expect(rhelTargetName, 'RHEL VM should have a target name').toBeTruthy();
+          if (rhelTargetName) {
+            await verifyExcludedDiskTarget(
+              resourceManager,
+              rhelTargetName,
+              testPlanData.targetProject.name,
+            );
+          }
+        });
+      }
     },
   );
 
@@ -258,8 +362,7 @@ test.describe.serial('Plans - VSphere to Host Happy Path Cold Migration', () => 
       const cnvVMPage = new VirtualMachineDetailsPage(page);
 
       await test.step('Navigate to plan VM tab', async () => {
-        await plansPage.navigateFromMainMenu();
-        await plansPage.waitForPageLoad();
+        await plansPage.navigateDirectly();
         await plansPage.navigateToPlan(planName);
         await planDetailsPage.verifyPlanTitle(planName);
         await planDetailsPage.virtualMachinesTab.navigateToVirtualMachinesTab();
@@ -280,8 +383,7 @@ test.describe.serial('Plans - VSphere to Host Happy Path Cold Migration', () => 
           await cnvVMPage.waitForPageLoad(vmName);
           await cnvVMPage.verifySmokeOverview(vmName);
 
-          await plansPage.navigateFromMainMenu();
-          await plansPage.waitForPageLoad();
+          await plansPage.navigateDirectly();
           await plansPage.navigateToPlan(planName);
           await planDetailsPage.verifyPlanTitle(planName);
           await planDetailsPage.virtualMachinesTab.navigateToVirtualMachinesTab();

@@ -17,6 +17,7 @@
   "description": "",
   "devDependencies": {
     "@kubernetes/client-node": "^1.4.0",
+    "@patternfly/react-styles": "6.4.0",
     "@playwright/test": "^1.62.1",
     "@types/node": "^20.0.0",
     "playwright": "^1.62.1",
