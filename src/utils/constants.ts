@@ -87,6 +87,7 @@ export type PfLabelStatus = (typeof PF_LABEL_STATUS)[keyof typeof PF_LABEL_STATU
  * If a feature is not in this list, it defaults to false.
  */
 export const FEATURE_FLAG_DEFAULTS: Record<string, boolean> = {
+  [FEATURE_NAMES.COPY_APPLIANCE]: true,
   [FEATURE_NAMES.COPY_OFFLOAD]: true,
 };
 

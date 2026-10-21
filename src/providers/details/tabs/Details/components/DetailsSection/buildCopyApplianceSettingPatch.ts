@@ -16,6 +16,9 @@ export const buildCopyApplianceSettingPatch = (
   path: string,
   value: string,
 ): SettingPatch | null => {
+  if (current === value) {
+    return null;
+  }
   if (!value) {
     if (!current) {
       return null;

@@ -30,11 +30,7 @@ describe('CreateProviderForm - vSphere Provider', () => {
       expect(screen.getByRole('textbox', { name: /provider name/i })).toBeInTheDocument();
       expect(screen.getByRole('radiogroup', { name: /vsphere endpoint/i })).toBeInTheDocument();
       expect(screen.getByTestId('vsphere-url-input')).toBeInTheDocument();
-      expect(
-        screen.getByRole('radiogroup', {
-          name: /virtual disk development kit \(vddk\) setup/i,
-        }),
-      ).toBeInTheDocument();
+      expect(screen.getByRole('radiogroup', { name: 'Disk transfer method' })).toBeInTheDocument();
       expect(
         screen.getByRole('radio', { name: /skip certificate validation/i }),
       ).toBeInTheDocument();
@@ -42,6 +38,7 @@ describe('CreateProviderForm - vSphere Provider', () => {
 
     expect(screen.queryByTestId('vsphere-username-input')).not.toBeInTheDocument();
     expect(screen.queryByTestId('vsphere-password-input')).not.toBeInTheDocument();
+    expect(screen.getByRole('form', { name: 'Provider details' })).toHaveClass('pf-v6-c-form');
   });
 
   it('shows credentials fields when URL is provided', async () => {
@@ -75,20 +72,44 @@ describe('CreateProviderForm - vSphere Provider', () => {
     });
   });
 
-  it('shows no VDDK option selected by default', async () => {
+  it('selects the configure disk transfer method option by default', async () => {
     const user = userEvent.setup();
     render(<CreateProviderForm />);
 
     await user.selectOptions(screen.getByLabelText(/provider type/i), 'vsphere');
 
     await waitFor(() => {
-      const uploadRadio = screen.getByTestId('vddk-setup-upload-radio');
-      const manualRadio = screen.getByTestId('vddk-setup-manual-radio');
-      const skipRadio = screen.getByTestId('vddk-setup-skip-radio');
+      const configureRadio = screen.getByTestId('disk-transfer-configure-radio');
+      expect(configureRadio).toBeChecked();
+    });
+    expect(screen.getByTestId('vddk-setup-skip-radio')).not.toBeChecked();
+    expect(screen.getByTestId('disk-transfer-configure-radio')).toHaveAccessibleName(
+      'Configure disk transfer method',
+    );
+    expect(screen.getByTestId('disk-transfer-method-toggle')).toBeInTheDocument();
+  });
 
-      expect(uploadRadio).not.toBeChecked();
-      expect(manualRadio).not.toBeChecked();
-      expect(skipRadio).not.toBeChecked();
+  it('shows one required image error below the image field only after interaction', async () => {
+    const user = userEvent.setup();
+    render(<CreateProviderForm />);
+
+    await user.selectOptions(screen.getByLabelText(/provider type/i), 'vsphere');
+    expect(screen.queryByText('VDDK image is required')).not.toBeInTheDocument();
+
+    const imageInput = screen.getByTestId('vsphere-vddk-image-input');
+    await user.type(imageInput, 'quay.io/vddk:latest');
+    await user.clear(imageInput);
+
+    await waitFor(() => {
+      expect(screen.getAllByText('VDDK image is required')).toHaveLength(1);
+    });
+    expect(screen.getByTestId('vsphere-vddk-image-helper-error')).toHaveTextContent(
+      'VDDK image is required',
+    );
+
+    await user.type(imageInput, 'quay.io/vddk:latest');
+    await waitFor(() => {
+      expect(screen.queryByText('VDDK image is required')).not.toBeInTheDocument();
     });
   });
 
