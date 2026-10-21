@@ -21,6 +21,11 @@ export class CreateProviderPage {
   readonly certificateSkipRadio;
   readonly certificateUploadInput;
   readonly createButton;
+  readonly datastorePlacementInput;
+  readonly deployButton;
+  readonly diskTransferConfigureRadio;
+  readonly diskTransferCopyApplianceOption;
+  readonly diskTransferMethodToggle;
   readonly ec2AccessKeyIdInput;
   readonly ec2AutoTargetCheckbox;
   readonly ec2CrossAccountCheckbox;
@@ -31,13 +36,17 @@ export class CreateProviderPage {
   readonly ec2TargetRegionInput;
   readonly ec2TargetSecretAccessKeyInput;
   readonly fetchCertificateButton;
+  readonly folderPlacementInput;
   public readonly navigationHelper: NavigationHelper;
+  readonly networkPlacementInput;
   protected readonly page: Page;
+  readonly resourcePoolPlacementInput;
+  readonly skipPlacementButton;
   // VDDK Setup locators
   readonly vddkAioCheckbox;
+
   readonly vddkImageInput;
   readonly vddkManualRadio;
-
   readonly vddkSkipRadio;
   readonly vddkSkipWarning;
   readonly vddkUploadRadio;
@@ -67,6 +76,17 @@ export class CreateProviderPage {
     this.ec2TargetAzInput = page.getByTestId('ec2-target-az-input');
     this.ec2TargetRegionInput = page.getByTestId('ec2-target-region-input');
     this.ec2TargetSecretAccessKeyInput = page.getByTestId('ec2-target-secret-access-key-input');
+    this.diskTransferConfigureRadio = page.getByTestId('disk-transfer-configure-radio');
+    this.diskTransferMethodToggle = page.getByTestId('disk-transfer-method-toggle');
+    this.diskTransferCopyApplianceOption = page.getByRole('option', {
+      name: 'Use a sourcing appliance',
+    });
+    this.deployButton = page.getByTestId('provider-deploy-button');
+    this.skipPlacementButton = page.getByTestId('provider-skip-placement-button');
+    this.datastorePlacementInput = page.getByPlaceholder('Select a datastore');
+    this.folderPlacementInput = page.getByPlaceholder('Select a folder');
+    this.networkPlacementInput = page.getByPlaceholder('Select a network');
+    this.resourcePoolPlacementInput = page.getByPlaceholder('Select a resource pool');
 
     const createButtonTestId = isVersionAtLeast(V2_11_0)
       ? 'provider-create-button'
@@ -76,12 +96,12 @@ export class CreateProviderPage {
     // VDDK Setup locators
     this.vddkAioCheckbox = page.getByTestId('vddk-aio-optimization-checkbox');
     this.vddkImageInput = page.getByTestId('vsphere-vddk-image-input');
-    this.vddkManualRadio = page.getByTestId('vddk-setup-manual-radio');
+    this.vddkManualRadio = page.getByRole('option', { name: 'Specify a VDDK image URL' });
     this.vddkSkipRadio = page.getByTestId('vddk-setup-skip-radio');
     this.vddkSkipWarning = page.getByRole('heading', {
-      name: /It is highly recommended to use a VDDK image/u,
+      name: /It is highly recommended to use a VDDK image|Disk transfer must be configured before migration/u,
     });
-    this.vddkUploadRadio = page.getByTestId('vddk-setup-upload-radio');
+    this.vddkUploadRadio = page.getByRole('option', { name: 'Upload a VDDK archive' });
   }
 
   private async configureVddkSetup(testData: ProviderData) {
@@ -105,7 +125,9 @@ export class CreateProviderPage {
       return;
     }
     if (testData.vddkInitImage) {
-      await this.page.getByTestId('vddk-setup-manual-radio').click();
+      await this.diskTransferConfigureRadio.click();
+      await this.diskTransferMethodToggle.click();
+      await this.vddkManualRadio.click();
       await this.page.getByTestId('vsphere-vddk-image-input').fill(testData.vddkInitImage);
     } else {
       await this.page.getByTestId('vddk-setup-skip-radio').click();

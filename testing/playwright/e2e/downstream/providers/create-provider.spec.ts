@@ -9,6 +9,7 @@ if (!existsSync(providersPath)) {
 }
 
 import { CreateProviderPage } from '../../../page-objects/CreateProviderPage';
+import { ProviderDetailsPage } from '../../../page-objects/ProviderDetailsPage/ProviderDetailsPage';
 import { ProviderType } from '../../../types/enums';
 import { hasProviderConfig } from '../../../utils/providers';
 import { ResourceManager } from '../../../utils/resource-manager/ResourceManager';
@@ -19,6 +20,7 @@ import { createProviderData, providerTestScenarios } from './creation-scenarios'
 
 const DUMMY_SMB_URL = '//server/share';
 const DUMMY_HOST = 'host.example.com';
+const VSPHERE_PROVIDER_KEY = process.env.VSPHERE_PROVIDER ?? 'vsphere-8.0.1';
 
 test.describe('Provider Creation Tests', () => {
   requireVersion(test, V2_10_5);
@@ -114,8 +116,12 @@ test.describe('Provider Creation Tests', () => {
       });
 
       await test.step('Verify AIO checkbox is visible when VDDK is configured manually', async () => {
+        await createProvider.diskTransferConfigureRadio.click();
+        await createProvider.diskTransferMethodToggle.click();
         await createProvider.vddkManualRadio.click();
-        await expect(createProvider.vddkManualRadio).toBeChecked();
+        await expect(createProvider.diskTransferMethodToggle).toContainText(
+          'Specify a VDDK image URL',
+        );
         await expect(createProvider.vddkAioCheckbox).toBeVisible();
         await expect(createProvider.vddkImageInput).toBeVisible();
       });
@@ -138,6 +144,113 @@ test.describe('Provider Creation Tests', () => {
         await expect(createProvider.certificateSkipRadio).toBeChecked();
         await expect(createProvider.certificateUploadInput).not.toBeVisible();
       });
+    },
+  );
+
+  test(
+    'should offer a sourcing appliance for an ESXi endpoint when enabled',
+    { tag: '@downstream' },
+    async ({ page }) => {
+      requireVersion(test, V2_11_0);
+      const createProvider = new CreateProviderPage(page);
+
+      await test.step('Open vSphere provider creation and select ESXi', async () => {
+        await createProvider.navigate();
+        await createProvider.selectProviderType(ProviderType.VSPHERE);
+        await page.getByTestId('vsphere-endpoint-esxi-radio').click();
+      });
+
+      await test.step('Open disk transfer methods', async () => {
+        await createProvider.diskTransferConfigureRadio.click();
+        await createProvider.diskTransferMethodToggle.click();
+      });
+
+      test.skip(
+        !(await createProvider.diskTransferCopyApplianceOption.isVisible()),
+        'Copy appliance feature is disabled on this cluster',
+      );
+
+      await test.step('Select sourcing appliance and verify the next-step guidance', async () => {
+        await createProvider.diskTransferCopyApplianceOption.click();
+        await expect(
+          page.getByText('Configure the sourcing appliance in the next step.'),
+        ).toBeVisible();
+        await expect(createProvider.vddkAioCheckbox).not.toBeVisible();
+      });
+    },
+  );
+
+  test(
+    'should create a vSphere provider and continue to the sourcing appliance placement step',
+    { tag: '@downstream' },
+    async ({ page }) => {
+      requireVersion(test, V2_11_0);
+      test.skip(!hasProviderConfig(VSPHERE_PROVIDER_KEY), 'vSphere provider config is unavailable');
+      const createProvider = new CreateProviderPage(page, resourceManager);
+      const providerData = createProviderData(ProviderType.VSPHERE, VSPHERE_PROVIDER_KEY, {
+        skipVddk: true,
+        vddkInitImage: undefined,
+      });
+
+      await createProvider.navigate();
+      await createProvider.fillProviderFields(providerData);
+      await createProvider.skipCertificateValidation();
+      await createProvider.diskTransferConfigureRadio.click();
+      await createProvider.diskTransferMethodToggle.click();
+      test.skip(
+        !(await createProvider.diskTransferCopyApplianceOption.isVisible()),
+        'Copy appliance feature is disabled on this cluster',
+      );
+      await createProvider.diskTransferCopyApplianceOption.click();
+      await expect(createProvider.createButton).toHaveText('Create and continue');
+
+      await createProvider.submitCreateForm(providerData.name, providerData.projectName);
+      await expect(createProvider.datastorePlacementInput).toBeVisible();
+      await expect(createProvider.folderPlacementInput).toBeVisible();
+      await expect(createProvider.networkPlacementInput).toBeVisible();
+      await expect(createProvider.resourcePoolPlacementInput).toBeVisible();
+      await expect(createProvider.deployButton).toBeDisabled();
+      await expect(createProvider.skipPlacementButton).toBeEnabled();
+
+      const providerResource = await resourceManager.fetchProvider(providerData.name);
+      expect(
+        providerResource?.metadata?.annotations?.['forklift.konveyor.io/ui-disk-transfer-method'],
+      ).toBe('copy-appliance');
+      expect(providerResource?.spec?.settings?.vddkInitImage).toBeUndefined();
+
+      await createProvider.skipPlacementButton.click();
+      await new ProviderDetailsPage(page).waitForProviderCreation(
+        providerData.name,
+        providerData.projectName,
+      );
+    },
+  );
+
+  test(
+    'should finish vSphere provider creation after skipping disk transfer setup',
+    { tag: '@downstream' },
+    async ({ page }) => {
+      requireVersion(test, V2_11_0);
+      test.skip(!hasProviderConfig(VSPHERE_PROVIDER_KEY), 'vSphere provider config is unavailable');
+      const createProvider = new CreateProviderPage(page, resourceManager);
+      const providerData = createProviderData(ProviderType.VSPHERE, VSPHERE_PROVIDER_KEY, {
+        skipVddk: true,
+        vddkInitImage: undefined,
+      });
+
+      await createProvider.navigate();
+      await createProvider.fillAndSubmit(providerData);
+      await new ProviderDetailsPage(page).waitForProviderCreation(
+        providerData.name,
+        providerData.projectName,
+      );
+      await expect(createProvider.datastorePlacementInput).not.toBeVisible();
+
+      const providerResource = await resourceManager.fetchProvider(providerData.name);
+      expect(
+        providerResource?.metadata?.annotations?.['forklift.konveyor.io/ui-disk-transfer-method'],
+      ).toBeUndefined();
+      expect(providerResource?.spec?.settings?.vddkInitImage).toBeUndefined();
     },
   );
 
