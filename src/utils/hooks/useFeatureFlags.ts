@@ -43,7 +43,7 @@ export const useFeatureFlags = (namespace?: string): FeatureFlagsResult => {
       const featureValue = spec[featureName];
 
       // If feature is explicitly set in the CR, use that value
-      if (featureValue) {
+      if (featureValue !== undefined) {
         // Consider enabled if value is boolean true or string 'true'
         return featureValue === true || featureValue === 'true';
       }

@@ -1,5 +1,8 @@
 import { decode } from 'js-base64';
-import { VSphereEndpointType } from 'src/providers/utils/constants';
+import {
+  DISK_TRANSFER_METHOD_ANNOTATION,
+  VSphereEndpointType,
+} from 'src/providers/utils/constants';
 
 import { describe, expect, it } from '@jest/globals';
 
@@ -49,5 +52,24 @@ describe('buildVsphereProviderResources', () => {
 
     expect(provider.spec?.settings?.vddkInitImage).toBeUndefined();
     expect(provider.spec?.settings?.sdkEndpoint).toBe(VSphereEndpointType.VCenter);
+  });
+
+  it('annotates appliance selection for ESXi without VDDK settings', () => {
+    const { provider } = buildVsphereProviderResources({
+      [ProviderFormFieldId.ProviderName]: 'vsphere',
+      [ProviderFormFieldId.ProviderProject]: 'ns',
+      [ProviderFormFieldId.ProviderType]: 'vsphere',
+      [ProviderFormFieldId.ShowDefaultProjects]: false,
+      [ProviderFormFieldId.VsphereEndpointType]: VSphereEndpointType.ESXi,
+      [ProviderFormFieldId.VsphereUrl]: 'https://esxi',
+      [ProviderFormFieldId.VsphereUseVddkAioOptimization]: true,
+      [ProviderFormFieldId.VsphereVddkInitImage]: 'ignored',
+      [ProviderFormFieldId.VsphereVddkSetupMode]: VddkSetupMode.CopyAppliance,
+    });
+
+    expect(provider.metadata?.annotations?.[DISK_TRANSFER_METHOD_ANNOTATION]).toBe(
+      VddkSetupMode.CopyAppliance,
+    );
+    expect(provider.spec?.settings).toEqual({ sdkEndpoint: VSphereEndpointType.ESXi });
   });
 });

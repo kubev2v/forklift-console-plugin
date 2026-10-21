@@ -1,6 +1,4 @@
 import type { ReactNode } from 'react';
-import type { ProviderFormFieldId } from 'src/providers/create/fields/constants';
-import type { VddkSetupMode } from 'src/providers/utils/constants';
 
 import type { V1beta1Provider } from '@forklift-ui/types';
 import type { ProviderData } from '@utils/providers/types';
@@ -24,10 +22,4 @@ export type ProviderDetailsItemProps = {
   helpContent?: ReactNode;
   moreInfoLink?: string;
   resource: V1beta1Provider;
-};
-
-export type EditProviderVDDKImageFormData = {
-  [ProviderFormFieldId.VsphereUseVddkAioOptimization]: string | undefined;
-  [ProviderFormFieldId.VsphereVddkInitImage]: string | undefined;
-  [ProviderFormFieldId.VsphereVddkSetupMode]: VddkSetupMode;
 };

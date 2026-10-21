@@ -1,39 +1,25 @@
 import type { FC } from 'react';
 import { Controller } from 'react-hook-form';
 
-import { useForkliftTranslation } from '@utils/i18n';
-
 import VDDKRadioSelection from '../../../components/VDDKRadioSelection';
 import { VddkSetupMode } from '../../../utils/constants';
 import { useCreateProviderFormContext } from '../../hooks/useCreateProviderFormContext';
 import { ProviderFormFieldId } from '../constants';
 
-import { validateVddkInitImage } from './vsphereFieldValidators';
+import { validateVsphereDiskTransfer } from './vsphereFieldValidators';
 
 const VsphereVddkField: FC = () => {
-  const { t } = useForkliftTranslation();
-  const { control, watch } = useCreateProviderFormContext();
-
-  const vddkImageValue = watch(ProviderFormFieldId.VsphereVddkInitImage);
+  const { control, getValues } = useCreateProviderFormContext();
 
   return (
     <Controller
       control={control}
+      defaultValue={VddkSetupMode.Manual}
       name={ProviderFormFieldId.VsphereVddkSetupMode}
       render={() => <VDDKRadioSelection />}
       rules={{
-        required: t('VDDK setup selection is required'),
-        validate: {
-          validImage: (mode: VddkSetupMode | undefined) => {
-            if (mode === VddkSetupMode.Skip) {
-              return undefined;
-            }
-            if (mode === VddkSetupMode.Manual) {
-              return validateVddkInitImage(vddkImageValue);
-            }
-            return undefined;
-          },
-        },
+        validate: (mode: VddkSetupMode | undefined) =>
+          validateVsphereDiskTransfer(mode, getValues(ProviderFormFieldId.VsphereVddkInitImage)),
       }}
     />
   );

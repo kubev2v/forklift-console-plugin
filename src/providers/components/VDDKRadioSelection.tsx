@@ -1,148 +1,85 @@
-import type { FC } from 'react';
-import { useController } from 'react-hook-form';
-import SkipVddkAlert from 'src/providers/components/SkipVddkAlert';
+import { type FC, useCallback } from 'react';
+import { useController, useFormContext } from 'react-hook-form';
 
-import { FormGroupWithHelpText } from '@components/common/FormGroupWithHelpText/FormGroupWithHelpText';
-import { HelpIconPopover } from '@components/common/HelpIconPopover/HelpIconPopover';
-import VddkUploader from '@components/VddkUploader/VddkUploader';
-import { HelperText, HelperTextItem, Radio, Stack, TextInput } from '@patternfly/react-core';
 import { FEATURE_NAMES } from '@utils/constants';
-import { getInputValidated } from '@utils/form';
-import { isEmpty } from '@utils/helpers';
 import { useFeatureFlags } from '@utils/hooks/useFeatureFlags';
-import { useForkliftTranslation } from '@utils/i18n';
 
 import { ProviderFormFieldId } from '../create/fields/constants';
-import { useCreateProviderFormContext } from '../create/hooks/useCreateProviderFormContext';
+import type { CreateProviderFormData } from '../create/types';
 import { VddkSetupMode } from '../utils/constants';
 
-import VDDKAioOptimizationCheckbox from './VDDKAioOptimizationCheckbox';
-import VDDKHelperText from './VDDKHelperText';
+import DiskTransferMethodSelection from './DiskTransferMethodSelection';
 
 const VDDKRadioSelection: FC = () => {
-  const { t } = useForkliftTranslation();
+  const {
+    control,
+    formState: { isSubmitted },
+    setValue,
+    trigger,
+  } = useFormContext<CreateProviderFormData>();
   const { isFeatureEnabled } = useFeatureFlags();
-  const copyApplianceTemplateEnabled = isFeatureEnabled(FEATURE_NAMES.COPY_APPLIANCE);
-
-  const { control } = useCreateProviderFormContext();
-
-  const vddkModeController = useController({
+  const methodController = useController({
     control,
     name: ProviderFormFieldId.VsphereVddkSetupMode,
   });
-  const vddkMode = vddkModeController.field.value;
-  const { error } = vddkModeController.fieldState;
-
-  const vddkImageController = useController({
+  const imageController = useController({
     control,
     name: ProviderFormFieldId.VsphereVddkInitImage,
   });
-  const vddkImage = vddkImageController.field.value ?? '';
-  const vddkImageError = vddkImageController.fieldState.error;
+  const aioController = useController({
+    control,
+    name: ProviderFormFieldId.VsphereUseVddkAioOptimization,
+  });
+  const method = methodController.field.value;
+  const image = imageController.field.value ?? '';
+  const isImageMethod = method === VddkSetupMode.Manual || method === VddkSetupMode.Upload;
+  const showValidationError =
+    isSubmitted || imageController.fieldState.isTouched || methodController.fieldState.isTouched;
+  const methodValidationError = methodController.fieldState.error?.message;
+  const onVddkImageChange = useCallback(
+    (nextImage: string): void => {
+      if (nextImage !== image) {
+        setValue(ProviderFormFieldId.VsphereVddkInitImage, nextImage, {
+          shouldDirty: true,
+          shouldTouch: true,
+        });
+        trigger(ProviderFormFieldId.VsphereVddkSetupMode).catch(() => undefined);
+      }
+    },
+    [image, setValue, trigger],
+  );
 
   return (
-    <FormGroupWithHelpText
-      fieldId={ProviderFormFieldId.VsphereVddkSetupMode}
-      helperTextInvalid={error?.message}
-      isRequired
-      label={t('Virtual Disk Development Kit (VDDK) setup')}
-      labelHelp={
-        <HelpIconPopover header={t('VDDK init image')}>
-          <VDDKHelperText />
-        </HelpIconPopover>
+    <DiskTransferMethodSelection
+      aioEnabled={Boolean(aioController.field.value)}
+      imageError={
+        isImageMethod && showValidationError
+          ? (imageController.fieldState.error?.message ?? methodValidationError)
+          : undefined
       }
-      role="radiogroup"
-      validated={getInputValidated(error)}
-    >
-      <Stack hasGutter>
-        <HelperText>
-          <HelperTextItem>
-            {t(
-              "Configure a VDDK image for a more efficient migration by enabling direct, block-level access to a VM's disk data.",
-            )}
-          </HelperTextItem>
-        </HelperText>
-
-        <Radio
-          body={
-            vddkMode === VddkSetupMode.Upload && (
-              <>
-                <VddkUploader
-                  onChangeVddk={(val) => {
-                    if (isEmpty(val) || val !== vddkImage) {
-                      vddkImageController.field.onChange(val);
-                    }
-                  }}
-                />
-                <VDDKAioOptimizationCheckbox />
-              </>
-            )
+      isCopyApplianceEnabled={isFeatureEnabled(FEATURE_NAMES.COPY_APPLIANCE)}
+      method={method}
+      methodError={!isImageMethod && showValidationError ? methodValidationError : undefined}
+      onAioChange={aioController.field.onChange}
+      onMethodChange={(nextMethod) => {
+        if (nextMethod !== method) {
+          setValue(ProviderFormFieldId.VsphereVddkInitImage, '', {
+            shouldDirty: true,
+            shouldTouch: true,
+          });
+          if (nextMethod === VddkSetupMode.CopyAppliance || nextMethod === VddkSetupMode.Skip) {
+            aioController.field.onChange(false);
           }
-          data-testid="vddk-setup-upload-radio"
-          id="vddk-setup-upload"
-          isChecked={vddkMode === VddkSetupMode.Upload}
-          label={t('Upload a VDDK archive to generate the image URL')}
-          name={ProviderFormFieldId.VsphereVddkSetupMode}
-          onChange={() => {
-            vddkModeController.field.onChange(VddkSetupMode.Upload);
-          }}
-        />
-
-        <Radio
-          body={
-            vddkMode === VddkSetupMode.Manual && (
-              <>
-                <FormGroupWithHelpText
-                  fieldId={ProviderFormFieldId.VsphereVddkInitImage}
-                  helperText={t('VMware Virtual Disk Development Kit (VDDK) image.')}
-                  helperTextInvalid={vddkImageError?.message}
-                  isRequired
-                  label={t('VDDK init image')}
-                  validated={getInputValidated(vddkImageError)}
-                >
-                  <TextInput
-                    data-testid="vsphere-vddk-image-input"
-                    id={ProviderFormFieldId.VsphereVddkInitImage}
-                    onChange={(_event, val) => {
-                      vddkImageController.field.onChange(val);
-                    }}
-                    spellCheck="false"
-                    type="text"
-                    validated={getInputValidated(vddkImageError)}
-                    value={vddkImage}
-                  />
-                </FormGroupWithHelpText>
-                <VDDKAioOptimizationCheckbox />
-              </>
-            )
-          }
-          data-testid="vddk-setup-manual-radio"
-          id="vddk-setup-manual"
-          isChecked={vddkMode === VddkSetupMode.Manual}
-          label={t('Manually specify the VDDK image URL')}
-          name={ProviderFormFieldId.VsphereVddkSetupMode}
-          onChange={() => {
-            vddkModeController.field.onChange(VddkSetupMode.Manual);
-          }}
-        />
-
-        <Radio
-          body={vddkMode === VddkSetupMode.Skip && <SkipVddkAlert />}
-          data-testid="vddk-setup-skip-radio"
-          id="vddk-setup-skip"
-          isChecked={vddkMode === VddkSetupMode.Skip}
-          label={
-            copyApplianceTemplateEnabled
-              ? t('Skip VDDK setup')
-              : t('Skip VDDK setup (not recommended)')
-          }
-          name={ProviderFormFieldId.VsphereVddkSetupMode}
-          onChange={() => {
-            vddkModeController.field.onChange(VddkSetupMode.Skip);
-          }}
-        />
-      </Stack>
-    </FormGroupWithHelpText>
+        }
+        setValue(ProviderFormFieldId.VsphereVddkSetupMode, nextMethod, {
+          shouldDirty: true,
+          shouldTouch: true,
+          shouldValidate: true,
+        });
+      }}
+      onVddkImageChange={onVddkImageChange}
+      vddkImage={image}
+    />
   );
 };
 

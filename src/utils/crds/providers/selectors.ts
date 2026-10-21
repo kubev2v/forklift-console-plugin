@@ -50,3 +50,6 @@ export const getCopyApplianceTemplateName = (
   const name = getName(provider);
   return name ? `${name}-copy-appliance-template` : undefined;
 };
+
+export const getProviderPhase = (provider: V1beta1Provider | undefined): string | undefined =>
+  provider?.status?.phase;

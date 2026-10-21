@@ -13,13 +13,13 @@ const SkipVddkAlert: FC = () => {
     return (
       <Alert
         isInline
-        title={t('VDDK is optional when copy appliance templates are enabled.')}
-        variant={AlertVariant.info}
+        title={t('Disk transfer must be configured before migration.')}
+        variant={AlertVariant.warning}
       >
         <ForkliftTrans>
           <p>
-            Without a VDDK image, migrations use the copy appliance. VDDK can still improve transfer
-            performance when you configure it on the provider.
+            Add a VDDK image or deploy a sourcing appliance template on the provider details page
+            before creating a plan.
           </p>
         </ForkliftTrans>
       </Alert>

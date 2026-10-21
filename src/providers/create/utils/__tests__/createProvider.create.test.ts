@@ -4,7 +4,12 @@ jest.mock('@openshift-console/dynamic-plugin-sdk', () => ({
   k8sCreate: jest.fn(),
 }));
 
-import { EMPTY_VDDK_INIT_IMAGE_ANNOTATION, YES_VALUE } from 'src/providers/utils/constants';
+import {
+  DISK_TRANSFER_METHOD_ANNOTATION,
+  EMPTY_VDDK_INIT_IMAGE_ANNOTATION,
+  VddkSetupMode,
+  YES_VALUE,
+} from 'src/providers/utils/constants';
 
 import { ProviderModel, type V1beta1Provider } from '@forklift-ui/types';
 import { k8sCreate } from '@openshift-console/dynamic-plugin-sdk';
@@ -52,6 +57,26 @@ describe('createProvider - create', () => {
     await createProvider(provider, undefined);
     const [createArg] = mockK8sCreate.mock.calls[0] as unknown as [{ data: V1beta1Provider }];
     expect(createArg.data.spec?.secret).toBeUndefined();
+  });
+
+  it('preserves the selected disk transfer annotation when attaching the Secret', async () => {
+    const provider = {
+      metadata: {
+        annotations: { [DISK_TRANSFER_METHOD_ANNOTATION]: VddkSetupMode.CopyAppliance },
+        name: 'p',
+        namespace: 'ns',
+      },
+      spec: { settings: { sdkEndpoint: 'esxi' }, type: 'vsphere', url: 'https://esxi' },
+    } as unknown as V1beta1Provider;
+    const secret = { metadata: { name: 'sec', namespace: 'ns' } } as never;
+
+    await createProvider(provider, secret);
+
+    const [createArg] = mockK8sCreate.mock.calls[0] as unknown as [{ data: V1beta1Provider }];
+    expect(createArg.data.metadata?.annotations?.[DISK_TRANSFER_METHOD_ANNOTATION]).toBe(
+      VddkSetupMode.CopyAppliance,
+    );
+    expect(createArg.data.spec?.secret).toEqual({ name: 'sec', namespace: 'ns' });
   });
 
   it('clears vddk settings when empty-VDDK annotation is yes', async () => {
