@@ -172,13 +172,20 @@ export class ProviderDetailsPage {
       await expect(this.page.getByTestId('credentials-detail-item')).toContainText('');
     }
 
-    // Only verify VDDK field for vSphere providers
+    // Only verify disk transfer for vSphere providers
     if (providerData.type === ProviderType.VSPHERE) {
-      const vddkElement = this.page.getByTestId('vddk-detail-item');
+      const diskTransferMethod = this.page.getByTestId('disk-transfer-method');
+      const legacyVddkElement = this.page.getByTestId('vddk-detail-item');
+      await expect(diskTransferMethod.or(legacyVddkElement)).toBeVisible();
       if (providerData.vddkInitImage) {
-        await expect(vddkElement).toContainText(providerData.vddkInitImage);
+        const image = (await diskTransferMethod.isVisible())
+          ? this.page.getByTestId('disk-transfer-vddk-image')
+          : legacyVddkElement;
+        await expect(image).toContainText(providerData.vddkInitImage);
+      } else if (await diskTransferMethod.isVisible()) {
+        await expect(diskTransferMethod).toContainText('Skip disk transfer setup');
       } else {
-        await expect(vddkElement).toContainText('Empty');
+        await expect(legacyVddkElement).toContainText('Empty');
       }
     }
 

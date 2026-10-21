@@ -2,14 +2,7 @@ import type { FC } from 'react';
 import LearningExperienceButton from 'src/onlineHelp/learningExperienceDrawer/LearningExperienceButton';
 import LearningExperienceDrawer from 'src/onlineHelp/learningExperienceDrawer/LearningExperienceDrawer';
 
-import {
-  PageSection,
-  PageSectionTypes,
-  Split,
-  SplitItem,
-  Stack,
-  Title,
-} from '@patternfly/react-core';
+import { PageSection, PageSectionTypes, Split, SplitItem, Title } from '@patternfly/react-core';
 import { useForkliftTranslation } from '@utils/i18n';
 
 import CreateProviderForm from './CreateProviderForm';
@@ -19,35 +12,22 @@ const ProvidersCreateFormPage: FC = () => {
 
   return (
     <LearningExperienceDrawer>
-      <PageSection hasBodyWrapper={false}>
-        <Stack hasGutter>
+      <div className="create-provider-page">
+        <PageSection hasBodyWrapper={false}>
           <Split>
             <SplitItem isFilled>
-              <Title headingLevel="h1" size="2xl">
-                {t('Create provider')}
-              </Title>
+              <Title headingLevel="h2">{t('Create provider')}</Title>
             </SplitItem>
             <SplitItem>
               <LearningExperienceButton />
             </SplitItem>
           </Split>
+        </PageSection>
 
-          <p className="pf-v6-u-text-color-subtle">
-            {t(
-              'Define the connection attributes the migration toolkit for virtualization needs to interact with your source and target providers.',
-            )}
-          </p>
-        </Stack>
-      </PageSection>
-
-      <PageSection
-        className="pf-v6-u-flex-grow-1"
-        hasBodyWrapper={false}
-        hasOverflowScroll
-        type={PageSectionTypes.default}
-      >
-        <CreateProviderForm />
-      </PageSection>
+        <PageSection hasBodyWrapper={false} type={PageSectionTypes.wizard}>
+          <CreateProviderForm />
+        </PageSection>
+      </div>
     </LearningExperienceDrawer>
   );
 };

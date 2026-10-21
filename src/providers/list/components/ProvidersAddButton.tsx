@@ -21,8 +21,7 @@ const ProvidersAddButton: FC<ProvidersAddButtonProps> = ({ canCreate, namespace,
   const { trackEvent } = useForkliftAnalytics();
 
   const providersListURL = getResourceUrl({
-    namespace,
-    namespaced: namespace !== undefined,
+    namespaced: false,
     reference: ProviderModelRef,
   });
 
