@@ -7,6 +7,7 @@ import type {
   ProviderVirtualMachine,
 } from '@forklift-ui/types';
 import { DEFAULT_NETWORK, Namespace } from '@utils/constants';
+import { getNamespace } from '@utils/crds/common/selectors';
 import { isEmpty } from '@utils/helpers';
 import { t } from '@utils/i18n';
 import { getEc2SubnetIds, isEc2Vm } from '@utils/types/ec2Inventory';
@@ -39,8 +40,14 @@ const toNetworksOrProfiles = (vm: ProviderVirtualMachine): string[] => {
       return vm?.nics?.map((nic) => nic?.profile) ?? [];
     }
     case PROVIDER_TYPES.openshift: {
+      const vmNamespace = getNamespace(vm.object);
+
       return (vm?.object?.spec?.template?.spec?.networks ?? []).reduce((acc: string[], network) => {
-        const networkName = network?.multus?.networkName ?? network?.name;
+        const multusNetworkName = network?.multus?.networkName;
+        const networkName =
+          multusNetworkName && vmNamespace && !multusNetworkName.includes('/')
+            ? `${vmNamespace}/${multusNetworkName}`
+            : (multusNetworkName ?? network?.name);
 
         if (network?.pod) {
           acc.push(DEFAULT_NETWORK);
