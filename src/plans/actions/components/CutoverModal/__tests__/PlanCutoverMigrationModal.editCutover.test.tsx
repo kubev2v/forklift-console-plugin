@@ -64,16 +64,25 @@ describe('PlanCutoverMigrationModal - past date alert', () => {
     spec: { cutover: '2020-01-01T10:00:00.000Z' },
   };
 
-  it('shows info alert when scheduled date is in the past', () => {
+  const PAST_TIME_ALERT =
+    'The selected time is in the past. Cutover will begin immediately, equivalent to the ASAP option.';
+
+  it('opens in ASAP mode when the stored cutover has already passed', () => {
     mockUsePlanMigration.mockReturnValue([mockMigrationWithPastCutover, true, null]);
 
     render(<PlanCutoverMigrationModal closeOverlay={closeOverlay} plan={mockPlan} />);
 
-    expect(
-      screen.getByText(
-        'The selected time is in the past. Cutover will begin immediately, equivalent to the ASAP option.',
-      ),
-    ).toBeInTheDocument();
+    expect(screen.getByTestId('cutover-mode-asap')).toBeChecked();
+    expect(screen.queryByText(PAST_TIME_ALERT)).not.toBeInTheDocument();
+  });
+
+  it('shows info alert once the user switches to the stale scheduled time', async () => {
+    mockUsePlanMigration.mockReturnValue([mockMigrationWithPastCutover, true, null]);
+
+    render(<PlanCutoverMigrationModal closeOverlay={closeOverlay} plan={mockPlan} />);
+    await userEvent.setup().click(screen.getByTestId('cutover-mode-scheduled'));
+
+    expect(screen.getByText(PAST_TIME_ALERT)).toBeInTheDocument();
   });
 
   it('does not show info alert when scheduled date is in the future', () => {

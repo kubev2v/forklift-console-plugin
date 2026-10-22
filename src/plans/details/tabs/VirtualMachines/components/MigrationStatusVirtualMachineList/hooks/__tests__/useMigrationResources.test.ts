@@ -5,13 +5,17 @@ import { useMigrationResources } from '../useMigrationResources';
 
 const mockUseK8sWatchResource = jest.fn();
 const mockUseLatestPlanMigration = jest.fn();
-
+const mockUsePlanMigration = jest.fn();
 jest.mock('@openshift-console/dynamic-plugin-sdk', () => ({
   useK8sWatchResource: jest.fn((...args: unknown[]) => mockUseK8sWatchResource(...args)),
 }));
 
 jest.mock('src/plans/hooks/useLatestPlanMigration', () => ({
   useLatestPlanMigration: jest.fn((...args: unknown[]) => mockUseLatestPlanMigration(...args)),
+}));
+
+jest.mock('src/plans/hooks/usePlanMigration', () => ({
+  usePlanMigration: jest.fn((...args: unknown[]) => mockUsePlanMigration(...args)),
 }));
 
 jest.mock('../../../utils/utils', () => ({
@@ -44,6 +48,7 @@ describe('useMigrationResources', () => {
   beforeEach(() => {
     jest.clearAllMocks();
     mockUseK8sWatchResource.mockReturnValue([[], true, undefined]);
+    mockUsePlanMigration.mockReturnValue([undefined, true, undefined]);
   });
 
   it('disables resource watches when no latest migration exists', () => {

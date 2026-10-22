@@ -1,3 +1,5 @@
+import { getEffectiveVmCutover } from 'src/plans/components/CutoverModal/utils/utils';
+
 import type {
   V1beta1PlanStatusMigrationVms,
   V1beta1PlanStatusMigrationVmsPipeline,
@@ -145,6 +147,15 @@ export const getVMDiskTransferPipeline = (
   }
 
   return diskTransfer ?? diskAllocation;
+};
+
+export const getVMCutover = (obj: unknown): string => {
+  const data = obj as MigrationStatusVirtualMachinePageData;
+  if (!data.migration) {
+    return '';
+  }
+
+  return getEffectiveVmCutover(data.migration, data.vmId).cutover ?? '';
 };
 
 export const getVMDiskProgress = (obj: unknown): number => {

@@ -4,9 +4,12 @@ import MigrationStatusLabel from 'src/plans/details/tabs/Details/components/Migr
 
 import { ConsoleTimestamp } from '@components/ConsoleTimestamp/ConsoleTimestamp';
 import { VirtualMachineModelGroupVersionKind } from '@utils/crds/common/models';
+import { isEmpty } from '@utils/helpers';
 
 import DisksCounter from '../components/DisksCounter';
 import DisksTransfer from '../components/DisksTransfer';
+import { VMCutoverCellRenderer } from '../components/VMCutoverCellRenderer';
+import VMCutoverActions from '../components/VMMigrationActions';
 
 import {
   type MigrationStatusVirtualMachinePageData,
@@ -21,11 +24,24 @@ import {
 export const getMigrationStatusVirtualMachinesRowFields = (
   fieldsData: MigrationStatusVirtualMachinePageData,
 ): Record<MigrationStatusVirtualMachinesTableResourceId, ReactNode> => {
-  const { specVM, statusVM, targetNamespace } = fieldsData;
+  const { activeMigration, migration, specVM, statusVM, targetNamespace, vmId, vmName } =
+    fieldsData;
   const vmCreated = isVirtualMachineCreationCompleted(statusVM);
   const diskTransferPipeline = getVMDiskTransferPipeline(statusVM);
-
   return {
+    [MigrationStatusVirtualMachinesTableResourceId.Actions]:
+      activeMigration && !isEmpty(activeMigration) && statusVM ? (
+        <VMCutoverActions
+          migration={activeMigration}
+          statusVM={statusVM}
+          vmId={vmId}
+          vmName={vmName}
+        />
+      ) : null,
+    [MigrationStatusVirtualMachinesTableResourceId.Cutover]:
+      migration && !isEmpty(migration) ? (
+        <VMCutoverCellRenderer migration={migration} vmId={vmId} />
+      ) : null,
     [MigrationStatusVirtualMachinesTableResourceId.DiskCounter]: (
       <DisksCounter diskTransferPipeline={diskTransferPipeline} />
     ),
