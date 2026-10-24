@@ -68,6 +68,7 @@ export enum TipsTopic {
 export const TELEMETRY_EVENTS = {
   MIGRATION_CUTOVER_SCHEDULED: 'Migration cutover scheduled',
   MIGRATION_STARTED: 'Migration started',
+  MIGRATION_VM_CUTOVER_SCHEDULED: 'Migration VM cutover scheduled',
   NETWORK_MAP_CREATE_COMPLETED: 'Network map created',
   NETWORK_MAP_CREATE_FAILED: 'Network map create failed',
   NETWORK_MAP_CREATE_STARTED: 'Network map create started',

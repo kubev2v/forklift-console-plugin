@@ -5,6 +5,7 @@ import { CUTOVER_MODE_ASAP, CUTOVER_MODE_SCHEDULED } from './useCutoverFormState
 type UseCutoverDateTimeHandlersArgs = {
   cutoverDate: string | undefined;
   cutoverMode: string;
+  existingCutover?: string;
   setCutoverDate: (date: string) => void;
   setIsDateValid: (valid: boolean) => void;
   setIsTimeValid: (valid: boolean) => void;
@@ -29,6 +30,7 @@ type UseCutoverDateTimeHandlersResult = {
 export const useCutoverDateTimeHandlers = ({
   cutoverDate,
   cutoverMode,
+  existingCutover,
   setCutoverDate,
   setIsDateValid,
   setIsTimeValid,
@@ -72,7 +74,12 @@ export const useCutoverDateTimeHandlers = ({
   );
 
   const isScheduledInvalid = (isTimeValid: boolean, isDateValid: boolean): boolean =>
-    cutoverMode === CUTOVER_MODE_SCHEDULED && (!isTimeValid || !isDateValid);
+    cutoverMode === CUTOVER_MODE_SCHEDULED &&
+    (!isTimeValid ||
+      !isDateValid ||
+      (existingCutover !== undefined &&
+        cutoverDate !== undefined &&
+        new Date(existingCutover).getTime() === new Date(cutoverDate).getTime()));
 
   const isScheduledInPast = (isTimeValid: boolean, isDateValid: boolean): boolean =>
     cutoverMode === CUTOVER_MODE_SCHEDULED &&

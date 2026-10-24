@@ -5,7 +5,7 @@ import { FilterDefType, type ResourceField } from '@components/common/utils/type
 import { t } from '@utils/i18n';
 
 import { MigrationStatusVirtualMachinesTableResourceId } from './types';
-import { getVMDiskProgress, getVMMigrationStatus } from './utils';
+import { getVMCutover, getVMDiskProgress, getVMMigrationStatus } from './utils';
 
 const vmStatuses = [
   { id: 'Failed', label: 'Failed' },
@@ -16,7 +16,7 @@ const vmStatuses = [
   { id: 'Unknown', label: 'Unknown' },
   { id: 'Waiting', label: 'Waiting for cutover' },
 ];
-export const planMigrationVirtualMachinesFields: ResourceField[] = [
+const planMigrationVirtualMachinesFields: ResourceField[] = [
   {
     filter: {
       placeholderLabel: t('Filter by name'),
@@ -81,3 +81,30 @@ export const planMigrationVirtualMachinesFields: ResourceField[] = [
     sortable: true,
   },
 ];
+
+const actionsField: ResourceField = {
+  isAction: true,
+  isVisible: true,
+  label: '',
+  resourceFieldId: MigrationStatusVirtualMachinesTableResourceId.Actions,
+  sortable: false,
+};
+
+export const getPlanMigrationVirtualMachinesFields = (isWarm: boolean): ResourceField[] => {
+  const cutoverField: ResourceField = {
+    filter: {
+      helperText: createElement(DatesComparedHelperText),
+      placeholderLabel: 'YYYY-MM-DD',
+      type: FilterDefType.DateRange,
+    },
+    isVisible: true,
+    jsonPath: getVMCutover,
+    label: t('Cutover'),
+    resourceFieldId: MigrationStatusVirtualMachinesTableResourceId.Cutover,
+    sortable: true,
+  };
+
+  return isWarm
+    ? [...planMigrationVirtualMachinesFields, cutoverField, actionsField]
+    : planMigrationVirtualMachinesFields;
+};

@@ -2,7 +2,8 @@ import type { V1beta1Migration, V1beta1Plan } from '@forklift-ui/types';
 
 export const mockPatchMigrationCutover = jest.fn().mockResolvedValue(undefined);
 
-jest.mock('../utils/utils', () => ({
+jest.mock('src/plans/components/CutoverModal/utils/utils', () => ({
+  ...jest.requireActual<object>('src/plans/components/CutoverModal/utils/utils'),
   formatDateTo12Hours: jest.fn((): string => '12:00 PM'),
   patchMigrationCutover: jest.fn((...args: unknown[]): unknown =>
     mockPatchMigrationCutover(...args),
