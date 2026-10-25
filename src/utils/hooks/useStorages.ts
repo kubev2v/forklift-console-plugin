@@ -50,10 +50,11 @@ export type InventoryStorage =
 
 export const useSourceStorages = (
   provider: V1beta1Provider | undefined,
-): [InventoryStorage[], boolean, Error | null] => {
+): [InventoryStorage[], boolean, Error | null, () => void] => {
   const providerType: ProviderType = provider?.spec?.type as ProviderType;
   const {
     error,
+    forceRefresh,
     inventory: storages,
     loading,
   } = useProviderInventory<InventoryStorage[]>({
@@ -74,7 +75,7 @@ export const useSourceStorages = (
     return storageList;
   }, [providerType, storages]);
 
-  return [typedStorages, loading, error];
+  return [typedStorages, loading, error, forceRefresh];
 };
 
 export const useOpenShiftStorages = (

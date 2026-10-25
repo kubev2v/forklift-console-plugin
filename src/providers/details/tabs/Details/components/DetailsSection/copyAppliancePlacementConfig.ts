@@ -29,13 +29,6 @@ export const COPY_APPLIANCE_SETTING_PATH: Record<CopyApplianceSettingField, stri
   resourcePool: '/spec/settings/copyApplianceResourcePool',
 };
 
-export const COPY_APPLIANCE_SETTING_CRUMBS: Record<CopyApplianceSettingField, string[]> = {
-  datastore: ['Provider', 'spec', 'settings', 'copyApplianceDatastore'],
-  folder: ['Provider', 'spec', 'settings', 'copyApplianceFolder'],
-  network: ['Provider', 'spec', 'settings', 'copyApplianceNetwork'],
-  resourcePool: ['Provider', 'spec', 'settings', 'copyApplianceResourcePool'],
-};
-
 export const COPY_APPLIANCE_SETTING_GETTERS: Record<
   CopyApplianceSettingField,
   (provider: V1beta1Provider) => string | undefined

@@ -45,6 +45,7 @@ const VddkUploader: FC<VddkUploaderProps> = ({ onChangeVddk }) => {
     setError(null);
     setUploading(true);
     setBuildName('');
+    onChangeVddk('');
 
     try {
       const response = await uploadVddkTarball(file);
@@ -68,11 +69,15 @@ const VddkUploader: FC<VddkUploaderProps> = ({ onChangeVddk }) => {
           onClearClick={() => {
             setFile(undefined);
             setFilename('');
+            setBuildName('');
+            onChangeVddk('');
           }}
           onFileInputChange={(_, newFile) => {
             if (newFile) {
               setFile(newFile);
               setFilename(newFile.name);
+              setBuildName('');
+              onChangeVddk('');
             }
           }}
         />

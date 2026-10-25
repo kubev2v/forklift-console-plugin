@@ -2,6 +2,7 @@ import { t } from '@utils/i18n';
 
 export const EMPTY_VDDK_INIT_IMAGE_ANNOTATION = 'forklift.konveyor.io/empty-vddk-init-image';
 export const DEFAULT_TRANSFER_NETWORK_ANNOTATION = 'forklift.konveyor.io/defaultTransferNetwork';
+export const DISK_TRANSFER_METHOD_ANNOTATION = 'forklift.konveyor.io/ui-disk-transfer-method';
 
 export enum ProvidersResourceFieldId {
   Name = 'name',
@@ -74,6 +75,7 @@ export const YES_VALUE = t('yes');
 export const TRUE_VALUE = t('true');
 
 export enum VddkSetupMode {
+  CopyAppliance = 'copy-appliance',
   Upload = 'upload',
   Manual = 'manual',
   Skip = 'skip',

@@ -33,7 +33,9 @@ import VsphereUrlField from './fields/vsphere/VsphereUrlField';
 import VsphereVddkField from './fields/vsphere/VsphereVddkField';
 import type { CreateProviderFormData } from './types';
 
-const ProviderTypeFields: FC = () => {
+type ProviderTypeFieldsProps = { lockSecretFields?: boolean };
+
+const ProviderTypeFields: FC<ProviderTypeFieldsProps> = ({ lockSecretFields = false }) => {
   const { t } = useForkliftTranslation();
   const { control } = useFormContext<CreateProviderFormData>();
 
@@ -50,10 +52,11 @@ const ProviderTypeFields: FC = () => {
 
   return (
     <>
-      <ProviderProjectField />
-      <ProviderTypeField />
-
-      {selectedProviderType && <ProviderNameField />}
+      <fieldset className="create-provider-form__fields" disabled={lockSecretFields}>
+        <ProviderProjectField />
+        <ProviderTypeField />
+        {selectedProviderType && <ProviderNameField />}
+      </fieldset>
 
       {selectedProviderType === PROVIDER_TYPES.ec2 && (
         <>
@@ -103,11 +106,15 @@ const ProviderTypeFields: FC = () => {
       {selectedProviderType === PROVIDER_TYPES.vsphere && (
         <>
           <VsphereEndpointTypeField />
-          <VsphereUrlField />
+          <fieldset className="create-provider-form__fields" disabled={lockSecretFields}>
+            <VsphereUrlField />
+          </fieldset>
           <VsphereVddkField />
-          <SectionHeading text={t('Provider credentials')} />
-          {vsphereUrl?.trim() && <VsphereCredentialsFields />}
-          <CertificateValidationField />
+          <fieldset className="create-provider-form__fields" disabled={lockSecretFields}>
+            <SectionHeading text={t('Provider credentials')} />
+            {vsphereUrl?.trim() && <VsphereCredentialsFields />}
+            <CertificateValidationField />
+          </fieldset>
         </>
       )}
 

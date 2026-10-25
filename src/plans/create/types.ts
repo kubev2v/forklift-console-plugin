@@ -1,7 +1,7 @@
 import type { FieldValues } from 'react-hook-form';
 import type { TargetPowerState } from 'src/plans/constants';
-import type { InventoryNetwork } from 'src/utils/hooks/useNetworks';
-import type { InventoryStorage } from 'src/utils/hooks/useStorages';
+import type { useSourceNetworks } from 'src/utils/hooks/useNetworks';
+import type { useSourceStorages } from 'src/utils/hooks/useStorages';
 import type { Ec2Network } from 'src/utils/types/ec2Inventory';
 
 import type {
@@ -149,11 +149,11 @@ type ResourceQueryResult<T> = [T, boolean, Error | null];
 export type CreatePlanWizardContextProps = {
   network: {
     oVirtNicProfiles: ResourceQueryResult<OVirtNicProfile[]>;
-    sources: ResourceQueryResult<InventoryNetwork[]>;
+    sources: ReturnType<typeof useSourceNetworks>;
     targets: ResourceQueryResult<OpenShiftNetworkAttachmentDefinition[]>;
   };
   storage: {
-    sources: ResourceQueryResult<InventoryStorage[]>;
+    sources: ReturnType<typeof useSourceStorages>;
     targets: ResourceQueryResult<TargetStorage[]>;
   };
   vmsWithDisks: ResourceQueryResult<ProviderVirtualMachine[]>;
