@@ -1,6 +1,9 @@
+import type { ReactElement } from 'react';
+
 import { render, screen } from '@testing-library/react';
 
 jest.mock('src/utils/i18n', (): unknown => ({
+  t: (key: string): string => key,
   useForkliftTranslation: () => ({
     t: (key: string, values?: Record<string, string>): string =>
       Object.entries(values ?? {}).reduce(
@@ -11,7 +14,7 @@ jest.mock('src/utils/i18n', (): unknown => ({
 }));
 jest.mock('../../DetailsSection/CopyAppliancePlacementForm', (): unknown => ({
   __esModule: true,
-  default: (): React.ReactElement => <div>Placement fields</div>,
+  default: (): ReactElement => <div>Placement fields</div>,
 }));
 jest.mock('../../DetailsSection/useCopyAppliancePlacementLabels', (): unknown => ({
   useCopyAppliancePlacementLabels: () => ({
@@ -33,7 +36,7 @@ const options = {
   inventoryErrors: { resourcePool: resourcePoolError },
   inventoryLoading: false,
   networkOptions: [],
-  resourcePoolEndpointUnavailable: true,
+  onRetry: jest.fn(),
   resourcePoolOptions: [],
 };
 const values = { datastore: '', folder: '', network: '', resourcePool: '' };
@@ -51,33 +54,10 @@ it('combines field-specific inventory and template lookup failures in one alert'
 
   expect(screen.getAllByTestId('disk-transfer-setup-error')).toHaveLength(1);
   expect(screen.getByText('Unable to load vSphere placement inventory')).toBeVisible();
-  expect(screen.getByText('Resource pool (resourcepools?detail=1): 404 Not Found')).toBeVisible();
-  expect(
-    screen.getByText(
-      'The resource-pool inventory endpoint appears unavailable from this Forklift backend. Retry cannot add this endpoint; use a backend with resource-pool inventory support.',
-    ),
-  ).toBeVisible();
-  expect(
-    screen.getByText('Unable to check whether a sourcing appliance template exists.'),
-  ).toBeVisible();
-  expect(
-    screen.getByText('You do not have permission to create a copy appliance template.'),
-  ).toBeVisible();
-});
-
-it('does not imply backend support is missing for other inventory failures', () => {
-  render(
-    <DiskTransferPlacementForm
-      onChange={jest.fn()}
-      options={{ ...options, resourcePoolEndpointUnavailable: false }}
-      values={values}
-    />,
+  const alert = screen.getByTestId('disk-transfer-setup-error');
+  expect(alert).toHaveTextContent('Resource pool: 404 Not Found');
+  expect(alert).toHaveTextContent('Unable to check whether a sourcing appliance template exists.');
+  expect(alert).toHaveTextContent(
+    'You do not have permission to create a copy appliance template.',
   );
-
-  expect(screen.getAllByTestId('disk-transfer-setup-error')).toHaveLength(1);
-  expect(
-    screen.queryByText(
-      'The resource-pool inventory endpoint appears unavailable from this Forklift backend. Retry cannot add this endpoint; use a backend with resource-pool inventory support.',
-    ),
-  ).not.toBeInTheDocument();
 });

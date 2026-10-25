@@ -72,11 +72,7 @@ test.describe('Provider disk transfer edit', { tag: '@upstream' }, () => {
     await providerDetailsPage.navigate(source.name, MTV_NAMESPACE);
 
     const editButton = page.getByTestId('disk-transfer-edit-button');
-    const hasDiskTransferEdit = await editButton
-      .waitFor({ state: 'visible', timeout: 5_000 })
-      .then(() => true)
-      .catch(() => false);
-    test.skip(!hasDiskTransferEdit, 'The deployed plugin does not include MTV-6963 yet.');
+    await expect(editButton).toBeVisible();
 
     await expect(page.getByTestId('disk-transfer-method')).toContainText('VDDK image');
     await expect(page.getByTestId('disk-transfer-vddk-image')).toContainText(VDDK_IMAGE);

@@ -2,15 +2,10 @@ import type { ReactElement } from 'react';
 import type { CopyApplianceSettingField } from 'src/providers/details/tabs/Details/components/DetailsSection/copyAppliancePlacementConfig';
 import type { CopyAppliancePlacementFieldLabels } from 'src/providers/details/tabs/Details/components/DetailsSection/useCopyAppliancePlacementLabels';
 
-import type { V1beta1Provider } from '@forklift-ui/types';
 import { fireEvent, render, screen } from '@testing-library/react';
 
 import CreateProviderPlacementInventory from '../CreateProviderPlacementInventory';
 
-const provider = {
-  metadata: { name: 'source', namespace: 'mtv', uid: 'provider-uid' },
-  spec: { type: 'vsphere' },
-} as V1beta1Provider;
 const option = { children: 'inventory-value', value: 'inventory-value' };
 const mockOptions = {
   datastoreOptions: [option],
@@ -20,14 +15,10 @@ const mockOptions = {
   inventoryErrors: {} as Partial<Record<CopyApplianceSettingField, Error>>,
   inventoryLoading: true,
   networkOptions: [option],
-  resourcePoolEndpointUnavailable: false,
+  onRetry: jest.fn(),
   resourcePoolOptions: [option],
 };
 
-jest.mock(
-  'src/providers/details/tabs/Details/components/DetailsSection/useCopyAppliancePlacementOptions',
-  (): unknown => ({ useCopyAppliancePlacementOptions: (): typeof mockOptions => mockOptions }),
-);
 jest.mock(
   'src/providers/details/tabs/Details/components/DetailsSection/useCopyAppliancePlacementLabels',
   (): unknown => ({
@@ -50,17 +41,16 @@ jest.mock('src/utils/i18n', (): unknown => ({
   useForkliftTranslation: (): unknown => ({ t: (key: string): string => key }),
 }));
 
-const renderInventory = (
-  onRetry = jest.fn(),
-  onValidChange = jest.fn(),
-): ReturnType<typeof render> =>
+const renderInventory = (onRetry = jest.fn()): ReturnType<typeof render> =>
   render(
     <CreateProviderPlacementInventory
-      onChange={jest.fn()}
-      onRetry={onRetry}
-      onValidChange={onValidChange}
-      provider={provider}
-      values={{ datastore: '', folder: '', network: '', resourcePool: '' }}
+      placement={{
+        canDeploy: false,
+        connection: { error: null, isMissing: false, isReady: true, loaded: true, phase: 'Ready' },
+        onChange: jest.fn(),
+        options: { ...mockOptions, onRetry },
+        values: { datastore: '', folder: '', network: '', resourcePool: '' },
+      }}
     />,
   );
 
@@ -69,7 +59,6 @@ describe('CreateProviderPlacementInventory', () => {
     mockOptions.inventoryLoading = true;
     mockOptions.inventoryError = null;
     mockOptions.inventoryErrors = {};
-    mockOptions.resourcePoolEndpointUnavailable = false;
     mockOptions.resourcePoolOptions = [option];
   });
 
@@ -108,24 +97,10 @@ describe('CreateProviderPlacementInventory', () => {
   it('shows fields but prevents deployment when required inventory is empty', () => {
     mockOptions.inventoryLoading = false;
     mockOptions.resourcePoolOptions = [];
-    const onValidChange = jest.fn();
-    renderInventory(jest.fn(), onValidChange);
+    renderInventory();
 
     expect(screen.getByText(/Required vSphere inventory/)).toBeInTheDocument();
     expect(screen.getByText('Resource pool (resourcepools?detail=1)')).toBeInTheDocument();
     expect(screen.getByTestId('placement-fields')).toBeInTheDocument();
-    expect(onValidChange).toHaveBeenLastCalledWith(false);
-  });
-
-  it('identifies an unavailable resource-pool endpoint without offering a futile Retry', () => {
-    mockOptions.inventoryLoading = false;
-    mockOptions.inventoryError = new Error('404 Not Found');
-    mockOptions.inventoryErrors = { resourcePool: mockOptions.inventoryError };
-    mockOptions.resourcePoolEndpointUnavailable = true;
-    renderInventory();
-
-    expect(screen.getByText(/Retry cannot add this endpoint/)).toBeInTheDocument();
-    expect(screen.getByText(/Resource pool \(resourcepools\?detail=1\)/)).toBeInTheDocument();
-    expect(screen.queryByRole('button', { name: 'Retry' })).not.toBeInTheDocument();
   });
 });

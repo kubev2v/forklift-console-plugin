@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { useCallback, useMemo } from 'react';
 
 import type { V1beta1Provider } from '@forklift-ui/types';
 import type { SelectOptionProps } from '@patternfly/react-core';
@@ -10,13 +10,12 @@ import { useForkliftTranslation } from '@utils/i18n';
 import { COPY_APPLIANCE_INVENTORY_ENDPOINTS } from './copyApplianceInventoryConstants';
 import type { CopyApplianceSettingField } from './copyAppliancePlacementConfig';
 import { toDatastoreSelectOptions, warningForDatastoreName } from './datastoreSelectOptions';
-import { isResourcePoolInventoryEndpointUnavailable } from './isResourcePoolInventoryEndpointUnavailable';
 import { toSelectOptions } from './toSelectOptions';
 
 type PathItem = { path?: string };
 
 export const useCopyAppliancePlacementOptions = (
-  provider: V1beta1Provider,
+  provider: V1beta1Provider | undefined,
   resourcePool: string,
   includeSelectedResourcePool = true,
 ): {
@@ -27,28 +26,39 @@ export const useCopyAppliancePlacementOptions = (
   inventoryErrors: Partial<Record<CopyApplianceSettingField, Error>>;
   inventoryLoading: boolean;
   networkOptions: SelectOptionProps[];
-  resourcePoolEndpointUnavailable: boolean;
+  onRetry: () => void;
   resourcePoolOptions: SelectOptionProps[];
 } => {
   const { t } = useForkliftTranslation();
-  const [storages, storagesLoading, storagesError] = useSourceStorages(provider);
-  const [networks, networksLoading, networksError] = useSourceNetworks(provider);
+  const [storages, storagesLoading, storagesError, refreshStorages] = useSourceStorages(provider);
+  const [networks, networksLoading, networksError, refreshNetworks] = useSourceNetworks(provider);
   const {
     error: foldersError,
+    forceRefresh: refreshFolders,
     inventory: folders,
     loading: foldersLoading,
   } = useProviderInventory<PathItem[]>({
+    disabled: !provider,
     provider,
     subPath: COPY_APPLIANCE_INVENTORY_ENDPOINTS.folder,
   });
   const {
     error: poolsError,
+    forceRefresh: refreshPools,
     inventory: resourcePools,
     loading: poolsLoading,
   } = useProviderInventory<PathItem[]>({
+    disabled: !provider,
     provider,
     subPath: COPY_APPLIANCE_INVENTORY_ENDPOINTS.resourcePool,
   });
+
+  const onRetry = useCallback((): void => {
+    refreshStorages();
+    refreshNetworks();
+    refreshFolders();
+    refreshPools();
+  }, [refreshFolders, refreshNetworks, refreshPools, refreshStorages]);
 
   const inventoryErrors = useMemo<Partial<Record<CopyApplianceSettingField, Error>>>(
     () => ({
@@ -59,14 +69,6 @@ export const useCopyAppliancePlacementOptions = (
     }),
     [foldersError, networksError, poolsError, storagesError],
   );
-  const otherInventoriesReady =
-    !storagesLoading &&
-    !networksLoading &&
-    !foldersLoading &&
-    !storagesError &&
-    !networksError &&
-    !foldersError;
-
   const datastoreOptions = useMemo(() => toDatastoreSelectOptions(storages, t), [storages, t]);
 
   const datastoreWarning = useMemo(
@@ -102,10 +104,7 @@ export const useCopyAppliancePlacementOptions = (
     inventoryErrors,
     inventoryLoading: storagesLoading || networksLoading || foldersLoading || poolsLoading,
     networkOptions,
-    resourcePoolEndpointUnavailable: isResourcePoolInventoryEndpointUnavailable(
-      poolsError,
-      otherInventoriesReady,
-    ),
+    onRetry,
     resourcePoolOptions,
   };
 };

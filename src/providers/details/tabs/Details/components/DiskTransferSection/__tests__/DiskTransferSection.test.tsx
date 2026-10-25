@@ -1,3 +1,4 @@
+import type { ReactNode } from 'react';
 import { DISK_TRANSFER_METHOD_ANNOTATION, VddkSetupMode } from 'src/providers/utils/constants';
 
 import type { V1beta1CopyApplianceTemplate, V1beta1Provider } from '@forklift-ui/types';
@@ -32,7 +33,7 @@ jest.mock('src/components/DetailItems/DetailItem', (): unknown => ({
     testId,
     title,
   }: {
-    content: React.ReactNode;
+    content: ReactNode;
     testId: string;
     title: string;
   }) => (

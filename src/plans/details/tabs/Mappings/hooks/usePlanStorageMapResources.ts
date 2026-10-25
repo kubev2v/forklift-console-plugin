@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
 import { useOvirtDisksForVMs } from 'src/plans/create/hooks/useOvirtDisksForVMs';
 import { getStorageMappingValues } from 'src/storageMaps/create/utils/buildStorageMappings';
-import { type InventoryStorage, useSourceStorages } from 'src/utils/hooks/useStorages';
+import { useSourceStorages } from 'src/utils/hooks/useStorages';
 
 import {
   type ProviderVirtualMachine,
@@ -31,7 +31,7 @@ type UsePlanStorageMapResources = ({
   sourceProvider,
   targetProvider,
 }: UsePlanStorageMapResourcesParams) => {
-  sourceStoragesResult: [InventoryStorage[], boolean, Error | null];
+  sourceStoragesResult: ReturnType<typeof useSourceStorages>;
   storageMappings: StorageMapping[];
   storageMapResult: TypedWatchK8sResult<V1beta1StorageMap>;
   targetStoragesResult: [TargetStorage[], boolean, Error | null];

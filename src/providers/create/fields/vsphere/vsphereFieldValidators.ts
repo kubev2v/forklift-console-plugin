@@ -29,20 +29,20 @@ export const validateVspherePassword = (value: string | undefined): string | tru
   return true;
 };
 
-export const validateVddkInitImage = (value: string | undefined): string | true => {
+export const validateVddkInitImage = (value: string | undefined): string | undefined => {
   const result = validateVDDKImage(value);
 
   if (result.type === ValidationState.Error && typeof result.msg === 'string') {
     return result.msg;
   }
 
-  return true;
+  return undefined;
 };
 
 export const validateVsphereDiskTransfer = (
   mode: VddkSetupMode | undefined,
   image: string | undefined,
-): string | true => {
+): string | undefined => {
   if (!mode) {
     return t('Disk transfer selection is required');
   }
@@ -54,5 +54,5 @@ export const validateVsphereDiskTransfer = (
     return validateVddkInitImage(image);
   }
 
-  return true;
+  return undefined;
 };

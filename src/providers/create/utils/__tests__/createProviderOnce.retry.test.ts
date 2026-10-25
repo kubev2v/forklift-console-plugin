@@ -13,10 +13,11 @@ import { ProviderFormFieldId } from '../../fields/constants';
 import type { CreateProviderFormData } from '../../types';
 import { buildProviderResources } from '../buildProviderResources';
 import { createProvider } from '../createProvider';
-import { createProviderOnce, type ProviderCreationProgress } from '../createProviderOnce';
+import { createProviderOnce } from '../createProviderOnce';
 import { createProviderSecret } from '../createProviderSecret';
 import { findCreatedProvider } from '../findCreatedProvider';
 import { patchProviderSecretOwner } from '../patchProviderSecretOwner';
+import type { ProviderCreationProgress } from '../providerCreation.types';
 
 const mockBuild = buildProviderResources as jest.MockedFunction<typeof buildProviderResources>;
 const mockCreateSecret = createProviderSecret as jest.MockedFunction<typeof createProviderSecret>;

@@ -1,10 +1,9 @@
-import type { FC } from 'react';
+import { type FC, Fragment } from 'react';
 
 import { Alert, AlertVariant, Stack, StackItem } from '@patternfly/react-core';
 import { isEmpty } from '@utils/helpers';
 import { useForkliftTranslation } from '@utils/i18n';
 
-import { COPY_APPLIANCE_INVENTORY_ENDPOINTS } from '../DetailsSection/copyApplianceInventoryConstants';
 import type {
   CopyAppliancePlacementValues,
   CopyApplianceSettingField,
@@ -13,6 +12,8 @@ import { COPY_APPLIANCE_SETTING_FIELDS } from '../DetailsSection/copyAppliancePl
 import CopyAppliancePlacementForm from '../DetailsSection/CopyAppliancePlacementForm';
 import { useCopyAppliancePlacementLabels } from '../DetailsSection/useCopyAppliancePlacementLabels';
 import type { useCopyAppliancePlacementOptions } from '../DetailsSection/useCopyAppliancePlacementOptions';
+
+import { getPlacementErrorTitle } from './diskTransferDisplay';
 
 type DiskTransferPlacementFormProps = {
   onChange: (field: CopyApplianceSettingField, value: string) => void;
@@ -39,16 +40,9 @@ const DiskTransferPlacementForm: FC<DiskTransferPlacementFormProps> = ({
     inventoryErrors,
     inventoryLoading,
     networkOptions,
-    resourcePoolEndpointUnavailable,
     resourcePoolOptions,
   } = options;
   const failedFields = COPY_APPLIANCE_SETTING_FIELDS.filter((field) => inventoryErrors[field]);
-  let alertTitle = t('Unable to configure sourcing appliance');
-  if (inventoryError) {
-    alertTitle = t('Unable to load vSphere placement inventory');
-  } else if (templateError) {
-    alertTitle = t('Unable to verify sourcing appliance template');
-  }
 
   return (
     <Stack hasGutter>
@@ -57,32 +51,33 @@ const DiskTransferPlacementForm: FC<DiskTransferPlacementFormProps> = ({
           <Alert
             data-testid="disk-transfer-setup-error"
             isInline
-            title={alertTitle}
+            title={getPlacementErrorTitle(inventoryError, templateError)}
             variant={AlertVariant.danger}
           >
             {inventoryError &&
               (isEmpty(failedFields) ? (
-                <div>{inventoryError.message}</div>
+                <>
+                  {inventoryError.message}
+                  <br />
+                </>
               ) : (
                 failedFields.map((field) => (
-                  <div key={field}>
-                    {t('{{field}} ({{endpoint}}): {{reason}}', {
-                      endpoint: COPY_APPLIANCE_INVENTORY_ENDPOINTS[field],
+                  <Fragment key={field}>
+                    {t('{{field}}: {{reason}}', {
                       field: labels[field].label,
                       reason: inventoryErrors[field]?.message,
                     })}
-                  </div>
+                    <br />
+                  </Fragment>
                 ))
               ))}
-            {resourcePoolEndpointUnavailable && (
-              <div>
-                {t(
-                  'The resource-pool inventory endpoint appears unavailable from this Forklift backend. Retry cannot add this endpoint; use a backend with resource-pool inventory support.',
-                )}
-              </div>
+            {templateError && (
+              <>
+                {templateError}
+                <br />
+              </>
             )}
-            {templateError && <div>{templateError}</div>}
-            {permissionError && <div>{permissionError}</div>}
+            {permissionError && <>{permissionError}</>}
           </Alert>
         </StackItem>
       )}

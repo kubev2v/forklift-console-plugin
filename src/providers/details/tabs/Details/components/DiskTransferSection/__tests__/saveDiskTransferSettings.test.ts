@@ -37,8 +37,7 @@ jest.mock('../../DetailsSection/onCreateCopyApplianceTemplate', (): unknown => (
   default: (...args: unknown[]) => mockCreateTemplate(...args),
 }));
 
-import { CopyApplianceTemplatePlacementMismatchError } from '../../DetailsSection/CopyApplianceTemplatePlacementMismatchError';
-import { DiskTransferSaveError, saveDiskTransferSettings } from '../saveDiskTransferSettings';
+import { saveDiskTransferSettings } from '../saveDiskTransferSettings';
 import type { DiskTransferValues } from '../types';
 
 const values: DiskTransferValues = {
@@ -123,20 +122,12 @@ describe('saveDiskTransferSettings', () => {
   it('marks the provider pending before creating a new template and reports creation failure', async () => {
     mockCreateTemplate.mockRejectedValueOnce(new Error('quota exceeded'));
 
-    await expect(saveDiskTransferSettings(provider, undefined, values)).rejects.toBeInstanceOf(
-      DiskTransferSaveError,
-    );
+    await expect(saveDiskTransferSettings(provider, undefined, values)).rejects.toMatchObject({
+      templateDeleted: false,
+    });
     expect(mockK8sPatch.mock.invocationCallOrder[0]).toBeLessThan(
       mockCreateTemplate.mock.invocationCallOrder[0],
     );
     expect(mockK8sDelete).not.toHaveBeenCalled();
-  });
-
-  it('shows how to edit an existing template after a placement conflict', async () => {
-    mockCreateTemplate.mockRejectedValueOnce(new CopyApplianceTemplatePlacementMismatchError());
-
-    await expect(saveDiskTransferSettings(provider, undefined, values)).rejects.toThrow(
-      'Close this form and edit disk transfer from the provider Details tab.',
-    );
   });
 });

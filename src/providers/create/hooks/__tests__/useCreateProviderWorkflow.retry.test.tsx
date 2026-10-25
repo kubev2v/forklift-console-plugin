@@ -44,16 +44,14 @@ const formData = {
 const WorkflowHarness: FC = () => {
   const { handleSubmit } = useForm<CreateProviderFormData>({ defaultValues: formData });
   const { apiError, createdProvider, onCreate, onDeploy } = useCreateProviderWorkflow({
-    canDeploy: true,
     handleSubmit,
-    placement: { datastore: 'ds', folder: '/folder', network: 'network', resourcePool: '/pool' },
   });
 
   return (
     <>
       <button
         onClick={() => {
-          onCreate().catch(() => undefined);
+          onCreate(jest.fn()).catch(() => undefined);
         }}
         type="button"
       >
@@ -61,7 +59,15 @@ const WorkflowHarness: FC = () => {
       </button>
       <button
         onClick={() => {
-          onDeploy().catch(() => undefined);
+          onDeploy({
+            canDeploy: true,
+            placement: {
+              datastore: 'ds',
+              folder: '/folder',
+              network: 'network',
+              resourcePool: '/pool',
+            },
+          }).catch(() => undefined);
         }}
         type="button"
       >
@@ -106,5 +112,24 @@ describe('useCreateProviderWorkflow retries', () => {
     });
     expect(createTemplate).toHaveBeenCalledTimes(2);
     expect(createProviderOnce).toHaveBeenCalledTimes(1);
+  });
+
+  it('blocks same-tick duplicate deployments before the loading state rerenders', async () => {
+    const createTemplate = onCreateCopyApplianceTemplate as jest.MockedFunction<
+      typeof onCreateCopyApplianceTemplate
+    >;
+    createTemplate.mockResolvedValue({} as never);
+    render(<WorkflowHarness />);
+    fireEvent.click(screen.getByRole('button', { name: 'Create' }));
+    await screen.findByText('Provider created');
+
+    const deploy = screen.getByRole('button', { name: 'Deploy' });
+    fireEvent.click(deploy);
+    fireEvent.click(deploy);
+
+    expect(createTemplate).toHaveBeenCalledTimes(1);
+    await waitFor(() => {
+      expect(mockNavigate).toHaveBeenCalledTimes(1);
+    });
   });
 });

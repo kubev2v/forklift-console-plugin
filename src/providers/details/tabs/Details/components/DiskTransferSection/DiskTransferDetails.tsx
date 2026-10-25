@@ -15,6 +15,7 @@ import CopyApplianceSSHSecretsDetailsItem from '../DetailsSection/CopyApplianceS
 import CopyApplianceTemplateDetailsItem from '../DetailsSection/CopyApplianceTemplateDetailsItem';
 import { useCopyAppliancePlacementLabels } from '../DetailsSection/useCopyAppliancePlacementLabels';
 
+import { getApplianceStatusLabel, getDiskTransferMethodLabel } from './diskTransferDisplay';
 import type { CopyApplianceDisplayStatus } from './types';
 
 type DiskTransferDetailsProps = {
@@ -33,22 +34,14 @@ const DiskTransferDetails: FC<DiskTransferDetailsProps> = ({
   const { t } = useForkliftTranslation();
   const placementLabels = useCopyAppliancePlacementLabels();
   const isVddk = method === VddkSetupMode.Manual || method === VddkSetupMode.Upload;
-  let methodLabel = t('Skip disk transfer setup');
-  if (isVddk) {
-    methodLabel = t('VDDK image');
-  } else if (method === VddkSetupMode.CopyAppliance) {
-    methodLabel = t('Copy appliance');
-  }
-  let applianceStatusLabel = t('Unavailable');
-  if (templateStatus === 'configured') {
-    applianceStatusLabel = t('Configured');
-  } else if (templateStatus === 'pending') {
-    applianceStatusLabel = t('Not configured');
-  }
 
   return (
     <DescriptionList columnModifier={{ default: '2Col' }}>
-      <DetailsItem content={methodLabel} testId="disk-transfer-method" title={t('Method')} />
+      <DetailsItem
+        content={getDiskTransferMethodLabel(method)}
+        testId="disk-transfer-method"
+        title={t('Method')}
+      />
       {isVddk && (
         <>
           <DetailsItem
@@ -65,7 +58,7 @@ const DiskTransferDetails: FC<DiskTransferDetailsProps> = ({
       )}
       {method === VddkSetupMode.CopyAppliance && (
         <DetailsItem
-          content={applianceStatusLabel}
+          content={getApplianceStatusLabel(templateStatus)}
           testId="disk-transfer-appliance-status"
           title={t('Sourcing appliance status')}
         />

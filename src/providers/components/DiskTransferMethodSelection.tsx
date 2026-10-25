@@ -65,9 +65,7 @@ const DiskTransferMethodSelection: FC<DiskTransferMethodSelectionProps> = ({
                   <Select
                     id="disk-transfer-method-select"
                     onSelect={(_event, value) => {
-                      if (typeof value === 'string') {
-                        onMethodChange(value as VddkSetupMode);
-                      }
+                      onMethodChange(value as VddkSetupMode);
                     }}
                     options={options}
                     testId="disk-transfer-method-toggle"

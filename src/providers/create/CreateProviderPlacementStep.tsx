@@ -1,51 +1,23 @@
-import { type FC, useEffect, useState } from 'react';
+import type { FC } from 'react';
 
-import { ProviderModelGroupVersionKind, type V1beta1Provider } from '@forklift-ui/types';
 import { Alert, AlertVariant } from '@patternfly/react-core';
-import { getName, getNamespace } from '@utils/crds/common/selectors';
-import { getProviderPhase } from '@utils/crds/providers/selectors';
-import { useK8sWatchResource } from '@utils/hooks/useK8sWatchResource';
 import { useForkliftTranslation } from '@utils/i18n';
 
-import type {
-  CopyAppliancePlacementValues,
-  CopyApplianceSettingField,
-} from '../details/tabs/Details/components/DetailsSection/copyAppliancePlacementConfig';
-
+import type { CreateProviderPlacement } from './hooks/createProviderPlacement.types';
 import CreateProviderPlacementInventory from './CreateProviderPlacementInventory';
 import CreateProviderPlacementLoading from './CreateProviderPlacementLoading';
 
-type CreateProviderPlacementStepProps = {
-  onChange: (field: CopyApplianceSettingField, value: string) => void;
-  onValidChange: (isValid: boolean) => void;
-  provider: V1beta1Provider;
-  values: CopyAppliancePlacementValues;
-};
-
-const CreateProviderPlacementStep: FC<CreateProviderPlacementStepProps> = ({
-  onChange,
-  onValidChange,
-  provider,
-  values,
-}) => {
+const CreateProviderPlacementStep: FC<{ placement: CreateProviderPlacement }> = ({ placement }) => {
   const { t } = useForkliftTranslation();
-  const [retryKey, setRetryKey] = useState(0);
-  const [watchedProvider, providerLoaded, providerError] = useK8sWatchResource<V1beta1Provider>({
-    groupVersionKind: ProviderModelGroupVersionKind,
-    name: getName(provider),
-    namespace: getNamespace(provider),
-    namespaced: true,
-  });
-  const phase = getProviderPhase(watchedProvider);
-  const isReady = providerLoaded && !providerError && phase === 'Ready';
+  const {
+    error: providerError,
+    isMissing,
+    isReady,
+    loaded: providerLoaded,
+    phase,
+  } = placement.connection;
 
-  useEffect(() => {
-    if (!isReady) {
-      onValidChange(false);
-    }
-  }, [isReady, onValidChange]);
-
-  if (providerError || (providerLoaded && !watchedProvider)) {
+  if (providerError || isMissing) {
     return (
       <Alert
         isInline
@@ -77,18 +49,7 @@ const CreateProviderPlacementStep: FC<CreateProviderPlacementStepProps> = ({
     );
   }
 
-  return (
-    <CreateProviderPlacementInventory
-      key={retryKey}
-      onChange={onChange}
-      onRetry={() => {
-        setRetryKey((current) => current + 1);
-      }}
-      onValidChange={onValidChange}
-      provider={watchedProvider}
-      values={values}
-    />
-  );
+  return <CreateProviderPlacementInventory placement={placement} />;
 };
 
 export default CreateProviderPlacementStep;

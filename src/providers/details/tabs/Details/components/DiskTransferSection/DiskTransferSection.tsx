@@ -3,11 +3,10 @@ import { VddkSetupMode } from 'src/providers/utils/constants';
 
 import SectionHeadingWithEdit from '@components/headers/SectionHeadingWithEdit';
 import {
-  CopyApplianceTemplateModel,
   CopyApplianceTemplateModelGroupVersionKind,
   type V1beta1CopyApplianceTemplate,
 } from '@forklift-ui/types';
-import { useAccessReview, useOverlay } from '@openshift-console/dynamic-plugin-sdk';
+import { useOverlay } from '@openshift-console/dynamic-plugin-sdk';
 import { Alert, AlertVariant, PageSection, Stack, StackItem } from '@patternfly/react-core';
 import { FEATURE_NAMES } from '@utils/constants';
 import { getName, getNamespace, getType } from '@utils/crds/common/selectors';
@@ -24,10 +23,10 @@ import {
 } from '../DetailsSection/copyAppliancePlacementConfig';
 
 import DiskTransferDetails from './DiskTransferDetails';
+import { getCopyApplianceDisplayStatus } from './diskTransferDisplay';
 import EditDiskTransfer from './EditDiskTransfer';
 import { getDiskTransferMethod } from './getDiskTransferMethod';
 import { isMissingCopyApplianceTemplate } from './isMissingCopyApplianceTemplate';
-import type { CopyApplianceDisplayStatus } from './types';
 
 type DiskTransferSectionProps = { data: ProviderData };
 
@@ -51,19 +50,6 @@ const DiskTransferSection: FC<DiskTransferSectionProps> = ({ data }) => {
         }
       : null,
   );
-  const [canCreateTemplate, createPermissionLoading] = useAccessReview({
-    group: CopyApplianceTemplateModel.apiGroup,
-    namespace,
-    resource: CopyApplianceTemplateModel.plural,
-    verb: 'create',
-  });
-  const [canDeleteTemplate, deletePermissionLoading] = useAccessReview({
-    group: CopyApplianceTemplateModel.apiGroup,
-    name: templateName,
-    namespace,
-    resource: CopyApplianceTemplateModel.plural,
-    verb: 'delete',
-  });
 
   if (!isVsphere || !provider || !permissions) {
     return null;
@@ -82,12 +68,7 @@ const DiskTransferSection: FC<DiskTransferSectionProps> = ({ data }) => {
     method === VddkSetupMode.CopyAppliance &&
     !template &&
     (!hasPlacement || templateIsMissing || (loaded && !loadError));
-  let templateStatus: CopyApplianceDisplayStatus = 'unavailable';
-  if (template) {
-    templateStatus = 'configured';
-  } else if (isPending) {
-    templateStatus = 'pending';
-  }
+  const templateStatus = getCopyApplianceDisplayStatus(Boolean(template), isPending);
 
   return (
     <PageSection className="forklift-page-section" hasBodyWrapper={false}>
@@ -101,11 +82,6 @@ const DiskTransferSection: FC<DiskTransferSectionProps> = ({ data }) => {
             }
             onClick={() => {
               launchOverlay(EditDiskTransfer, {
-                canCreateTemplate,
-                canDeleteTemplate,
-                copyApplianceEnabled,
-                createPermissionLoading,
-                deletePermissionLoading,
                 provider,
                 template,
                 templateLookupUnavailable,
