@@ -12,7 +12,6 @@ jest.mock('@openshift-console/dynamic-plugin-sdk', (): unknown => ({
 
 import { CopyApplianceTemplateModel } from '@forklift-ui/types';
 
-import { CopyApplianceTemplatePlacementMismatchError } from '../CopyApplianceTemplatePlacementMismatchError';
 import onCreateCopyApplianceTemplate from '../onCreateCopyApplianceTemplate';
 
 const placement = {
@@ -104,7 +103,7 @@ describe('onCreateCopyApplianceTemplate', () => {
     );
     await expect(
       onCreateCopyApplianceTemplate(provider, { ...placement, datastore: 'datastore-B' }),
-    ).rejects.toBeInstanceOf(CopyApplianceTemplatePlacementMismatchError);
+    ).rejects.toEqual({ code: 409 });
     expect(mockK8sCreate).toHaveBeenCalledTimes(2);
   });
 

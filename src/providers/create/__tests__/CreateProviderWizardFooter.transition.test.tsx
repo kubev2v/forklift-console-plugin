@@ -8,6 +8,7 @@ import { PROVIDER_DETAILS_STEP_ID, PROVIDER_PLACEMENT_STEP_ID } from '../utils/w
 
 jest.mock('react-router', (): object => ({ useNavigate: (): jest.Mock => jest.fn() }));
 jest.mock('src/utils/i18n', (): object => ({
+  t: (key: string): string => key,
   useForkliftTranslation: (): object => ({ t: (key: string): string => key }),
 }));
 
@@ -23,10 +24,10 @@ const WizardHarness: FC = () => {
           createdProviderUrl={providerCreated ? '/provider/details' : undefined}
           isApplianceSelected
           isSubmitting={false}
-          onCreate={async () => {
+          onCreate={async (onContinue) => {
             await Promise.resolve();
             setProviderCreated(true);
-            return true;
+            onContinue();
           }}
           onDeploy={(): Promise<void> => Promise.resolve()}
         />

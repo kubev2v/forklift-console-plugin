@@ -1,7 +1,10 @@
+import type { FC } from 'react';
+
 import type { V1beta1Provider } from '@forklift-ui/types';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 
 import CreateProviderPlacementStep from '../CreateProviderPlacementStep';
+import { useCreateProviderPlacement } from '../hooks/useCreateProviderPlacement';
 
 const provider = {
   metadata: { name: 'source', namespace: 'mtv', uid: 'provider-uid' },
@@ -25,20 +28,17 @@ jest.mock('src/utils/i18n', (): unknown => ({
   useForkliftTranslation: (): unknown => ({ t: (key: string): string => key }),
 }));
 
+const PlacementHarness: FC = () => (
+  <CreateProviderPlacementStep placement={useCreateProviderPlacement(provider)} />
+);
+
 describe('CreateProviderPlacementStep inventory retry', () => {
   beforeEach(() => {
     mockConsoleFetchJSON.mockClear();
   });
 
   it('reissues a failed inventory endpoint when Retry is clicked', async () => {
-    render(
-      <CreateProviderPlacementStep
-        onChange={jest.fn()}
-        onValidChange={jest.fn()}
-        provider={provider}
-        values={{ datastore: '', folder: '', network: '', resourcePool: '' }}
-      />,
-    );
+    render(<PlacementHarness />);
 
     await screen.findByText(/Resource pool \(resourcepools\?detail=1\): 404 Not Found/);
     const poolRequests = (): number =>

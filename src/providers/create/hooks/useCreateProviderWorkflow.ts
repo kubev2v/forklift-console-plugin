@@ -1,7 +1,5 @@
-import { type MutableRefObject, useCallback, useRef, useState } from 'react';
-import type { UseFormHandleSubmit } from 'react-hook-form';
+import { useCallback, useRef, useState } from 'react';
 import { useNavigate } from 'react-router';
-import type { CopyAppliancePlacementValues } from 'src/providers/details/tabs/Details/components/DetailsSection/copyAppliancePlacementConfig';
 import onCreateCopyApplianceTemplate from 'src/providers/details/tabs/Details/components/DetailsSection/onCreateCopyApplianceTemplate';
 import { getProviderDetailsPageUrl } from 'src/providers/utils/getProviderDetailsPageUrl';
 import { isProviderUsingCopyAppliance } from 'src/providers/utils/isProviderUsingCopyAppliance';
@@ -12,32 +10,18 @@ import { useForkliftAnalytics } from '@utils/analytics/hooks/useForkliftAnalytic
 import { getType } from '@utils/crds/common/selectors';
 
 import { ProviderFormFieldId } from '../fields/constants';
-import type { CreateProviderFormData } from '../types';
-import { createProviderOnce, type ProviderCreationProgress } from '../utils/createProviderOnce';
+import { createProviderOnce } from '../utils/createProviderOnce';
+import type { ProviderCreationProgress } from '../utils/providerCreation.types';
 
-type UseCreateProviderWorkflowParams = {
-  canDeploy: boolean;
-  handleSubmit: UseFormHandleSubmit<CreateProviderFormData>;
-  placement: CopyAppliancePlacementValues;
-};
-
-const setRefValue = (ref: MutableRefObject<boolean>, value: boolean): void => {
-  ref.current = value;
-};
+import type {
+  CreateProviderWorkflow,
+  DeployProviderPlacement,
+  UseCreateProviderWorkflowParams,
+} from './createProviderWorkflow.types';
 
 export const useCreateProviderWorkflow = ({
-  canDeploy,
   handleSubmit,
-  placement,
-}: UseCreateProviderWorkflowParams): {
-  apiError: Error | null;
-  createdProvider: V1beta1Provider | undefined;
-  isDeploying: boolean;
-  isProviderPersisted: boolean;
-  isSecretCreated: boolean;
-  onCreate: () => Promise<boolean>;
-  onDeploy: () => Promise<void>;
-} => {
+}: UseCreateProviderWorkflowParams): CreateProviderWorkflow => {
   const navigate = useNavigate();
   const { trackEvent } = useForkliftAnalytics();
   const [apiError, setApiError] = useState<Error | null>(null);
@@ -49,62 +33,70 @@ export const useCreateProviderWorkflow = ({
   const deploymentInFlight = useRef(false);
   const templateCreated = useRef(false);
 
-  const onCreate = useCallback(async (): Promise<boolean> => {
-    let shouldContinue = false;
-    await handleSubmit(async (formData) => {
-      setApiError(null);
-      const namespace = formData[ProviderFormFieldId.ProviderProject];
-      const providerType = formData[ProviderFormFieldId.ProviderType];
-      trackEvent(TELEMETRY_EVENTS.PROVIDER_CREATE_STARTED, { namespace, providerType });
+  const onCreate = useCallback(
+    async (onContinue: () => void): Promise<void> => {
+      await handleSubmit(async (formData) => {
+        setApiError(null);
+        const namespace = formData[ProviderFormFieldId.ProviderProject];
+        const providerType = formData[ProviderFormFieldId.ProviderType];
+        trackEvent(TELEMETRY_EVENTS.PROVIDER_CREATE_STARTED, { namespace, providerType });
 
-      try {
-        const provider = await createProviderOnce(formData, creationProgress.current);
-        setCreatedProvider(provider);
-        trackEvent(TELEMETRY_EVENTS.PROVIDER_CREATE_COMPLETED, {
-          namespace,
-          providerType: getType(provider),
-        });
+        try {
+          const provider = await createProviderOnce(formData, creationProgress.current);
+          setCreatedProvider(provider);
+          trackEvent(TELEMETRY_EVENTS.PROVIDER_CREATE_COMPLETED, {
+            namespace,
+            providerType: getType(provider),
+          });
 
-        shouldContinue = isProviderUsingCopyAppliance(provider);
-        if (!shouldContinue) {
+          if (isProviderUsingCopyAppliance(provider)) {
+            onContinue();
+            return;
+          }
           navigate(getProviderDetailsPageUrl(provider))?.catch(() => undefined);
+        } catch (error) {
+          trackEvent(TELEMETRY_EVENTS.PROVIDER_CREATE_FAILED, {
+            error: error instanceof Error ? error.message : 'Unknown error',
+            namespace,
+            providerType,
+          });
+          setApiError(error as Error);
+        } finally {
+          setIsSecretCreated(Boolean(creationProgress.current.secret));
+          setIsProviderPersisted(Boolean(creationProgress.current.provider));
         }
+      })();
+    },
+    [handleSubmit, navigate, trackEvent],
+  );
+
+  const onDeploy = useCallback(
+    async ({ canDeploy, placement }: DeployProviderPlacement): Promise<void> => {
+      const { provider } = creationProgress.current;
+      if (!provider || !canDeploy || deploymentInFlight.current) {
+        return;
+      }
+
+      deploymentInFlight.current = true;
+      setApiError(null);
+      setIsDeploying(true);
+      try {
+        if (!templateCreated.current) {
+          await onCreateCopyApplianceTemplate(provider, placement);
+          // eslint-disable-next-line require-atomic-updates -- deploymentInFlight serializes deployment.
+          templateCreated.current = true;
+        }
+        navigate(getProviderDetailsPageUrl(provider))?.catch(() => undefined);
       } catch (error) {
-        setIsSecretCreated(Boolean(creationProgress.current.secret));
-        setIsProviderPersisted(Boolean(creationProgress.current.provider));
-        trackEvent(TELEMETRY_EVENTS.PROVIDER_CREATE_FAILED, {
-          error: error instanceof Error ? error.message : 'Unknown error',
-          namespace,
-          providerType,
-        });
         setApiError(error as Error);
+      } finally {
+        // eslint-disable-next-line require-atomic-updates -- Only the active deployment clears its guard.
+        deploymentInFlight.current = false;
+        setIsDeploying(false);
       }
-    })();
-    return shouldContinue;
-  }, [handleSubmit, navigate, trackEvent]);
-
-  const onDeploy = useCallback(async (): Promise<void> => {
-    const { provider } = creationProgress.current;
-    if (!provider || !canDeploy || deploymentInFlight.current) {
-      return;
-    }
-
-    deploymentInFlight.current = true;
-    setApiError(null);
-    setIsDeploying(true);
-    try {
-      if (!templateCreated.current) {
-        await onCreateCopyApplianceTemplate(provider, placement);
-        setRefValue(templateCreated, true);
-      }
-      navigate(getProviderDetailsPageUrl(provider))?.catch(() => undefined);
-    } catch (error) {
-      setApiError(error as Error);
-    } finally {
-      setRefValue(deploymentInFlight, false);
-      setIsDeploying(false);
-    }
-  }, [canDeploy, navigate, placement]);
+    },
+    [navigate],
+  );
 
   return {
     apiError,

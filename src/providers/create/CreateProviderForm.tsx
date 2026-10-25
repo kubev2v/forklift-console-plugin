@@ -1,10 +1,6 @@
-import { type FC, useCallback, useState } from 'react';
+import type { FC } from 'react';
 import { FormProvider, useForm, useWatch } from 'react-hook-form';
 import { useSearchParams } from 'react-router';
-import type {
-  CopyAppliancePlacementValues,
-  CopyApplianceSettingField,
-} from 'src/providers/details/tabs/Details/components/DetailsSection/copyAppliancePlacementConfig';
 import { VddkSetupMode } from 'src/providers/utils/constants';
 import { getProviderDetailsPageUrl } from 'src/providers/utils/getProviderDetailsPageUrl';
 import { isProviderUsingCopyAppliance } from 'src/providers/utils/isProviderUsingCopyAppliance';
@@ -14,13 +10,10 @@ import { useForkliftTranslation } from '@utils/i18n';
 import { PROVIDER_TYPES } from '@utils/providers/constants';
 
 import { ProviderFormFieldId } from './fields/constants';
+import { useCreateProviderPlacement } from './hooks/useCreateProviderPlacement';
 import { useCreateProviderWorkflow } from './hooks/useCreateProviderWorkflow';
 import { getDefaultFormValues } from './utils/getDefaultFormValues';
-import {
-  EMPTY_COPY_APPLIANCE_PLACEMENT,
-  PROVIDER_DETAILS_STEP_ID,
-  PROVIDER_PLACEMENT_STEP_ID,
-} from './utils/wizardConstants';
+import { PROVIDER_DETAILS_STEP_ID, PROVIDER_PLACEMENT_STEP_ID } from './utils/wizardConstants';
 import CreateProviderFormContextProvider from './CreateProviderFormContextProvider';
 import CreateProviderPlacementStep from './CreateProviderPlacementStep';
 import CreateProviderWizardFooter from './CreateProviderWizardFooter';
@@ -33,10 +26,6 @@ const VALID_PROVIDER_TYPES = new Set<string>(Object.values(PROVIDER_TYPES));
 const CreateProviderForm: FC = () => {
   const { t } = useForkliftTranslation();
   const [searchParams] = useSearchParams();
-  const [placement, setPlacement] = useState<CopyAppliancePlacementValues>(
-    EMPTY_COPY_APPLIANCE_PLACEMENT,
-  );
-  const [canDeploy, setCanDeploy] = useState(false);
   const urlProviderType = searchParams.get('providerType');
   const validatedProviderType =
     urlProviderType && VALID_PROVIDER_TYPES.has(urlProviderType) ? urlProviderType : undefined;
@@ -65,7 +54,8 @@ const CreateProviderForm: FC = () => {
     isSecretCreated,
     onCreate,
     onDeploy,
-  } = useCreateProviderWorkflow({ canDeploy, handleSubmit, placement });
+  } = useCreateProviderWorkflow({ handleSubmit });
+  const placement = useCreateProviderPlacement(createdProvider);
   const canRetryProviderOnly =
     isSecretCreated && !isProviderPersisted && selectedProviderType === PROVIDER_TYPES.vsphere;
   const isApplianceSelected = createdProvider
@@ -73,9 +63,6 @@ const CreateProviderForm: FC = () => {
     : selectedProviderType === PROVIDER_TYPES.vsphere &&
       diskTransferMethod === VddkSetupMode.CopyAppliance;
   const createdProviderUrl = createdProvider && getProviderDetailsPageUrl(createdProvider);
-  const onPlacementChange = useCallback((field: CopyApplianceSettingField, value: string): void => {
-    setPlacement((current) => ({ ...current, [field]: value }));
-  }, []);
 
   return (
     <FormProvider {...form}>
@@ -86,12 +73,14 @@ const CreateProviderForm: FC = () => {
           footer={
             <CreateProviderWizardFooter
               canCreate={isValid}
-              canDeploy={canDeploy}
+              canDeploy={placement.canDeploy}
               createdProviderUrl={createdProviderUrl}
               isApplianceSelected={isApplianceSelected}
               isSubmitting={isSubmitting || isDeploying}
               onCreate={onCreate}
-              onDeploy={onDeploy}
+              onDeploy={async () =>
+                onDeploy({ canDeploy: placement.canDeploy, placement: placement.values })
+              }
             />
           }
           isVisitRequired
@@ -129,12 +118,7 @@ const CreateProviderForm: FC = () => {
           >
             {createdProvider && (
               <>
-                <CreateProviderPlacementStep
-                  onChange={onPlacementChange}
-                  onValidChange={setCanDeploy}
-                  provider={createdProvider}
-                  values={placement}
-                />
+                <CreateProviderPlacementStep placement={placement} />
                 {apiError && (
                   <Alert
                     isInline

@@ -1,4 +1,4 @@
-import { type FC, useEffect } from 'react';
+import type { FC } from 'react';
 import { useNavigate } from 'react-router';
 
 import {
@@ -12,7 +12,8 @@ import {
 } from '@patternfly/react-core';
 import { useForkliftTranslation } from '@utils/i18n';
 
-import { PROVIDER_DETAILS_STEP_ID, PROVIDER_PLACEMENT_STEP_ID } from './utils/wizardConstants';
+import { getCreateProviderButtonLabel } from './utils/getCreateProviderButtonLabel';
+import { PROVIDER_PLACEMENT_STEP_ID, PROVIDER_PLACEMENT_STEP_INDEX } from './utils/wizardConstants';
 
 type CreateProviderWizardFooterProps = {
   canCreate: boolean;
@@ -20,7 +21,7 @@ type CreateProviderWizardFooterProps = {
   createdProviderUrl?: string;
   isApplianceSelected: boolean;
   isSubmitting: boolean;
-  onCreate: () => Promise<boolean>;
+  onCreate: (onContinue: () => void) => Promise<void>;
   onDeploy: () => Promise<void>;
 };
 
@@ -35,21 +36,8 @@ const CreateProviderWizardFooter: FC<CreateProviderWizardFooterProps> = ({
 }) => {
   const { t } = useForkliftTranslation();
   const navigate = useNavigate();
-  const { activeStep, goToStepById } = useWizardContext();
+  const { activeStep, goToStepByIndex } = useWizardContext();
   const isPlacementStep = activeStep.id === PROVIDER_PLACEMENT_STEP_ID;
-  let primaryButtonLabel = t('Create provider');
-
-  if (isPlacementStep) {
-    primaryButtonLabel = t('Deploy');
-  } else if (isApplianceSelected) {
-    primaryButtonLabel = t('Create and continue');
-  }
-
-  useEffect(() => {
-    if (createdProviderUrl && isApplianceSelected && activeStep.id === PROVIDER_DETAILS_STEP_ID) {
-      goToStepById(PROVIDER_PLACEMENT_STEP_ID);
-    }
-  }, [activeStep.id, createdProviderUrl, goToStepById, isApplianceSelected]);
 
   return (
     <WizardFooterWrapper>
@@ -63,13 +51,15 @@ const CreateProviderWizardFooter: FC<CreateProviderWizardFooterProps> = ({
               onClick={async () => {
                 if (isPlacementStep) {
                   await onDeploy();
-                } else {
-                  await onCreate();
+                  return;
                 }
+                await onCreate(() => {
+                  goToStepByIndex(PROVIDER_PLACEMENT_STEP_INDEX);
+                });
               }}
               variant={ButtonVariant.primary}
             >
-              {primaryButtonLabel}
+              {getCreateProviderButtonLabel(isPlacementStep, isApplianceSelected)}
             </Button>
           </ActionListItem>
           {isPlacementStep && createdProviderUrl && (
@@ -95,9 +85,9 @@ const CreateProviderWizardFooter: FC<CreateProviderWizardFooterProps> = ({
               onClick={() => {
                 if (createdProviderUrl) {
                   navigate(createdProviderUrl)?.catch(() => undefined);
-                } else {
-                  navigate(-1)?.catch(() => undefined);
+                  return;
                 }
+                navigate(-1)?.catch(() => undefined);
               }}
               variant={ButtonVariant.link}
             >

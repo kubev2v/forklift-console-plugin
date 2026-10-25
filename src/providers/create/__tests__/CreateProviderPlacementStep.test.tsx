@@ -1,9 +1,10 @@
-import type { ReactElement } from 'react';
+import type { FC, ReactElement } from 'react';
 
 import type { V1beta1Provider } from '@forklift-ui/types';
 import { render, screen } from '@testing-library/react';
 
 import CreateProviderPlacementStep from '../CreateProviderPlacementStep';
+import { useCreateProviderPlacement } from '../hooks/useCreateProviderPlacement';
 
 const createdProvider = {
   metadata: { name: 'source', namespace: 'mtv', uid: 'provider-uid' },
@@ -22,15 +23,17 @@ jest.mock('../CreateProviderPlacementInventory', (): unknown => ({
   default: (): ReactElement => <div data-testid="placement-fields" />,
 }));
 
-const renderStep = (): ReturnType<typeof render> =>
-  render(
-    <CreateProviderPlacementStep
-      onChange={jest.fn()}
-      onValidChange={jest.fn()}
-      provider={createdProvider}
-      values={{ datastore: '', folder: '', network: '', resourcePool: '' }}
-    />,
-  );
+jest.mock(
+  'src/providers/details/tabs/Details/components/DetailsSection/useCopyAppliancePlacementOptions',
+  () => ({
+    useCopyAppliancePlacementOptions: (): object => ({ inventoryLoading: true }),
+  }),
+);
+
+const PlacementHarness: FC = () => (
+  <CreateProviderPlacementStep placement={useCreateProviderPlacement(createdProvider)} />
+);
+const renderStep = (): ReturnType<typeof render> => render(<PlacementHarness />);
 
 describe('CreateProviderPlacementStep', () => {
   beforeEach(() => {
@@ -44,26 +47,12 @@ describe('CreateProviderPlacementStep', () => {
     expect(screen.queryByTestId('placement-fields')).not.toBeInTheDocument();
 
     mockWatchResult = [{ ...createdProvider, status: { phase: 'Staging' } }, true, null];
-    view.rerender(
-      <CreateProviderPlacementStep
-        onChange={jest.fn()}
-        onValidChange={jest.fn()}
-        provider={createdProvider}
-        values={{ datastore: '', folder: '', network: '', resourcePool: '' }}
-      />,
-    );
+    view.rerender(<PlacementHarness />);
     expect(screen.getByText('Connecting to the provider')).toBeInTheDocument();
     expect(screen.queryByTestId('placement-fields')).not.toBeInTheDocument();
 
     mockWatchResult = [{ ...createdProvider, status: { phase: 'Ready' } }, true, null];
-    view.rerender(
-      <CreateProviderPlacementStep
-        onChange={jest.fn()}
-        onValidChange={jest.fn()}
-        provider={createdProvider}
-        values={{ datastore: '', folder: '', network: '', resourcePool: '' }}
-      />,
-    );
+    view.rerender(<PlacementHarness />);
     expect(screen.getByTestId('placement-fields')).toBeInTheDocument();
   });
 

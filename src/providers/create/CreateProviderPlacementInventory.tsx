@@ -1,15 +1,9 @@
-import { type FC, useEffect } from 'react';
+import type { FC } from 'react';
 import { COPY_APPLIANCE_INVENTORY_ENDPOINTS } from 'src/providers/details/tabs/Details/components/DetailsSection/copyApplianceInventoryConstants';
-import type {
-  CopyAppliancePlacementValues,
-  CopyApplianceSettingField,
-} from 'src/providers/details/tabs/Details/components/DetailsSection/copyAppliancePlacementConfig';
 import { COPY_APPLIANCE_SETTING_FIELDS } from 'src/providers/details/tabs/Details/components/DetailsSection/copyAppliancePlacementConfig';
 import CopyAppliancePlacementForm from 'src/providers/details/tabs/Details/components/DetailsSection/CopyAppliancePlacementForm';
 import { useCopyAppliancePlacementLabels } from 'src/providers/details/tabs/Details/components/DetailsSection/useCopyAppliancePlacementLabels';
-import { useCopyAppliancePlacementOptions } from 'src/providers/details/tabs/Details/components/DetailsSection/useCopyAppliancePlacementOptions';
 
-import type { V1beta1Provider } from '@forklift-ui/types';
 import {
   Alert,
   AlertVariant,
@@ -21,25 +15,14 @@ import {
 import { isEmpty } from '@utils/helpers';
 import { useForkliftTranslation } from '@utils/i18n';
 
-import { isValidCopyAppliancePlacement } from './utils/isValidCopyAppliancePlacement';
+import type { CreateProviderPlacement } from './hooks/createProviderPlacement.types';
 import CreateProviderInventoryError from './CreateProviderInventoryError';
 import CreateProviderPlacementLoading from './CreateProviderPlacementLoading';
 
-type CreateProviderPlacementInventoryProps = {
-  onChange: (field: CopyApplianceSettingField, value: string) => void;
-  onRetry: () => void;
-  onValidChange: (isValid: boolean) => void;
-  provider: V1beta1Provider;
-  values: CopyAppliancePlacementValues;
-};
-
-const CreateProviderPlacementInventory: FC<CreateProviderPlacementInventoryProps> = ({
-  onChange,
-  onRetry,
-  onValidChange,
-  provider,
-  values,
+const CreateProviderPlacementInventory: FC<{ placement: CreateProviderPlacement }> = ({
+  placement,
 }) => {
+  const { onChange, options, values } = placement;
   const { t } = useForkliftTranslation();
   const labels = useCopyAppliancePlacementLabels();
   const {
@@ -50,9 +33,9 @@ const CreateProviderPlacementInventory: FC<CreateProviderPlacementInventoryProps
     inventoryErrors,
     inventoryLoading,
     networkOptions,
-    resourcePoolEndpointUnavailable,
+    onRetry,
     resourcePoolOptions,
-  } = useCopyAppliancePlacementOptions(provider, values.resourcePool, false);
+  } = options;
   const optionsByField = {
     datastore: datastoreOptions,
     folder: folderOptions,
@@ -62,20 +45,6 @@ const CreateProviderPlacementInventory: FC<CreateProviderPlacementInventoryProps
   const missingFields = COPY_APPLIANCE_SETTING_FIELDS.filter((field) =>
     isEmpty(optionsByField[field]),
   );
-  const isValid =
-    !inventoryError &&
-    !inventoryLoading &&
-    isValidCopyAppliancePlacement(values, {
-      datastore: datastoreOptions,
-      folder: folderOptions,
-      network: networkOptions,
-      resourcePool: resourcePoolOptions,
-    });
-
-  useEffect(() => {
-    onValidChange(isValid);
-  }, [isValid, onValidChange]);
-
   if (inventoryLoading) {
     return <CreateProviderPlacementLoading label={t('Loading vSphere placement inventory')} />;
   }
@@ -87,7 +56,6 @@ const CreateProviderPlacementInventory: FC<CreateProviderPlacementInventoryProps
         errors={inventoryErrors}
         labels={labels}
         onRetry={onRetry}
-        resourcePoolEndpointUnavailable={resourcePoolEndpointUnavailable}
       />
     );
   }

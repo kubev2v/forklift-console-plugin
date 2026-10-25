@@ -11,45 +11,43 @@ import { isEmpty } from '@utils/helpers';
 
 import { buildCopyAppliancePlacementPatches } from './buildCopyApplianceSettingPatch';
 import type { CopyAppliancePlacementValues } from './copyAppliancePlacementConfig';
-import { CopyApplianceTemplatePlacementMismatchError } from './CopyApplianceTemplatePlacementMismatchError';
 
 const findCreatedTemplate = async (
   provider: V1beta1Provider,
   templateName: string,
   placement: CopyAppliancePlacementValues,
 ): Promise<V1beta1CopyApplianceTemplate | undefined> => {
-  let template: V1beta1CopyApplianceTemplate;
   try {
-    template = await k8sGet<V1beta1CopyApplianceTemplate>({
+    const template = await k8sGet<V1beta1CopyApplianceTemplate>({
       model: CopyApplianceTemplateModel,
       name: templateName,
       ns: getNamespace(provider),
     });
+
+    const belongsToProvider = template.metadata?.ownerReferences?.some(
+      (owner) => owner.kind === 'Provider' && owner.uid === getUID(provider),
+    );
+    if (
+      getName(template) !== templateName ||
+      getNamespace(template) !== getNamespace(provider) ||
+      template.spec?.provider?.name !== getName(provider) ||
+      template.spec?.provider?.namespace !== getNamespace(provider) ||
+      !belongsToProvider
+    ) {
+      return undefined;
+    }
+    if (
+      template.spec?.datastore !== placement.datastore ||
+      template.spec?.folder !== placement.folder ||
+      template.spec?.network !== placement.network ||
+      template.spec?.templateName !== templateName
+    ) {
+      return undefined;
+    }
+    return template;
   } catch {
     return undefined;
   }
-
-  const belongsToProvider = template.metadata?.ownerReferences?.some(
-    (owner) => owner.kind === 'Provider' && owner.uid === getUID(provider),
-  );
-  if (
-    getName(template) !== templateName ||
-    getNamespace(template) !== getNamespace(provider) ||
-    template.spec?.provider?.name !== getName(provider) ||
-    template.spec?.provider?.namespace !== getNamespace(provider) ||
-    !belongsToProvider
-  ) {
-    return undefined;
-  }
-  if (
-    template.spec?.datastore !== placement.datastore ||
-    template.spec?.folder !== placement.folder ||
-    template.spec?.network !== placement.network ||
-    template.spec?.templateName !== templateName
-  ) {
-    throw new CopyApplianceTemplatePlacementMismatchError();
-  }
-  return template;
 };
 
 const onCreateCopyApplianceTemplate = async (

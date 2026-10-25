@@ -13,7 +13,6 @@ type CreateProviderInventoryErrorProps = {
   errors: Partial<Record<CopyApplianceSettingField, Error>>;
   labels: CopyAppliancePlacementFieldLabels;
   onRetry: () => void;
-  resourcePoolEndpointUnavailable: boolean;
 };
 
 const CreateProviderInventoryError: FC<CreateProviderInventoryErrorProps> = ({
@@ -21,7 +20,6 @@ const CreateProviderInventoryError: FC<CreateProviderInventoryErrorProps> = ({
   errors,
   labels,
   onRetry,
-  resourcePoolEndpointUnavailable,
 }) => {
   const { t } = useForkliftTranslation();
   const failedFields = COPY_APPLIANCE_SETTING_FIELDS.filter((field) => errors[field]);
@@ -29,23 +27,14 @@ const CreateProviderInventoryError: FC<CreateProviderInventoryErrorProps> = ({
   return (
     <Alert
       actionLinks={
-        !resourcePoolEndpointUnavailable && (
-          <Button onClick={onRetry} variant={ButtonVariant.link}>
-            {t('Retry')}
-          </Button>
-        )
+        <Button onClick={onRetry} variant={ButtonVariant.link}>
+          {t('Retry')}
+        </Button>
       }
       isInline
       title={t('Unable to load vSphere placement inventory')}
       variant={AlertVariant.danger}
     >
-      {resourcePoolEndpointUnavailable && (
-        <div>
-          {t(
-            'The resource-pool inventory endpoint appears unavailable from this Forklift backend. Retry cannot add this endpoint; use a backend with resource-pool inventory support.',
-          )}
-        </div>
-      )}
       {isEmpty(failedFields) ? (
         error.message
       ) : (

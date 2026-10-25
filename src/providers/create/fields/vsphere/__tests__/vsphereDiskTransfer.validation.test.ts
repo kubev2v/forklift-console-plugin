@@ -13,10 +13,12 @@ describe('validateVsphereDiskTransfer', () => {
   });
 
   it('accepts a valid completed image', () => {
-    expect(validateVsphereDiskTransfer(VddkSetupMode.Upload, 'quay.io/vddk:latest')).toBe(true);
+    expect(
+      validateVsphereDiskTransfer(VddkSetupMode.Upload, 'quay.io/vddk:latest'),
+    ).toBeUndefined();
   });
 
   it('does not require VDDK for a sourcing appliance', () => {
-    expect(validateVsphereDiskTransfer(VddkSetupMode.CopyAppliance, undefined)).toBe(true);
+    expect(validateVsphereDiskTransfer(VddkSetupMode.CopyAppliance, undefined)).toBeUndefined();
   });
 });

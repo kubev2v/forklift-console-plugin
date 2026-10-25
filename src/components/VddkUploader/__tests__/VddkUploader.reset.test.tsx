@@ -1,28 +1,28 @@
 import type { ReactElement } from 'react';
 
-import type * as PatternFlyReactCore from '@patternfly/react-core';
+import type { FileUploadProps } from '@patternfly/react-core';
 import { fireEvent, render, screen } from '@testing-library/react';
 
 import VddkUploader from '../VddkUploader';
 
 jest.mock('@patternfly/react-core', (): object => {
-  const actual = jest.requireActual<typeof PatternFlyReactCore>('@patternfly/react-core');
+  const actual = jest.requireActual<Record<string, unknown>>('@patternfly/react-core');
   return {
     ...actual,
     FileUpload: ({
       onClearClick,
       onFileInputChange,
-    }: {
-      onClearClick: () => void;
-      onFileInputChange: (event: unknown, file: File) => void;
-    }): ReactElement => (
+    }: Pick<FileUploadProps, 'onClearClick' | 'onFileInputChange'>): ReactElement => (
       <>
-        <button onClick={onClearClick} type="button">
+        <button onClick={(event) => onClearClick?.(event)} type="button">
           Clear archive
         </button>
         <button
-          onClick={() => {
-            onFileInputChange(undefined, new File(['tar'], 'new.tar'));
+          onClick={(event) => {
+            onFileInputChange?.(
+              event as unknown as Parameters<NonNullable<FileUploadProps['onFileInputChange']>>[0],
+              new File(['tar'], 'new.tar'),
+            );
           }}
           type="button"
         >
