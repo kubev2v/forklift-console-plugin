@@ -48,7 +48,6 @@ test.describe('Plan additional settings', { tag: '@downstream' }, () => {
 
     const planDetailsPage = new PlanDetailsPage(page);
     const { settingsTab } = planDetailsPage;
-    await settingsTab.navigateToSettingsTab();
     await settingsTab.navigateToTargetVmSection();
     await expect(settingsTab.targetVMPowerState('Powered on')).toBeVisible();
     await settingsTab.clickEditTargetVMPowerState();

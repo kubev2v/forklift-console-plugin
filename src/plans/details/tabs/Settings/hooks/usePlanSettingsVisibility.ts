@@ -16,12 +16,13 @@ import type { PlanSettingsVisibilityInput } from '../utils/planSettingsVisibilit
 
 export type PlanSettingsVisibility = PlanSettingsVisibilityInput & {
   canPatch: boolean;
+  isProviderLoaded: boolean;
   isVddkInitImageNotSet: boolean;
   plan: V1beta1Plan;
 };
 
 export const usePlanSettingsVisibility = (plan: V1beta1Plan): PlanSettingsVisibility => {
-  const { sourceProvider } = usePlanSourceProvider(plan);
+  const { loaded: isProviderLoaded, sourceProvider } = usePlanSourceProvider(plan);
   const { isFeatureEnabled } = useFeatureFlags();
 
   const { canPatch } = useGetDeleteAndEditAccessReview({
@@ -42,6 +43,7 @@ export const usePlanSettingsVisibility = (plan: V1beta1Plan): PlanSettingsVisibi
   return {
     canPatch,
     isOvirt,
+    isProviderLoaded,
     isTransferNetworkVisible,
     isVddkInitImageNotSet,
     isVsphere,

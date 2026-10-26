@@ -23,6 +23,7 @@ export class SettingsTab extends DetailsTab {
   }
 
   async navigateToTargetVmSection(): Promise<void> {
+    await this.navigateToSettingsTab();
     await this.selectSettingsSection('target');
   }
 

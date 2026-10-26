@@ -24,8 +24,9 @@ import './plan-settings-page.scss';
 
 const PlanSettingsPage: FC<PlanPageProps> = ({ name, namespace }) => {
   const { t } = useForkliftTranslation();
-  const { plan } = usePlan(name, namespace);
+  const { loaded: isPlanLoaded, plan } = usePlan(name, namespace);
   const visibility = usePlanSettingsVisibility(plan);
+  const isReady = isPlanLoaded && visibility.isProviderLoaded;
   const [searchParams, setSearchParams] = useSearchParams();
 
   const visibleSections = useMemo(() => getVisiblePlanSettingsSections(visibility), [visibility]);
@@ -48,10 +49,10 @@ const PlanSettingsPage: FC<PlanPageProps> = ({ name, namespace }) => {
   );
 
   useEffect(() => {
-    if (requestedSection !== activeSectionId) {
+    if (isReady && requestedSection !== activeSectionId) {
       setActiveSection(activeSectionId);
     }
-  }, [activeSectionId, requestedSection, setActiveSection]);
+  }, [activeSectionId, isReady, requestedSection, setActiveSection]);
 
   return (
     <PageSection
