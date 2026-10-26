@@ -3,15 +3,17 @@
 #
 # These cannot be safely upgraded in the plugin without breaking Console
 # shared-module alignment or forcing a breaking SDK downgrade:
-# - react-router: peerOptional ~7.13.1 from @openshift-console/dynamic-plugin-sdk
+# - react-router: peer ~7.18.1 from @openshift-console/dynamic-plugin-sdk@4.23+
 # - immutable: nested ^3.8.3 under the SDK (patched releases are 4.3.9+/5.x)
 # - @openshift-console/dynamic-plugin-sdk / @openshift/dynamic-plugin-sdk:
 #   meta findings caused only by the packages above
+# - zod: nested ^3.25.67 under @openshift/dynamic-plugin-sdk@9.x (SDK 4.23+);
+#   advisory fix is zod 4.6.6+ which is incompatible with that dependency range
 #
 # Remove packages from ALLOWLIST when upstream Console/SDK ships fixed versions.
 set -euo pipefail
 
-ALLOWLIST='@openshift-console/dynamic-plugin-sdk @openshift/dynamic-plugin-sdk immutable react-router'
+ALLOWLIST='@openshift-console/dynamic-plugin-sdk @openshift/dynamic-plugin-sdk immutable react-router zod'
 
 AUDIT_JSON="$(mktemp)"
 trap 'rm -f "${AUDIT_JSON}"' EXIT
