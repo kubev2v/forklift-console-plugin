@@ -5,8 +5,9 @@ description: Create Jira bug tickets for the MTV project with User Interface com
 
 # Bug Report
 
-Creates a Jira bug ticket in the MTV project with the User Interface component
-and `user-interface` label. Assignment is optional and uses a locally configured
+Creates a Jira bug ticket in the MTV project with the User Interface component,
+`user-interface` label, and **QA Contact** (QE contact) set to **Pedro Abreu**
+(`pabreu@redhat.com`). Assignment is optional and uses a locally configured
 account ID supplied for this invocation or in `JIRA_ASSIGNEE_ACCOUNT_ID`.
 
 ## Prerequisites
@@ -22,12 +23,15 @@ Collect from the user or infer from context:
 | Field | Required | Notes |
 |-------|----------|-------|
 | Title | Yes | Short, descriptive summary |
-| Description | Yes | Jira wiki markup. Include problem, impact, and fix instructions |
+| Description | Yes | **Brief** Jira wiki markup (see [Description format](#description-format)) |
 | Priority | Yes | Ask user. Map to Jira ID (see below) |
 | Severity | No | Map to Jira ID (see below). Use when different from Priority |
 | Assignee | No | Optional; set `JIRA_ASSIGNEE_ACCOUNT_ID` locally or provide an account ID when running the script |
 | Labels | No | Default: `["user-interface"]` |
 | Fix Version | No | Only if specified by user |
+
+**QE contact** is applied automatically by `create-bug.sh` (not a separate question).
+Override only when the user asks for someone else: `JIRA_QE_CONTACT_ACCOUNT_ID`.
 
 ### 2. Priority mapping
 
@@ -63,7 +67,8 @@ source ~/.jira-creds
 ```
 
 The script writes the payload to a temp file to avoid shell quoting issues, then
-calls the Jira REST API. It outputs the created ticket key.
+calls the Jira REST API. It sets **QA Contact** (`customfield_10470`) to Pedro
+Abreu immediately after create. It outputs the created ticket key.
 
 Omit `SEVERITY_ID` (pass empty string `""`) if not needed.
 
@@ -95,17 +100,40 @@ the field to the project's screen scheme.
 
 ## Description format
 
-Use Jira wiki markup:
+Write for a busy engineer: **short, factual, scannable**. The summary line
+should carry the headline; the description adds only what is needed to reproduce
+and fix. Avoid long narratives, repeated context, and large file dumps.
 
-- `h3.` for headings
-- `*bold*` for emphasis
-- `{{code}}` for inline code
-- `{code}...{code}` for code blocks
-- `||col1||col2||` for table headers, `|val1|val2|` for rows
-- `#` for ordered lists, `*` for unordered lists
+**Target length:** about 5–12 lines total (excluding blank lines).
 
-Structure descriptions with:
-1. **Problem** -- what's wrong
-2. **Details** -- specific findings, tables, lists of affected files
-3. **Fix instructions** -- clear steps for whoever picks up the ticket
-4. **Verification** -- how to confirm the fix (commands, tests)
+Use Jira wiki markup sparingly:
+
+- `h3.` only for section breaks (at most 3–4 sections)
+- `{{code}}` for paths, selectors, or API fields — not whole paragraphs
+- `*` for bullets; keep lists to 3 items unless the user provided more essentials
+- Skip tables unless comparing two concrete values
+
+**Required content (keep each section to 1–3 lines):**
+
+1. **Problem** — what is wrong and where (page, flow, or component).
+2. **Expected vs actual** — one line each, or a single sentence if obvious.
+3. **Repro** — only when not obvious from the title (numbered steps, minimal).
+4. **Fix hint** — optional; point to the likely area (file or behavior), not a design essay.
+5. **Verify** — one line: test name, command, or quick manual check.
+
+**Do not include:** impact essays, duplicate title text, full stack traces (link or
+trim), or "fix instructions" that restate the problem.
+
+**Example (good):**
+
+```
+h3. Problem
+Plan Settings tab shows Convertor scheduling for plans that should hide it.
+
+h3. Expected vs actual
+*Expected:* Section hidden when convertor scheduling does not apply.
+*Actual:* Section is visible and empty.
+
+h3. Verify
+{{npm test -- planSettingsVisibility}} and open Plan → Settings on a cold-migration plan.
+```
