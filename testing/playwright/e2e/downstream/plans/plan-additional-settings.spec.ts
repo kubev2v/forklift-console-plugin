@@ -113,17 +113,17 @@ test.describe('Plan additional settings', { tag: '@downstream' }, () => {
     await wizard.waitForPlanCreation();
 
     const planDetailsPage = new PlanDetailsPage(page);
-    const { settingsTab: st, virtualMachinesTab: vmt } = planDetailsPage;
-    await st.navigateToGuestSection();
-    await expect(st.sharedDisksDetailItem('Migrate shared disks')).toBeVisible();
+    const { settingsTab, virtualMachinesTab: vmt } = planDetailsPage;
+    await settingsTab.navigateToGuestSection();
+    await expect(settingsTab.sharedDisksDetailItem('Migrate shared disks')).toBeVisible();
 
-    await st.clickEditSharedDisks();
-    await expect(st.editSharedDisksModal).toBeVisible();
-    await st.editSharedDisksCheckbox.uncheck();
-    await expect(st.editSharedDisksCheckbox).not.toBeChecked();
-    await st.saveSharedDisksButton.click();
-    await expect(st.editSharedDisksModal).not.toBeVisible();
-    await expect(st.sharedDisksDetailItem('Do not migrate shared disks')).toBeVisible();
+    await settingsTab.clickEditSharedDisks();
+    await expect(settingsTab.editSharedDisksModal).toBeVisible();
+    await settingsTab.editSharedDisksCheckbox.uncheck();
+    await expect(settingsTab.editSharedDisksCheckbox).not.toBeChecked();
+    await settingsTab.saveSharedDisksButton.click();
+    await expect(settingsTab.editSharedDisksModal).not.toBeVisible();
+    await expect(settingsTab.sharedDisksDetailItem('Do not migrate shared disks')).toBeVisible();
 
     await vmt.navigateToVirtualMachinesTab();
     await vmt.enableColumn('Shared disks');
@@ -230,48 +230,48 @@ test.describe('Plan additional settings - PR #2292', { tag: '@downstream' }, () 
       await wizard.fillAndSubmit(testData);
     });
 
-    const { settingsTab: st } = new PlanDetailsPage(page);
-    await st.navigateToTransferSection();
+    const { settingsTab } = new PlanDetailsPage(page);
+    await settingsTab.navigateToTransferSection();
 
     await test.step('Verify preserve static IPs default is enabled (vSphere)', async () => {
-      await st.verifyPreserveStaticIPs(true);
+      await settingsTab.verifyPreserveStaticIPs(true);
     });
 
     await test.step('Disable preserve static IPs', async () => {
-      await st.clickEditPreserveStaticIPs();
-      await expect(st.preserveStaticIPsCheckbox).toBeChecked();
-      await st.preserveStaticIPsCheckbox.uncheck();
-      await expect(st.preserveStaticIPsCheckbox).not.toBeChecked();
-      await st.savePreserveStaticIPs();
-      await st.verifyPreserveStaticIPs(false);
+      await settingsTab.clickEditPreserveStaticIPs();
+      await expect(settingsTab.preserveStaticIPsCheckbox).toBeChecked();
+      await settingsTab.preserveStaticIPsCheckbox.uncheck();
+      await expect(settingsTab.preserveStaticIPsCheckbox).not.toBeChecked();
+      await settingsTab.savePreserveStaticIPs();
+      await settingsTab.verifyPreserveStaticIPs(false);
     });
 
     await test.step('Re-enable preserve static IPs', async () => {
-      await st.clickEditPreserveStaticIPs();
-      await st.preserveStaticIPsCheckbox.check();
-      await expect(st.preserveStaticIPsCheckbox).toBeChecked();
-      await st.savePreserveStaticIPs();
-      await st.verifyPreserveStaticIPs(true);
+      await settingsTab.clickEditPreserveStaticIPs();
+      await settingsTab.preserveStaticIPsCheckbox.check();
+      await expect(settingsTab.preserveStaticIPsCheckbox).toBeChecked();
+      await settingsTab.savePreserveStaticIPs();
+      await settingsTab.verifyPreserveStaticIPs(true);
     });
 
     await test.step('Enable shared disks migration', async () => {
-      await st.navigateToGuestSection();
-      await st.clickEditMigrateSharedDisks();
-      await st.migrateSharedDisksCheckbox.check();
-      await expect(st.migrateSharedDisksCheckbox).toBeChecked();
-      await expect(st.sharedDisksInfoAlert).toBeVisible();
-      await st.saveMigrateSharedDisks();
-      await st.verifySharedDisks(true);
+      await settingsTab.navigateToGuestSection();
+      await settingsTab.clickEditMigrateSharedDisks();
+      await settingsTab.migrateSharedDisksCheckbox.check();
+      await expect(settingsTab.migrateSharedDisksCheckbox).toBeChecked();
+      await expect(settingsTab.sharedDisksInfoAlert).toBeVisible();
+      await settingsTab.saveMigrateSharedDisks();
+      await settingsTab.verifySharedDisks(true);
     });
 
     await test.step('Disable shared disks migration', async () => {
-      await st.clickEditMigrateSharedDisks();
-      await expect(st.migrateSharedDisksCheckbox).toBeChecked();
-      await st.migrateSharedDisksCheckbox.uncheck();
-      await expect(st.migrateSharedDisksCheckbox).not.toBeChecked();
-      await expect(st.sharedDisksInfoAlert).not.toBeVisible();
-      await st.saveMigrateSharedDisks();
-      await st.verifySharedDisks(false);
+      await settingsTab.clickEditMigrateSharedDisks();
+      await expect(settingsTab.migrateSharedDisksCheckbox).toBeChecked();
+      await settingsTab.migrateSharedDisksCheckbox.uncheck();
+      await expect(settingsTab.migrateSharedDisksCheckbox).not.toBeChecked();
+      await expect(settingsTab.sharedDisksInfoAlert).not.toBeVisible();
+      await settingsTab.saveMigrateSharedDisks();
+      await settingsTab.verifySharedDisks(false);
     });
   });
 

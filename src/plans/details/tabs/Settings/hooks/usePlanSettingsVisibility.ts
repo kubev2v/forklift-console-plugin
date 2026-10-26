@@ -9,6 +9,7 @@ import { FEATURE_NAMES } from '@utils/constants';
 import { getNamespace } from '@utils/crds/common/selectors';
 import { isEmpty } from '@utils/helpers';
 import { useFeatureFlags } from '@utils/hooks/useFeatureFlags';
+import { PROVIDER_TYPES } from '@utils/providers/constants';
 
 import usePlanSourceProvider from '../../../hooks/usePlanSourceProvider';
 import type { PlanSettingsVisibilityInput } from '../utils/planSettingsVisibility';
@@ -28,8 +29,8 @@ export const usePlanSettingsVisibility = (plan: V1beta1Plan): PlanSettingsVisibi
     namespace: getNamespace(plan),
   });
 
-  const isVsphere = sourceProvider?.spec?.type === 'vsphere';
-  const isOvirt = sourceProvider?.spec?.type === 'ovirt';
+  const isVsphere = sourceProvider?.spec?.type === PROVIDER_TYPES.vsphere;
+  const isOvirt = sourceProvider?.spec?.type === PROVIDER_TYPES.ovirt;
   const migrationType = getPlanMigrationType(plan);
   const isVddkInitImageNotSet = isEmpty(sourceProvider?.spec?.settings?.vddkInitImage);
 

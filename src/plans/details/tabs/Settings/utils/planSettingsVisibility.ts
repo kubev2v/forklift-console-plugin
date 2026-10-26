@@ -22,8 +22,6 @@ const isTransferSectionVisible = ({
 
 const isNamingSectionVisible = ({ isVsphere }: PlanSettingsVisibilityInput): boolean => isVsphere;
 
-const isTargetSectionVisible = (): boolean => true;
-
 const isConvertorSectionVisible = ({ isVsphere }: PlanSettingsVisibilityInput): boolean =>
   isVsphere;
 
@@ -34,7 +32,7 @@ const SECTION_VISIBILITY: Record<
   [PLAN_SETTINGS_SECTION_ID.Convertor]: isConvertorSectionVisible,
   [PLAN_SETTINGS_SECTION_ID.Guest]: isGuestSectionVisible,
   [PLAN_SETTINGS_SECTION_ID.Naming]: isNamingSectionVisible,
-  [PLAN_SETTINGS_SECTION_ID.Target]: isTargetSectionVisible,
+  [PLAN_SETTINGS_SECTION_ID.Target]: () => true, // Target section is always visible
   [PLAN_SETTINGS_SECTION_ID.Transfer]: isTransferSectionVisible,
 };
 
