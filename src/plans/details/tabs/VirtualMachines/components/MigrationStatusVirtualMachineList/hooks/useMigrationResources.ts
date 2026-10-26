@@ -1,5 +1,6 @@
 import { useMemo } from 'react';
 import { useLatestPlanMigration } from 'src/plans/hooks/useLatestPlanMigration';
+import { usePlanMigration } from 'src/plans/hooks/usePlanMigration';
 
 import {
   CopyApplianceModelGroupVersionKind,
@@ -28,24 +29,17 @@ import { useK8sWatchResource } from '@utils/hooks/useK8sWatchResource';
 
 import { getPlanVirtualMachineIdByName } from '../../utils/getPlanVirtualMachineIdByName';
 import { getPlanVirtualMachinesDict } from '../../utils/utils';
-import type { MigrationStatusVirtualMachinePageData } from '../utils/types';
+import type { MigrationResources, MigrationStatusVirtualMachinePageData } from '../utils/types';
 import { groupByVmId } from '../utils/utils';
-
-type MigrationResources = {
-  error: unknown;
-  loaded: boolean;
-  migrationListData: MigrationStatusVirtualMachinePageData[];
-};
 
 export const useMigrationResources = (plan: V1beta1Plan): MigrationResources => {
   const [latestMigration, migrationLoaded, migrationError] = useLatestPlanMigration(plan);
+  const [activeMigration] = usePlanMigration(plan);
   const migrationUid = latestMigration ? getUID(latestMigration) : undefined;
   const planUid = getUID(plan);
 
   const watchOptions = useMemo((): WatchK8sResource | null => {
-    if (!migrationUid || !planUid) {
-      return null;
-    }
+    if (!migrationUid || !planUid) return null;
 
     return {
       isList: true,
@@ -131,19 +125,34 @@ export const useMigrationResources = (plan: V1beta1Plan): MigrationResources => 
     return virtualMachines.map((specVM) => {
       const id = specVM?.id ?? getPlanVirtualMachineIdByName(plan, specVM?.name) ?? '';
       return {
+        activeMigration,
         copyAppliances: copyAppliancesDict[id],
         dvs: dvsDict[id],
-        isWarm: getPlanIsWarm(plan),
+        isWarm: getPlanIsWarm(plan) ?? plan.spec?.type === 'warm',
         jobs: jobsDict[id],
+        migration: latestMigration,
         plan,
         pods: podsDict[id],
         pvcs: pvcsDict[id],
         specVM,
         statusVM: vmDict[id],
         targetNamespace: getPlanTargetNamespace(plan),
+        vmId: id,
+        vmName: vmDict[id]?.newName ?? vmDict[id]?.name ?? specVM.name ?? '',
       };
     }) as MigrationStatusVirtualMachinePageData[];
-  }, [virtualMachines, copyAppliancesDict, dvsDict, jobsDict, podsDict, pvcsDict, vmDict, plan]);
+  }, [
+    latestMigration,
+    activeMigration,
+    virtualMachines,
+    copyAppliancesDict,
+    dvsDict,
+    jobsDict,
+    podsDict,
+    pvcsDict,
+    vmDict,
+    plan,
+  ]);
 
   return {
     error: migrationError ?? podsError ?? jobsError ?? pvcsError ?? dvsError ?? copyAppliancesError,
