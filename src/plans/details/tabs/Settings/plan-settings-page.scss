@@ -4,8 +4,16 @@
     flex-direction: row;
     flex-wrap: nowrap;
     align-items: stretch;
-    margin-block-start: var(--pf-t--global--spacer--md);
     min-height: 12rem;
+  }
+
+  &__section-intro {
+    margin-block-end: var(--pf-t--global--spacer--md);
+  }
+
+  &__section-description {
+    margin-block-start: var(--pf-t--global--spacer--xs);
+    margin-block-end: 0;
   }
 
   &__nav {

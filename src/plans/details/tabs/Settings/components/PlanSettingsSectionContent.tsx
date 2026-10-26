@@ -1,30 +1,19 @@
 import type { FC, ReactNode } from 'react';
 
-import { DescriptionList } from '@patternfly/react-core';
+import { DescriptionList, Stack, StackItem } from '@patternfly/react-core';
 
-import ConvertorAffinityDetailsItem from '../../Details/components/SettingsSection/components/ConvertorAffinity/ConvertorAffinityDetailsItem';
-import ConvertorLabelsDetailsItem from '../../Details/components/SettingsSection/components/ConvertorLabels/ConvertorLabelsDetailsItem';
-import ConvertorNodeSelectorDetailsItem from '../../Details/components/SettingsSection/components/ConvertorNodeSelector/ConvertorNodeSelectorDetailsItem';
-import GuestConversionDetailsItem from '../../Details/components/SettingsSection/components/GuestConversion/GuestConversionDetailsItem';
-import NetworkNameTemplateDetailsItem from '../../Details/components/SettingsSection/components/NetworkNameTemplate/NetworkNameTemplateDetailsItem';
-import SharedDisksDetailsItem from '../../Details/components/SettingsSection/components/PlanMigrateSharedDisks/MigrateSharedDisksDetailsItem';
-import TransferNetworkDetailsItem from '../../Details/components/SettingsSection/components/PlanTransferNetwork/TransferNetworkDetailsItem';
-import PreserveClusterCpuModelDetailsItem from '../../Details/components/SettingsSection/components/PreserveClusterCpuModel/PreserveClusterCpuModelDetailsItem';
-import PreserveStaticIPsDetailsItem from '../../Details/components/SettingsSection/components/PreserveStaticIPs/PreserveStaticIPsDetailsItem';
-import PVCNameTemplateDetailsItem from '../../Details/components/SettingsSection/components/PVCNameTemplate/PVCNameTemplateDetailsItem';
-import RootDiskDetailsItem from '../../Details/components/SettingsSection/components/RootDisk/RootDiskDetailsItem';
-import SetLUKSEncryptionPasswordsDetailsItem from '../../Details/components/SettingsSection/components/SetLUKSEncryptionPasswords/SetLUKSEncryptionPasswordsDetailsItem';
-import TargetAffinityDetailsItem from '../../Details/components/SettingsSection/components/TargetAffinity/TargetAffinityDetailsItem';
-import TargetLabelsDetailsItem from '../../Details/components/SettingsSection/components/TargetLabels/TargetLabelsDetailsItem';
-import TargetNodeSelectorDetailsItem from '../../Details/components/SettingsSection/components/TargetNodeSelector/TargetNodeSelectorDetailsItem';
-import TargetPowerStateDetailsItem from '../../Details/components/SettingsSection/components/TargetPowerState/TargetPowerStateDetailsItem';
-import VolumeNameTemplateDetailsItem from '../../Details/components/SettingsSection/components/VolumeNameTemplate/VolumeNameTemplateDetailsItem';
-import XfsCompatibilityDetailsItem from '../../Details/components/SettingsSection/components/XfsCompatibility/XfsCompatibilityDetailsItem';
 import type { PlanSettingsVisibility } from '../hooks/usePlanSettingsVisibility';
 import {
   PLAN_SETTINGS_SECTION_ID,
   type PlanSettingsSectionId,
 } from '../utils/planSettingsSectionIds';
+
+import PlanSettingsConvertorSection from './sections/PlanSettingsConvertorSection';
+import PlanSettingsGuestSection from './sections/PlanSettingsGuestSection';
+import PlanSettingsNamingSection from './sections/PlanSettingsNamingSection';
+import PlanSettingsTargetSection from './sections/PlanSettingsTargetSection';
+import PlanSettingsTransferSection from './sections/PlanSettingsTransferSection';
+import PlanSettingsSectionIntro from './PlanSettingsSectionIntro';
 
 type PlanSettingsSectionContentProps = {
   sectionId: PlanSettingsSectionId;
@@ -35,95 +24,44 @@ const PlanSettingsSectionContent: FC<PlanSettingsSectionContentProps> = ({
   sectionId,
   visibility,
 }) => {
-  const { canPatch, isOvirt, isTransferNetworkVisible, isVddkInitImageNotSet, isVsphere, plan } =
-    visibility;
-
-  const renderGuestSection = (): ReactNode => (
-    <>
-      <SetLUKSEncryptionPasswordsDetailsItem
-        canPatch={canPatch}
-        plan={plan}
-        shouldRender={isVsphere}
-      />
-      <RootDiskDetailsItem canPatch={canPatch} plan={plan} shouldRender={isVsphere} />
-      <SharedDisksDetailsItem
-        canPatch={canPatch}
-        isVddkInitImageNotSet={isVddkInitImageNotSet}
-        plan={plan}
-        shouldRender={isVsphere}
-      />
-      <XfsCompatibilityDetailsItem canPatch={canPatch} plan={plan} shouldRender={isVsphere} />
-      <GuestConversionDetailsItem canPatch={canPatch} plan={plan} shouldRender={isVsphere} />
-      <PreserveClusterCpuModelDetailsItem canPatch={canPatch} plan={plan} shouldRender={isOvirt} />
-    </>
-  );
-
-  const renderTransferSection = (): ReactNode => (
-    <>
-      <TransferNetworkDetailsItem
-        canPatch={canPatch}
-        plan={plan}
-        shouldRender={isTransferNetworkVisible}
-      />
-      <PreserveStaticIPsDetailsItem canPatch={canPatch} plan={plan} shouldRender={isVsphere} />
-    </>
-  );
-
-  const renderNamingSection = (): ReactNode => (
-    <>
-      <PVCNameTemplateDetailsItem canPatch={canPatch} plan={plan} shouldRender={isVsphere} />
-      <VolumeNameTemplateDetailsItem canPatch={canPatch} plan={plan} shouldRender={isVsphere} />
-      <NetworkNameTemplateDetailsItem canPatch={canPatch} plan={plan} shouldRender={isVsphere} />
-    </>
-  );
-
-  const renderTargetSection = (): ReactNode => (
-    <>
-      <TargetPowerStateDetailsItem canPatch={canPatch} plan={plan} />
-      <TargetLabelsDetailsItem canPatch={canPatch} plan={plan} />
-      <TargetNodeSelectorDetailsItem canPatch={canPatch} plan={plan} />
-      <TargetAffinityDetailsItem canPatch={canPatch} plan={plan} />
-    </>
-  );
-
-  const renderConvertorSection = (): ReactNode => (
-    <>
-      <ConvertorLabelsDetailsItem canPatch={canPatch} plan={plan} shouldRender={isVsphere} />
-      <ConvertorNodeSelectorDetailsItem canPatch={canPatch} plan={plan} shouldRender={isVsphere} />
-      <ConvertorAffinityDetailsItem canPatch={canPatch} plan={plan} shouldRender={isVsphere} />
-    </>
-  );
-
-  const sectionContent = ((): ReactNode => {
+  const getSectionContent = (): ReactNode => {
     switch (sectionId) {
       case PLAN_SETTINGS_SECTION_ID.Guest:
-        return renderGuestSection();
+        return <PlanSettingsGuestSection visibility={visibility} />;
       case PLAN_SETTINGS_SECTION_ID.Transfer:
-        return renderTransferSection();
+        return <PlanSettingsTransferSection visibility={visibility} />;
       case PLAN_SETTINGS_SECTION_ID.Naming:
-        return renderNamingSection();
+        return <PlanSettingsNamingSection visibility={visibility} />;
       case PLAN_SETTINGS_SECTION_ID.Target:
-        return renderTargetSection();
+        return <PlanSettingsTargetSection visibility={visibility} />;
       case PLAN_SETTINGS_SECTION_ID.Convertor:
-        return renderConvertorSection();
+        return <PlanSettingsConvertorSection visibility={visibility} />;
       default:
         return null;
     }
-  })();
+  };
+
+  const sectionContent = getSectionContent();
 
   if (sectionContent === null) {
     return null;
   }
 
   return (
-    <DescriptionList
-      columnModifier={{
-        default: '2Col',
-      }}
-      data-testid={`plan-settings-section-${sectionId}`}
-    >
-      {sectionContent}
-    </DescriptionList>
+    <Stack data-testid={`plan-settings-section-${sectionId}`}>
+      <StackItem>
+        <PlanSettingsSectionIntro sectionId={sectionId} />
+      </StackItem>
+      <StackItem>
+        <DescriptionList
+          columnModifier={{
+            default: '2Col',
+          }}
+        >
+          {sectionContent}
+        </DescriptionList>
+      </StackItem>
+    </Stack>
   );
 };
 

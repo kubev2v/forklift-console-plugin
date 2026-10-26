@@ -1,9 +1,7 @@
 import { type FC, useCallback, useEffect, useMemo } from 'react';
 import { useSearchParams } from 'react-router';
 
-import SectionHeading from '@components/headers/SectionHeading';
 import { Divider, Flex, FlexItem, PageSection } from '@patternfly/react-core';
-import { useForkliftTranslation } from '@utils/i18n';
 
 import { usePlan } from '../../hooks/usePlan';
 import type { PlanPageProps } from '../../utils/types';
@@ -23,7 +21,6 @@ import {
 import './plan-settings-page.scss';
 
 const PlanSettingsPage: FC<PlanPageProps> = ({ name, namespace }) => {
-  const { t } = useForkliftTranslation();
   const { loaded: isPlanLoaded, plan } = usePlan(name, namespace);
   const visibility = usePlanSettingsVisibility(plan);
   const isReady = isPlanLoaded && visibility.isProviderLoaded;
@@ -60,7 +57,6 @@ const PlanSettingsPage: FC<PlanPageProps> = ({ name, namespace }) => {
       data-testid="plan-settings-page"
       hasBodyWrapper={false}
     >
-      <SectionHeading text={t('Plan settings')} />
       <Flex
         alignItems={{ default: 'alignItemsStretch' }}
         className="forklift-plan-settings__layout"
