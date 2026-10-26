@@ -230,11 +230,12 @@ test.describe('Plan name template overrides', { tag: '@upstream' }, () => {
     page,
   }) => {
     const planDetailsPage = new PlanDetailsPage(page);
-    const { detailsTab, virtualMachinesTab } = planDetailsPage;
+    const { settingsTab, virtualMachinesTab } = planDetailsPage;
 
-    await test.step('Navigate to the plan Details tab', async () => {
+    await test.step('Navigate to the plan Settings tab (Naming section)', async () => {
       await planDetailsPage.navigate(TEST_DATA.planName, MTV_NAMESPACE);
-      await detailsTab.navigateToDetailsTab();
+      await settingsTab.navigateToSettingsTab();
+      await settingsTab.selectSettingsSection('naming');
       await planDetailsPage.waitForPlanEditable();
     });
 

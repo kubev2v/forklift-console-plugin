@@ -130,55 +130,55 @@ test.describe('Plan Details - Guest Conversion Mode', { tag: '@downstream' }, ()
     testProvider: _testProvider,
   }) => {
     const { planDetailsPage } = await setupPlanDetailsPage(page, testPlan);
-    await planDetailsPage.detailsTab.navigateToDetailsTab();
+    await planDetailsPage.settingsTab.navigateToGuestSection();
 
     // Step 1: Assert "Include guest conversion" is visible (initial state)
-    await planDetailsPage.detailsTab.verifyGuestConversionModeText('Include guest conversion');
+    await planDetailsPage.settingsTab.verifyGuestConversionModeText('Include guest conversion');
 
     // Step 2: Click edit icon next to Guest conversion mode
-    await planDetailsPage.detailsTab.clickEditGuestConversionMode();
+    await planDetailsPage.settingsTab.clickEditGuestConversionMode();
 
     // Step 3: Click "Skip guest conversion" checkbox and verify warning
     // Initially should be unchecked (Include guest conversion state)
-    await planDetailsPage.detailsTab.guestConversionModal.verifySkipGuestConversionCheckbox(false);
+    await planDetailsPage.settingsTab.guestConversionModal.verifySkipGuestConversionCheckbox(false);
 
     // Check the "Skip guest conversion" checkbox
-    await planDetailsPage.detailsTab.guestConversionModal.toggleSkipGuestConversion(true);
+    await planDetailsPage.settingsTab.guestConversionModal.toggleSkipGuestConversion(true);
 
     // Step 4: Verify warning message appears
-    await planDetailsPage.detailsTab.guestConversionModal.verifySkipWarningMessage();
+    await planDetailsPage.settingsTab.guestConversionModal.verifySkipWarningMessage();
 
     // Step 5: Verify "Use compatibility mode" shows up and is checked
     // By default, compatibility mode should be enabled when skip is checked
-    await planDetailsPage.detailsTab.guestConversionModal.verifyUseCompatibilityModeVisibleAndChecked();
+    await planDetailsPage.settingsTab.guestConversionModal.verifyUseCompatibilityModeVisibleAndChecked();
 
     // Step 6: Save changes and verify detail items
-    await planDetailsPage.detailsTab.guestConversionModal.save();
+    await planDetailsPage.settingsTab.guestConversionModal.save();
 
     // Verify the changes are reflected in the details section
-    await planDetailsPage.detailsTab.verifyGuestConversionModeTexts([
+    await planDetailsPage.settingsTab.verifyGuestConversionModeTexts([
       'Skip guest conversion',
       'Compatibility mode enabled',
     ]);
 
     // Step 7: Edit again and uncheck "Use compatibility mode" to verify new warning
-    await planDetailsPage.detailsTab.clickEditGuestConversionMode();
+    await planDetailsPage.settingsTab.clickEditGuestConversionMode();
 
     // Verify the previous settings are preserved
-    await planDetailsPage.detailsTab.guestConversionModal.verifySkipGuestConversionCheckbox(true);
-    await planDetailsPage.detailsTab.guestConversionModal.verifyUseCompatibilityModeVisibleAndChecked();
+    await planDetailsPage.settingsTab.guestConversionModal.verifySkipGuestConversionCheckbox(true);
+    await planDetailsPage.settingsTab.guestConversionModal.verifyUseCompatibilityModeVisibleAndChecked();
 
     // Uncheck "Use compatibility mode"
-    await planDetailsPage.detailsTab.guestConversionModal.toggleUseCompatibilityMode(false);
+    await planDetailsPage.settingsTab.guestConversionModal.toggleUseCompatibilityMode(false);
 
     // Step 8: Verify new warning appears when compatibility mode is disabled
-    await planDetailsPage.detailsTab.guestConversionModal.verifyCompatibilityWarningMessage();
+    await planDetailsPage.settingsTab.guestConversionModal.verifyCompatibilityWarningMessage();
 
     // Save the final changes
-    await planDetailsPage.detailsTab.guestConversionModal.save();
+    await planDetailsPage.settingsTab.guestConversionModal.save();
 
     // Verify final state shows compatibility mode disabled
-    await planDetailsPage.detailsTab.verifyGuestConversionModeTexts([
+    await planDetailsPage.settingsTab.verifyGuestConversionModeTexts([
       'Skip guest conversion',
       'Compatibility mode disabled',
     ]);
@@ -189,43 +189,43 @@ test.describe('Plan Details - Target Labels', { tag: '@downstream' }, () => {
   requireVersion(test, V2_11_0);
   test('should edit VM target labels', async ({ page, testPlan, testProvider: _testProvider }) => {
     const { planDetailsPage } = await setupPlanDetailsPage(page, testPlan);
-    await planDetailsPage.detailsTab.navigateToDetailsTab();
+    await planDetailsPage.settingsTab.navigateToTargetVmSection();
 
     // Step 1: Verify initial state (no labels)
-    await planDetailsPage.detailsTab.verifyTargetLabelsCount(0);
+    await planDetailsPage.settingsTab.verifyTargetLabelsCount(0);
 
     // Step 2: Click edit icon next to VM target labels
-    await planDetailsPage.detailsTab.clickEditTargetLabels();
+    await planDetailsPage.settingsTab.clickEditTargetLabels();
 
     // Step 3: Add a label
-    await planDetailsPage.detailsTab.labelsModal.addLabel('environment', 'production');
+    await planDetailsPage.settingsTab.labelsModal.addLabel('environment', 'production');
 
     // Step 4: Save changes
-    await planDetailsPage.detailsTab.labelsModal.save();
+    await planDetailsPage.settingsTab.labelsModal.save();
 
     // Step 5: Verify label is displayed
-    await planDetailsPage.detailsTab.verifyTargetLabelsCount(1);
-    await planDetailsPage.detailsTab.verifyTargetLabelsText('environment');
+    await planDetailsPage.settingsTab.verifyTargetLabelsCount(1);
+    await planDetailsPage.settingsTab.verifyTargetLabelsText('environment');
 
     // Step 6: Edit again and add another label
-    await planDetailsPage.detailsTab.clickEditTargetLabels();
-    await planDetailsPage.detailsTab.labelsModal.verifyLabelExists('environment', 'production');
-    await planDetailsPage.detailsTab.labelsModal.addLabel('team', 'migration');
+    await planDetailsPage.settingsTab.clickEditTargetLabels();
+    await planDetailsPage.settingsTab.labelsModal.verifyLabelExists('environment', 'production');
+    await planDetailsPage.settingsTab.labelsModal.addLabel('team', 'migration');
 
     // Step 7: Save and verify both labels
-    await planDetailsPage.detailsTab.labelsModal.save();
-    await planDetailsPage.detailsTab.verifyTargetLabelsCount(2);
-    await planDetailsPage.detailsTab.verifyTargetLabelsText('environment');
-    await planDetailsPage.detailsTab.verifyTargetLabelsText('team');
+    await planDetailsPage.settingsTab.labelsModal.save();
+    await planDetailsPage.settingsTab.verifyTargetLabelsCount(2);
+    await planDetailsPage.settingsTab.verifyTargetLabelsText('environment');
+    await planDetailsPage.settingsTab.verifyTargetLabelsText('team');
 
     // Step 8: Edit again and remove one label
-    await planDetailsPage.detailsTab.clickEditTargetLabels();
-    await planDetailsPage.detailsTab.labelsModal.deleteLabelByKey('team');
+    await planDetailsPage.settingsTab.clickEditTargetLabels();
+    await planDetailsPage.settingsTab.labelsModal.deleteLabelByKey('team');
 
     // Step 9: Save and verify only one label remains
-    await planDetailsPage.detailsTab.labelsModal.save();
-    await planDetailsPage.detailsTab.verifyTargetLabelsCount(1);
-    await planDetailsPage.detailsTab.verifyTargetLabelsText('environment');
+    await planDetailsPage.settingsTab.labelsModal.save();
+    await planDetailsPage.settingsTab.verifyTargetLabelsCount(1);
+    await planDetailsPage.settingsTab.verifyTargetLabelsText('environment');
   });
 });
 
@@ -237,53 +237,55 @@ test.describe('Plan Details - Target Node Selector', { tag: '@downstream' }, () 
     testProvider: _testProvider,
   }) => {
     const { planDetailsPage } = await setupPlanDetailsPage(page, testPlan);
-    await planDetailsPage.detailsTab.navigateToDetailsTab();
+    await planDetailsPage.settingsTab.navigateToTargetVmSection();
     // Step 1: Verify initial state (no node selectors)
-    await planDetailsPage.detailsTab.verifyTargetNodeSelectorCount(0);
+    await planDetailsPage.settingsTab.verifyTargetNodeSelectorCount(0);
 
     // Step 2: Click edit icon next to VM target node selector
-    await planDetailsPage.detailsTab.clickEditTargetNodeSelector();
+    await planDetailsPage.settingsTab.clickEditTargetNodeSelector();
 
     // Step 3: Add a node selector
-    await planDetailsPage.detailsTab.nodeSelectorModal.addNodeSelector(
+    await planDetailsPage.settingsTab.nodeSelectorModal.addNodeSelector(
       'kubernetes.io/arch',
       'amd64',
     );
 
     // Step 4: Save changes
-    await planDetailsPage.detailsTab.nodeSelectorModal.save();
+    await planDetailsPage.settingsTab.nodeSelectorModal.save();
 
     // Step 5: Verify node selector is displayed
-    await planDetailsPage.detailsTab.verifyTargetNodeSelectorCount(1);
-    await planDetailsPage.detailsTab.verifyTargetNodeSelectorText('kubernetes.io/arch');
+    await planDetailsPage.settingsTab.verifyTargetNodeSelectorCount(1);
+    await planDetailsPage.settingsTab.verifyTargetNodeSelectorText('kubernetes.io/arch');
 
     // Step 6: Edit again and add another node selector
-    await planDetailsPage.detailsTab.clickEditTargetNodeSelector();
-    await planDetailsPage.detailsTab.nodeSelectorModal.verifyNodeSelectorExists(
+    await planDetailsPage.settingsTab.clickEditTargetNodeSelector();
+    await planDetailsPage.settingsTab.nodeSelectorModal.verifyNodeSelectorExists(
       'kubernetes.io/arch',
       'amd64',
     );
-    await planDetailsPage.detailsTab.nodeSelectorModal.addNodeSelector(
+    await planDetailsPage.settingsTab.nodeSelectorModal.addNodeSelector(
       'node-role.kubernetes.io/worker',
       '',
     );
 
     // Step 7: Save and verify both node selectors
-    await planDetailsPage.detailsTab.nodeSelectorModal.save();
-    await planDetailsPage.detailsTab.verifyTargetNodeSelectorCount(2);
-    await planDetailsPage.detailsTab.verifyTargetNodeSelectorText('kubernetes.io/arch');
-    await planDetailsPage.detailsTab.verifyTargetNodeSelectorText('node-role.kubernetes.io/worker');
+    await planDetailsPage.settingsTab.nodeSelectorModal.save();
+    await planDetailsPage.settingsTab.verifyTargetNodeSelectorCount(2);
+    await planDetailsPage.settingsTab.verifyTargetNodeSelectorText('kubernetes.io/arch');
+    await planDetailsPage.settingsTab.verifyTargetNodeSelectorText(
+      'node-role.kubernetes.io/worker',
+    );
 
     // Step 8: Edit again and remove one node selector
-    await planDetailsPage.detailsTab.clickEditTargetNodeSelector();
-    await planDetailsPage.detailsTab.nodeSelectorModal.deleteNodeSelectorByKey(
+    await planDetailsPage.settingsTab.clickEditTargetNodeSelector();
+    await planDetailsPage.settingsTab.nodeSelectorModal.deleteNodeSelectorByKey(
       'node-role.kubernetes.io/worker',
     );
 
     // Step 9: Save and verify only one node selector remains
-    await planDetailsPage.detailsTab.nodeSelectorModal.save();
-    await planDetailsPage.detailsTab.verifyTargetNodeSelectorCount(1);
-    await planDetailsPage.detailsTab.verifyTargetNodeSelectorText('kubernetes.io/arch');
+    await planDetailsPage.settingsTab.nodeSelectorModal.save();
+    await planDetailsPage.settingsTab.verifyTargetNodeSelectorCount(1);
+    await planDetailsPage.settingsTab.verifyTargetNodeSelectorText('kubernetes.io/arch');
   });
 });
 
@@ -295,68 +297,68 @@ test.describe('Plan Details - Target Affinity Rules', { tag: '@downstream' }, ()
     testProvider: _testProvider,
   }) => {
     const { planDetailsPage } = await setupPlanDetailsPage(page, testPlan);
-    await planDetailsPage.detailsTab.navigateToDetailsTab();
+    await planDetailsPage.settingsTab.navigateToTargetVmSection();
     // Step 1: Verify initial state (no affinity rules)
-    await planDetailsPage.detailsTab.verifyTargetAffinityRulesCount(0);
+    await planDetailsPage.settingsTab.verifyTargetAffinityRulesCount(0);
 
     // Step 2: Click edit icon next to VM target affinity rules
-    await planDetailsPage.detailsTab.clickEditTargetAffinity();
+    await planDetailsPage.settingsTab.clickEditTargetAffinity();
 
     // Step 3: Click "Add affinity rule" button
-    await planDetailsPage.detailsTab.affinityModal.clickAddAffinityRule();
+    await planDetailsPage.settingsTab.affinityModal.clickAddAffinityRule();
 
     // Step 4: Verify available affinity type options
-    await planDetailsPage.detailsTab.affinityModal.verifyAffinityTypeOptions([
+    await planDetailsPage.settingsTab.affinityModal.verifyAffinityTypeOptions([
       'Node affinity',
       'Workload (pod) affinity',
       'Workload (pod) anti-affinity',
     ]);
 
     // Step 5: Select affinity type (Node affinity)
-    await planDetailsPage.detailsTab.affinityModal.selectAffinityType('Node affinity');
+    await planDetailsPage.settingsTab.affinityModal.selectAffinityType('Node affinity');
 
     // Step 6: Verify available condition options
-    await planDetailsPage.detailsTab.affinityModal.verifyConditionOptions([
+    await planDetailsPage.settingsTab.affinityModal.verifyConditionOptions([
       'Required during scheduling',
       'Preferred during scheduling',
     ]);
 
     // Step 7: Select rule type (Required during scheduling)
-    await planDetailsPage.detailsTab.affinityModal.selectRuleType('Required during scheduling');
+    await planDetailsPage.settingsTab.affinityModal.selectRuleType('Required during scheduling');
 
     // Step 8: Add an expression to make the rule valid
-    await planDetailsPage.detailsTab.affinityModal.addExpression();
-    await planDetailsPage.detailsTab.affinityModal.fillExpressionKey('kubernetes.io/hostname');
-    await planDetailsPage.detailsTab.affinityModal.fillExpressionValue('worker-node-1');
+    await planDetailsPage.settingsTab.affinityModal.addExpression();
+    await planDetailsPage.settingsTab.affinityModal.fillExpressionKey('kubernetes.io/hostname');
+    await planDetailsPage.settingsTab.affinityModal.fillExpressionValue('worker-node-1');
 
     // Step 9: Save the affinity rule
-    await planDetailsPage.detailsTab.affinityModal.saveAffinityRule();
+    await planDetailsPage.settingsTab.affinityModal.saveAffinityRule();
 
     // Step 10: Verify rule exists in the list
-    await planDetailsPage.detailsTab.affinityModal.verifyAffinityRuleExists();
+    await planDetailsPage.settingsTab.affinityModal.verifyAffinityRuleExists();
 
     // Step 11: Apply rules and close modal
-    await planDetailsPage.detailsTab.affinityModal.save();
+    await planDetailsPage.settingsTab.affinityModal.save();
 
     // Step 12: Verify affinity rule is displayed
-    await planDetailsPage.detailsTab.verifyTargetAffinityRulesCount(1);
+    await planDetailsPage.settingsTab.verifyTargetAffinityRulesCount(1);
 
     // Step 13: Edit again and add another affinity rule
-    await planDetailsPage.detailsTab.clickEditTargetAffinity();
-    await planDetailsPage.detailsTab.affinityModal.clickAddAffinityRule();
-    await planDetailsPage.detailsTab.affinityModal.selectAffinityType('Workload (pod) affinity');
-    await planDetailsPage.detailsTab.affinityModal.selectRuleType('Preferred during scheduling');
+    await planDetailsPage.settingsTab.clickEditTargetAffinity();
+    await planDetailsPage.settingsTab.affinityModal.clickAddAffinityRule();
+    await planDetailsPage.settingsTab.affinityModal.selectAffinityType('Workload (pod) affinity');
+    await planDetailsPage.settingsTab.affinityModal.selectRuleType('Preferred during scheduling');
 
-    await planDetailsPage.detailsTab.affinityModal.fillWeight('50');
-    await planDetailsPage.detailsTab.affinityModal.fillTopologyKey('kubernetes.io/hostname');
-    await planDetailsPage.detailsTab.affinityModal.addExpression();
-    await planDetailsPage.detailsTab.affinityModal.fillExpressionKey('app');
-    await planDetailsPage.detailsTab.affinityModal.fillExpressionValue('database');
-    await planDetailsPage.detailsTab.affinityModal.saveAffinityRule();
+    await planDetailsPage.settingsTab.affinityModal.fillWeight('50');
+    await planDetailsPage.settingsTab.affinityModal.fillTopologyKey('kubernetes.io/hostname');
+    await planDetailsPage.settingsTab.affinityModal.addExpression();
+    await planDetailsPage.settingsTab.affinityModal.fillExpressionKey('app');
+    await planDetailsPage.settingsTab.affinityModal.fillExpressionValue('database');
+    await planDetailsPage.settingsTab.affinityModal.saveAffinityRule();
 
     // Step 14: Apply rules and verify multiple rules
-    await planDetailsPage.detailsTab.affinityModal.save();
-    await planDetailsPage.detailsTab.verifyTargetAffinityRulesCount(2);
+    await planDetailsPage.settingsTab.affinityModal.save();
+    await planDetailsPage.settingsTab.verifyTargetAffinityRulesCount(2);
   });
 });
 

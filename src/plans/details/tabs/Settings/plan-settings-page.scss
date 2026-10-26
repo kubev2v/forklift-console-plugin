@@ -1,0 +1,26 @@
+.forklift-plan-settings {
+  &__layout {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    align-items: stretch;
+    margin-block-start: var(--pf-t--global--spacer--md);
+    min-height: 12rem;
+  }
+
+  &__nav-column {
+    flex: 0 0 auto;
+    min-width: 12rem;
+    max-width: 16rem;
+  }
+
+  &__divider {
+    align-self: stretch;
+    margin-inline: var(--pf-t--global--spacer--md);
+  }
+
+  &__content-column {
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+}
