@@ -42,6 +42,7 @@ import {
   getMigrationTimeoutUiStatus,
   isMigrationTimeoutError,
 } from '../../utils/formatMigrationTimeoutDetail';
+import { getPlanVmExcludeDisks } from '../../utils/planVmExcludeDisks';
 import { requireVddk } from '../../utils/requireVddk';
 import {
   ELEMENT_TIMEOUT,
@@ -206,14 +207,14 @@ test.describe.serial('Plans - VSphere to Host Happy Path Cold Migration', () => 
         await vmTab.openPowerStateDialog(EXCLUDED_DISK_SOURCE_VM);
         await vmTab.powerStateModalSelect.click();
         await vmTab.powerStateOptionOn.click();
-        await vmTab.powerStateModalSaveButton.click();
+        await vmTab.saveEditVmWizard();
         await expect(vmTab.editTargetPowerStateModal).not.toBeVisible();
         await vmTab.waitForVMPowerState(EXCLUDED_DISK_SOURCE_VM, 'Powered on');
 
         await vmTab.openPowerStateDialog(WINDOWS_SOURCE_VM);
         await vmTab.powerStateModalSelect.click();
         await vmTab.powerStateOptionOff.click();
-        await vmTab.powerStateModalSaveButton.click();
+        await vmTab.saveEditVmWizard();
         await expect(vmTab.editTargetPowerStateModal).not.toBeVisible();
         await vmTab.waitForVMPowerState(WINDOWS_SOURCE_VM, 'Powered off');
       });
@@ -257,7 +258,7 @@ test.describe.serial('Plans - VSphere to Host Happy Path Cold Migration', () => 
           const planVms = planResource?.spec?.vms ?? [];
           const rhelPlanVm = planVms.find((vm) => vm.name?.includes(EXCLUDED_DISK_SOURCE_VM));
           expect(rhelPlanVm?.name).toContain(EXCLUDED_DISK_SOURCE_VM);
-          expect(rhelPlanVm?.excludeDisks).toEqual([EXCLUDED_DATA_DISK_BUS_ADDRESS]);
+          expect(getPlanVmExcludeDisks(rhelPlanVm)).toEqual([EXCLUDED_DATA_DISK_BUS_ADDRESS]);
           const windowsPlanVm = planVms.find((vm) => vm.name?.includes(WINDOWS_SOURCE_VM));
           expect(windowsPlanVm?.name).toContain(WINDOWS_SOURCE_VM);
           expect(windowsPlanVm?.targetPowerState).toBe('off');

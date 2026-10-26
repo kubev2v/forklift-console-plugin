@@ -77,7 +77,10 @@ test.describe('Plan additional settings', { tag: '@downstream' }, () => {
     );
 
     await virtualMachinesTab.openPowerStateDialog(vmName);
+    await virtualMachinesTab.editVmWizard.advanceToReviewStep();
     await expect(virtualMachinesTab.powerStateModalSaveButton).toBeDisabled();
+    await virtualMachinesTab.page.getByTestId('edit-vm-wizard-back-button').click();
+    await virtualMachinesTab.editVmWizard.generalStep.waitFor({ state: 'visible' });
     await virtualMachinesTab.powerStateModalSelect.click();
     await expect(virtualMachinesTab.powerStateOptionInherit).toBeVisible();
     await expect(virtualMachinesTab.powerStateOptionInherit).toContainText('Set to: Powered off');
@@ -86,8 +89,7 @@ test.describe('Plan additional settings', { tag: '@downstream' }, () => {
     await expect(virtualMachinesTab.powerStateOptionOff).toBeVisible();
 
     await virtualMachinesTab.powerStateOptionOn.click();
-    await expect(virtualMachinesTab.powerStateModalSaveButton).toBeEnabled();
-    await virtualMachinesTab.powerStateModalSaveButton.click();
+    await virtualMachinesTab.saveEditVmWizard();
 
     await expect(virtualMachinesTab.editTargetPowerStateModal).not.toBeVisible();
     await planDetailsPage.virtualMachinesTab.waitForVMPowerState(vmName, 'Powered on');
@@ -135,21 +137,22 @@ test.describe('Plan additional settings', { tag: '@downstream' }, () => {
       'Do not migrate shared disks (Inherited from plan)',
     );
     await vmt.openSharedDisksDialog(vmName);
+    await vmt.editVmWizard.advanceToReviewStep();
     await expect(vmt.sharedDisksModalSaveButton).toBeDisabled();
+    await vmt.page.getByTestId('edit-vm-wizard-back-button').click();
+    await vmt.editVmExcludeDisksModal.disksStep.waitFor({ state: 'visible' });
     await expect(vmt.sharedDisksOptionInherit).toBeVisible();
     await expect(vmt.sharedDisksOptionEnabled).toBeVisible();
     await expect(vmt.sharedDisksOptionDisabled).toBeVisible();
 
     await vmt.sharedDisksOptionEnabled.click();
-    await expect(vmt.sharedDisksModalSaveButton).toBeEnabled();
-    await vmt.sharedDisksModalSaveButton.click();
+    await vmt.saveEditVmWizard();
     await expect(vmt.editSharedDisksModal).not.toBeVisible();
     await vmt.waitForVMSharedDisks(vmName, 'Migrate shared disks');
 
     await vmt.openSharedDisksDialog(vmName);
     await vmt.sharedDisksOptionInherit.click();
-    await expect(vmt.sharedDisksModalSaveButton).toBeEnabled();
-    await vmt.sharedDisksModalSaveButton.click();
+    await vmt.saveEditVmWizard();
     await expect(vmt.editSharedDisksModal).not.toBeVisible();
     await vmt.waitForVMSharedDisks(vmName, 'Do not migrate shared disks (Inherited from plan)');
   });

@@ -7,6 +7,12 @@
     width: 100%;
   }
 
+  &__title-group--compact {
+    display: flex;
+    flex-direction: column;
+    gap: var(--pf-t--global--spacer--sm);
+  }
+
   .pf-v6-c-page__main-section {
     padding: 0;
   }
