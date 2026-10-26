@@ -11,6 +11,7 @@ import {
   PHASES,
   taskStatuses,
 } from '@utils/constants';
+import { t } from '@utils/i18n';
 
 import type { DiskTransferMap, TaskCounterMap } from './types';
 
@@ -109,4 +110,13 @@ export const getJobPhase = (job: IoK8sApiBatchV1Job): string => {
   }
 
   return taskStatuses.pending;
+};
+
+export const getEditCutoverDescription = (): string => {
+  return t('Cannot change the cutover time after the final cutover has started');
+};
+
+export const getChangeCutoverText = (hasCutover: boolean): string => {
+  if (hasCutover) return t('Edit cutover');
+  return t('Schedule cutover');
 };

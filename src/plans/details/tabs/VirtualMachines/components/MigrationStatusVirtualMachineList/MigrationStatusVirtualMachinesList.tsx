@@ -3,16 +3,17 @@ import { loadUserSettings } from 'src/components/common/Page/userSettings';
 import { StandardPageWithSelection } from 'src/components/page/StandardPageWithSelection';
 import { TableSortContextProvider } from 'src/components/TableSortContextProvider';
 import { isPlanExecuting } from 'src/plans/details/components/PlanStatus/utils/planStatusResolver';
+import { getPlanIsWarm } from 'src/utils/crds/plans/selectors';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import type { V1beta1Plan } from '@forklift-ui/types';
 
-import { PLAN_VIRTUAL_MACHINES_LIST_ID } from '../utils/constants';
+import { MIGRATION_VIRTUAL_MACHINES_LIST_ID } from '../utils/constants';
 
 import MigrationStatusExpandedPage from './components/MigrationStatusExpandedPage/MigrationStatusExpandedPage';
 import { useMigrationResources } from './hooks/useMigrationResources';
 import { useMigrationVirtualMachineActions } from './hooks/useMigrationVirtualMachineActions';
-import { planMigrationVirtualMachinesFields } from './utils/constants';
+import { getPlanMigrationVirtualMachinesFields } from './utils/constants';
 import type { MigrationStatusVirtualMachinePageData } from './utils/types';
 import MigrationStatusVirtualMachinesRow from './MigrationStatusVirtualMachinesRow';
 
@@ -31,9 +32,13 @@ const MigrationStatusVirtualMachinesList: FC<MigrationStatusVirtualMachinesListP
 }) => {
   const { t } = useForkliftTranslation();
   const userSettings = useMemo(
-    () => loadUserSettings({ pageId: PLAN_VIRTUAL_MACHINES_LIST_ID }),
+    () => loadUserSettings({ pageId: MIGRATION_VIRTUAL_MACHINES_LIST_ID }),
     [],
   );
+
+  const isWarm = Boolean(getPlanIsWarm(plan)) || plan.spec?.type === 'warm';
+  const fields = useMemo(() => getPlanMigrationVirtualMachinesFields(isWarm), [isWarm]);
+
   const { migrationListData } = useMigrationResources(plan);
   const actions = useMigrationVirtualMachineActions(plan);
   const [expandedIds, setExpandedIds] = useState<string[]>([]);
@@ -63,15 +68,16 @@ const MigrationStatusVirtualMachinesList: FC<MigrationStatusVirtualMachinesListP
       canSelectWhenExecuting(item) ?? canSelectWhenNotExecuting(item),
     [canSelectWhenExecuting, canSelectWhenNotExecuting],
   );
+
   return (
-    <TableSortContextProvider fields={planMigrationVirtualMachinesFields}>
+    <TableSortContextProvider fields={fields}>
       <StandardPageWithSelection<MigrationStatusVirtualMachinePageData>
         canSelect={canSelect}
         cell={MigrationStatusVirtualMachinesRow}
         dataSource={dataSource}
         expanded={MigrationStatusExpandedPage}
         expandedIds={expandedIds}
-        fieldsMetadata={planMigrationVirtualMachinesFields}
+        fieldsMetadata={fields}
         GlobalActionToolbarItems={actions}
         onExpand={setExpandedIds}
         onSelect={onSelect}

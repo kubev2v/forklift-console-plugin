@@ -5,6 +5,7 @@ import { useMigrationResources } from '../useMigrationResources';
 
 const mockUseK8sWatchResource = jest.fn();
 const mockUseLatestPlanMigration = jest.fn();
+const mockUsePlanMigration = jest.fn();
 
 jest.mock('@utils/hooks/useK8sWatchResource', (): unknown => ({
   useK8sWatchResource: (...args: unknown[]) => mockUseK8sWatchResource(...args),
@@ -12,6 +13,10 @@ jest.mock('@utils/hooks/useK8sWatchResource', (): unknown => ({
 
 jest.mock('src/plans/hooks/useLatestPlanMigration', (): unknown => ({
   useLatestPlanMigration: (...args: unknown[]) => mockUseLatestPlanMigration(...args),
+}));
+
+jest.mock('src/plans/hooks/usePlanMigration', (): unknown => ({
+  usePlanMigration: (...args: unknown[]) => mockUsePlanMigration(...args),
 }));
 
 const PLAN_UID = 'plan-uid';
@@ -46,6 +51,8 @@ const labeled = (
 describe('useMigrationResources - listData', () => {
   beforeEach(() => {
     jest.clearAllMocks();
+    mockUsePlanMigration.mockReturnValue([undefined, true, null]);
+
     mockUseLatestPlanMigration.mockReturnValue([
       { metadata: { uid: MIGRATION_UID } },
       true,
@@ -83,6 +90,27 @@ describe('useMigrationResources - listData', () => {
     expect(byName.specVM).toEqual({ name: 'bravo-by-name' });
     expect(byName.statusVM).toMatchObject({ id: 'vm-2', name: 'bravo-by-name' });
     expect(byName.pods?.[0].metadata?.name).toBe('pod-2');
+  });
+
+  it('carries the migration and VM identity on every row', () => {
+    // The hook's `as MigrationStatusVirtualMachinePageData[]` cast means TypeScript checks
+    // none of these, yet the cutover column and the row kebab both depend on them.
+    const latestMigration = { metadata: { uid: MIGRATION_UID } };
+    mockUseLatestPlanMigration.mockReturnValue([latestMigration, true, undefined]);
+
+    const { result } = renderHook(() => useMigrationResources(plan));
+    const [withId, byName] = result.current.migrationListData;
+
+    expect(withId).toMatchObject({ migration: latestMigration, vmId: 'vm-1', vmName: 'alpha' });
+    expect(byName).toMatchObject({ migration: latestMigration, vmId: 'vm-2' });
+  });
+
+  it('leaves the row migration undefined when the plan has never run', () => {
+    mockUseLatestPlanMigration.mockReturnValue([undefined, true, undefined]);
+
+    const { result } = renderHook(() => useMigrationResources(plan));
+
+    expect(result.current.migrationListData[0].migration).toBeUndefined();
   });
 
   it('omits resource dicts while watches are still loading', () => {
