@@ -1,4 +1,4 @@
-import { existsSync, mkdirSync, unlinkSync, writeFileSync } from 'fs';
+import { existsSync, mkdirSync, statSync, unlinkSync, writeFileSync } from 'fs';
 
 import { execFileSync } from 'node:child_process';
 
@@ -32,6 +32,23 @@ const ENV_KEYS_TO_RELAY = [
 const USER_SET_KEYS = new Set(
   (process.env.PLAYWRIGHT_USER_SET_KEYS ?? '').split(',').filter(Boolean),
 );
+
+const AUTH_SESSION_MAX_AGE_MS = 12 * 60 * 60 * 1000;
+
+const shouldReuseExistingAuth = (): boolean => {
+  if (process.env.PLAYWRIGHT_FORCE_LOGIN === '1') {
+    return false;
+  }
+  if (!existsSync(AUTH_FILE)) {
+    return false;
+  }
+  try {
+    const { mtimeMs, size } = statSync(AUTH_FILE);
+    return size > 50 && Date.now() - mtimeMs < AUTH_SESSION_MAX_AGE_MS;
+  } catch {
+    return false;
+  }
+};
 
 /**
  * Fetches the cluster API server URL from the OpenShift infrastructure CR.
@@ -209,6 +226,12 @@ const detectCnvVersion = async (): Promise<void> => {
   }
 };
 
+const runPostAuthClusterSetup = async (): Promise<void> => {
+  await cleanupLeftoverHappyPathVms();
+  await detectForkliftVersion();
+  await detectCnvVersion();
+};
+
 const globalSetup = async (config: FullConfig) => {
   // console.error is used intentionally throughout this function.
   // Playwright routes stderr to the test reporter unconditionally, so these
@@ -231,49 +254,54 @@ const globalSetup = async (config: FullConfig) => {
   if (username && password) {
     mkdirSync('playwright/.auth', { recursive: true });
 
-    const browser = await chromium.launch();
-    const page = await browser.newPage({ ignoreHTTPSErrors: true });
+    if (shouldReuseExistingAuth()) {
+      console.error(
+        '✅ Reusing existing playwright/.auth/user.json (set PLAYWRIGHT_FORCE_LOGIN=1 to re-login)',
+      );
+      await generateKubeconfig(username, password);
+      await runPostAuthClusterSetup();
+    } else {
+      const browser = await chromium.launch();
+      const page = await browser.newPage({ ignoreHTTPSErrors: true });
 
-    page.on('pageerror', (error) => {
-      console.error(`🚨 Page error: ${error.message}`);
-    });
-
-    try {
-      const loginPage = new LoginPage(page);
-      await loginPage.login(baseURL, username, password);
-
-      await disableGuidedTour(page);
-
-      // Wait for the console SPA to finish initialising its Kubernetes proxy session.
-      // The proxy authenticates via the session-token cookie, but that binding is
-      // completed asynchronously after the OAuth redirect.  Sending the ConfigMap
-      // PATCH before networkidle resolves causes a 403 ("system:anonymous").
-      await page.waitForLoadState('networkidle', { timeout: 60_000 }).catch(() => {
-        // networkidle may never fire on very busy clusters — proceed anyway.
-        console.error('⚠️ networkidle timed out before language restore; proceeding');
+      page.on('pageerror', (error) => {
+        console.error(`🚨 Page error: ${error.message}`);
       });
 
-      await page.context().storageState({ path: AUTH_FILE });
-      console.error('✅ Authentication completed successfully');
+      try {
+        const loginPage = new LoginPage(page);
+        await loginPage.login(baseURL, username, password);
 
-      await restoreConsoleLanguage(page);
+        await disableGuidedTour(page);
 
-      // Re-save so workers inherit English localStorage after language restore.
-      await page.context().storageState({ path: AUTH_FILE });
+        // Wait for the console SPA to finish initialising its Kubernetes proxy session.
+        // The proxy authenticates via the session-token cookie, but that binding is
+        // completed asynchronously after the OAuth redirect.  Sending the ConfigMap
+        // PATCH before networkidle resolves causes a 403 ("system:anonymous").
+        await page.waitForLoadState('networkidle', { timeout: 60_000 }).catch(() => {
+          // networkidle may never fire on very busy clusters — proceed anyway.
+          console.error('⚠️ networkidle timed out before language restore; proceeding');
+        });
 
-      await generateKubeconfig(username, password);
-      await cleanupLeftoverHappyPathVms();
+        await page.context().storageState({ path: AUTH_FILE });
+        console.error('✅ Authentication completed successfully');
 
-      await detectForkliftVersion();
-      await detectCnvVersion();
-    } catch (error) {
-      const screenshotPath = 'playwright/test-results/global-setup-login-failure.png';
-      await page.screenshot({ fullPage: true, path: screenshotPath }).catch(() => undefined);
-      console.error(`📸 Login failure screenshot: ${screenshotPath} (URL: ${page.url()})`);
-      console.error('❌ Login failed in global setup:', error);
-      throw error;
-    } finally {
-      await browser.close();
+        await restoreConsoleLanguage(page);
+
+        // Re-save so workers inherit English localStorage after language restore.
+        await page.context().storageState({ path: AUTH_FILE });
+
+        await generateKubeconfig(username, password);
+        await runPostAuthClusterSetup();
+      } catch (error) {
+        const screenshotPath = 'playwright/test-results/global-setup-login-failure.png';
+        await page.screenshot({ fullPage: true, path: screenshotPath }).catch(() => undefined);
+        console.error(`📸 Login failure screenshot: ${screenshotPath} (URL: ${page.url()})`);
+        console.error('❌ Login failed in global setup:', error);
+        throw error;
+      } finally {
+        await browser.close();
+      }
     }
   } else {
     console.error('⚠️ No credentials provided, skipping authentication setup');

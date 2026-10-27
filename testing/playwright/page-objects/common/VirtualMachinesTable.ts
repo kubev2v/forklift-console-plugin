@@ -90,7 +90,7 @@ export class VirtualMachinesTable {
    * Adds a column by checking it in the Manage columns modal
    */
   async addColumn(columnName: string): Promise<void> {
-    const manageColumnsBtn = this.page.getByTestId('manage-columns-button');
+    const manageColumnsBtn = this.rootLocator.getByTestId('manage-columns-button');
     await manageColumnsBtn.click();
 
     const modalBody = this.page.getByTestId('manage-columns-modal');
@@ -107,7 +107,8 @@ export class VirtualMachinesTable {
     const saveBtn = this.page.getByTestId('manage-columns-save-button');
     await saveBtn.click();
     await expect(modalBody).not.toBeVisible();
-    await this.page.waitForTimeout(500);
+    await this.table.waitForTableLoad();
+    await this.table.waitForColumnVisible(columnName);
   }
 
   async clearAllFilters(): Promise<void> {
@@ -143,7 +144,10 @@ export class VirtualMachinesTable {
   }
 
   async enableColumn(columnName: string): Promise<void> {
-    await this.table.enableColumn(columnName);
+    if (await this.isColumnVisible(columnName)) {
+      return;
+    }
+    await this.addColumn(columnName);
   }
 
   /**

@@ -1,7 +1,7 @@
 import type { Page } from '@playwright/test';
 
 import { MTV_NAMESPACE } from './resource-manager/constants';
-import { disableGuidedTour } from './utils';
+import { prepareConsolePage } from './utils';
 
 export class NavigationHelper {
   private readonly defaultNamespace = MTV_NAMESPACE;
@@ -51,7 +51,7 @@ export class NavigationHelper {
   async navigateToConsole(): Promise<void> {
     await this.page.goto('/');
     await this.page.waitForLoadState('domcontentloaded');
-    await disableGuidedTour(this.page);
+    await prepareConsolePage(this.page);
   }
 
   async navigateToK8sResource(options: {
@@ -65,7 +65,7 @@ export class NavigationHelper {
     const url = this.buildK8sUrl(options);
     await this.page.goto(url);
     await this.page.waitForLoadState('domcontentloaded');
-    await disableGuidedTour(this.page);
+    await prepareConsolePage(this.page);
   }
 
   async navigateToMigrationMenu(): Promise<void> {
@@ -73,16 +73,31 @@ export class NavigationHelper {
     await this.page.getByTestId('migration-nav-item').click({ timeout: 20000 });
   }
 
+  /** Matches `CreatePlanAction` navigation (`getResourceUrl` cluster path + query params). */
+  async navigateToNewPlanFromSourceProvider(
+    sourceProvider: string,
+    planProject = this.defaultNamespace,
+  ): Promise<void> {
+    const params = new URLSearchParams({
+      planProject,
+      sourceProvider,
+    });
+    const path = this.buildK8sUrl({ action: 'new', allNamespaces: true, resource: 'Plan' });
+    await this.page.goto(`${path}?${params.toString()}`);
+    await this.page.waitForLoadState('domcontentloaded');
+    await prepareConsolePage(this.page);
+  }
+
   async navigateToOverview(): Promise<void> {
     await this.page.goto('/mtv/overview');
     await this.page.waitForLoadState('domcontentloaded');
-    await disableGuidedTour(this.page);
+    await prepareConsolePage(this.page);
   }
 
   async navigateToOverviewSettings(): Promise<void> {
     await this.page.goto('/mtv/overview/settings');
     await this.page.waitForLoadState('domcontentloaded');
-    await disableGuidedTour(this.page);
+    await prepareConsolePage(this.page);
   }
 
   async navigateToPlans(): Promise<void> {

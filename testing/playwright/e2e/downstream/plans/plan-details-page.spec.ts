@@ -2,11 +2,13 @@ import { expect } from '@playwright/test';
 
 import { setupPlanDetailsPage } from '../../../fixtures/helpers/planDetailsHelpers';
 import { sharedProviderFixtures as test } from '../../../fixtures/resourceFixtures';
+import { DOWNSTREAM_PLAN_UI_TIMEOUT_MS } from '../../../utils/resource-manager/constants';
 import { V2_10_5, V2_11_0 } from '../../../utils/version/constants';
 import { requireVersion } from '../../../utils/version/version';
 
 test.describe('Plan Details Navigation', { tag: '@downstream' }, () => {
   requireVersion(test, V2_10_5);
+  test.describe.configure({ timeout: DOWNSTREAM_PLAN_UI_TIMEOUT_MS });
 
   test('should navigate to plan details and verify page content', async ({
     page,
@@ -21,6 +23,7 @@ test.describe('Plan Details Navigation', { tag: '@downstream' }, () => {
 
 test.describe('Plan Details - Delete', { tag: '@downstream' }, () => {
   requireVersion(test, V2_10_5);
+  test.describe.configure({ timeout: DOWNSTREAM_PLAN_UI_TIMEOUT_MS });
 
   test('should delete the plan from the details page and return to the list', async ({
     page,
@@ -40,6 +43,7 @@ test.describe('Plan Details - Delete', { tag: '@downstream' }, () => {
 
 test.describe('Plan Details - VM Rename Validation', { tag: '@downstream' }, () => {
   requireVersion(test, V2_11_0);
+  test.describe.configure({ timeout: DOWNSTREAM_PLAN_UI_TIMEOUT_MS });
 
   test('should handle VM rename validation - success and failure scenarios', async ({
     page,
@@ -124,6 +128,7 @@ test.describe('Plan Details - VM Rename Validation', { tag: '@downstream' }, () 
 
 test.describe('Plan Details - Guest Conversion Mode', { tag: '@downstream' }, () => {
   requireVersion(test, V2_11_0);
+  test.describe.configure({ timeout: DOWNSTREAM_PLAN_UI_TIMEOUT_MS });
   test('should edit Guest conversion mode', async ({
     page,
     testPlan,
@@ -187,6 +192,7 @@ test.describe('Plan Details - Guest Conversion Mode', { tag: '@downstream' }, ()
 
 test.describe('Plan Details - Target Labels', { tag: '@downstream' }, () => {
   requireVersion(test, V2_11_0);
+  test.describe.configure({ timeout: DOWNSTREAM_PLAN_UI_TIMEOUT_MS });
   test('should edit VM target labels', async ({ page, testPlan, testProvider: _testProvider }) => {
     const { planDetailsPage } = await setupPlanDetailsPage(page, testPlan);
     await planDetailsPage.settingsTab.navigateToTargetVmSection();
@@ -231,6 +237,7 @@ test.describe('Plan Details - Target Labels', { tag: '@downstream' }, () => {
 
 test.describe('Plan Details - Target Node Selector', { tag: '@downstream' }, () => {
   requireVersion(test, V2_11_0);
+  test.describe.configure({ timeout: DOWNSTREAM_PLAN_UI_TIMEOUT_MS });
   test('should edit VM target node selector', async ({
     page,
     testPlan,
@@ -291,6 +298,7 @@ test.describe('Plan Details - Target Node Selector', { tag: '@downstream' }, () 
 
 test.describe('Plan Details - Target Affinity Rules', { tag: '@downstream' }, () => {
   requireVersion(test, V2_11_0);
+  test.describe.configure({ timeout: DOWNSTREAM_PLAN_UI_TIMEOUT_MS });
   test('should edit VM target affinity rules', async ({
     page,
     testPlan,
@@ -364,6 +372,7 @@ test.describe('Plan Details - Target Affinity Rules', { tag: '@downstream' }, ()
 
 test.describe('Plan Details - Description', { tag: '@downstream' }, () => {
   requireVersion(test, V2_11_0);
+  test.describe.configure({ timeout: DOWNSTREAM_PLAN_UI_TIMEOUT_MS });
   test('should edit plan description', async ({ page, testPlan, testProvider: _testProvider }) => {
     const { planDetailsPage, testData } = await setupPlanDetailsPage(page, testPlan);
 
@@ -377,6 +386,7 @@ test.describe('Plan Details - Description', { tag: '@downstream' }, () => {
     });
 
     await test.step('Edit and update description', async () => {
+      await planDetailsPage.waitForPlanEditable();
       await planDetailsPage.detailsTab.clickEditDescription();
       const updatedDescription = 'Updated description for production migration plan';
       await planDetailsPage.detailsTab.editDescription(updatedDescription);

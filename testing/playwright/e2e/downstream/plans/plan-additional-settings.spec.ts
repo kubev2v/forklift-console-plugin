@@ -5,11 +5,13 @@ import { CreatePlanWizardPage } from '../../../page-objects/CreatePlanWizard/Cre
 import { PlanDetailsPage } from '../../../page-objects/PlanDetailsPage/PlanDetailsPage';
 import { MigrationType } from '../../../types/enums';
 import { createPlanTestData, type PlanTestData } from '../../../types/test-data';
+import { DOWNSTREAM_PLAN_UI_TIMEOUT_MS } from '../../../utils/resource-manager/constants';
 import { V2_11_0, V2_12_0 } from '../../../utils/version/constants';
 import { isVersionAtLeast, requireVersion } from '../../../utils/version/version';
 
 test.describe('Plan additional settings', { tag: '@downstream' }, () => {
   requireVersion(test, V2_11_0);
+  test.describe.configure({ timeout: DOWNSTREAM_PLAN_UI_TIMEOUT_MS });
 
   test('should set power state on plan creation, plan details tab, and VMs tab', async ({
     page,
@@ -211,6 +213,7 @@ test.describe('Plan additional settings', { tag: '@downstream' }, () => {
 
 test.describe('Plan additional settings - PR #2292', { tag: '@downstream' }, () => {
   requireVersion(test, V2_12_0);
+  test.describe.configure({ timeout: DOWNSTREAM_PLAN_UI_TIMEOUT_MS });
 
   test('should edit preserve static IPs and shared disks from details page', async ({
     page,

@@ -4,6 +4,7 @@ import { EndpointType, ProviderType } from '../types/enums';
 import type { ProviderData } from '../types/test-data';
 import { NavigationHelper } from '../utils/NavigationHelper';
 import type { ResourceManager } from '../utils/resource-manager/ResourceManager';
+import { dismissWebpackDevServerOverlay } from '../utils/utils';
 import { V2_11_0 } from '../utils/version/constants';
 import { isVersionAtLeast } from '../utils/version/version';
 
@@ -313,6 +314,7 @@ export class CreateProviderPage {
 
     const createButton = this.page.getByTestId('add-provider-button');
     await createButton.waitFor({ state: 'visible', timeout: 20000 });
+    await dismissWebpackDevServerOverlay(this.page);
     await createButton.click();
     await this.page.waitForLoadState('domcontentloaded');
   }

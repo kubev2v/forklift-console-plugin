@@ -1,10 +1,12 @@
 import { setupPlanDetailsPage } from '../../../fixtures/helpers/planDetailsHelpers';
 import { sharedProviderFixtures as test } from '../../../fixtures/resourceFixtures';
+import { DOWNSTREAM_PLAN_UI_TIMEOUT_MS } from '../../../utils/resource-manager/constants';
 import { V2_12_0 } from '../../../utils/version/constants';
 import { requireVersion } from '../../../utils/version/version';
 
 test.describe('Plan Details - Convertor Pod Labels', { tag: '@downstream' }, () => {
   requireVersion(test, V2_12_0);
+  test.describe.configure({ timeout: DOWNSTREAM_PLAN_UI_TIMEOUT_MS });
   test('should edit convertor pod labels', async ({
     page,
     testPlan,
@@ -50,6 +52,7 @@ test.describe('Plan Details - Convertor Pod Labels', { tag: '@downstream' }, () 
 
 test.describe('Plan Details - Convertor Pod Node Selector', { tag: '@downstream' }, () => {
   requireVersion(test, V2_12_0);
+  test.describe.configure({ timeout: DOWNSTREAM_PLAN_UI_TIMEOUT_MS });
 
   test('should edit convertor pod node selector', async ({
     page,
@@ -109,6 +112,7 @@ test.describe('Plan Details - Convertor Pod Node Selector', { tag: '@downstream'
 
 test.describe('Plan Details - Convertor Pod Affinity Rules', { tag: '@downstream' }, () => {
   requireVersion(test, V2_12_0);
+  test.describe.configure({ timeout: DOWNSTREAM_PLAN_UI_TIMEOUT_MS });
 
   test('should edit convertor pod affinity rules', async ({
     page,

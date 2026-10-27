@@ -40,4 +40,14 @@ export class SettingsTab extends DetailsTab {
   targetVMPowerStateDetailItem(): Locator {
     return this.page.getByTestId('target-vm-power-state-detail-item');
   }
+
+  async verifyTargetPowerStateSetting(targetPowerState: 'auto' | 'off' | 'on'): Promise<void> {
+    const labels: Record<'auto' | 'off' | 'on', string> = {
+      auto: 'Retain source VM power state',
+      off: 'Powered off',
+      on: 'Powered on',
+    };
+    await this.navigateToTargetVmSection();
+    await expect(this.targetVMPowerState(labels[targetPowerState])).toBeVisible();
+  }
 }

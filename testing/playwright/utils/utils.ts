@@ -36,6 +36,42 @@ export const disableGuidedTour = async (page: Page): Promise<void> => {
   await skipButton.waitFor({ state: 'hidden', timeout: GUIDED_TOUR_HIDDEN_TIMEOUT_MS });
 };
 
+/**
+ * Removes the webpack-dev-server compile-error overlay iframe injected during local
+ * `npm start`. It sits above the console and blocks Playwright clicks; CI builds do
+ * not inject it.
+ */
+export const dismissWebpackDevServerOverlay = async (page: Page): Promise<void> => {
+  await page.evaluate(() => {
+    document.getElementById('webpack-dev-server-client-overlay')?.remove();
+  });
+};
+
+/** Run common post-navigation cleanup before interacting with the console UI. */
+export const prepareConsolePage = async (page: Page): Promise<void> => {
+  await dismissWebpackDevServerOverlay(page);
+  await disableGuidedTour(page);
+};
+
+const CONSOLE_ERROR_BOUNDARY_HEADING = 'Something wrong happened';
+
+/**
+ * Throws when OpenShift's error boundary replaced the page (plugin runtime error).
+ * Common with a broken local `npm start` bundle; CI production builds do not hit this.
+ */
+export const assertNoConsoleErrorBoundary = async (page: Page): Promise<void> => {
+  const errorBoundary = page.getByRole('heading', { name: CONSOLE_ERROR_BOUNDARY_HEADING });
+  if (await errorBoundary.isVisible().catch(() => false)) {
+    const detail = (await page.locator('main').textContent()) ?? '';
+    throw new Error(
+      `Console error boundary is visible (${CONSOLE_ERROR_BOUNDARY_HEADING}). ` +
+        'Fix the plugin build/runtime error before running E2E (check npm start / npm run build, ' +
+        'or use npm run console). ' +
+        `Page excerpt: ${detail.slice(0, 300)}`,
+    );
+  }
+};
+
 // Dynamic plugin may not have registered its routes yet on first load; reload and retry once.
 export const waitForVisibleWithReload = async (
   page: Page,

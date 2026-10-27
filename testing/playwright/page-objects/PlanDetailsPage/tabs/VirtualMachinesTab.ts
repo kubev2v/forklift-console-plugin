@@ -18,7 +18,7 @@ export class VirtualMachinesTab extends VirtualMachinesTable {
   readonly postMigrationSetup: PostMigrationSetupHelpers;
 
   constructor(page: Page) {
-    super(page, page.locator('main'));
+    super(page, page.getByTestId('plan-spec-virtual-machines-list'));
     this.concerns = new ConcernsHelpers(page);
     this.editVmExcludeDisksModal = new EditVmExcludeDisksModal(page);
     this.editVmInstanceTypeModal = new PlanVmInstanceTypeModal(page);
@@ -177,6 +177,7 @@ export class VirtualMachinesTab extends VirtualMachinesTable {
   async navigateToVirtualMachinesTab(): Promise<void> {
     await this.page.locator('[data-test-id="horizontal-link-Virtual machines"]').click();
     await this.page.waitForURL((url) => url.toString().endsWith('/vms'));
+    await this.page.getByTestId('plan-spec-virtual-machines-list').waitFor({ state: 'visible' });
     await this.table.waitForTableLoad();
   }
 

@@ -2,6 +2,7 @@ import { expect, type Locator, type Page } from '@playwright/test';
 
 import type { MigrationType } from '../../../types/enums';
 import type { PlanTestData } from '../../../types/test-data';
+import { K8S_RECONCILE_TIMEOUT } from '../../../utils/resource-manager/constants';
 import { V2_11_0 } from '../../../utils/version/constants';
 import { isVersionAtLeast } from '../../../utils/version/version';
 import { GuestConversionModal } from '../modals/GuestConversionModal';
@@ -199,8 +200,10 @@ export class DetailsTab {
   }
 
   async saveDescription(): Promise<void> {
-    await this.editDescriptionModal.getByTestId('modal-confirm-button').click();
-    await expect(this.editDescriptionModal).not.toBeVisible();
+    const confirmButton = this.editDescriptionModal.getByTestId('modal-confirm-button');
+    await expect(confirmButton).toBeEnabled();
+    await confirmButton.click();
+    await expect(this.editDescriptionModal).not.toBeVisible({ timeout: K8S_RECONCILE_TIMEOUT });
   }
 
   async saveMigrateSharedDisks(): Promise<void> {
@@ -317,12 +320,6 @@ export class DetailsTab {
     await expect(this.page.getByTestId('owner-detail-item')).toContainText('No owner');
     if (isVersionAtLeast(V2_11_0)) {
       await this.verifyDescriptionText(planData.description ?? 'None');
-    }
-    if (planData.additionalPlanSettings?.targetPowerState) {
-      const labels = { auto: 'Retain source VM power state', off: 'Powered off', on: 'Powered on' };
-      await expect(
-        this.targetVMPowerState(labels[planData.additionalPlanSettings.targetPowerState]),
-      ).toBeVisible();
     }
   }
 
