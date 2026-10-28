@@ -83,6 +83,7 @@ const MigrationStatusVirtualMachinesList: FC<MigrationStatusVirtualMachinesListP
         onSelect={onSelect}
         resizableColumns
         selectedIds={selectedIds}
+        testId="plan-migration-virtual-machines-list"
         title={t('Virtual machines')}
         toId={toId}
         userSettings={userSettings}

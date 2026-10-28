@@ -10,6 +10,11 @@ import { EditVmExcludeDisksModal } from './EditVmExcludeDisksModal';
 import { PlanVmInstanceTypeModal } from './PlanVmInstanceTypeModal';
 import { PostMigrationSetupHelpers } from './PostMigrationSetupHelpers';
 
+const planVirtualMachinesListRoot = (page: Page): Locator =>
+  page
+    .getByTestId('plan-spec-virtual-machines-list')
+    .or(page.getByTestId('plan-migration-virtual-machines-list'));
+
 /** VirtualMachines tab for Plan Details page (flat grid, no folder hierarchy). */
 export class VirtualMachinesTab extends VirtualMachinesTable {
   readonly concerns: ConcernsHelpers;
@@ -18,7 +23,7 @@ export class VirtualMachinesTab extends VirtualMachinesTable {
   readonly postMigrationSetup: PostMigrationSetupHelpers;
 
   constructor(page: Page) {
-    super(page, page.getByTestId('plan-spec-virtual-machines-list'));
+    super(page, planVirtualMachinesListRoot(page));
     this.concerns = new ConcernsHelpers(page);
     this.editVmExcludeDisksModal = new EditVmExcludeDisksModal(page);
     this.editVmInstanceTypeModal = new PlanVmInstanceTypeModal(page);
@@ -177,7 +182,9 @@ export class VirtualMachinesTab extends VirtualMachinesTable {
   async navigateToVirtualMachinesTab(): Promise<void> {
     await this.page.locator('[data-test-id="horizontal-link-Virtual machines"]').click();
     await this.page.waitForURL((url) => url.toString().endsWith('/vms'));
-    await this.page.getByTestId('plan-spec-virtual-machines-list').waitFor({ state: 'visible' });
+    await expect(planVirtualMachinesListRoot(this.page)).toBeVisible({
+      timeout: K8S_RECONCILE_TIMEOUT,
+    });
     await this.table.waitForTableLoad();
   }
 
