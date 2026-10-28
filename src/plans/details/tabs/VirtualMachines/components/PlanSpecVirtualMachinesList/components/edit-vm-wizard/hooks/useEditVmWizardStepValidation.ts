@@ -1,22 +1,26 @@
 import { useCallback } from 'react';
 import { useFormContext } from 'react-hook-form';
 import { validateVMTargetName } from 'src/plans/details/tabs/VirtualMachines/components/PlanSpecVirtualMachinesList/components/utils/utils';
-import { wouldExcludeAllDisks } from 'src/plans/utils/excludeDisks/excludeDiskSelection';
 
 import type { V1beta1Plan } from '@forklift-ui/types';
-import { getPlanVirtualMachines } from '@utils/crds/plans/selectors';
+import { getPlanVirtualMachines, getVmExcludeDisks } from '@utils/crds/plans/selectors';
 
 import { EditVmWizardStepId } from '../constants';
 import type { EditVmWizardFormValues } from '../types';
 import { hasNamingTemplatesStepErrors } from '../utils/editVmNamingTemplateValidation';
+import { hasInvalidExcludeDiskSelection } from '../utils/hasInvalidExcludeDiskSelection';
 
 type UseEditVmWizardStepValidationArgs = {
+  diskLoadError: Error | null;
+  isDiskInventoryLoading: boolean;
   plan: V1beta1Plan;
   selectableDiskAddresses: string[];
   vmIndex: number;
 };
 
 export const useEditVmWizardStepValidation = ({
+  diskLoadError,
+  isDiskInventoryLoading,
   plan,
   selectableDiskAddresses,
   vmIndex,
@@ -37,7 +41,14 @@ export const useEditVmWizardStepValidation = ({
       }
 
       if (stepId === EditVmWizardStepId.Disks) {
-        return wouldExcludeAllDisks(values.excludeDisks, selectableDiskAddresses);
+        const vm = getPlanVirtualMachines(plan)[vmIndex];
+        return hasInvalidExcludeDiskSelection({
+          current: getVmExcludeDisks(vm) ?? [],
+          diskLoadError,
+          isInventoryLoading: isDiskInventoryLoading,
+          selectableAddresses: selectableDiskAddresses,
+          selected: values.excludeDisks,
+        });
       }
 
       if (stepId === EditVmWizardStepId.NamingTemplates) {
@@ -46,7 +57,7 @@ export const useEditVmWizardStepValidation = ({
 
       return false;
     },
-    [getValues, plan, selectableDiskAddresses, vmIndex],
+    [diskLoadError, getValues, isDiskInventoryLoading, plan, selectableDiskAddresses, vmIndex],
   );
 
   const validateStep = useCallback(

@@ -8,7 +8,7 @@ import type { EnhancedPlanSpecVms } from '@utils/plans/types';
 
 import type { EditVmWizardFormValues } from '../types';
 
-export type EditVmPatchOperation = {
+type EditVmPatchOperation = {
   op: string;
   path: string;
   value?: unknown;

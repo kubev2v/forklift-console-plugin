@@ -33,9 +33,18 @@ const EditVmWizardFooter: FC<EditVmWizardFooterProps> = ({ closeOverlay }) => {
   const { activeStep, goToNextStep, goToPrevStep } = useWizardContext();
   const { control, getValues } = useFormContext<EditVmWizardFormValues>();
   const formValues = useWatch({ control });
-  const { plan, providerType, selectableDiskAddresses, vmIndex } = useEditVmWizardContext();
+  const {
+    diskLoadError,
+    isDiskInventoryLoading,
+    plan,
+    providerType,
+    selectableDiskAddresses,
+    vmIndex,
+  } = useEditVmWizardContext();
   const stepIds = useEditVmWizardSteps(providerType);
   const { hasStepErrors, validateStep } = useEditVmWizardStepValidation({
+    diskLoadError,
+    isDiskInventoryLoading,
     plan,
     selectableDiskAddresses,
     vmIndex,
