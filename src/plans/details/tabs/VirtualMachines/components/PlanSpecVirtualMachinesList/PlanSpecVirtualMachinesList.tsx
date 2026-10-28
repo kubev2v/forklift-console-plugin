@@ -79,7 +79,6 @@ const PlanSpecVirtualMachinesList: FC<PlanVirtualMachinesListProps> = ({ plan })
     <StandardPageWithSelection<SpecVirtualMachinePageData>
       canSelect={canSelect}
       cell={PlanSpecVirtualMachinesRow}
-      data-testid="plan-spec-virtual-machines-list"
       dataSource={[enrichedData, !loading, inventoryError]}
       expanded={expanded}
       expandedIds={expandedIds}
@@ -90,6 +89,7 @@ const PlanSpecVirtualMachinesList: FC<PlanVirtualMachinesListProps> = ({ plan })
       onSelect={onSelect}
       resizableColumns
       selectedIds={selectedIds}
+      testId="plan-spec-virtual-machines-list"
       title={t('Virtual machines')}
       toId={vmDataToId}
       userSettings={userSettings}

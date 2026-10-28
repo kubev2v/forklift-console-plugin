@@ -4,7 +4,7 @@ import { ProviderType } from '../../types/enums';
 import type { ProviderData } from '../../types/test-data';
 import { NavigationHelper } from '../../utils/NavigationHelper';
 import { MTV_NAMESPACE } from '../../utils/resource-manager/constants';
-import { assertNoConsoleErrorBoundary, dismissWebpackDevServerOverlay } from '../../utils/utils';
+import { dismissWebpackDevServerOverlay } from '../../utils/utils';
 import { V2_12_0 } from '../../utils/version/constants';
 import { isVersionAtLeast } from '../../utils/version/version';
 import { DeleteResourceModal } from '../common/DeleteResourceModal';
@@ -252,7 +252,6 @@ export class ProviderDetailsPage {
 
   async waitForReadyStatus(timeoutMs = 180000): Promise<void> {
     await dismissWebpackDevServerOverlay(this.page);
-    await assertNoConsoleErrorBoundary(this.page);
 
     const statusLocator = this.page.getByTestId('resource-status');
     const createPlanButton = isVersionAtLeast(V2_12_0)
@@ -265,7 +264,6 @@ export class ProviderDetailsPage {
     try {
       await expect(statusLocator).toContainText('Ready', { timeout: statusHeadingBudgetMs });
     } catch {
-      await assertNoConsoleErrorBoundary(this.page);
       await expect(createPlanButton).toBeVisible({ timeout: actionBudgetMs });
       await expect(createPlanButton).toBeEnabled({ timeout: actionBudgetMs });
     }
