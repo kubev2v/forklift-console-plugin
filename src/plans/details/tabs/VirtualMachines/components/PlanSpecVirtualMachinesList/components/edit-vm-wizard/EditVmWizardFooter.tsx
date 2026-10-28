@@ -54,11 +54,14 @@ const EditVmWizardFooter: FC<EditVmWizardFooterProps> = ({ closeOverlay }) => {
   );
   const hasChanges = !isEmpty(patchOperations);
 
-  const isNextDisabled = isSaving || hasStepErrors(activeStepId) || (isLastStep && !hasChanges);
+  const hasAnyStepErrors = stepIds.some((stepId) => hasStepErrors(stepId));
+  const isNextDisabled =
+    isSaving || hasStepErrors(activeStepId) || (isLastStep && (hasAnyStepErrors || !hasChanges));
 
   const onNextClick = useCallback(async () => {
-    const isValid = await validateStep(activeStepId);
-    if (!isValid) {
+    const stepsToValidate = isLastStep ? stepIds : [activeStepId];
+    const results = await Promise.all(stepsToValidate.map(validateStep));
+    if (results.includes(false)) {
       return;
     }
 
@@ -91,6 +94,7 @@ const EditVmWizardFooter: FC<EditVmWizardFooterProps> = ({ closeOverlay }) => {
     goToNextStep,
     isLastStep,
     plan,
+    stepIds,
     t,
     validateStep,
     vmIndex,

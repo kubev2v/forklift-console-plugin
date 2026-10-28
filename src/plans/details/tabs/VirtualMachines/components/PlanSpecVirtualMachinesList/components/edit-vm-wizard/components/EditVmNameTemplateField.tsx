@@ -1,4 +1,4 @@
-import type { FC } from 'react';
+import { type FC, useState } from 'react';
 import { useFormContext } from 'react-hook-form';
 
 import {
@@ -48,6 +48,8 @@ const EditVmNameTemplateField: FC<EditVmNameTemplateFieldProps> = ({
   const templateValue = watch(fieldId);
   const isOverrideMode = isVmNameTemplateOverrideMode(templateValue);
   const isInvalid = isVmNameTemplateOverrideInvalid(templateValue);
+  const [showEmptyOverrideError, setShowEmptyOverrideError] = useState(false);
+  const showFieldValidation = isInvalid && showEmptyOverrideError;
   const inheritDescription = t('Set to: {{value}}', {
     value: isEmpty(inheritValue) ? t('default') : inheritValue,
   });
@@ -69,9 +71,12 @@ const EditVmNameTemplateField: FC<EditVmNameTemplateFieldProps> = ({
           label={t('Inherit plan wide setting')}
           name={`${fieldId}-mode`}
           onChange={() => {
+            setShowEmptyOverrideError(false);
             setValue(fieldId, undefined, { shouldDirty: true });
           }}
         />
+      </StackItem>
+      <StackItem>
         <Radio
           data-testid={`${fieldId}-override-radio`}
           id={`${fieldId}-override`}
@@ -79,6 +84,7 @@ const EditVmNameTemplateField: FC<EditVmNameTemplateFieldProps> = ({
           label={t('Override for this VM')}
           name={`${fieldId}-mode`}
           onChange={() => {
+            setShowEmptyOverrideError(false);
             setValue(fieldId, templateValue ?? '', { shouldDirty: true });
           }}
         />
@@ -89,15 +95,18 @@ const EditVmNameTemplateField: FC<EditVmNameTemplateFieldProps> = ({
             aria-label={t('Template')}
             data-testid={`${fieldId}-input`}
             id={`${fieldId}-input`}
+            onBlur={() => {
+              setShowEmptyOverrideError(true);
+            }}
             onChange={(_event, val) => {
               setValue(fieldId, val, { shouldDirty: true });
             }}
-            validated={isInvalid ? ValidatedOptions.error : ValidatedOptions.default}
+            validated={showFieldValidation ? ValidatedOptions.error : ValidatedOptions.default}
             value={templateValue ?? ''}
           />
           <EditVmNameTemplateOverrideHelpers
             exampleExpression={EDIT_VM_NAME_TEMPLATE_EXAMPLE_EXPRESSION[fieldId]}
-            isInvalid={isInvalid}
+            isInvalid={showFieldValidation}
           />
         </StackItem>
       )}

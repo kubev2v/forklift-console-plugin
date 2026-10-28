@@ -1,20 +1,20 @@
 /* eslint-disable react-refresh/only-export-components -- context module exports the provider and hook */
-import {
-  createContext,
-  type FC,
-  type PropsWithChildren,
-  useContext,
-  useMemo,
-  useState,
-} from 'react';
+import { createContext, type FC, type PropsWithChildren, useContext, useMemo } from 'react';
 
 import type { ProviderType, V1beta1Plan } from '@forklift-ui/types';
+import { PROVIDER_TYPES } from '@utils/providers/constants';
+
+import type { buildExcludeDiskRows } from '../ExcludeDisks/buildExcludeDiskRows';
+
+import { useEditVmDiskInventory } from './hooks/useEditVmDiskInventory';
 
 type EditVmWizardContextValue = {
+  diskLoadError: Error | null;
+  isDiskInventoryLoading: boolean;
   plan: V1beta1Plan;
   providerType?: ProviderType;
+  rows: ReturnType<typeof buildExcludeDiskRows>;
   selectableDiskAddresses: string[];
-  setSelectableDiskAddresses: (addresses: string[]) => void;
   vmIndex: number;
 };
 
@@ -32,17 +32,33 @@ export const EditVmWizardContextProvider: FC<EditVmWizardContextProviderProps> =
   providerType,
   vmIndex,
 }) => {
-  const [selectableDiskAddresses, setSelectableDiskAddresses] = useState<string[]>([]);
+  const isVsphere = providerType === PROVIDER_TYPES.vsphere;
+  const { diskLoadError, isInventoryLoading, rows, selectableAddresses } = useEditVmDiskInventory(
+    plan,
+    vmIndex,
+    isVsphere,
+  );
 
   const value = useMemo(
     (): EditVmWizardContextValue => ({
+      diskLoadError: isVsphere ? diskLoadError : null,
+      isDiskInventoryLoading: isVsphere ? isInventoryLoading : false,
       plan,
       providerType,
-      selectableDiskAddresses,
-      setSelectableDiskAddresses,
+      rows: isVsphere ? rows : [],
+      selectableDiskAddresses: isVsphere ? selectableAddresses : [],
       vmIndex,
     }),
-    [plan, providerType, selectableDiskAddresses, vmIndex],
+    [
+      diskLoadError,
+      isInventoryLoading,
+      isVsphere,
+      plan,
+      providerType,
+      rows,
+      selectableAddresses,
+      vmIndex,
+    ],
   );
 
   return <EditVmWizardContext.Provider value={value}>{children}</EditVmWizardContext.Provider>;

@@ -45,4 +45,4 @@ export const getReviewMigrateSharedDisks = (
 };
 
 export const getReviewExcludedDisksCount = (excludeDisks: string[]): string =>
-  isEmpty(excludeDisks) ? t('None') : t('{{count}} disk excluded', { count: excludeDisks.length });
+  isEmpty(excludeDisks) ? t('None') : t('{{count}} excluded disk', { count: excludeDisks.length });

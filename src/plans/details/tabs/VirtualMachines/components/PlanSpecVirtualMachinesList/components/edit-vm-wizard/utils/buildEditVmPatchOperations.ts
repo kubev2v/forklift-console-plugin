@@ -136,18 +136,21 @@ export const buildEditVmPatchOperations = (
     vmPath(vmIndex, 'pvcNameTemplate'),
     values.pvcNameTemplate,
     vm?.pvcNameTemplate,
+    true,
   );
   pushStringFieldPatch(
     operations,
     vmPath(vmIndex, 'volumeNameTemplate'),
     values.volumeNameTemplate,
     vm?.volumeNameTemplate,
+    true,
   );
   pushStringFieldPatch(
     operations,
     vmPath(vmIndex, 'networkNameTemplate'),
     values.networkNameTemplate,
     vm?.networkNameTemplate,
+    true,
   );
 
   return operations;

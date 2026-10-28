@@ -91,4 +91,18 @@ describe('buildEditVmPatchOperations', () => {
       { op: 'add', path: '/spec/vms/0/excludeDisks', value: ['disk-1'] },
     ]);
   });
+
+  it('REMOVEs pvcNameTemplate when cleared to inherit', () => {
+    const plan = {
+      ...basePlan,
+      spec: {
+        ...basePlan.spec,
+        vms: [{ id: 'vm-1', name: 'source-vm', pvcNameTemplate: '{{.VmName}}' }],
+      },
+    } satisfies V1beta1Plan;
+    const values = { ...baseValues(plan), pvcNameTemplate: undefined };
+    expect(buildEditVmPatchOperations(plan, 0, values)).toEqual([
+      { op: 'remove', path: '/spec/vms/0/pvcNameTemplate' },
+    ]);
+  });
 });

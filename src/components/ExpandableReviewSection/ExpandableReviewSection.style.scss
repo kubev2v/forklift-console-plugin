@@ -19,4 +19,12 @@
   .pf-v6-c-expandable-section__toggle-icon {
     align-self: center;
   }
+
+  &:not(.pf-m-expanded) .pf-v6-c-expandable-section__toggle-icon {
+    transform: rotate(90deg);
+  }
+
+  &.pf-m-expanded .pf-v6-c-expandable-section__toggle-icon {
+    transform: rotate(-90deg);
+  }
 }

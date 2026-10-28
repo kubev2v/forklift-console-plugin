@@ -23,12 +23,12 @@ export const editVmWizardStepNames: Record<EditVmWizardStepId, string> = {
 };
 
 export const editVmWizardStepDescriptions: Record<EditVmWizardStepId, string> = {
-  [EditVmWizardStepId.Disks]: t('Choose which disks to migrate and how to handle shared disks.'),
+  [EditVmWizardStepId.Disks]: t('Select which disks to migrate and how to handle shared disks.'),
   [EditVmWizardStepId.General]: t(
     'Configure the VM name, power state and compute resource after migration.',
   ),
   [EditVmWizardStepId.NamingTemplates]: t(
-    'Customize names generated for resource created for this VM. VM overrides take precedence over plan settings.',
+    'Customize names generated for resources created for this VM. VM overrides take precedence over plan settings.',
   ),
   [EditVmWizardStepId.Review]: t(
     'Review the settings for {{vmName}}. Changes apply only to this VM.',

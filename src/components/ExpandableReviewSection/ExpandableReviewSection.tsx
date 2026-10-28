@@ -29,7 +29,6 @@ const ExpandableReviewSection: FC<ExpandableReviewSectionProps> = ({
   return (
     <div className="expandable-review-section-wrapper">
       <ExpandableSection
-        allowFullScreen
         className="expandable-review-section pf-v6-w-100"
         data-testid={testId}
         isExpanded={isExpanded}
