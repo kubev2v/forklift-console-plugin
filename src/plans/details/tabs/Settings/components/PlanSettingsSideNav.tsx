@@ -24,12 +24,14 @@ const PlanSettingsSideNav: FC<PlanSettingsSideNavProps> = ({
       <NavList>
         {visibleSectionIds.map((sectionId) => (
           <NavItem
+            component="button"
             id={`plan-settings-nav-${sectionId}`}
             isActive={sectionId === activeSectionId}
             key={sectionId}
             onClick={() => {
               onSelectSection(sectionId);
             }}
+            type="button"
           >
             {getPlanSettingsSectionLabel(sectionId, t)}
           </NavItem>

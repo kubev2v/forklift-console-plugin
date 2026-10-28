@@ -4,7 +4,6 @@ import { ProviderType } from '../../types/enums';
 import type { ProviderData } from '../../types/test-data';
 import { NavigationHelper } from '../../utils/NavigationHelper';
 import { MTV_NAMESPACE } from '../../utils/resource-manager/constants';
-import { dismissWebpackDevServerOverlay } from '../../utils/utils';
 import { V2_12_0 } from '../../utils/version/constants';
 import { isVersionAtLeast } from '../../utils/version/version';
 import { DeleteResourceModal } from '../common/DeleteResourceModal';
@@ -64,7 +63,6 @@ export class ProviderDetailsPage {
       : this.page.getByRole('button', { name: 'Create migration plan' });
     await expect(createPlanButton).toBeVisible();
     await expect(createPlanButton).toBeEnabled();
-    await dismissWebpackDevServerOverlay(this.page);
     await createPlanButton.click();
   }
 
@@ -251,8 +249,6 @@ export class ProviderDetailsPage {
   }
 
   async waitForReadyStatus(timeoutMs = 180000): Promise<void> {
-    await dismissWebpackDevServerOverlay(this.page);
-
     const statusLocator = this.page.getByTestId('resource-status');
     await expect(statusLocator).toContainText('Ready', { timeout: timeoutMs });
   }

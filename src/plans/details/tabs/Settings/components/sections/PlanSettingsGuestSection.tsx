@@ -2,7 +2,6 @@ import type { FC } from 'react';
 
 import GuestConversionDetailsItem from '../../../Details/components/SettingsSection/components/GuestConversion/GuestConversionDetailsItem';
 import SharedDisksDetailsItem from '../../../Details/components/SettingsSection/components/PlanMigrateSharedDisks/MigrateSharedDisksDetailsItem';
-import PreserveClusterCpuModelDetailsItem from '../../../Details/components/SettingsSection/components/PreserveClusterCpuModel/PreserveClusterCpuModelDetailsItem';
 import RootDiskDetailsItem from '../../../Details/components/SettingsSection/components/RootDisk/RootDiskDetailsItem';
 import SetLUKSEncryptionPasswordsDetailsItem from '../../../Details/components/SettingsSection/components/SetLUKSEncryptionPasswords/SetLUKSEncryptionPasswordsDetailsItem';
 import XfsCompatibilityDetailsItem from '../../../Details/components/SettingsSection/components/XfsCompatibility/XfsCompatibilityDetailsItem';
@@ -13,7 +12,7 @@ type PlanSettingsGuestSectionProps = {
 };
 
 const PlanSettingsGuestSection: FC<PlanSettingsGuestSectionProps> = ({ visibility }) => {
-  const { canPatch, isOvirt, isVddkInitImageNotSet, isVsphere, plan } = visibility;
+  const { canPatch, isVddkInitImageNotSet, isVsphere, plan } = visibility;
 
   return (
     <>
@@ -31,7 +30,6 @@ const PlanSettingsGuestSection: FC<PlanSettingsGuestSectionProps> = ({ visibilit
       />
       <XfsCompatibilityDetailsItem canPatch={canPatch} plan={plan} shouldRender={isVsphere} />
       <GuestConversionDetailsItem canPatch={canPatch} plan={plan} shouldRender={isVsphere} />
-      <PreserveClusterCpuModelDetailsItem canPatch={canPatch} plan={plan} shouldRender={isOvirt} />
     </>
   );
 };

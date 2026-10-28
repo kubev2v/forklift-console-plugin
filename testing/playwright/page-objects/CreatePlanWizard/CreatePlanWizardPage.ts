@@ -4,11 +4,7 @@ import type { PlanTestData } from '../../types/test-data';
 import { NavigationHelper } from '../../utils/NavigationHelper';
 import { MTV_NAMESPACE } from '../../utils/resource-manager/constants';
 import type { ResourceManager } from '../../utils/resource-manager/ResourceManager';
-import {
-  assertNoConsoleErrorBoundary,
-  dismissWebpackDevServerOverlay,
-  prepareConsolePage,
-} from '../../utils/utils';
+import { assertNoConsoleErrorBoundary, prepareConsolePage } from '../../utils/utils';
 import { V2_12_0 } from '../../utils/version/constants';
 import { isVersionAtLeast } from '../../utils/version/version';
 
@@ -97,22 +93,18 @@ export class CreatePlanWizardPage {
   }
 
   async clickBack(): Promise<void> {
-    await dismissWebpackDevServerOverlay(this.page);
     await this.page.getByTestId('wizard-back-button').click();
   }
 
   async clickCreatePlan(): Promise<void> {
-    await dismissWebpackDevServerOverlay(this.page);
     await this.page.getByTestId('wizard-create-button').click();
   }
 
   async clickNext(): Promise<void> {
-    await dismissWebpackDevServerOverlay(this.page);
     await this.page.getByTestId('wizard-next-button').click();
   }
 
   async clickSkipToReview(): Promise<void> {
-    await dismissWebpackDevServerOverlay(this.page);
     await this.page.getByTestId('wizard-review-button').click();
   }
 

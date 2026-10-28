@@ -21,18 +21,14 @@ describe('getVisiblePlanSettingsSections', () => {
     ]);
   });
 
-  it('returns guest, transfer, and target for oVirt', () => {
+  it('returns transfer and target for oVirt', () => {
     expect(
       getVisiblePlanSettingsSections({
         isOvirt: true,
         isTransferNetworkVisible: true,
         isVsphere: false,
       }),
-    ).toEqual([
-      PLAN_SETTINGS_SECTION_ID.Guest,
-      PLAN_SETTINGS_SECTION_ID.Transfer,
-      PLAN_SETTINGS_SECTION_ID.Target,
-    ]);
+    ).toEqual([PLAN_SETTINGS_SECTION_ID.Transfer, PLAN_SETTINGS_SECTION_ID.Target]);
   });
 
   it('returns target only when transfer network is hidden and not vSphere', () => {

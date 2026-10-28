@@ -36,20 +36,8 @@ export const disableGuidedTour = async (page: Page): Promise<void> => {
   await skipButton.waitFor({ state: 'hidden', timeout: GUIDED_TOUR_HIDDEN_TIMEOUT_MS });
 };
 
-/**
- * Removes the webpack-dev-server compile-error overlay iframe injected during local
- * `npm start`. It sits above the console and blocks Playwright clicks; CI builds do
- * not inject it.
- */
-export const dismissWebpackDevServerOverlay = async (page: Page): Promise<void> => {
-  await page.evaluate(() => {
-    document.getElementById('webpack-dev-server-client-overlay')?.remove();
-  });
-};
-
 /** Run common post-navigation cleanup before interacting with the console UI. */
 export const prepareConsolePage = async (page: Page): Promise<void> => {
-  await dismissWebpackDevServerOverlay(page);
   await disableGuidedTour(page);
 };
 

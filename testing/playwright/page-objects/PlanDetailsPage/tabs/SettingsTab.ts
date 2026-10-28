@@ -1,5 +1,8 @@
 import { expect, type Locator } from '@playwright/test';
 
+import { V5_1_0 } from '../../../utils/version/constants';
+import { isVersionAtLeast } from '../../../utils/version/version';
+
 import { DetailsTab } from './DetailsTab';
 
 /** Settings tab — plan-level settings with category side nav. */
@@ -15,6 +18,11 @@ export class SettingsTab extends DetailsTab {
   }
 
   async navigateToSettingsTab(): Promise<void> {
+    if (!isVersionAtLeast(V5_1_0)) {
+      await this.navigateToDetailsTab();
+      return;
+    }
+
     const settingsLink = this.page
       .locator('[data-test-id="horizontal-link-Settings"]')
       .or(this.page.getByRole('tab', { name: 'Settings' }));
@@ -33,6 +41,10 @@ export class SettingsTab extends DetailsTab {
   }
 
   async selectSettingsSection(sectionId: string): Promise<void> {
+    if (!isVersionAtLeast(V5_1_0)) {
+      return;
+    }
+
     await this.page.locator(`#plan-settings-nav-${sectionId}`).click();
     await expect(this.page.getByTestId(`plan-settings-section-${sectionId}`)).toBeVisible();
   }

@@ -1,7 +1,9 @@
-import { type FC, useCallback, useEffect, useMemo } from 'react';
+import { type FC, useCallback, useEffect } from 'react';
 import { useSearchParams } from 'react-router';
 
+import { ErrorState, Loading } from '@components/common/Page/PageStates';
 import { Divider, Flex, FlexItem, PageSection } from '@patternfly/react-core';
+import { useForkliftTranslation } from '@utils/i18n';
 
 import { usePlan } from '../../hooks/usePlan';
 import type { PlanPageProps } from '../../utils/types';
@@ -21,12 +23,14 @@ import {
 import './plan-settings-page.scss';
 
 const PlanSettingsPage: FC<PlanPageProps> = ({ name, namespace }) => {
-  const { loaded: isPlanLoaded, plan } = usePlan(name, namespace);
+  const { t } = useForkliftTranslation();
+  const { loaded: isPlanLoaded, loadError: planLoadError, plan } = usePlan(name, namespace);
   const visibility = usePlanSettingsVisibility(plan);
-  const isReady = isPlanLoaded && visibility.isProviderLoaded;
+  const loadError = planLoadError ?? (isPlanLoaded ? visibility.providerLoadError : null);
+  const isReady = isPlanLoaded && visibility.isProviderLoaded && !loadError;
   const [searchParams, setSearchParams] = useSearchParams();
 
-  const visibleSections = useMemo(() => getVisiblePlanSettingsSections(visibility), [visibility]);
+  const visibleSections = getVisiblePlanSettingsSections(visibility);
 
   const requestedSection = searchParams.get(PLAN_SETTINGS_SECTION_QUERY_PARAM);
   const activeSectionId = resolvePlanSettingsSection(requestedSection, visibleSections);
@@ -51,33 +55,43 @@ const PlanSettingsPage: FC<PlanPageProps> = ({ name, namespace }) => {
     }
   }, [activeSectionId, isReady, requestedSection, setActiveSection]);
 
+  const statusContent = loadError ? (
+    <ErrorState title={t('Unable to load plan settings')} />
+  ) : (
+    <Loading title={t('Loading plan settings')} />
+  );
+
   return (
     <PageSection
       className="forklift-plan-settings"
       data-testid="plan-settings-page"
       hasBodyWrapper={false}
     >
-      <Flex
-        alignItems={{ default: 'alignItemsStretch' }}
-        className="forklift-plan-settings__layout"
-        direction={{ default: 'row' }}
-        flexWrap={{ default: 'nowrap' }}
-      >
-        <FlexItem className="forklift-plan-settings__nav-column" shrink={{ default: 'shrink' }}>
-          <PlanSettingsSideNav
-            activeSectionId={activeSectionId}
-            onSelectSection={setActiveSection}
-            visibleSectionIds={visibleSections}
+      {isReady ? (
+        <Flex
+          alignItems={{ default: 'alignItemsStretch' }}
+          className="forklift-plan-settings__layout"
+          direction={{ default: 'column', md: 'row' }}
+          flexWrap={{ default: 'wrap', md: 'nowrap' }}
+        >
+          <FlexItem className="forklift-plan-settings__nav-column" shrink={{ default: 'shrink' }}>
+            <PlanSettingsSideNav
+              activeSectionId={activeSectionId}
+              onSelectSection={setActiveSection}
+              visibleSectionIds={visibleSections}
+            />
+          </FlexItem>
+          <Divider
+            className="forklift-plan-settings__divider"
+            orientation={{ default: 'vertical' }}
           />
-        </FlexItem>
-        <Divider
-          className="forklift-plan-settings__divider"
-          orientation={{ default: 'vertical' }}
-        />
-        <FlexItem className="forklift-plan-settings__content-column" grow={{ default: 'grow' }}>
-          <PlanSettingsSectionContent sectionId={activeSectionId} visibility={visibility} />
-        </FlexItem>
-      </Flex>
+          <FlexItem className="forklift-plan-settings__content-column" grow={{ default: 'grow' }}>
+            <PlanSettingsSectionContent sectionId={activeSectionId} visibility={visibility} />
+          </FlexItem>
+        </Flex>
+      ) : (
+        statusContent
+      )}
     </PageSection>
   );
 };

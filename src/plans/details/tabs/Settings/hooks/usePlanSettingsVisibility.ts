@@ -19,10 +19,15 @@ export type PlanSettingsVisibility = PlanSettingsVisibilityInput & {
   isProviderLoaded: boolean;
   isVddkInitImageNotSet: boolean;
   plan: V1beta1Plan;
+  providerLoadError: Error | null;
 };
 
 export const usePlanSettingsVisibility = (plan: V1beta1Plan): PlanSettingsVisibility => {
-  const { loaded: isProviderLoaded, sourceProvider } = usePlanSourceProvider(plan);
+  const {
+    loaded: isProviderLoaded,
+    loadError: providerLoadError,
+    sourceProvider,
+  } = usePlanSourceProvider(plan);
   const { isFeatureEnabled } = useFeatureFlags();
 
   const { canPatch } = useGetDeleteAndEditAccessReview({
@@ -48,5 +53,6 @@ export const usePlanSettingsVisibility = (plan: V1beta1Plan): PlanSettingsVisibi
     isVddkInitImageNotSet,
     isVsphere,
     plan,
+    providerLoadError,
   };
 };

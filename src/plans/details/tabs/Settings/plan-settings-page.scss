@@ -1,9 +1,5 @@
 .forklift-plan-settings {
   &__layout {
-    display: flex;
-    flex-direction: row;
-    flex-wrap: nowrap;
-    align-items: stretch;
     min-height: 12rem;
   }
 
@@ -34,5 +30,18 @@
   &__content-column {
     flex: 1 1 auto;
     min-width: 0;
+  }
+
+  @media (max-width: 47rem) {
+    &__nav-column,
+    &__content-column {
+      width: 100%;
+      min-width: 0;
+      max-width: none;
+    }
+
+    &__divider {
+      display: none;
+    }
   }
 }

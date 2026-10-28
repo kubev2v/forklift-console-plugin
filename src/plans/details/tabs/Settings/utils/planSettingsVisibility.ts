@@ -12,8 +12,7 @@ export type PlanSettingsVisibilityInput = {
   isVsphere: boolean;
 };
 
-const isGuestSectionVisible = ({ isOvirt, isVsphere }: PlanSettingsVisibilityInput): boolean =>
-  isVsphere || isOvirt;
+const isGuestSectionVisible = ({ isVsphere }: PlanSettingsVisibilityInput): boolean => isVsphere;
 
 const isTransferSectionVisible = ({
   isTransferNetworkVisible,

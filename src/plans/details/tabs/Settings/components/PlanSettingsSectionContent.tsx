@@ -55,7 +55,8 @@ const PlanSettingsSectionContent: FC<PlanSettingsSectionContentProps> = ({
       <StackItem>
         <DescriptionList
           columnModifier={{
-            default: '2Col',
+            default: '1Col',
+            md: '2Col',
           }}
         >
           {sectionContent}

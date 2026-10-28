@@ -1,5 +1,6 @@
 import type { FC } from 'react';
 
+import PreserveClusterCpuModelDetailsItem from '../../../Details/components/SettingsSection/components/PreserveClusterCpuModel/PreserveClusterCpuModelDetailsItem';
 import TargetAffinityDetailsItem from '../../../Details/components/SettingsSection/components/TargetAffinity/TargetAffinityDetailsItem';
 import TargetLabelsDetailsItem from '../../../Details/components/SettingsSection/components/TargetLabels/TargetLabelsDetailsItem';
 import TargetNodeSelectorDetailsItem from '../../../Details/components/SettingsSection/components/TargetNodeSelector/TargetNodeSelectorDetailsItem';
@@ -11,7 +12,7 @@ type PlanSettingsTargetSectionProps = {
 };
 
 const PlanSettingsTargetSection: FC<PlanSettingsTargetSectionProps> = ({ visibility }) => {
-  const { canPatch, plan } = visibility;
+  const { canPatch, isOvirt, plan } = visibility;
 
   return (
     <>
@@ -19,6 +20,7 @@ const PlanSettingsTargetSection: FC<PlanSettingsTargetSectionProps> = ({ visibil
       <TargetLabelsDetailsItem canPatch={canPatch} plan={plan} />
       <TargetNodeSelectorDetailsItem canPatch={canPatch} plan={plan} />
       <TargetAffinityDetailsItem canPatch={canPatch} plan={plan} />
+      <PreserveClusterCpuModelDetailsItem canPatch={canPatch} plan={plan} shouldRender={isOvirt} />
     </>
   );
 };

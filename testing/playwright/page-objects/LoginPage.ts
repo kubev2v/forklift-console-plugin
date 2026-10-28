@@ -1,7 +1,5 @@
 import type { Page } from '@playwright/test';
 
-import { dismissWebpackDevServerOverlay } from '../utils/utils';
-
 /** Console routes use path-based or hash-based URLs depending on cluster / dev mode. */
 const CONSOLE_ROUTE_PATTERN =
   /(?:^|[#/])(?:dashboards|console|k8s|overview|monitoring|topology|dev-console)(?:\/|$|[?#])/u;
@@ -24,8 +22,8 @@ const isVisibleOrFalse = async (getVisibility: () => Promise<boolean>): Promise<
 
 export const isConsoleRouteUrl = (urlString: string): boolean => {
   try {
-    const { hash, pathname, search } = new URL(urlString);
-    return CONSOLE_ROUTE_PATTERN.test(`${pathname}${search}${hash}`);
+    const { hash, pathname } = new URL(urlString);
+    return CONSOLE_ROUTE_PATTERN.test(pathname) || CONSOLE_ROUTE_PATTERN.test(hash);
   } catch {
     return false;
   }
@@ -38,7 +36,7 @@ export class LoginPage {
     this.page = page;
   }
 
-  private async throwConsoleLoadError(baseURL: string, cause: unknown): Promise<void> {
+  private async getConsoleLoadError(baseURL: string, cause: unknown): Promise<Error> {
     const url = this.page.url();
     const bodyText =
       (await this.page
@@ -56,7 +54,7 @@ export class LoginPage {
     ];
 
     const causeMessage = cause instanceof Error ? cause.message : String(cause);
-    throw new Error(`${hints.join(' ')} (${causeMessage})`);
+    return new Error(`${hints.join(' ')} (${causeMessage})`);
   }
 
   private async waitForLoginFormOrConsole(): Promise<'authenticated' | 'login-form'> {
@@ -83,13 +81,11 @@ export class LoginPage {
       timeout: GLOBAL_SETUP_LOGIN_TIMEOUT_MS,
       waitUntil: 'domcontentloaded',
     });
-    await dismissWebpackDevServerOverlay(this.page);
-
     let state: 'authenticated' | 'login-form';
     try {
       state = await this.waitForLoginFormOrConsole();
     } catch (error) {
-      await this.throwConsoleLoadError(baseURL, error);
+      throw await this.getConsoleLoadError(baseURL, error);
     }
 
     if (state === 'authenticated') {
