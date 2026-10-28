@@ -5,6 +5,8 @@ type PlanVmExcludeDisksFields = {
 };
 
 export const getPlanVmExcludeDisks = (vm?: V1beta1PlanSpecVms): string[] | undefined => {
-  const vmWithExcludeDisks: PlanVmExcludeDisksFields | undefined = vm;
-  return vmWithExcludeDisks?.excludeDisks;
+  if (vm === undefined) {
+    return undefined;
+  }
+  return (vm as PlanVmExcludeDisksFields).excludeDisks;
 };

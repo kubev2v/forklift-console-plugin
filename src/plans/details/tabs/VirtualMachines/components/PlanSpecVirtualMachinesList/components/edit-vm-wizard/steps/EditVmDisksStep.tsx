@@ -50,7 +50,7 @@ const EditVmDisksStep: FC = () => {
         <StackItem className="edit-vm-wizard-form-width">
           <EditVmWizardSubsectionTitle
             description={t(
-              'Selected disks will not be migrated, but will remain on the source VM.',
+              'Select disks that will not be migrated, but will remain on the source VM.',
             )}
             title={t('Excluded disks')}
           />

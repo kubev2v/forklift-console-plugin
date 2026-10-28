@@ -18,8 +18,10 @@
     font-size: var(--pf-t--global--font--size--sm);
   }
 
-  .edit-vm-name-template-field__title {
-    font-size: var(--pf-t--global--font--size--md);
+  .edit-vm-name-template-radio-group {
+    display: flex;
+    flex-direction: column;
+    gap: var(--pf-t--global--spacer--sm);
   }
 
   .edit-vm-name-template-inline-code {
@@ -33,24 +35,11 @@
     display: flex;
     flex-direction: column;
     gap: 0;
+    margin-left: var(--pf-t--global--spacer--lg);
   }
 
   .edit-vm-name-template-override-helpers {
     margin-block-start: var(--pf-t--global--spacer--xs);
-
-    &--with-error {
-      margin-block-start: var(--pf-t--global--spacer--sm);
-    }
-  }
-
-  .edit-vm-name-template-variables {
-    &:not(.pf-m-expanded) .pf-v6-c-expandable-section__toggle-icon {
-      transform: rotate(90deg);
-    }
-
-    &.pf-m-expanded .pf-v6-c-expandable-section__toggle-icon {
-      transform: rotate(-90deg);
-    }
   }
 
   .edit-vm-wizard {

@@ -7,7 +7,6 @@ import {
   Stack,
   StackItem,
   TextInput,
-  Title,
   ValidatedOptions,
 } from '@patternfly/react-core';
 import { isEmpty } from '@utils/helpers';
@@ -22,6 +21,7 @@ import {
 
 import { EditVmNameTemplateOverrideHelpers } from './EditVmNameTemplateExpressionHelper';
 import EditVmNameTemplateVariables from './EditVmNameTemplateVariables';
+import EditVmWizardSubsectionTitle from './EditVmWizardSubsectionTitle';
 
 type EditVmNameTemplateFieldProps = {
   allowedVariables: string[];
@@ -57,12 +57,9 @@ const EditVmNameTemplateField: FC<EditVmNameTemplateFieldProps> = ({
   return (
     <Stack hasGutter>
       <StackItem>
-        <Title className="edit-vm-name-template-field__title" headingLevel="h4">
-          {title}
-        </Title>
-        <p className="edit-vm-wizard-section-description">{description}</p>
+        <EditVmWizardSubsectionTitle description={description} title={title} />
       </StackItem>
-      <StackItem>
+      <StackItem className="edit-vm-name-template-radio-group">
         <Radio
           data-testid={`${fieldId}-inherit-radio`}
           description={inheritDescription}
@@ -75,8 +72,6 @@ const EditVmNameTemplateField: FC<EditVmNameTemplateFieldProps> = ({
             setValue(fieldId, undefined, { shouldDirty: true });
           }}
         />
-      </StackItem>
-      <StackItem>
         <Radio
           data-testid={`${fieldId}-override-radio`}
           id={`${fieldId}-override`}

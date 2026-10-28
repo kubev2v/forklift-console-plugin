@@ -79,8 +79,7 @@ test.describe('Plan additional settings', { tag: '@downstream' }, () => {
     await virtualMachinesTab.openPowerStateDialog(vmName);
     await virtualMachinesTab.editVmWizard.advanceToReviewStep();
     await expect(virtualMachinesTab.powerStateModalSaveButton).toBeDisabled();
-    await virtualMachinesTab.page.getByTestId('edit-vm-wizard-back-button').click();
-    await virtualMachinesTab.editVmWizard.generalStep.waitFor({ state: 'visible' });
+    await virtualMachinesTab.editVmWizard.navigateToGeneralStep();
     await virtualMachinesTab.powerStateModalSelect.click();
     await expect(virtualMachinesTab.powerStateOptionInherit).toBeVisible();
     await expect(virtualMachinesTab.powerStateOptionInherit).toContainText('Set to: Powered off');
@@ -139,8 +138,7 @@ test.describe('Plan additional settings', { tag: '@downstream' }, () => {
     await vmt.openSharedDisksDialog(vmName);
     await vmt.editVmWizard.advanceToReviewStep();
     await expect(vmt.sharedDisksModalSaveButton).toBeDisabled();
-    await vmt.page.getByTestId('edit-vm-wizard-back-button').click();
-    await vmt.editVmExcludeDisksModal.disksStep.waitFor({ state: 'visible' });
+    await vmt.editVmWizard.navigateToDisksStep();
     await expect(vmt.sharedDisksOptionInherit).toBeVisible();
     await expect(vmt.sharedDisksOptionEnabled).toBeVisible();
     await expect(vmt.sharedDisksOptionDisabled).toBeVisible();
