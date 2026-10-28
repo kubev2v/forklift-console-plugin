@@ -1,6 +1,7 @@
 import { expect, type Locator, type Page } from '@playwright/test';
 
 import type { PlanTestData } from '../../../types/test-data';
+import { PLAN_SPEC_VIRTUAL_MACHINES_LIST_TEST_ID } from '../../../utils/constants';
 import { K8S_RECONCILE_TIMEOUT } from '../../../utils/resource-manager/constants';
 import { VirtualMachinesTable } from '../../common/VirtualMachinesTable';
 import { AddVirtualMachinesModal } from '../modals/AddVirtualMachinesModal';
@@ -12,7 +13,7 @@ import { PostMigrationSetupHelpers } from './PostMigrationSetupHelpers';
 
 const planVirtualMachinesListRoot = (page: Page): Locator =>
   page
-    .getByTestId('plan-spec-virtual-machines-list')
+    .getByTestId(PLAN_SPEC_VIRTUAL_MACHINES_LIST_TEST_ID)
     .or(page.getByTestId('plan-migration-virtual-machines-list'));
 
 /** VirtualMachines tab for Plan Details page (flat grid, no folder hierarchy). */

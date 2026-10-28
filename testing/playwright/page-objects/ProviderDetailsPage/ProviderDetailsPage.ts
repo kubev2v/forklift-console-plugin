@@ -254,18 +254,6 @@ export class ProviderDetailsPage {
     await dismissWebpackDevServerOverlay(this.page);
 
     const statusLocator = this.page.getByTestId('resource-status');
-    const createPlanButton = isVersionAtLeast(V2_12_0)
-      ? this.page.getByTestId('create-plan-from-provider-button')
-      : this.page.getByRole('button', { name: 'Create migration plan' });
-
-    const statusHeadingBudgetMs = Math.min(30_000, timeoutMs);
-    const actionBudgetMs = Math.max(timeoutMs - statusHeadingBudgetMs, 30_000);
-
-    try {
-      await expect(statusLocator).toContainText('Ready', { timeout: statusHeadingBudgetMs });
-    } catch {
-      await expect(createPlanButton).toBeVisible({ timeout: actionBudgetMs });
-      await expect(createPlanButton).toBeEnabled({ timeout: actionBudgetMs });
-    }
+    await expect(statusLocator).toContainText('Ready', { timeout: timeoutMs });
   }
 }

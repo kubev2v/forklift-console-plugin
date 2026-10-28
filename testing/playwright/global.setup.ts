@@ -1,4 +1,4 @@
-import { existsSync, mkdirSync, statSync, unlinkSync, writeFileSync } from 'fs';
+import { existsSync, mkdirSync, unlinkSync, writeFileSync } from 'fs';
 
 import { execFileSync } from 'node:child_process';
 
@@ -6,6 +6,7 @@ import { chromium, type FullConfig } from '@playwright/test';
 
 import { restoreConsoleLanguage } from './fixtures/helpers/languageHelpers';
 import { LoginPage } from './page-objects/LoginPage';
+import { shouldReuseExistingAuth } from './utils/authSession';
 import { AUTH_FILE, ENV_RELAY_FILE, KUBECONFIG_FILE } from './utils/constants';
 import { cleanupLeftoverHappyPathVms } from './utils/happyPathLeftoverCleanup';
 import { BaseResourceManager } from './utils/resource-manager/BaseResourceManager';
@@ -32,23 +33,6 @@ const ENV_KEYS_TO_RELAY = [
 const USER_SET_KEYS = new Set(
   (process.env.PLAYWRIGHT_USER_SET_KEYS ?? '').split(',').filter(Boolean),
 );
-
-const AUTH_SESSION_MAX_AGE_MS = 12 * 60 * 60 * 1000;
-
-const shouldReuseExistingAuth = (): boolean => {
-  if (process.env.PLAYWRIGHT_FORCE_LOGIN === '1') {
-    return false;
-  }
-  if (!existsSync(AUTH_FILE)) {
-    return false;
-  }
-  try {
-    const { mtimeMs, size } = statSync(AUTH_FILE);
-    return size > 50 && Date.now() - mtimeMs < AUTH_SESSION_MAX_AGE_MS;
-  } catch {
-    return false;
-  }
-};
 
 /**
  * Fetches the cluster API server URL from the OpenShift infrastructure CR.
@@ -254,7 +238,7 @@ const globalSetup = async (config: FullConfig) => {
   if (username && password) {
     mkdirSync('playwright/.auth', { recursive: true });
 
-    if (shouldReuseExistingAuth()) {
+    if (await shouldReuseExistingAuth(baseURL, username)) {
       console.error(
         '✅ Reusing existing playwright/.auth/user.json (set PLAYWRIGHT_FORCE_LOGIN=1 to re-login)',
       );

@@ -59,7 +59,7 @@ export class Table {
     const modalBody = this.page.getByTestId('manage-columns-modal');
     await expect(modalBody).toBeVisible();
 
-    const checkbox = modalBody.getByRole('checkbox', { name: columnName });
+    const checkbox = modalBody.getByRole('checkbox', { exact: true, name: columnName });
     if ((await checkbox.count()) === 0) {
       const cancelButton = this.page.getByTestId('manage-columns-cancel-button');
       await cancelButton.click();
@@ -93,7 +93,7 @@ export class Table {
     const modalBody = this.page.getByTestId('manage-columns-modal');
     await expect(modalBody).toBeVisible();
 
-    const checkbox = modalBody.getByRole('checkbox', { name: columnName });
+    const checkbox = modalBody.getByRole('checkbox', { exact: true, name: columnName });
     if ((await checkbox.count()) === 0) {
       const cancelButton = this.page.getByTestId('manage-columns-cancel-button');
       await cancelButton.click();
@@ -178,7 +178,9 @@ export class Table {
 
   async isColumnVisible(columnName: string): Promise<boolean> {
     const tableContainer = this.getTableContainer();
-    const header = tableContainer.getByRole('columnheader', { name: columnName }).first();
+    const header = tableContainer
+      .getByRole('columnheader', { exact: true, name: columnName })
+      .first();
     return header.isVisible().catch(() => false);
   }
 
@@ -209,7 +211,7 @@ export class Table {
   async waitForColumnVisible(columnName: string): Promise<void> {
     const tableContainer = this.getTableContainer();
     await expect(
-      tableContainer.getByRole('columnheader', { name: columnName }).first(),
+      tableContainer.getByRole('columnheader', { exact: true, name: columnName }).first(),
     ).toBeVisible({ timeout: K8S_RECONCILE_TIMEOUT });
   }
 

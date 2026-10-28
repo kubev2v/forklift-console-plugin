@@ -13,7 +13,10 @@ import type { V1beta1Plan } from '@forklift-ui/types';
 import { Stack, StackItem } from '@patternfly/react-core';
 import type { SpecVirtualMachinePageData } from '@utils/types/specVirtualMachinePageData';
 
-import { PLAN_VIRTUAL_MACHINES_LIST_ID } from '../utils/constants';
+import {
+  PLAN_SPEC_VIRTUAL_MACHINES_LIST_TEST_ID,
+  PLAN_VIRTUAL_MACHINES_LIST_ID,
+} from '../utils/constants';
 
 import { useInspectionData } from './hooks/useInspectionData';
 import { useSpecVirtualMachinesActions } from './hooks/useSpecVirtualMachinesActions';
@@ -89,7 +92,7 @@ const PlanSpecVirtualMachinesList: FC<PlanVirtualMachinesListProps> = ({ plan })
       onSelect={onSelect}
       resizableColumns
       selectedIds={selectedIds}
-      testId="plan-spec-virtual-machines-list"
+      testId={PLAN_SPEC_VIRTUAL_MACHINES_LIST_TEST_ID}
       title={t('Virtual machines')}
       toId={vmDataToId}
       userSettings={userSettings}

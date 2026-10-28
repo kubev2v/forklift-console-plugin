@@ -133,7 +133,7 @@ export const setupProvidersIntercepts = async (page: Page) => {
   await page.route(
     `**/forklift-inventory/providers/vsphere/${TEST_DATA.providers.source.uid}**`,
     async (route) => {
-      if (route.request().url().includes('/test')) {
+      if (new URL(route.request().url()).pathname.endsWith('/test')) {
         await route.continue();
         return;
       }
@@ -144,7 +144,7 @@ export const setupProvidersIntercepts = async (page: Page) => {
   await page.route(
     `**/api/proxy/plugin/forklift-console-plugin/forklift-inventory/providers/vsphere/${TEST_DATA.providers.source.uid}**`,
     async (route) => {
-      if (route.request().url().includes('/test')) {
+      if (new URL(route.request().url()).pathname.endsWith('/test')) {
         await route.continue();
         return;
       }

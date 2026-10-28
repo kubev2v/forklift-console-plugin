@@ -13,7 +13,7 @@
 # Remove packages from ALLOWLIST when upstream Console/SDK ships fixed versions.
 set -euo pipefail
 
-ALLOWLIST='@openshift-console/dynamic-plugin-sdk @openshift/dynamic-plugin-sdk immutable react-router zod'
+ALLOWLIST='@openshift-console/dynamic-plugin-sdk @openshift/dynamic-plugin-sdk immutable react-router'
 
 AUDIT_JSON="$(mktemp)"
 trap 'rm -f "${AUDIT_JSON}"' EXIT
@@ -28,6 +28,10 @@ import sys
 
 allowlist = set(os.environ["ALLOWLIST"].split())
 blocking = {"critical", "high"}
+sdk_zod_nodes = {
+    "node_modules/@openshift/dynamic-plugin-sdk-webpack/node_modules/zod",
+    "node_modules/@openshift/dynamic-plugin-sdk/node_modules/zod",
+}
 
 with open(sys.argv[1], encoding="utf-8") as audit_file:
     report = json.load(audit_file)
@@ -39,7 +43,8 @@ actionable = []
 for name, vulnerability in sorted(vulnerabilities.items()):
     if vulnerability.get("severity") not in blocking:
         continue
-    if name in allowlist:
+    nodes = set(vulnerability.get("nodes") or [])
+    if name in allowlist or (name == "zod" and nodes and nodes <= sdk_zod_nodes):
         ignored.append((name, vulnerability))
     else:
         actionable.append((name, vulnerability))
