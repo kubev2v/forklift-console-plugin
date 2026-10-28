@@ -102,6 +102,56 @@ export const setupProvidersIntercepts = async (page: Page) => {
     },
   );
 
+  const sourceInventorySummary = {
+    id: TEST_DATA.providers.source.uid,
+    name: TEST_DATA.providers.source.name,
+    object: {
+      apiVersion: 'forklift.konveyor.io/v1beta1',
+      kind: 'Provider',
+      metadata: {
+        name: TEST_DATA.providers.source.name,
+        uid: TEST_DATA.providers.source.uid,
+      },
+      spec: { type: TEST_DATA.providers.source.type },
+      status: { phase: 'Ready' },
+    },
+    selfLink: `providers/vsphere/${TEST_DATA.providers.source.uid}`,
+    uid: TEST_DATA.providers.source.uid,
+    version: '1',
+  };
+
+  const fulfillProviderInventory = async (route: {
+    fulfill: (arg: object) => Promise<void>;
+  }): Promise<void> => {
+    await route.fulfill({
+      body: JSON.stringify(sourceInventorySummary),
+      contentType: 'application/json',
+      status: 200,
+    });
+  };
+
+  await page.route(
+    `**/forklift-inventory/providers/vsphere/${TEST_DATA.providers.source.uid}**`,
+    async (route) => {
+      if (new URL(route.request().url()).pathname.endsWith('/test')) {
+        await route.continue();
+        return;
+      }
+      await fulfillProviderInventory(route);
+    },
+  );
+
+  await page.route(
+    `**/api/proxy/plugin/forklift-console-plugin/forklift-inventory/providers/vsphere/${TEST_DATA.providers.source.uid}**`,
+    async (route) => {
+      if (new URL(route.request().url()).pathname.endsWith('/test')) {
+        await route.continue();
+        return;
+      }
+      await fulfillProviderInventory(route);
+    },
+  );
+
   // Provider inventory connections - make sure each provider can be connected to
   await page.route('**/forklift-inventory/providers/*/test', async (route) => {
     await route.fulfill({

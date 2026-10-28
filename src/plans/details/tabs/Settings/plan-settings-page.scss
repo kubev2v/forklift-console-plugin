@@ -1,0 +1,47 @@
+.forklift-plan-settings {
+  &__layout {
+    min-height: 12rem;
+  }
+
+  &__section-intro {
+    margin-block-end: var(--pf-t--global--spacer--md);
+  }
+
+  &__section-description {
+    margin-block-start: var(--pf-t--global--spacer--xs);
+    margin-block-end: 0;
+  }
+
+  &__nav {
+    padding: 0;
+  }
+
+  &__nav-column {
+    flex: 0 0 auto;
+    min-width: 12rem;
+    max-width: 16rem;
+  }
+
+  &__divider {
+    align-self: stretch;
+    margin-inline: var(--pf-t--global--spacer--md);
+  }
+
+  &__content-column {
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+
+  @media (max-width: 47rem) {
+    &__nav-column,
+    &__content-column {
+      width: 100%;
+      min-width: 0;
+      max-width: none;
+    }
+
+    &__divider {
+      display: none;
+    }
+  }
+}

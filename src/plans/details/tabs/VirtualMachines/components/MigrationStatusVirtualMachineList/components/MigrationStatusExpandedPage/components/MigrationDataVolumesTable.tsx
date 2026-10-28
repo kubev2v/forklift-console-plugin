@@ -2,8 +2,7 @@ import type { FC } from 'react';
 
 import SectionHeading from '@components/headers/SectionHeading';
 import type { V1beta1DataVolume } from '@forklift-ui/types';
-import { ResourceLink } from '@openshift-console/dynamic-plugin-sdk';
-import Status from '@openshift-console/dynamic-plugin-sdk/lib/app/components/status/Status';
+import { ResourceLink, StatusComponent } from '@openshift-console/dynamic-plugin-sdk';
 import { Table, Tbody, Td, Th, Thead, Tr } from '@patternfly/react-table';
 import { DataVolumeModelGroupVersionKind } from '@utils/crds/common/models';
 import { getName, getNamespace, getUID } from '@utils/crds/common/selectors';
@@ -46,7 +45,7 @@ const MigrationDataVolumesTable: FC<MigrationDataVolumesTableProps> = ({ dvs }) 
                 />
               </Td>
               <Td>
-                <Status status={dv?.status?.phase ?? ''} />
+                <StatusComponent status={dv?.status?.phase ?? ''} />
               </Td>
             </Tr>
           ))}

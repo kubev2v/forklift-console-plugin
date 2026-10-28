@@ -16,6 +16,8 @@ export const PAGE_LOAD_TIMEOUT = 30_000;
 // transient 'Cannot start' state before the plan reaches 'Ready for migration'.
 // This budget covers that initial validation window end-to-end.
 export const PLAN_READY_TIMEOUT = 5 * 60_000;
+/** Real-cluster plan wizard + details (includes testPlan fixture createPlan). */
+export const DOWNSTREAM_PLAN_UI_TIMEOUT_MS = 300_000;
 export const MTV_NAMESPACE = 'openshift-mtv';
 
 export const RESOURCE_KINDS = {

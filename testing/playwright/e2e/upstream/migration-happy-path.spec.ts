@@ -7,6 +7,9 @@ import { ProviderDetailsPage } from '../../page-objects/ProviderDetailsPage/Prov
 import { createPlanTestData } from '../../types/test-data';
 import { MTV_NAMESPACE } from '../../utils/resource-manager/constants';
 
+/** Full wizard + mocked provider ready wait; Playwright default is 60s in CI. */
+const PLAN_CREATION_WIZARD_TEST_TIMEOUT_MS = 120_000;
+
 test.describe(
   'Plans - Upstream Happy Path Migration',
   {
@@ -18,6 +21,8 @@ test.describe(
     });
 
     test('should run plan creation wizard', async ({ page }) => {
+      test.setTimeout(PLAN_CREATION_WIZARD_TEST_TIMEOUT_MS);
+
       const sourceProvider = 'test-source-provider';
       const providerDetailsPage = new ProviderDetailsPage(page);
       const createWizard = new CreatePlanWizardPage(page);

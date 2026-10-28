@@ -5,7 +5,7 @@ import { MIGRATION_TIMEOUT_PREFIX } from '../../utils/formatMigrationTimeoutDeta
 import { NavigationHelper } from '../../utils/NavigationHelper';
 import { K8S_RECONCILE_TIMEOUT, PLAN_READY_TIMEOUT } from '../../utils/resource-manager/constants';
 import { testLog } from '../../utils/testLog';
-import { disableGuidedTour, isEmpty } from '../../utils/utils';
+import { isEmpty, prepareConsolePage } from '../../utils/utils';
 import { InspectVirtualMachinesModal } from '../InspectVirtualMachinesModal';
 
 import { AutomationTab } from './tabs/AutomationTab';
@@ -13,6 +13,7 @@ import { DetailsTab } from './tabs/DetailsTab';
 import { HooksTab } from './tabs/HooksTab';
 import { MappingsTab } from './tabs/MappingsTab';
 import { ResourcesTab } from './tabs/ResourcesTab';
+import { SettingsTab } from './tabs/SettingsTab';
 import { VirtualMachinesTab } from './tabs/VirtualMachinesTab';
 
 export class PlanDetailsPage {
@@ -23,6 +24,7 @@ export class PlanDetailsPage {
   public readonly mappingsTab: MappingsTab;
   protected readonly page: Page;
   public readonly resourcesTab: ResourcesTab;
+  public readonly settingsTab: SettingsTab;
   public readonly virtualMachinesTab: VirtualMachinesTab;
 
   constructor(page: Page) {
@@ -30,6 +32,7 @@ export class PlanDetailsPage {
     this.automationTab = new AutomationTab(page);
     this.detailsTab = new DetailsTab(page);
     this.hooksTab = new HooksTab(page);
+    this.settingsTab = new SettingsTab(page);
     this.mappingsTab = new MappingsTab(page);
     this.navigation = new NavigationHelper(page);
     this.resourcesTab = new ResourcesTab(page);
@@ -81,8 +84,14 @@ export class PlanDetailsPage {
 
   /** Deletes the plan via the details page Actions menu, confirming in the plan-specific PlanDeleteModal. */
   async deletePlan(): Promise<void> {
+    await this.waitForPlanEditable();
     await this.page.getByTestId('plan-actions-dropdown-button').click();
-    await this.page.getByRole('menuitem', { exact: true, name: 'Delete' }).click();
+    const deleteItem = this.page.getByRole('menuitem', { exact: true, name: 'Delete' });
+    await expect(deleteItem).toBeVisible();
+    await expect(deleteItem).not.toHaveAttribute('aria-disabled', 'true', {
+      timeout: K8S_RECONCILE_TIMEOUT,
+    });
+    await deleteItem.click();
 
     const deleteModal = this.page.getByRole('dialog', { name: 'Delete plan' });
     await expect(deleteModal).toBeVisible();
@@ -199,7 +208,7 @@ export class PlanDetailsPage {
       resource: 'Plan',
       tab,
     });
-    await disableGuidedTour(this.page);
+    await prepareConsolePage(this.page);
     await this.verifyPlanTitle(planName);
   }
 
@@ -245,6 +254,11 @@ export class PlanDetailsPage {
     await this.verifyNavigationTabs();
     await this.detailsTab.navigateToDetailsTab();
     await this.detailsTab.verifyDetailsTab(planData);
+    if (planData.additionalPlanSettings?.targetPowerState) {
+      await this.settingsTab.verifyTargetPowerStateSetting(
+        planData.additionalPlanSettings.targetPowerState,
+      );
+    }
     await this.waitForPlanEditable();
     await this.virtualMachinesTab.navigateToVirtualMachinesTab();
     await this.virtualMachinesTab.verifyVirtualMachinesTab(planData);
@@ -292,7 +306,7 @@ export class PlanDetailsPage {
   async verifyPlanTitle(planName: string): Promise<void> {
     const titleLocator = this.page.getByTestId('resource-details-title');
     // Empty plan watches render " Unknown" until the Plan CR loads.
-    await expect(titleLocator).toContainText(planName, { timeout: 30_000 });
+    await expect(titleLocator).toContainText(planName, { timeout: K8S_RECONCILE_TIMEOUT });
   }
 
   /**

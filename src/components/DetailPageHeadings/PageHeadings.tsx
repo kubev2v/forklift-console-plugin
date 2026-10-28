@@ -7,8 +7,8 @@ import {
   type K8sResourceKind,
   ResourceIcon,
   ResourceStatus,
+  StatusComponent,
 } from '@openshift-console/dynamic-plugin-sdk';
-import Status from '@openshift-console/dynamic-plugin-sdk/lib/app/components/status/Status';
 import { Split, SplitItem } from '@patternfly/react-core';
 
 import BreadCrumbs from '../BreadCrumb/BreadCrumb';
@@ -53,7 +53,7 @@ export const PageHeadings: FC<PageHeadingsProps> = ({
               {typeof dataStatus === 'string' && (
                 <span data-testid="resource-status">
                   <ResourceStatus additionalClassNames="hidden-xs">
-                    <Status status={dataStatus} />
+                    <StatusComponent status={dataStatus} />
                   </ResourceStatus>
                 </span>
               )}

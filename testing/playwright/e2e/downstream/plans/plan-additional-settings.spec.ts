@@ -5,11 +5,13 @@ import { CreatePlanWizardPage } from '../../../page-objects/CreatePlanWizard/Cre
 import { PlanDetailsPage } from '../../../page-objects/PlanDetailsPage/PlanDetailsPage';
 import { MigrationType } from '../../../types/enums';
 import { createPlanTestData, type PlanTestData } from '../../../types/test-data';
+import { DOWNSTREAM_PLAN_UI_TIMEOUT_MS } from '../../../utils/resource-manager/constants';
 import { V2_11_0, V2_12_0 } from '../../../utils/version/constants';
 import { isVersionAtLeast, requireVersion } from '../../../utils/version/version';
 
 test.describe('Plan additional settings', { tag: '@downstream' }, () => {
   requireVersion(test, V2_11_0);
+  test.describe.configure({ timeout: DOWNSTREAM_PLAN_UI_TIMEOUT_MS });
 
   test('should set power state on plan creation, plan details tab, and VMs tab', async ({
     page,
@@ -47,21 +49,21 @@ test.describe('Plan additional settings', { tag: '@downstream' }, () => {
     await wizard.waitForPlanCreation();
 
     const planDetailsPage = new PlanDetailsPage(page);
-    const { detailsTab } = planDetailsPage;
-    await detailsTab.navigateToDetailsTab();
-    await expect(detailsTab.targetVMPowerState('Powered on')).toBeVisible();
-    await detailsTab.clickEditTargetVMPowerState();
-    await expect(detailsTab.editPowerStateModal).toBeVisible();
-    await expect(detailsTab.savePowerStateButton).toBeDisabled();
-    await detailsTab.targetPowerStateSelect.click();
-    await expect(detailsTab.powerStateOptionAuto).toHaveText('Retain source VM power state');
-    await expect(detailsTab.powerStateOptionOn).toHaveText('Powered on');
-    await expect(detailsTab.powerStateOptionOff).toHaveText('Powered off');
+    const { settingsTab } = planDetailsPage;
+    await settingsTab.navigateToTargetVmSection();
+    await expect(settingsTab.targetVMPowerState('Powered on')).toBeVisible();
+    await settingsTab.clickEditTargetVMPowerState();
+    await expect(settingsTab.editPowerStateModal).toBeVisible();
+    await expect(settingsTab.savePowerStateButton).toBeDisabled();
+    await settingsTab.targetPowerStateSelect.click();
+    await expect(settingsTab.powerStateOptionAuto).toHaveText('Retain source VM power state');
+    await expect(settingsTab.powerStateOptionOn).toHaveText('Powered on');
+    await expect(settingsTab.powerStateOptionOff).toHaveText('Powered off');
 
-    await detailsTab.powerStateOption('off').click();
-    await expect(detailsTab.savePowerStateButton).toBeEnabled();
-    await detailsTab.savePowerStateButton.click();
-    await expect(detailsTab.targetVMPowerState('Powered off')).toBeVisible();
+    await settingsTab.powerStateOption('off').click();
+    await expect(settingsTab.savePowerStateButton).toBeEnabled();
+    await settingsTab.savePowerStateButton.click();
+    await expect(settingsTab.targetVMPowerState('Powered off')).toBeVisible();
 
     await planDetailsPage.virtualMachinesTab.navigateToVirtualMachinesTab();
 
@@ -112,17 +114,17 @@ test.describe('Plan additional settings', { tag: '@downstream' }, () => {
     await wizard.waitForPlanCreation();
 
     const planDetailsPage = new PlanDetailsPage(page);
-    const { detailsTab: dt, virtualMachinesTab: vmt } = planDetailsPage;
-    await dt.navigateToDetailsTab();
-    await expect(dt.sharedDisksDetailItem('Migrate shared disks')).toBeVisible();
+    const { settingsTab, virtualMachinesTab: vmt } = planDetailsPage;
+    await settingsTab.navigateToGuestSection();
+    await expect(settingsTab.sharedDisksDetailItem('Migrate shared disks')).toBeVisible();
 
-    await dt.clickEditSharedDisks();
-    await expect(dt.editSharedDisksModal).toBeVisible();
-    await dt.editSharedDisksCheckbox.uncheck();
-    await expect(dt.editSharedDisksCheckbox).not.toBeChecked();
-    await dt.saveSharedDisksButton.click();
-    await expect(dt.editSharedDisksModal).not.toBeVisible();
-    await expect(dt.sharedDisksDetailItem('Do not migrate shared disks')).toBeVisible();
+    await settingsTab.clickEditSharedDisks();
+    await expect(settingsTab.editSharedDisksModal).toBeVisible();
+    await settingsTab.editSharedDisksCheckbox.uncheck();
+    await expect(settingsTab.editSharedDisksCheckbox).not.toBeChecked();
+    await settingsTab.saveSharedDisksButton.click();
+    await expect(settingsTab.editSharedDisksModal).not.toBeVisible();
+    await expect(settingsTab.sharedDisksDetailItem('Do not migrate shared disks')).toBeVisible();
 
     await vmt.navigateToVirtualMachinesTab();
     await vmt.enableColumn('Shared disks');
@@ -186,31 +188,32 @@ test.describe('Plan additional settings', { tag: '@downstream' }, () => {
     await wizard.waitForPlanCreation();
 
     const planDetailsPage = new PlanDetailsPage(page);
-    await planDetailsPage.detailsTab.navigateToDetailsTab();
-    await expect(planDetailsPage.detailsTab.diskDecryptionDetailItem()).toBeVisible();
+    await planDetailsPage.settingsTab.navigateToGuestSection();
+    await expect(planDetailsPage.settingsTab.diskDecryptionDetailItem()).toBeVisible();
 
-    // Step 4: Edit disk decryption from Details tab
-    await planDetailsPage.detailsTab.clickEditDiskDecryption();
-    await expect(planDetailsPage.detailsTab.editDiskDecryptionModal).toBeVisible();
-    await expect(planDetailsPage.detailsTab.useNbdeClevisCheckbox).toBeVisible();
+    // Step 4: Edit disk decryption from Settings tab
+    await planDetailsPage.settingsTab.clickEditDiskDecryption();
+    await expect(planDetailsPage.settingsTab.editDiskDecryptionModal).toBeVisible();
+    await expect(planDetailsPage.settingsTab.useNbdeClevisCheckbox).toBeVisible();
 
     // Step 5: Test checkbox toggle functionality
-    await planDetailsPage.detailsTab.useNbdeClevisCheckbox.check();
-    await expect(planDetailsPage.detailsTab.useNbdeClevisCheckbox).toBeChecked();
-    await planDetailsPage.detailsTab.useNbdeClevisCheckbox.uncheck();
-    await expect(planDetailsPage.detailsTab.useNbdeClevisCheckbox).not.toBeChecked();
-    await planDetailsPage.detailsTab.useNbdeClevisCheckbox.check();
-    await expect(planDetailsPage.detailsTab.useNbdeClevisCheckbox).toBeChecked();
+    await planDetailsPage.settingsTab.useNbdeClevisCheckbox.check();
+    await expect(planDetailsPage.settingsTab.useNbdeClevisCheckbox).toBeChecked();
+    await planDetailsPage.settingsTab.useNbdeClevisCheckbox.uncheck();
+    await expect(planDetailsPage.settingsTab.useNbdeClevisCheckbox).not.toBeChecked();
+    await planDetailsPage.settingsTab.useNbdeClevisCheckbox.check();
+    await expect(planDetailsPage.settingsTab.useNbdeClevisCheckbox).toBeChecked();
 
     // Step 6: Save disk decryption changes
-    await expect(planDetailsPage.detailsTab.saveDiskDecryptionButton).toBeEnabled();
-    await planDetailsPage.detailsTab.saveDiskDecryptionButton.click();
-    await expect(planDetailsPage.detailsTab.editDiskDecryptionModal).not.toBeVisible();
+    await expect(planDetailsPage.settingsTab.saveDiskDecryptionButton).toBeEnabled();
+    await planDetailsPage.settingsTab.saveDiskDecryptionButton.click();
+    await expect(planDetailsPage.settingsTab.editDiskDecryptionModal).not.toBeVisible();
   });
 });
 
 test.describe('Plan additional settings - PR #2292', { tag: '@downstream' }, () => {
   requireVersion(test, V2_12_0);
+  test.describe.configure({ timeout: DOWNSTREAM_PLAN_UI_TIMEOUT_MS });
 
   test('should edit preserve static IPs and shared disks from details page', async ({
     page,
@@ -229,47 +232,48 @@ test.describe('Plan additional settings - PR #2292', { tag: '@downstream' }, () 
       await wizard.fillAndSubmit(testData);
     });
 
-    const { detailsTab } = new PlanDetailsPage(page);
-    await detailsTab.navigateToDetailsTab();
+    const { settingsTab } = new PlanDetailsPage(page);
+    await settingsTab.navigateToTransferSection();
 
     await test.step('Verify preserve static IPs default is enabled (vSphere)', async () => {
-      await detailsTab.verifyPreserveStaticIPs(true);
+      await settingsTab.verifyPreserveStaticIPs(true);
     });
 
     await test.step('Disable preserve static IPs', async () => {
-      await detailsTab.clickEditPreserveStaticIPs();
-      await expect(detailsTab.preserveStaticIPsCheckbox).toBeChecked();
-      await detailsTab.preserveStaticIPsCheckbox.uncheck();
-      await expect(detailsTab.preserveStaticIPsCheckbox).not.toBeChecked();
-      await detailsTab.savePreserveStaticIPs();
-      await detailsTab.verifyPreserveStaticIPs(false);
+      await settingsTab.clickEditPreserveStaticIPs();
+      await expect(settingsTab.preserveStaticIPsCheckbox).toBeChecked();
+      await settingsTab.preserveStaticIPsCheckbox.uncheck();
+      await expect(settingsTab.preserveStaticIPsCheckbox).not.toBeChecked();
+      await settingsTab.savePreserveStaticIPs();
+      await settingsTab.verifyPreserveStaticIPs(false);
     });
 
     await test.step('Re-enable preserve static IPs', async () => {
-      await detailsTab.clickEditPreserveStaticIPs();
-      await detailsTab.preserveStaticIPsCheckbox.check();
-      await expect(detailsTab.preserveStaticIPsCheckbox).toBeChecked();
-      await detailsTab.savePreserveStaticIPs();
-      await detailsTab.verifyPreserveStaticIPs(true);
+      await settingsTab.clickEditPreserveStaticIPs();
+      await settingsTab.preserveStaticIPsCheckbox.check();
+      await expect(settingsTab.preserveStaticIPsCheckbox).toBeChecked();
+      await settingsTab.savePreserveStaticIPs();
+      await settingsTab.verifyPreserveStaticIPs(true);
     });
 
     await test.step('Enable shared disks migration', async () => {
-      await detailsTab.clickEditMigrateSharedDisks();
-      await detailsTab.migrateSharedDisksCheckbox.check();
-      await expect(detailsTab.migrateSharedDisksCheckbox).toBeChecked();
-      await expect(detailsTab.sharedDisksInfoAlert).toBeVisible();
-      await detailsTab.saveMigrateSharedDisks();
-      await detailsTab.verifySharedDisks(true);
+      await settingsTab.navigateToGuestSection();
+      await settingsTab.clickEditMigrateSharedDisks();
+      await settingsTab.migrateSharedDisksCheckbox.check();
+      await expect(settingsTab.migrateSharedDisksCheckbox).toBeChecked();
+      await expect(settingsTab.sharedDisksInfoAlert).toBeVisible();
+      await settingsTab.saveMigrateSharedDisks();
+      await settingsTab.verifySharedDisks(true);
     });
 
     await test.step('Disable shared disks migration', async () => {
-      await detailsTab.clickEditMigrateSharedDisks();
-      await expect(detailsTab.migrateSharedDisksCheckbox).toBeChecked();
-      await detailsTab.migrateSharedDisksCheckbox.uncheck();
-      await expect(detailsTab.migrateSharedDisksCheckbox).not.toBeChecked();
-      await expect(detailsTab.sharedDisksInfoAlert).not.toBeVisible();
-      await detailsTab.saveMigrateSharedDisks();
-      await detailsTab.verifySharedDisks(false);
+      await settingsTab.clickEditMigrateSharedDisks();
+      await expect(settingsTab.migrateSharedDisksCheckbox).toBeChecked();
+      await settingsTab.migrateSharedDisksCheckbox.uncheck();
+      await expect(settingsTab.migrateSharedDisksCheckbox).not.toBeChecked();
+      await expect(settingsTab.sharedDisksInfoAlert).not.toBeVisible();
+      await settingsTab.saveMigrateSharedDisks();
+      await settingsTab.verifySharedDisks(false);
     });
   });
 

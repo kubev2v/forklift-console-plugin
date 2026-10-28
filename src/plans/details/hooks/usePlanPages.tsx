@@ -8,6 +8,7 @@ import PlanDetailsPage from '../tabs/Details/PlanDetailsPage';
 import PlanHooksPage from '../tabs/Hooks/PlanHooksPage';
 import PlanMappingsPage from '../tabs/Mappings/PlanMappingsPage';
 import PlanResourcesPage from '../tabs/Resources/PlanResourcesPage';
+import PlanSettingsPage from '../tabs/Settings/PlanSettingsPage';
 import PlanVirtualMachinesPage from '../tabs/VirtualMachines/PlanVirtualMachinesPage';
 import PlanYAMLPage from '../tabs/YAML/PlanYAMLPage';
 const usePlanPages = (name: string, namespace: string): NavPage[] => {
@@ -19,6 +20,11 @@ const usePlanPages = (name: string, namespace: string): NavPage[] => {
         component: (): ReactElement => <PlanDetailsPage name={name} namespace={namespace} />,
         href: '',
         name: t('Details'),
+      },
+      {
+        component: (): ReactElement => <PlanSettingsPage name={name} namespace={namespace} />,
+        href: 'settings',
+        name: t('Settings'),
       },
       {
         component: (): ReactElement => <PlanYAMLPage name={name} namespace={namespace} />,

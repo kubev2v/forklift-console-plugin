@@ -15,7 +15,6 @@ import ConditionsSection from './components/ConditionsSection/ConditionsSection'
 import DetailsSection from './components/DetailsSection/DetailsSection';
 import MigrationsSection from './components/MigrationsSection/MigrationsSection';
 import ProvidersSection from './components/ProvidersSection/ProvidersSection';
-import SettingsSection from './components/SettingsSection/SettingsSection';
 
 const PlanDetailsPage: FC<PlanPageProps> = ({ name, namespace }) => {
   const { t } = useForkliftTranslation();
@@ -35,11 +34,6 @@ const PlanDetailsPage: FC<PlanPageProps> = ({ name, namespace }) => {
       <PageSection hasBodyWrapper={false}>
         <SectionHeading text={t('Providers')} />
         <ProvidersSection plan={plan} />
-      </PageSection>
-      <Divider />
-      <PageSection hasBodyWrapper={false}>
-        <SectionHeading text={t('Plan settings')} />
-        <SettingsSection plan={plan} />
       </PageSection>
       <Divider />
       <PageSection hasBodyWrapper={false}>

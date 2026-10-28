@@ -1,5 +1,7 @@
 import { expect, type Locator, type Page } from '@playwright/test';
 
+import { K8S_RECONCILE_TIMEOUT } from '../../utils/resource-manager/constants';
+
 export class Table {
   private readonly page: Page;
   private readonly rootLocator: Locator;
@@ -57,33 +59,26 @@ export class Table {
     const modalBody = this.page.getByTestId('manage-columns-modal');
     await expect(modalBody).toBeVisible();
 
-    const columnList = modalBody.getByTestId('manage-columns-list');
-    const targetListItem = columnList
-      .getByRole('listitem')
-      .filter({ hasText: new RegExp(`^${columnName}$`, 'u') });
-
-    if ((await targetListItem.count()) === 0) {
+    const checkbox = modalBody.getByRole('checkbox', { exact: true, name: columnName });
+    if ((await checkbox.count()) === 0) {
       const cancelButton = this.page.getByTestId('manage-columns-cancel-button');
       await cancelButton.click();
       await expect(modalBody).not.toBeVisible();
       throw new Error(`Column "${columnName}" not found in available columns`);
     }
 
-    const checkbox = targetListItem.getByRole('checkbox');
-    if ((await checkbox.count()) > 0) {
-      const isChecked = await checkbox.isChecked();
-      const isDisabled = await checkbox.isDisabled();
-
-      if (!isDisabled && isChecked) {
-        await checkbox.uncheck();
-      }
+    if (!(await checkbox.isDisabled()) && (await checkbox.isChecked())) {
+      await checkbox.uncheck();
     }
 
     const saveButton = this.page.getByTestId('manage-columns-save-button');
     await saveButton.click();
 
     await expect(modalBody).not.toBeVisible();
-    await expect.poll(async () => this.isColumnVisible(columnName)).toBe(false);
+    await this.waitForTableLoad();
+    await expect
+      .poll(async () => this.isColumnVisible(columnName), { timeout: K8S_RECONCILE_TIMEOUT })
+      .toBe(false);
   }
 
   async enableColumn(columnName: string): Promise<void> {
@@ -98,33 +93,27 @@ export class Table {
     const modalBody = this.page.getByTestId('manage-columns-modal');
     await expect(modalBody).toBeVisible();
 
-    const columnList = modalBody.getByTestId('manage-columns-list');
-    const targetListItem = columnList
-      .getByRole('listitem')
-      .filter({ hasText: new RegExp(`^${columnName}$`, 'u') });
-
-    if ((await targetListItem.count()) === 0) {
+    const checkbox = modalBody.getByRole('checkbox', { exact: true, name: columnName });
+    if ((await checkbox.count()) === 0) {
       const cancelButton = this.page.getByTestId('manage-columns-cancel-button');
       await cancelButton.click();
       await expect(modalBody).not.toBeVisible();
       throw new Error(`Column "${columnName}" not found in available columns`);
     }
 
-    const checkbox = targetListItem.getByRole('checkbox');
-    if ((await checkbox.count()) > 0) {
-      const isChecked = await checkbox.isChecked();
-      const isDisabled = await checkbox.isDisabled();
-
-      if (!isDisabled && !isChecked) {
-        await checkbox.check();
-      }
+    if (!(await checkbox.isDisabled()) && !(await checkbox.isChecked())) {
+      await checkbox.check();
+      await expect(checkbox).toBeChecked();
     }
 
     const saveButton = this.page.getByTestId('manage-columns-save-button');
     await saveButton.click();
 
     await expect(modalBody).not.toBeVisible();
-    await expect.poll(async () => this.isColumnVisible(columnName)).toBe(true);
+    await this.waitForTableLoad();
+    await expect
+      .poll(async () => this.isColumnVisible(columnName), { timeout: K8S_RECONCILE_TIMEOUT })
+      .toBe(true);
   }
 
   async getCell(
@@ -188,8 +177,11 @@ export class Table {
   }
 
   async isColumnVisible(columnName: string): Promise<boolean> {
-    const currentColumns = await this.getColumns();
-    return currentColumns.includes(columnName);
+    const tableContainer = this.getTableContainer();
+    const header = tableContainer
+      .getByRole('columnheader', { exact: true, name: columnName })
+      .first();
+    return header.isVisible().catch(() => false);
   }
 
   async search(value: string): Promise<void> {
@@ -214,6 +206,13 @@ export class Table {
   async verifyRowIsVisible(options: Record<string, string>): Promise<void> {
     const row = this.getRow(options);
     await expect(row).toBeVisible();
+  }
+
+  async waitForColumnVisible(columnName: string): Promise<void> {
+    const tableContainer = this.getTableContainer();
+    await expect(
+      tableContainer.getByRole('columnheader', { exact: true, name: columnName }).first(),
+    ).toBeVisible({ timeout: K8S_RECONCILE_TIMEOUT });
   }
 
   async waitForTableLoad(): Promise<void> {

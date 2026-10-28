@@ -4,6 +4,7 @@ import type { PlanTestData } from '../../types/test-data';
 import { NavigationHelper } from '../../utils/NavigationHelper';
 import { MTV_NAMESPACE } from '../../utils/resource-manager/constants';
 import type { ResourceManager } from '../../utils/resource-manager/ResourceManager';
+import { assertNoConsoleErrorBoundary, prepareConsolePage } from '../../utils/utils';
 import { V2_12_0 } from '../../utils/version/constants';
 import { isVersionAtLeast } from '../../utils/version/version';
 
@@ -174,6 +175,15 @@ export class CreatePlanWizardPage {
     });
   }
 
+  /** Same destination as Create migration plan on the provider details page. */
+  async navigateFromSourceProvider(
+    sourceProvider: string,
+    planProject = MTV_NAMESPACE,
+  ): Promise<void> {
+    await this.navigationHelper.navigateToNewPlanFromSourceProvider(sourceProvider, planProject);
+    await assertNoConsoleErrorBoundary(this.page);
+  }
+
   async navigateToAdditionalSettings(testData: PlanTestData): Promise<void> {
     await this.navigateToMigrationTypeStep(testData);
     await this.clickNext(); // Skip Migration Type Step -> goes to Other Settings
@@ -225,8 +235,10 @@ export class CreatePlanWizardPage {
     );
   }
 
-  async waitForWizardLoad() {
-    expect(this.page.url()).toContain('forklift.konveyor.io~v1beta1~Plan/~new');
+  async waitForWizardLoad(): Promise<void> {
+    await expect(this.page).toHaveURL(/forklift\.konveyor\.io~v1beta1~Plan\/~new/u);
+    await prepareConsolePage(this.page);
+    await assertNoConsoleErrorBoundary(this.page);
     await expect(this.page.getByTestId('create-plan-wizard')).toBeVisible();
   }
 }

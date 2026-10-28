@@ -21,3 +21,4 @@ export const KUBECONFIG_FILE = 'playwright/.auth/kubeconfig';
  * See https://github.com/microsoft/playwright/issues/21565
  */
 export const ENV_RELAY_FILE = 'playwright/.env-relay.json';
+export const PLAN_SPEC_VIRTUAL_MACHINES_LIST_TEST_ID = 'plan-spec-virtual-machines-list';

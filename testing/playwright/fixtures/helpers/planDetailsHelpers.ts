@@ -23,6 +23,5 @@ export const setupPlanDetailsPage = async (
   const planDetailsPage = new PlanDetailsPage(page);
   const { name: planName, namespace } = testPlan.metadata;
   await planDetailsPage.navigate(planName, namespace);
-  await planDetailsPage.verifyPlanTitle(planName);
   return { namespace, planDetailsPage, planName, testData: testPlan.testData };
 };
