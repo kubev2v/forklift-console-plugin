@@ -1,12 +1,7 @@
-/**
- * DataView table for StandardPage rows that combine resizable columns with expand and/or
- * selection leading cells (see `useDataViewSelection`). Use `ForkliftDataViewTable` when
- * rows do not need expand or the hybrid leading-column layout.
- */
+/** Renders each StandardPage row once while retaining its native PatternFly cells. */
 import type { FC, ReactElement, ReactNode } from 'react';
 
 import { Bullseye } from '@patternfly/react-core';
-import { DataViewTableHead } from '@patternfly/react-data-view';
 import type { DataViewTh } from '@patternfly/react-data-view/dist/esm/DataViewTable/DataViewTable';
 import { InnerScrollContainer, Table, Tbody, Td, Tr } from '@patternfly/react-table';
 
@@ -17,10 +12,12 @@ import { UID } from '../utils/constants';
 import type { ResourceField } from '../utils/types';
 
 import { getRenderedColumnCount } from './dataViewColumnUtils';
+import { DATA_CONTROL_COLUMN_ATTR } from './dataViewTableConstants';
 import {
   FORKLIFT_DATA_VIEW_TABLE_CLASS,
   FORKLIFT_DATA_VIEW_TABLE_LAYOUT_CLASS,
 } from './forkliftDataViewTableClass';
+import ForkliftResizableTableHead from './ForkliftResizableTableHead';
 import { useDefaultColumnLayout } from './useDefaultColumnLayout';
 import { useForkliftDataViewColumns } from './useForkliftDataViewColumns';
 
@@ -41,6 +38,14 @@ type ForkliftHybridDataViewTableProps<T> = {
   visibleColumns: ResourceField[];
 };
 
+const getControlColumnId = (column: DataViewTh): string => {
+  if (!column || typeof column !== 'object' || !('cell' in column)) return '';
+  const { props } = column;
+  if (!props || !(DATA_CONTROL_COLUMN_ATTR in props)) return '';
+  const marker = props[DATA_CONTROL_COLUMN_ATTR];
+  return typeof marker === 'string' ? marker : '';
+};
+
 const ForkliftHybridDataViewTable = <T,>({
   activeSort,
   'aria-label': ariaLabel,
@@ -56,7 +61,12 @@ const ForkliftHybridDataViewTable = <T,>({
   visibleColumns,
 }: ForkliftHybridDataViewTableProps<T>): ReactElement => {
   const { columnLayoutKey, hasCustomColumnWidths } = useTableColumnWidthContext();
-  const layoutKey = getTableColumnLayoutKey(columnLayoutKey, visibleColumns);
+  const controlColumnSignature = leadingColumns?.map(getControlColumnId).join('|') ?? '';
+  const layoutKey = getTableColumnLayoutKey(
+    columnLayoutKey,
+    visibleColumns,
+    controlColumnSignature,
+  );
   const { defaultLayoutVersion, layoutRef } = useDefaultColumnLayout({
     hasCustomColumnWidths,
     layoutKey,
@@ -77,11 +87,12 @@ const ForkliftHybridDataViewTable = <T,>({
           aria-label={ariaLabel}
           className={FORKLIFT_DATA_VIEW_TABLE_CLASS}
           data-column-widths-customized={hasCustomColumnWidths}
+          gridBreakPoint=""
           isStickyHeader
           key={`${layoutKey}-${defaultLayoutVersion}`}
           variant="compact"
         >
-          <DataViewTableHead columns={columns} hasResizableColumns />
+          <ForkliftResizableTableHead columns={columns} />
           <Tbody>
             {placeholder ? (
               <Tr>
@@ -90,17 +101,23 @@ const ForkliftHybridDataViewTable = <T,>({
                 </Td>
               </Tr>
             ) : (
-              entities.map((resourceData, index) => (
-                <RowComponent
-                  isExpanded={expandedIds?.includes(toId ? toId(resourceData) : '')}
-                  key={`${columnSignature}_${String(resourceData?.[uidFieldId as keyof T] ?? index)}`}
-                  length={Math.max(renderedColumnCount - 1, 1)}
-                  namespace={namespace}
-                  resourceData={resourceData}
-                  resourceFields={visibleColumns}
-                  resourceIndex={index}
-                />
-              ))
+              entities.map((resourceData, index) => {
+                const id = toId?.(resourceData);
+                const rowId = id?.length
+                  ? id
+                  : String(resourceData?.[uidFieldId as keyof T] ?? index);
+                return (
+                  <RowComponent
+                    isExpanded={expandedIds?.includes(id ?? '')}
+                    key={`${columnSignature}_${rowId}`}
+                    length={Math.max(renderedColumnCount - 1, 1)}
+                    namespace={namespace}
+                    resourceData={resourceData}
+                    resourceFields={visibleColumns}
+                    resourceIndex={index}
+                  />
+                );
+              })
             )}
           </Tbody>
         </Table>

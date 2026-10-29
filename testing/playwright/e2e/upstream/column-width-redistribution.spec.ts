@@ -2,15 +2,15 @@ import { expect, type Locator, type Page, test } from '@playwright/test';
 
 import { setupPlansIntercepts } from '../../intercepts/plans';
 import { setupProvidersIntercepts } from '../../intercepts/providers';
-import { expectTableToFit } from '../../utils/resizableColumns';
+import { expectReadableTableLayout } from '../../utils/resizableColumns';
 import { V5_1_0 } from '../../utils/version/constants';
 import { requireVersion } from '../../utils/version/version';
 
 const VIEWPORT_HEIGHT = 1080;
 const SHRINK_DRAG_PX = 25;
 
-const shrinkColumn = async (page: Page, header: Locator, label: string): Promise<void> => {
-  const handle = header.locator(`button[aria-label="${label}"]`);
+const shrinkColumn = async (page: Page, header: Locator): Promise<void> => {
+  const handle = header.locator('button[data-resize-handle="true"]');
   const box = await handle.boundingBox();
   if (!box) {
     throw new Error('The column resize handle is not visible');
@@ -43,11 +43,11 @@ test.describe('Resized columns do not absorb freed space', { tag: '@upstream' },
         await page.goto(`/k8s/all-namespaces/forklift.konveyor.io~v1beta1~${resource.kind}`);
         const table = page.getByRole('grid', { exact: true, name: resource.title });
         await expect(table.locator('tbody').getByRole('link').first()).toBeVisible();
-        await expectTableToFit(table);
+        await expectReadableTableLayout(table);
         const name = table.locator('th#name');
         const project = table.locator('th#namespace');
-        await shrinkColumn(page, name, 'Name');
-        await shrinkColumn(page, project, 'Project');
+        await shrinkColumn(page, name);
+        await shrinkColumn(page, project);
         const nameWidth = await name.evaluate((header) => header.getBoundingClientRect().width);
         const projectWidth = await project.evaluate(
           (header) => header.getBoundingClientRect().width,
@@ -85,7 +85,7 @@ test.describe('Resized columns do not absorb freed space', { tag: '@upstream' },
               .evaluate((header) => header.getBoundingClientRect().width),
           )
           .toBeGreaterThan(0);
-        await expectTableToFit(table);
+        await expectReadableTableLayout(table);
 
         await page.reload();
         await expect(table.locator('tbody').getByRole('link').first()).toBeVisible();

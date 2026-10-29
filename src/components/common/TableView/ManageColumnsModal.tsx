@@ -14,7 +14,6 @@ type ManagedColumnsProps = {
   description?: string;
   onChange: (columns: ResourceField[]) => void;
   onClose: () => void;
-  onResetColumnWidths?: () => void;
   reorderLabel?: string;
   resourceFields: ResourceField[];
   restoreLabel?: string;
@@ -29,7 +28,6 @@ export const ManageColumnsModal = ({
   description = 'Selected columns will be displayed in the table.',
   onChange,
   onClose,
-  onResetColumnWidths,
   reorderLabel: _reorderLabel = 'Reorder',
   resourceFields,
   restoreLabel = 'Restore default columns',
@@ -39,11 +37,8 @@ export const ManageColumnsModal = ({
 }: ManagedColumnsProps): ReactElement => {
   // Fresh state each open: ManageColumnsToolbar mounts this only while open.
   const [editedColumns, setEditedColumns] = useState(filterActionsAndHidden(resourceFields));
-  const [shouldResetWidths, setShouldResetWidths] = useState(false);
-
   const restoreDefaults = (): void => {
     setEditedColumns([...filterActionsAndHidden(defaultColumns)]);
-    setShouldResetWidths(true);
   };
 
   const onMove = (fieldId: string, direction: -1 | 1): void => {
@@ -76,9 +71,6 @@ export const ManageColumnsModal = ({
       ...editedColumns,
       ...resourceFields.filter((col) => Boolean(col.isAction) || Boolean(col.isHidden)),
     ]);
-    if (shouldResetWidths) {
-      onResetColumnWidths?.();
-    }
     onClose();
   };
 
@@ -104,9 +96,7 @@ export const ManageColumnsModal = ({
       <ModalFooter>
         <Button
           data-testid="manage-columns-save-button"
-          isDisabled={
-            !shouldResetWidths && sameOrderAndVisibility(visibleResourceFields, editedColumns)
-          }
+          isDisabled={sameOrderAndVisibility(visibleResourceFields, editedColumns)}
           key="save"
           onClick={onSave}
           variant={ButtonVariant.primary}

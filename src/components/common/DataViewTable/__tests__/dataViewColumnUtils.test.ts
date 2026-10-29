@@ -3,7 +3,6 @@ import type { ResourceField } from '@components/common/utils/types';
 import type { SortType } from '../../TableView/types';
 import {
   getActionCellProps,
-  getBodyCellProps,
   getRenderedColumnCount,
   toDataViewColumn,
 } from '../dataViewColumnUtils';
@@ -30,17 +29,17 @@ describe('dataViewColumnUtils', () => {
     expect(getRenderedColumnCount(1, false)).toBe(1);
   });
 
-  it('lets DataViewTh control resizing without a conflicting CSS width or nowrap modifier', () => {
+  it('marks saved data headers and keeps the saved minimum without a competing width', () => {
     const column = toDataViewColumn({
       actionScreenReaderText: 'Actions',
       activeSort,
       columnIndex: 0,
       field: nameField,
-      resizableProps: {
-        isResizable: true,
+      resizeConfig: {
+        id: 'name',
+        label: 'Name',
         minWidth: 100,
-        resizeButtonAriaLabel: 'Name',
-        width: 240,
+        savedWidth: 240,
       },
       setActiveSort: () => undefined,
       visibleColumns: [nameField],
@@ -53,12 +52,13 @@ describe('dataViewColumnUtils', () => {
           'data-column-width-fixed': true,
           'data-resizable-column': true,
           id: 'name',
+          style: { minWidth: '240px' },
         }),
         resizableProps: expect.objectContaining({ isResizable: true, width: 240 }),
       }),
     );
     if (typeof column === 'object' && column && 'props' in column) {
-      expect(column.props).not.toHaveProperty('style');
+      expect(column.props).not.toHaveProperty('width');
       expect(column.props).not.toHaveProperty('modifier');
     }
   });
@@ -69,12 +69,15 @@ describe('dataViewColumnUtils', () => {
       activeSort,
       columnIndex: 0,
       field: nameField,
-      resizableProps: { isResizable: true, minWidth: 100, resizeButtonAriaLabel: 'Name' },
+      resizeConfig: { id: 'name', label: 'Name', minWidth: 100 },
       setActiveSort: () => undefined,
       visibleColumns: [nameField],
     });
 
     expect(column).toMatchObject({ props: { 'data-column-width-fixed': false } });
+    if (typeof column === 'object' && column && 'props' in column) {
+      expect(column.props).not.toHaveProperty('style');
+    }
   });
 
   it('keeps action columns sticky and not resizable', () => {
@@ -109,15 +112,6 @@ describe('dataViewColumnUtils', () => {
         isStickyColumn: true,
         stickyMinWidth: '0',
       }),
-    );
-    expect(getBodyCellProps(actionField)).toEqual(
-      expect.objectContaining({
-        className: FORKLIFT_DATA_VIEW_TABLE_STICKY_CELL_CLASS,
-        isActionCell: true,
-      }),
-    );
-    expect(getBodyCellProps(nameField)).toEqual(
-      expect.objectContaining({ modifier: 'truncate', dataLabel: 'Name' }),
     );
   });
 

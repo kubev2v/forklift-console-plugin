@@ -20,8 +20,12 @@
     min-width: 0 !important;
   }
 
-  &[data-column-widths-customized='false'] colgroup[data-default-column-widths='true'] col {
+  colgroup[data-default-column-widths='true'] col {
     width: var(--forklift-default-column-width, auto);
+  }
+
+  &[data-column-resize-active='true'] colgroup[data-default-column-widths='true'] col {
+    width: auto;
   }
 
   // A zero preferred width leaves PatternFly's live minimum as the resized column's exact size.
@@ -30,7 +34,6 @@
   }
 
   &[data-column-widths-customized='true'] [data-column-width-spacer='true'] {
-    // DataViewTh caches the visible spacer width inline on reload; it must remain shrinkable.
     min-width: 0 !important;
     padding: 0;
     width: 100%;
@@ -43,6 +46,76 @@
 
   &[data-column-widths-customized='false'] [data-column-width-spacer='true'] {
     display: none;
+  }
+
+  & &__resizable-header {
+    position: relative;
+    padding-inline-end: 2.5rem;
+
+    button:not([data-resize-handle='true']) {
+      max-inline-size: 100%;
+      min-inline-size: 0;
+
+      > div,
+      > div > span {
+        min-inline-size: 0;
+      }
+    }
+  }
+
+  & &__header-title {
+    display: inline-block;
+    max-inline-size: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    vertical-align: bottom;
+    white-space: nowrap;
+  }
+
+  & &__resize-handle {
+    align-items: center;
+    block-size: 2rem;
+    cursor: grab;
+    display: flex;
+    font-size: inherit;
+    inline-size: 2rem;
+    // PatternFly bottom-aligns header text; center the 2rem target on that line box.
+    inset-block-end: calc(var(--pf-v6-c-table--cell--PaddingBlockEnd) + 0.5lh - 1rem);
+    inset-inline-end: 0;
+    justify-content: center;
+    line-height: inherit;
+    min-block-size: 2rem;
+    min-inline-size: 2rem;
+    padding: 0;
+    position: absolute;
+    touch-action: none;
+    z-index: 1;
+
+    svg {
+      font-size: var(--pf-v6-c-button--FontSize);
+    }
+
+    &:active {
+      cursor: grabbing;
+    }
+
+    &:focus-visible {
+      outline-offset: var(--pf-t--global--focus-ring--position--inset);
+    }
+  }
+
+  & &__resize-status,
+  & &__title-probe {
+    block-size: 1px;
+    clip-path: inset(50%);
+    overflow: hidden;
+    pointer-events: none;
+    position: absolute;
+    white-space: nowrap;
+  }
+
+  & &__title-probe {
+    inline-size: 4ch;
   }
 
   [data-table-control-column='expand']:first-child {
