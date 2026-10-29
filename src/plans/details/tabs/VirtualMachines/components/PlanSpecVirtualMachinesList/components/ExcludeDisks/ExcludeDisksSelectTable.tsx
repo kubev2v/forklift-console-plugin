@@ -13,6 +13,7 @@ type ExcludeDisksSelectTableProps = {
   isLoading: boolean;
   loadError: Error | null;
   onSelect: (selectedIds: string[]) => void;
+  resizableColumns?: boolean;
   rows: ExcludeDiskRowData[];
   selectedIds: string[];
 };
@@ -23,6 +24,7 @@ const ExcludeDisksSelectTable: FC<ExcludeDisksSelectTableProps> = ({
   isLoading,
   loadError,
   onSelect,
+  resizableColumns = true,
   rows,
   selectedIds,
 }) => {
@@ -61,7 +63,7 @@ const ExcludeDisksSelectTable: FC<ExcludeDisksSelectTableProps> = ({
       noPadding
       onSelect={onSelect}
       pagination={10}
-      resizableColumns
+      resizableColumns={resizableColumns}
       selectedIds={selectedIds}
       showManageColumns={false}
       testId="exclude-disks-select-table"

@@ -20,10 +20,13 @@ export const useInventoryVms = (
   { provider }: ProviderData,
   providerLoaded = true,
   providerLoadError?: unknown,
+  inventoryDisabled = false,
 ): [ProviderVmData[], boolean, Error | null] => {
-  const validProvider = providerLoaded && !providerLoadError ? provider : undefined;
+  const validProvider =
+    !inventoryDisabled && providerLoaded && !providerLoadError ? provider : undefined;
 
   const inventoryOptions: UseProviderInventoryParams = {
+    disabled: inventoryDisabled,
     provider: validProvider,
     subPath: 'vms?detail=4',
   };

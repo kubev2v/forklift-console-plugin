@@ -8,7 +8,7 @@ import { AddVirtualMachinesModal } from '../modals/AddVirtualMachinesModal';
 
 import { ConcernsHelpers } from './ConcernsHelpers';
 import { EditVmExcludeDisksModal } from './EditVmExcludeDisksModal';
-import { PlanVmInstanceTypeModal } from './PlanVmInstanceTypeModal';
+import { EditVmWizardModal } from './EditVmWizardModal';
 import { PostMigrationSetupHelpers } from './PostMigrationSetupHelpers';
 
 const planVirtualMachinesListRoot = (page: Page): Locator =>
@@ -20,19 +20,26 @@ const planVirtualMachinesListRoot = (page: Page): Locator =>
 export class VirtualMachinesTab extends VirtualMachinesTable {
   readonly concerns: ConcernsHelpers;
   readonly editVmExcludeDisksModal: EditVmExcludeDisksModal;
-  readonly editVmInstanceTypeModal: PlanVmInstanceTypeModal;
+  readonly editVmWizard: EditVmWizardModal;
   readonly postMigrationSetup: PostMigrationSetupHelpers;
 
   constructor(page: Page) {
     super(page, planVirtualMachinesListRoot(page));
     this.concerns = new ConcernsHelpers(page);
     this.editVmExcludeDisksModal = new EditVmExcludeDisksModal(page);
-    this.editVmInstanceTypeModal = new PlanVmInstanceTypeModal(page);
+    this.editVmWizard = new EditVmWizardModal(page);
     this.postMigrationSetup = new PostMigrationSetupHelpers(page);
   }
 
   private async dismissOpenModals(): Promise<void> {
-    await this.cancelButton.click({ timeout: 1000 }).catch(() => undefined);
+    await this.page
+      .getByTestId('edit-vm-wizard-cancel-button')
+      .click({ timeout: 1000 })
+      .catch(() => undefined);
+    await this.page
+      .getByTestId('modal-cancel-button')
+      .click({ timeout: 1000 })
+      .catch(() => undefined);
   }
 
   private get vmTable() {
@@ -64,7 +71,9 @@ export class VirtualMachinesTab extends VirtualMachinesTable {
   }
 
   get cancelButton() {
-    return this.page.getByTestId('modal-cancel-button');
+    return this.page
+      .getByTestId('edit-vm-wizard-cancel-button')
+      .or(this.page.getByTestId('modal-cancel-button'));
   }
 
   async clearFilters(): Promise<void> {
@@ -87,19 +96,24 @@ export class VirtualMachinesTab extends VirtualMachinesTable {
   }
 
   get editInstanceTypeModal() {
-    return this.editVmInstanceTypeModal.root;
+    return this.editVmWizard.root;
   }
 
   get editSharedDisksModal() {
-    return this.page.getByTestId('edit-vm-shared-disks-modal');
+    return this.editVmWizard.root;
   }
 
+  /** @deprecated Use editVmMenuItem */
   get editTargetNameMenuItem() {
-    return this.page.getByTestId('edit-vm-target-name-menu-item');
+    return this.editVmMenuItem;
   }
 
   get editTargetPowerStateModal() {
-    return this.page.getByTestId('edit-target-power-state-modal');
+    return this.editVmWizard.root;
+  }
+
+  get editVmMenuItem() {
+    return this.page.getByTestId('edit-vm-menu-item');
   }
 
   async expandFilters(): Promise<void> {
@@ -173,11 +187,11 @@ export class VirtualMachinesTab extends VirtualMachinesTable {
   }
 
   get instanceTypeModalSaveButton() {
-    return this.editVmInstanceTypeModal.confirmButton;
+    return this.editVmWizard.nextButton;
   }
 
   get instanceTypeModalSelect() {
-    return this.editVmInstanceTypeModal.selectToggle;
+    return this.page.getByTestId('instance-type-select');
   }
 
   async navigateToVirtualMachinesTab(): Promise<void> {
@@ -189,53 +203,47 @@ export class VirtualMachinesTab extends VirtualMachinesTable {
     await this.table.waitForTableLoad();
   }
 
-  async openExcludeDisksDialog(vmName: string): Promise<EditVmExcludeDisksModal> {
+  async openDisksWizardStep(vmName: string): Promise<void> {
+    await this.openEditVmWizard(vmName);
+    await this.editVmWizard.nextButton.click();
+    await this.editVmExcludeDisksModal.disksStep.waitFor({ state: 'visible' });
+  }
+
+  async openEditVmWizard(vmName: string): Promise<void> {
     await this.dismissOpenModals();
     await this.getVMActionsMenu(vmName).click();
-    const menuItem = this.page.getByTestId('edit-vm-exclude-disks-menu-item');
+    const menuItem = this.editVmMenuItem;
     await expect(menuItem).not.toHaveClass(/pf-m-disabled/u, { timeout: K8S_RECONCILE_TIMEOUT });
     await menuItem.click();
-    await this.editVmExcludeDisksModal.root.waitFor({ state: 'visible' });
+    await this.editVmWizard.root.waitFor({ state: 'visible' });
+    await this.editVmWizard.generalStep.waitFor({ state: 'visible' });
+  }
+
+  async openExcludeDisksDialog(vmName: string): Promise<EditVmExcludeDisksModal> {
+    await this.openDisksWizardStep(vmName);
     return this.editVmExcludeDisksModal;
   }
 
   async openInstanceTypeDialog(vmName: string): Promise<void> {
-    await this.editVmInstanceTypeModal.openFromKebab(
-      vmName,
-      (name) => this.getVMActionsMenu(name),
-      async () => this.dismissOpenModals(),
-    );
+    await this.openEditVmWizard(vmName);
   }
 
   async openPowerStateDialog(vmName: string): Promise<void> {
-    await this.dismissOpenModals();
-    await this.getVMActionsMenu(vmName).click();
-    const menuItem = this.page.getByTestId('edit-vm-target-power-state-menu-item');
-    await menuItem.waitFor({ state: 'visible' });
-    await menuItem.click();
-    await this.editTargetPowerStateModal.waitFor({ state: 'visible' });
+    await this.openEditVmWizard(vmName);
   }
 
   async openRenameDialog(vmName: string): Promise<void> {
-    await this.dismissOpenModals();
-    await this.getVMActionsMenu(vmName).click();
-    await this.editTargetNameMenuItem.waitFor({ state: 'visible' });
-    await this.editTargetNameMenuItem.click();
+    await this.openEditVmWizard(vmName);
     await this.renameTargetNameInput.waitFor({ state: 'visible' });
     await this.renameTargetNameInput.focus();
   }
 
   async openSharedDisksDialog(vmName: string): Promise<void> {
-    await this.dismissOpenModals();
-    await this.getVMActionsMenu(vmName).click();
-    const menuItem = this.page.getByTestId('edit-vm-shared-disks-menu-item');
-    await menuItem.waitFor({ state: 'visible' });
-    await menuItem.click();
-    await this.editSharedDisksModal.waitFor({ state: 'visible' });
+    await this.openDisksWizardStep(vmName);
   }
 
   get powerStateModalSaveButton() {
-    return this.page.getByTestId('modal-confirm-button');
+    return this.editVmWizard.nextButton;
   }
 
   get powerStateModalSelect() {
@@ -257,6 +265,7 @@ export class VirtualMachinesTab extends VirtualMachinesTable {
   get powerStateOptionOn() {
     return this.page.getByRole('option', { exact: true, name: 'Powered on' });
   }
+
   get renameTargetNameInput() {
     return this.page.getByTestId('vm-target-name-input');
   }
@@ -264,44 +273,45 @@ export class VirtualMachinesTab extends VirtualMachinesTable {
     await this.search(sourceName);
     const vmRow = this.table.getRow({ Name: sourceName });
     await expect(vmRow).toBeVisible({ timeout: 2000 });
-    await vmRow.getByTestId('vm-actions-menu-toggle').click();
-    await this.editTargetNameMenuItem.click();
+    await this.openEditVmWizard(sourceName);
     await this.renameTargetNameInput.fill(targetName);
-    await this.saveButton.click();
-    await expect(this.renameTargetNameInput).not.toBeVisible();
+    await this.saveEditVmWizard();
+    await expect(this.editVmWizard.root).not.toBeVisible();
     await this.page.waitForLoadState('domcontentloaded');
 
-    // Verify rename was applied
     await this.search(sourceName);
     await this.verifyRowIsVisible({ Name: sourceName });
     await this.dismissOpenModals();
-    await this.table.getRow({ Name: sourceName }).getByTestId('vm-actions-menu-toggle').click();
-    await this.editTargetNameMenuItem.click();
+    await this.openEditVmWizard(sourceName);
     await expect(this.renameTargetNameInput).toHaveValue(targetName);
     await this.cancelButton.click();
     await this.clearAllFilters();
   }
   get saveButton() {
-    return this.page.getByRole('button', { name: /save|confirm/iu });
+    return this.editVmWizard.nextButton;
+  }
+  async saveEditVmWizard(): Promise<void> {
+    await this.editVmWizard.advanceToReviewStep();
+    await this.editVmWizard.save();
   }
   async selectVirtualMachine(vmName: string): Promise<void> {
     await this.table.selectRow({ Name: vmName });
   }
 
   get sharedDisksModalSaveButton() {
-    return this.editSharedDisksModal.getByTestId('modal-confirm-button');
+    return this.editVmWizard.nextButton;
   }
 
   get sharedDisksOptionDisabled() {
-    return this.editSharedDisksModal.getByTestId('shared-disks-option-disabled');
+    return this.page.getByTestId('shared-disks-option-disabled');
   }
 
   get sharedDisksOptionEnabled() {
-    return this.editSharedDisksModal.getByTestId('shared-disks-option-enabled');
+    return this.page.getByTestId('shared-disks-option-enabled');
   }
 
   get sharedDisksOptionInherit() {
-    return this.editSharedDisksModal.getByTestId('shared-disks-option-inherit');
+    return this.page.getByTestId('shared-disks-option-inherit');
   }
   override async sortByColumn(columnName: string): Promise<void> {
     const columnHeader = this.vmTable

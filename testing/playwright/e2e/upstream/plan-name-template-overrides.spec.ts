@@ -1,4 +1,4 @@
-import { expect, type Page, test } from '@playwright/test';
+import { expect, type Locator, type Page, test } from '@playwright/test';
 
 import { API_ENDPOINTS, TEST_DATA } from '../../fixtures/test-data';
 import { setupForkliftIntercepts } from '../../intercepts/setupForkliftIntercepts';
@@ -6,8 +6,8 @@ import { PlanDetailsPage } from '../../page-objects/PlanDetailsPage/PlanDetailsP
 import { MTV_NAMESPACE } from '../../utils/resource-manager/constants';
 
 // MTV-4056 — plan-level PVC/Volume/Network name templates can be overridden per VM.
-// Settings rows surface an info popover listing overriding VMs; VM kebab items show
-// whether each VM uses the plan default or a custom template.
+// Settings rows surface an info popover listing overriding VMs; the Edit VM wizard
+// shows whether each VM uses the plan default or a custom template.
 
 const VM1_NAME = 'test-virtual-machine-1';
 const VM2_NAME = 'test-virtual-machine-2';
@@ -210,14 +210,19 @@ const verifyOverridePopover = async (
   await expect(popover).toBeHidden();
 };
 
-const verifyVmNameTemplateMenuDescription = async (
-  page: Page,
-  menuItemLabel: string,
-  expectedDescription: string,
+const verifyVmNameTemplateSelection = async (
+  namingTemplatesStep: Locator,
+  fieldId: 'pvcNameTemplate' | 'volumeNameTemplate' | 'networkNameTemplate',
+  expectedTemplate?: string,
 ): Promise<void> => {
-  const menuItem = page.getByRole('menuitem', { name: menuItemLabel });
-  await expect(menuItem).toBeVisible();
-  await expect(menuItem).toContainText(expectedDescription);
+  if (expectedTemplate === undefined) {
+    await expect(namingTemplatesStep.getByTestId(`${fieldId}-inherit-radio`)).toBeChecked();
+    await expect(namingTemplatesStep.getByTestId(`${fieldId}-input`)).toBeHidden();
+    return;
+  }
+
+  await expect(namingTemplatesStep.getByTestId(`${fieldId}-override-radio`)).toBeChecked();
+  await expect(namingTemplatesStep.getByTestId(`${fieldId}-input`)).toHaveValue(expectedTemplate);
 };
 
 test.describe('Plan name template overrides', { tag: '@upstream' }, () => {
@@ -226,7 +231,7 @@ test.describe('Plan name template overrides', { tag: '@upstream' }, () => {
     await setupNameTemplateOverridePlanOverride(page);
   });
 
-  test('shows Settings override popovers and VM kebab descriptions for custom templates', async ({
+  test('shows Settings override popovers and VM wizard selections for custom templates', async ({
     page,
   }) => {
     const planDetailsPage = new PlanDetailsPage(page);
@@ -245,36 +250,30 @@ test.describe('Plan name template overrides', { tag: '@upstream' }, () => {
       await verifyOverridePopover(page, 'network', [VM2_NAME]);
     });
 
-    await test.step('VM kebab shows custom vs default template descriptions', async () => {
+    await test.step('Edit VM wizard shows custom vs inherited template selections', async () => {
       await virtualMachinesTab.navigateToVirtualMachinesTab();
 
-      await virtualMachinesTab.getVMActionsMenu(VM1_NAME).click();
-      await verifyVmNameTemplateMenuDescription(
-        page,
-        'Edit PVC name template',
-        `Use custom (${VM1_PVC_TEMPLATE})`,
-      );
-      await verifyVmNameTemplateMenuDescription(
-        page,
-        'Edit volume name template',
-        `Use custom (${VM1_VOLUME_TEMPLATE})`,
-      );
-      await verifyVmNameTemplateMenuDescription(page, 'Edit network name template', 'Use default');
-      await page.getByRole('grid', { name: 'Virtual machines' }).click();
-      await expect(page.getByRole('menu')).not.toBeVisible();
-
-      await virtualMachinesTab.getVMActionsMenu(VM2_NAME).click();
-      await verifyVmNameTemplateMenuDescription(
-        page,
-        'Edit PVC name template',
-        `Use custom (${VM2_PVC_TEMPLATE})`,
-      );
-      await verifyVmNameTemplateMenuDescription(page, 'Edit volume name template', 'Use default');
-      await verifyVmNameTemplateMenuDescription(
-        page,
-        'Edit network name template',
-        `Use custom (${VM2_NETWORK_TEMPLATE})`,
-      );
+      const wizard = virtualMachinesTab.editVmWizard;
+      for (const { name, network, pvc, volume } of [
+        { name: VM1_NAME, network: undefined, pvc: VM1_PVC_TEMPLATE, volume: VM1_VOLUME_TEMPLATE },
+        { name: VM2_NAME, network: VM2_NETWORK_TEMPLATE, pvc: VM2_PVC_TEMPLATE, volume: undefined },
+      ]) {
+        await virtualMachinesTab.openEditVmWizard(name);
+        await wizard.advanceToNamingTemplatesStep();
+        await verifyVmNameTemplateSelection(wizard.namingTemplatesStep, 'pvcNameTemplate', pvc);
+        await verifyVmNameTemplateSelection(
+          wizard.namingTemplatesStep,
+          'volumeNameTemplate',
+          volume,
+        );
+        await verifyVmNameTemplateSelection(
+          wizard.namingTemplatesStep,
+          'networkNameTemplate',
+          network,
+        );
+        await wizard.cancelButton.click();
+        await expect(wizard.root).not.toBeVisible();
+      }
     });
   });
 });

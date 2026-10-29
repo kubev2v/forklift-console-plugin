@@ -107,7 +107,7 @@ test.describe('Plan Details - VM Rename Validation', { tag: '@downstream' }, () 
     await planDetailsPage.virtualMachinesTab.renameTargetNameInput.fill(finalValidName);
 
     await expect(planDetailsPage.virtualMachinesTab.saveButton).toBeEnabled();
-    await planDetailsPage.virtualMachinesTab.saveButton.click();
+    await planDetailsPage.virtualMachinesTab.saveEditVmWizard();
     await expect(planDetailsPage.virtualMachinesTab.renameTargetNameInput).not.toBeVisible();
 
     const targetNameCell = await planDetailsPage.virtualMachinesTab.getTableCell(

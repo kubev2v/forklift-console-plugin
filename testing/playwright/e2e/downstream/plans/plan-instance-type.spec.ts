@@ -67,7 +67,7 @@ const pickAndSaveNonNoneInstanceType = async (
     throw new Error('pickAndSaveNonNoneInstanceType: no non-None option available');
   }
   await nonNoneOption.click();
-  await virtualMachinesTab.instanceTypeModalSaveButton.click();
+  await virtualMachinesTab.saveEditVmWizard();
   await expect(virtualMachinesTab.editInstanceTypeModal).not.toBeVisible();
   await virtualMachinesTab.waitForVMInstanceType(vmName, picked);
   return picked;
@@ -140,7 +140,10 @@ test.describe('Plan per-VM instance type (MTV-1661)', { tag: '@downstream' }, ()
     await test.step('Verify modal initial state — save disabled before selection', async () => {
       await expect(virtualMachinesTab.editInstanceTypeModal).toBeVisible();
       await expect(virtualMachinesTab.instanceTypeModalSelect).toBeVisible();
+      await virtualMachinesTab.editVmWizard.advanceToReviewStep();
       await expect(virtualMachinesTab.instanceTypeModalSaveButton).toBeDisabled();
+      await virtualMachinesTab.cancelButton.click();
+      await virtualMachinesTab.openInstanceTypeDialog(vmName);
     });
 
     await test.step('Select instance type and save', async () => {
@@ -150,7 +153,7 @@ test.describe('Plan per-VM instance type (MTV-1661)', { tag: '@downstream' }, ()
       const nonNoneOption = listbox.getByRole('option').filter({ hasNotText: /^None/u }).first();
       const picked = (await nonNoneOption.innerText()).split('\n')[0]?.trim() ?? '';
       await nonNoneOption.click();
-      await virtualMachinesTab.instanceTypeModalSaveButton.click();
+      await virtualMachinesTab.saveEditVmWizard();
       await expect(virtualMachinesTab.editInstanceTypeModal).not.toBeVisible();
       await virtualMachinesTab.waitForVMInstanceType(vmName, picked);
     });
@@ -172,7 +175,7 @@ test.describe('Plan per-VM instance type (MTV-1661)', { tag: '@downstream' }, ()
       await virtualMachinesTab.openInstanceTypeDialog(vmName);
       await virtualMachinesTab.instanceTypeModalSelect.click();
       await page.getByRole('option', { name: /^None/u }).click();
-      await page.getByTestId('modal-cancel-button').click();
+      await page.getByTestId('edit-vm-wizard-cancel-button').click();
       await expect(virtualMachinesTab.editInstanceTypeModal).not.toBeVisible();
       await virtualMachinesTab.waitForVMInstanceType(vmName, picked);
     });
@@ -190,7 +193,7 @@ test.describe('Plan per-VM instance type (MTV-1661)', { tag: '@downstream' }, ()
       await virtualMachinesTab.openInstanceTypeDialog(vmName);
       await virtualMachinesTab.instanceTypeModalSelect.click();
       await page.getByRole('option', { name: /^None/u }).click();
-      await virtualMachinesTab.instanceTypeModalSaveButton.click();
+      await virtualMachinesTab.saveEditVmWizard();
       await expect(virtualMachinesTab.editInstanceTypeModal).not.toBeVisible();
       await virtualMachinesTab.waitForVMInstanceType(vmName, '-');
     });

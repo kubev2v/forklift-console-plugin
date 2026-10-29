@@ -9,6 +9,7 @@ import type { PlanDetailsPage } from '../page-objects/PlanDetailsPage/PlanDetail
 import { apiRequest } from './resource-manager/apiRequest';
 import { API_PATHS, RESOURCE_TYPES } from './resource-manager/constants';
 import type { ResourceManager } from './resource-manager/ResourceManager';
+import { getPlanVmExcludeDisks } from './planVmExcludeDisks';
 
 export const EXCLUDED_DISK_SOURCE_VM = 'mtv-rhel8-warm-2disks2nics';
 export const EXCLUDED_DATA_DISK_BUS_ADDRESS = 'scsi0:1';
@@ -27,7 +28,7 @@ const getExcludedDisks = async (
   expect(planVm?.name, 'Plan should contain the two-disk source').toContain(
     EXCLUDED_DISK_SOURCE_VM,
   );
-  return planVm?.excludeDisks;
+  return getPlanVmExcludeDisks(planVm);
 };
 
 export const saveExcludedDataDisk = async (
@@ -37,7 +38,10 @@ export const saveExcludedDataDisk = async (
 ): Promise<void> => {
   const modal = await planPage.virtualMachinesTab.openExcludeDisksDialog(EXCLUDED_DISK_SOURCE_VM);
   await modal.waitForDisks([BOOT_DISK_BUS_ADDRESS, EXCLUDED_DATA_DISK_BUS_ADDRESS]);
+  await modal.wizard.advanceToReviewStep();
   await expect(modal.saveButton).toBeDisabled();
+  await modal.page.getByTestId('edit-vm-wizard-back-button').click();
+  await modal.disksStep.waitFor({ state: 'visible' });
 
   await modal.diskCheckbox(BOOT_DISK_BUS_ADDRESS).check();
   await modal.diskCheckbox(EXCLUDED_DATA_DISK_BUS_ADDRESS).check();
@@ -45,7 +49,7 @@ export const saveExcludedDataDisk = async (
   await expect(modal.saveButton).toBeDisabled();
 
   await modal.diskCheckbox(BOOT_DISK_BUS_ADDRESS).uncheck();
-  await modal.saveButton.click();
+  await modal.saveFromDisksStep();
   await expect(modal.root).not.toBeVisible();
   await expect
     .poll(() => getExcludedDisks(resourceManager, planName), { timeout: PLAN_SPEC_TIMEOUT_MS })
@@ -60,9 +64,12 @@ export const clearAndRestoreExcludedDataDisk = async (
   const modal = await planPage.virtualMachinesTab.openExcludeDisksDialog(EXCLUDED_DISK_SOURCE_VM);
   await modal.waitForDisks([BOOT_DISK_BUS_ADDRESS, EXCLUDED_DATA_DISK_BUS_ADDRESS]);
   await expect(modal.diskCheckbox(EXCLUDED_DATA_DISK_BUS_ADDRESS)).toBeChecked();
+  await modal.wizard.advanceToReviewStep();
   await expect(modal.saveButton).toBeDisabled();
+  await modal.page.getByTestId('edit-vm-wizard-back-button').click();
+  await modal.disksStep.waitFor({ state: 'visible' });
   await modal.diskCheckbox(EXCLUDED_DATA_DISK_BUS_ADDRESS).uncheck();
-  await modal.saveButton.click();
+  await modal.saveFromDisksStep();
   await expect(modal.root).not.toBeVisible();
   await expect
     .poll(() => getExcludedDisks(resourceManager, planName), { timeout: PLAN_SPEC_TIMEOUT_MS })
@@ -71,7 +78,7 @@ export const clearAndRestoreExcludedDataDisk = async (
   await planPage.virtualMachinesTab.openExcludeDisksDialog(EXCLUDED_DISK_SOURCE_VM);
   await modal.waitForDisks([BOOT_DISK_BUS_ADDRESS, EXCLUDED_DATA_DISK_BUS_ADDRESS]);
   await modal.diskCheckbox(EXCLUDED_DATA_DISK_BUS_ADDRESS).check();
-  await modal.saveButton.click();
+  await modal.saveFromDisksStep();
   await expect(modal.root).not.toBeVisible();
   await expect
     .poll(() => getExcludedDisks(resourceManager, planName), { timeout: PLAN_SPEC_TIMEOUT_MS })

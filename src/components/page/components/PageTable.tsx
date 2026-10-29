@@ -1,4 +1,4 @@
-import { type FC, type ReactElement, useMemo } from 'react';
+import { type FC, Fragment, type ReactElement, useMemo } from 'react';
 
 import { TableView } from '@components/common/TableView/TableView';
 import type { RowProps, SortType, TableViewHeaderProps } from '@components/common/TableView/types';
@@ -118,7 +118,9 @@ export const PageTable = <T,>({
       toId={toId}
       visibleColumns={visibleColumns}
     >
-      {placeholder === null ? undefined : [placeholder]}
+      {placeholder === null
+        ? undefined
+        : [<Fragment key="page-table-placeholder">{placeholder}</Fragment>]}
     </TableView>
   );
 };
