@@ -1,84 +1,76 @@
-import type { MouseEvent } from 'react';
-
 import type { ResourceField } from '@components/common/utils/types';
 import { act, renderHook } from '@testing-library/react';
 
-import type { ColumnWidthsSettings } from '../../Page/types';
-import { COLUMN_WIDTH_PERSIST_DEBOUNCE_MS } from '../columnWidthConstants';
 import { useTableColumnWidths } from '../useTableColumnWidths';
 
-type VisibilityTestProps = {
-  columnWidthsSettings: ColumnWidthsSettings & {
-    clear: jest.Mock;
-    data: Record<string, number>;
-    save: jest.Mock;
-  };
+const nameField: ResourceField = { isVisible: true, label: 'Name', resourceFieldId: 'name' };
+const statusField: ResourceField = { isVisible: false, label: 'Status', resourceFieldId: 'status' };
+const projectField: ResourceField = {
+  isVisible: true,
+  label: 'Project',
+  resourceFieldId: 'namespace',
 };
 
-const nameField: ResourceField = { label: 'Name', resourceFieldId: 'name' };
-const statusField: ResourceField = { label: 'Status', resourceFieldId: 'status' };
-const projectField: ResourceField = { label: 'Project', resourceFieldId: 'namespace' };
-const resizeEvent = {} as MouseEvent;
+describe('column visibility and width overrides', () => {
+  beforeEach(() => jest.useFakeTimers());
+  afterEach(() => jest.useRealTimers());
 
-describe('useTableColumnWidths column visibility', () => {
-  beforeEach(() => {
-    jest.useFakeTimers();
-  });
-
-  afterEach(() => {
-    jest.useRealTimers();
-  });
-
-  it('preserves widths by ID when resizing and restoring columns from settings', () => {
-    const clear = jest.fn();
+  it('preserves saved widths by ID across hiding, showing, and reordering', () => {
     const save = jest.fn();
-    const columnWidthsSettings = (
-      data: Record<string, number>,
-    ): VisibilityTestProps['columnWidthsSettings'] => ({ clear, data, save });
-
+    const settings = {
+      clear: jest.fn(),
+      data: { name: 624.125, status: 79.125 },
+      save,
+    };
     const { result, rerender } = renderHook(
-      ({ columnWidthsSettings: settings }: VisibilityTestProps) =>
-        useTableColumnWidths({
-          columnWidthsSettings: settings,
-          enabled: true,
-        }),
-      {
-        initialProps: {
-          columnWidthsSettings: columnWidthsSettings({ name: 624.125, status: 79.125 }),
-        },
-      },
+      ({ fields }: { fields: ResourceField[] }) =>
+        useTableColumnWidths({ columnWidthsSettings: settings, enabled: true, fields }),
+      { initialProps: { fields: [nameField, statusField, projectField] } },
+    );
+    expect(result.current.hasCustomColumnWidths).toBe(true);
+    expect(result.current.hasKnownColumnWidths).toBe(true);
+    expect(result.current.getResizeConfig(projectField, 'Project')).not.toHaveProperty(
+      'savedWidth',
     );
 
     rerender({
-      columnWidthsSettings: columnWidthsSettings({ name: 624.125, status: 79.125 }),
+      fields: [{ ...nameField, isVisible: false }, statusField, projectField],
     });
-    expect(result.current.getResizableProps(nameField, 'Name')).toMatchObject({ width: 624.125 });
-    expect(result.current.getResizableProps(projectField, 'Project')).not.toHaveProperty('width');
-    expect(save).not.toHaveBeenCalled();
-    expect(clear).not.toHaveBeenCalled();
-
-    act(() => {
-      result.current
-        .getResizableProps(projectField, 'Project')
-        ?.onResize?.(resizeEvent, 'namespace', 160);
-      jest.advanceTimersByTime(COLUMN_WIDTH_PERSIST_DEBOUNCE_MS);
-    });
-    expect(save).toHaveBeenLastCalledWith({ name: 624.125, namespace: 160, status: 79.125 });
+    expect(result.current.hasCustomColumnWidths).toBe(false);
+    expect(result.current.hasKnownColumnWidths).toBe(true);
 
     rerender({
-      columnWidthsSettings: columnWidthsSettings({
-        name: 624.125,
-        namespace: 160,
-        status: 79.125,
+      fields: [{ ...statusField, isVisible: true }, projectField, nameField],
+    });
+    expect(result.current.getResizeConfig(statusField, 'Status')).toHaveProperty(
+      'savedWidth',
+      79.125,
+    );
+    expect(result.current.getResizeConfig(nameField, 'Name')).toHaveProperty('savedWidth', 624.125);
+    expect(save).not.toHaveBeenCalled();
+  });
+
+  it('merges a newly resized visible column with hidden saved widths', () => {
+    const save = jest.fn();
+    const { result } = renderHook(() =>
+      useTableColumnWidths({
+        columnWidthsSettings: {
+          clear: jest.fn(),
+          data: { name: 624.125, status: 79.125 },
+          save,
+        },
+        enabled: true,
+        fields: [nameField, statusField, projectField],
       }),
+    );
+    act(() => {
+      result.current.commitColumnWidths({ name: 624.125, namespace: 160 });
+      result.current.flushPendingColumnWidths();
     });
-    expect(result.current.getResizableProps(nameField, 'Name')).toMatchObject({ width: 624.125 });
-    expect(result.current.getResizableProps(statusField, 'Status')).toMatchObject({
-      width: 79.125,
+    expect(save).toHaveBeenCalledWith({
+      name: 624.125,
+      namespace: 160,
+      status: 79.125,
     });
-    expect(result.current.getResizableProps(projectField, 'Project')).toMatchObject({ width: 160 });
-    expect(result.current.columnLayoutKey).toBe(0);
-    expect(result.current.hasCustomColumnWidths).toBe(true);
-    expect(clear).not.toHaveBeenCalled();
   });
 });

@@ -1,6 +1,5 @@
 import { type FC, memo, type ReactElement, useRef } from 'react';
 
-import { useDataViewCellScope } from '@components/common/DataViewTable/DataViewCellScope';
 import {
   getExpandCellProps,
   getSelectionCellProps,
@@ -91,12 +90,6 @@ const SelectionRowCell = memo(
 const SelectionRow = <T,>(props: RowProps<T>): ReactElement => {
   const { cellRef, hasExpansion, hasSelection } = usePageSelectionConfig<T>();
   const CellComponent = cellRef.current;
-  const scope = useDataViewCellScope();
-
-  if (scope) {
-    return CellComponent ? <SelectionRowCell CellComponent={CellComponent} {...props} /> : <></>;
-  }
-
   return (
     <>
       {hasExpansion && (

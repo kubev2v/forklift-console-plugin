@@ -32,7 +32,6 @@ type StandardPageProps<T> = {
   extraSupportedMatchers?: ValueMatcher[];
   fieldsMetadata: ResourceField[];
   GlobalActionToolbarItems?: FC<GlobalActionToolbarProps<T>>[];
-  header?: FC<TableViewHeaderProps<T>>;
   namespace?: string;
   noPadding?: boolean;
   onExpand?: (expandedIds: string[]) => void;
@@ -45,7 +44,6 @@ type StandardPageProps<T> = {
     selectedFilters: Record<string, string[]>,
     fields: ResourceField[],
   ) => T[];
-  resizableColumns?: boolean;
   row?: FC<RowProps<T>>;
   selectedIds?: string[];
   shouldShowLearningExperienceButton?: boolean;
@@ -55,7 +53,10 @@ type StandardPageProps<T> = {
   titleHelpContent?: ReactNode;
   toId?: (item: T) => string;
   userSettings?: UserSettings;
-};
+} & (
+  | { header?: never; resizableColumns: true }
+  | { header?: FC<TableViewHeaderProps<T>>; resizableColumns?: false }
+);
 
 const StandardPage = <T,>(pageProps: StandardPageProps<T>): ReactElement => {
   const sortContext = useTableSortContext();

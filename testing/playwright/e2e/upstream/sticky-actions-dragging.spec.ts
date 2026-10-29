@@ -4,7 +4,7 @@ import { expect, test } from '@playwright/test';
 
 import { setupPlansIntercepts } from '../../intercepts/plans';
 import { setupProvidersIntercepts } from '../../intercepts/providers';
-import { expectTableToFit } from '../../utils/resizableColumns';
+import { expectReadableTableLayout } from '../../utils/resizableColumns';
 import {
   expectActionsPinned,
   expectStickyCellOpaque,
@@ -36,9 +36,9 @@ test.describe('Sticky Actions during mouse resizing', { tag: '@upstream' }, () =
       await page.goto(`/k8s/all-namespaces/forklift.konveyor.io~v1beta1~${resource.kind}`);
       const table = page.getByRole('grid', { exact: true, name: resource.title });
       await expect(table.locator('tbody').getByRole('link').first()).toBeVisible();
-      await expectTableToFit(table);
+      await expectReadableTableLayout(table);
       await page.addStyleTag({ path: SCROLLABLE_TABLE_STYLES });
-      const handle = table.locator('th#name button[aria-label="Name"]');
+      const handle = table.locator('th#name button[data-resize-handle="true"]');
       const box = await handle.boundingBox();
       if (!box) {
         throw new Error('The Name resize handle is not visible');

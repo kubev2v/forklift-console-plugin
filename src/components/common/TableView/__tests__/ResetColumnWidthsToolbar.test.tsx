@@ -11,13 +11,15 @@ jest.mock('src/utils/i18n', () => ({
 const mockContext = jest.mocked(useTableColumnWidthContext);
 const resetAllColumnWidths = jest.fn();
 
-const setContext = (enabled: boolean, hasCustomColumnWidths: boolean): void => {
+const setContext = (enabled: boolean, hasKnownColumnWidths: boolean): void => {
   mockContext.mockReturnValue({
-    captureColumnWidths: (): void => undefined,
-    columnLayoutKey: 0,
+    columnLayoutKey: '[null,0,0]',
+    commitColumnWidths: (): void => undefined,
     enabled,
-    getResizableProps: (): undefined => undefined,
-    hasCustomColumnWidths,
+    flushPendingColumnWidths: (): void => undefined,
+    getResizeConfig: (): undefined => undefined,
+    hasCustomColumnWidths: hasKnownColumnWidths,
+    hasKnownColumnWidths,
     resetAllColumnWidths,
   });
 };
@@ -33,14 +35,14 @@ describe('ResetColumnWidthsToolbar', () => {
     expect(screen.queryByRole('button', { name: 'Reset column widths' })).not.toBeInTheDocument();
   });
 
-  it('keeps Reset available with default widths; the hook owns idempotent resets', () => {
+  it('shows Reset disabled while widths are at defaults', () => {
     setContext(true, false);
     render(<ResetColumnWidthsToolbar />);
     const button = screen.getByRole('button', { name: 'Reset column widths' });
     expect(button).toBeVisible();
-    expect(button).toBeEnabled();
+    expect(button).toBeDisabled();
     fireEvent.click(button);
-    expect(resetAllColumnWidths).toHaveBeenCalledTimes(1);
+    expect(resetAllColumnWidths).not.toHaveBeenCalled();
   });
 
   it('keeps Reset available after resizing and repeated resets', () => {
@@ -53,6 +55,6 @@ describe('ResetColumnWidthsToolbar', () => {
     setContext(true, false);
     rerender(<ResetColumnWidthsToolbar />);
     expect(button).toBeVisible();
-    expect(button).toBeEnabled();
+    expect(button).toBeDisabled();
   });
 });

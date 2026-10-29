@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it } from '@jest/globals';
-import { screen } from '@testing-library/react';
+import { screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
 import StandardPage from '../StandardPage';
@@ -31,6 +31,26 @@ describe('StandardPage - sorting and filtering', () => {
     expect(items[0]).toHaveTextContent('Item 3');
     expect(items[1]).toHaveTextContent('Item 2');
     expect(items[2]).toHaveTextContent('Item 1');
+  });
+
+  it('keeps a resizable handle click separate from sorting', async () => {
+    const user = userEvent.setup();
+
+    renderWithRouter(
+      <StandardPage
+        dataSource={[mockData, true, null]}
+        fieldsMetadata={fieldsMetadata}
+        namespace="test-ns"
+        resizableColumns
+      />,
+    );
+
+    const nameHeader = screen.getByRole('columnheader', { name: 'Name' });
+    await user.click(within(nameHeader).getByRole('button', { name: /Resize/u }));
+    expect(screen.getAllByText(/Item \d/u)[0]).toHaveTextContent('Item 1');
+
+    await user.click(screen.getByRole('button', { name: 'Name' }));
+    expect(screen.getAllByText(/Item \d/u)[0]).toHaveTextContent('Item 3');
   });
 
   it('should render filter controls when filter is defined', () => {

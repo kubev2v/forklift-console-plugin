@@ -4,7 +4,7 @@ import { expect, test } from '@playwright/test';
 
 import { setupPlansIntercepts } from '../../intercepts/plans';
 import { setupProvidersIntercepts } from '../../intercepts/providers';
-import { expectTableToFit } from '../../utils/resizableColumns';
+import { expectReadableTableLayout } from '../../utils/resizableColumns';
 import {
   expectActionsPinned,
   expectStickyCellOpaque,
@@ -49,8 +49,8 @@ test.describe('Sticky controls cover overflowing resized columns', { tag: '@upst
           await page.evaluate((dark): void => {
             document.documentElement.classList.toggle('pf-v6-theme-dark', dark);
           }, theme === 'dark');
-          await expectTableToFit(table);
-          const handle = table.locator('th#name button[aria-label="Name"]');
+          await expectReadableTableLayout(table);
+          const handle = table.locator('th#name button[data-resize-handle="true"]');
           for (let step = 0; step < ENLARGE_STEPS; step += 1) {
             await handle.press('Shift+ArrowRight');
           }
@@ -110,7 +110,7 @@ test.describe('Sticky controls cover overflowing resized columns', { tag: '@upst
             .poll(() => actions.evaluate((element) => element.getBoundingClientRect().width))
             .toBeCloseTo(actionsWidth, GEOMETRY_PRECISION);
           await page.getByRole('button', { exact: true, name: 'Reset column widths' }).click();
-          await expectTableToFit(table);
+          await expectReadableTableLayout(table);
           await expectStickyCellOpaque(table.locator('tbody tr').first().locator('td').last());
         });
       }

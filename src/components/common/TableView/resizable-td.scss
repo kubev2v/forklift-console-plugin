@@ -1,0 +1,12 @@
+.forklift-data-view-table .forklift-resizable-cell {
+  --pf-v6-c-table--cell--MinWidth: 0;
+  --pf-v6-c-table--cell--MaxWidth: 1px;
+  --pf-v6-c-table--cell--Overflow: hidden;
+  --pf-v6-c-table--cell--TextOverflow: ellipsis;
+  --pf-v6-c-table--cell--WhiteSpace: nowrap;
+
+  &:focus-visible {
+    outline: 2px solid var(--pf-t--global--border--color--clicked);
+    outline-offset: -2px;
+  }
+}

@@ -8,7 +8,7 @@ import { useTableColumnWidthContext } from './TableColumnWidthContext';
 
 const ResetColumnWidthsToolbar = (): ReactElement | null => {
   const { t } = useForkliftTranslation();
-  const { enabled, resetAllColumnWidths } = useTableColumnWidthContext();
+  const { enabled, hasKnownColumnWidths, resetAllColumnWidths } = useTableColumnWidthContext();
   const label = t('Reset column widths');
 
   if (!enabled) {
@@ -18,13 +18,16 @@ const ResetColumnWidthsToolbar = (): ReactElement | null => {
   return (
     <ToolbarItem>
       <Tooltip content={label}>
-        <Button
-          aria-label={label}
-          data-testid="reset-column-widths-button"
-          icon={<ArrowsAltHIcon />}
-          onClick={resetAllColumnWidths}
-          variant={ButtonVariant.plain}
-        />
+        <span>
+          <Button
+            aria-label={label}
+            data-testid="reset-column-widths-button"
+            icon={<ArrowsAltHIcon />}
+            isDisabled={!hasKnownColumnWidths}
+            onClick={resetAllColumnWidths}
+            variant={ButtonVariant.plain}
+          />
+        </span>
       </Tooltip>
     </ToolbarItem>
   );

@@ -81,6 +81,7 @@ export const loadUserSettings = ({ pageId }: { pageId: string }): UserSettings =
       save: (newWidths): void => {
         saveToLocalStorage(key, JSON.stringify({ ...parseOrClean(key), columnWidths: newWidths }));
       },
+      scopeId: key,
     },
     fields: {
       clear: (): void => {

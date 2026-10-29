@@ -9,6 +9,7 @@ export type ColumnWidthsSettings = {
   clear: () => void;
   data: Record<string, number>;
   save: (columnWidths: Record<string, number>) => void;
+  scopeId?: string;
 };
 
 export type FieldSettings = {

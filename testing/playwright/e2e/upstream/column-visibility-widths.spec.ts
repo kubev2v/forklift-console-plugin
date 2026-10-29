@@ -2,7 +2,10 @@ import { expect, type Locator, type Page, test } from '@playwright/test';
 
 import { setupPlansIntercepts } from '../../intercepts/plans';
 import { setupProvidersIntercepts } from '../../intercepts/providers';
-import { expectTableToFit } from '../../utils/resizableColumns';
+import {
+  expectEveryResizeHandleAligned,
+  expectReadableTableLayout,
+} from '../../utils/resizableColumns';
 import { V5_1_0 } from '../../utils/version/constants';
 import { requireVersion } from '../../utils/version/version';
 
@@ -48,49 +51,38 @@ test.describe('Column visibility preserves widths', { tag: '@upstream' }, () => 
         await page.goto(`/k8s/all-namespaces/forklift.konveyor.io~v1beta1~${resource.kind}`);
         const table = page.getByRole('grid', { exact: true, name: resource.title });
         await expect(table.locator('tbody').getByRole('link').first()).toBeVisible();
-        await expectTableToFit(table);
+        await expectReadableTableLayout(table);
         const name = table.locator('th#name');
-        const status = table.locator(
-          `thead th:has(button[aria-label="${resource.resizedColumn}"])`,
-        );
-        await name.locator('button[aria-label="Name"]').press('Shift+ArrowRight');
-        await status
-          .locator(`button[aria-label="${resource.resizedColumn}"]`)
-          .press('Shift+ArrowRight');
-        const nameWidth = await name.evaluate((header) => header.style.minWidth);
-        const statusWidth = await status.evaluate((header) => header.style.minWidth);
+        const status = table
+          .locator('thead th[data-resizable-column="true"]')
+          .filter({ hasText: resource.resizedColumn });
+        await name.locator('button[data-resize-handle="true"]').press('Shift+ArrowRight');
+        await status.locator('button[data-resize-handle="true"]').press('Shift+ArrowRight');
         const nameRenderedWidth = await getRenderedWidth(name);
         const statusRenderedWidth = await getRenderedWidth(status);
 
         await setColumnVisibility(page, resource.resizedColumn, false);
         await expect(status).toHaveCount(0);
-        await expect(name).toHaveCSS('min-width', nameWidth);
         await expectRenderedWidth(name, nameRenderedWidth);
 
         await setColumnVisibility(page, resource.addedColumn, true);
-        const added = table.getByRole('columnheader', { name: resource.addedColumn });
+        const added = table
+          .locator('thead th[data-resizable-column="true"]')
+          .filter({ hasText: resource.addedColumn });
         await expect(added).toBeVisible();
-        await expect(name).toHaveCSS('min-width', nameWidth);
+        await expectReadableTableLayout(table);
+        await expectEveryResizeHandleAligned(table);
         await expectRenderedWidth(name, nameRenderedWidth);
-        await added
-          .locator(`button[aria-label="${resource.addedColumn}"]`)
-          .press('Shift+ArrowRight');
-        const addedWidth = await added.evaluate((header) => header.style.minWidth);
+        await added.locator('button[data-resize-handle="true"]').press('Shift+ArrowRight');
         const addedRenderedWidth = await getRenderedWidth(added);
 
         await setColumnVisibility(page, resource.resizedColumn, true);
-        await expect(name).toHaveCSS('min-width', nameWidth);
-        await expect(status).toHaveCSS('min-width', statusWidth);
-        await expect(added).toHaveCSS('min-width', addedWidth);
         await expectRenderedWidth(name, nameRenderedWidth);
         await expectRenderedWidth(status, statusRenderedWidth);
         await expectRenderedWidth(added, addedRenderedWidth);
 
         await page.reload();
         await expect(table.locator('tbody').getByRole('link').first()).toBeVisible();
-        await expect(name).toHaveCSS('min-width', nameWidth);
-        await expect(status).toHaveCSS('min-width', statusWidth);
-        await expect(added).toHaveCSS('min-width', addedWidth);
         await expectRenderedWidth(name, nameRenderedWidth);
         await expectRenderedWidth(status, statusRenderedWidth);
         await expectRenderedWidth(added, addedRenderedWidth);
