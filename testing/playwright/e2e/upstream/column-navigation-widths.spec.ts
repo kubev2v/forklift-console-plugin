@@ -1,7 +1,7 @@
 import { expect, type Locator, type Page, test } from '@playwright/test';
 
 import { setupForkliftIntercepts } from '../../intercepts/setupForkliftIntercepts';
-import { expectTableToFit } from '../../utils/resizableColumns';
+import { expectReadableTableLayout } from '../../utils/resizableColumns';
 import { V5_1_0 } from '../../utils/version/constants';
 import { requireVersion } from '../../utils/version/version';
 
@@ -70,9 +70,10 @@ test.describe('Navigation preserves the complete resized layout', { tag: '@upstr
         await page.goto(`/k8s/all-namespaces/forklift.konveyor.io~v1beta1~${resource.kind}`);
         const table = page.getByRole('grid', { exact: true, name: resource.title });
         await expect(table.locator('tbody').getByRole('link').first()).toBeVisible();
-        await expectTableToFit(table);
+        await expectReadableTableLayout(table);
         const initialWidths = await getColumnWidths(table);
-        const handle = table.locator('th#name button[aria-label="Name"]');
+        const initialOverflow = await getOverflow(table);
+        const handle = table.locator('th#name button[data-resize-handle="true"]');
         const box = await handle.boundingBox();
         if (!box) throw new Error('The Name resize handle is not visible');
         const x = box.x + box.width / 2;
@@ -86,7 +87,7 @@ test.describe('Navigation preserves the complete resized layout', { tag: '@upstr
         const overflow = await getOverflow(table);
         await expectWidthsAndOverflow(table, resizedWidths, overflow);
         expect(nameGrowth).toBeGreaterThan(0);
-        expect(Math.abs(overflow - nameGrowth)).toBeLessThan(TOLERANCE_PX);
+        expect(Math.abs(overflow - initialOverflow - nameGrowth)).toBeLessThan(TOLERANCE_PX);
         const originalDocument = await page.locator('html').elementHandle();
         const awayKind = resource.kind === 'Provider' ? 'Plan' : 'Provider';
         await navigateInSidebar(page, awayKind);
@@ -99,7 +100,7 @@ test.describe('Navigation preserves the complete resized layout', { tag: '@upstr
         await expect(table.locator('tbody').getByRole('link').first()).toBeVisible();
         await expectWidthsAndOverflow(table, resizedWidths, overflow);
         await page.getByRole('button', { exact: true, name: 'Reset column widths' }).click();
-        await expectTableToFit(table);
+        await expectReadableTableLayout(table);
       });
     }
   }

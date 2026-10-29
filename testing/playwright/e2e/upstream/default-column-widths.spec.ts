@@ -4,13 +4,18 @@ import { setupNetworkMapsIntercepts } from '../../intercepts/networkMaps';
 import { setupPlansIntercepts } from '../../intercepts/plans';
 import { setupProvidersIntercepts } from '../../intercepts/providers';
 import { setupStorageMapsIntercepts } from '../../intercepts/storageMaps';
-import { expectLastResizeHandleVisible, expectTableToFit } from '../../utils/resizableColumns';
+import {
+  expectEveryResizeHandleAligned,
+  expectReadableTableLayout,
+} from '../../utils/resizableColumns';
 import { V5_1_0 } from '../../utils/version/constants';
 import { requireVersion } from '../../utils/version/version';
 
 const VIEWPORT_HEIGHT = 1080;
 const SMALL_DRAG_PX = 5;
 const LARGE_DRAG_PX = 50;
+const MIN_READABLE_WIDTH_PX = 96;
+const SHRINK_DRAG_PX = -400;
 const WIDTH_TOLERANCE_PX = 1;
 const SHARE_TOLERANCE = 0.001;
 
@@ -56,7 +61,7 @@ test.describe('Weighted default column widths', { tag: '@upstream' }, () => {
     { compactId: 'phase', kind: 'StorageMap', title: 'Storage maps' },
   ]) {
     for (const width of [1100, 1280, 1440, 1920]) {
-      test(`${resource.kind}: weighted initial/reset widths fit at ${width}px`, async ({
+      test(`${resource.kind}: weighted initial/reset widths remain readable at ${width}px`, async ({
         page,
       }) => {
         await page.setViewportSize({ height: VIEWPORT_HEIGHT, width });
@@ -64,23 +69,23 @@ test.describe('Weighted default column widths', { tag: '@upstream' }, () => {
         const table = page.getByRole('grid', { exact: true, name: resource.title });
         await expect(table.locator('tbody').getByRole('link').first()).toBeVisible();
         await expectWeightedWidths(table, resource.compactId);
-        await expectTableToFit(table);
-        await expectLastResizeHandleVisible(table);
+        await expectReadableTableLayout(table);
+        await expectEveryResizeHandleAligned(table);
         const initialShare = await getNameShare(table);
-        await table.locator('th#name button[aria-label="Name"]').press('Shift+ArrowRight');
+        await table.locator('th#name button[data-resize-handle="true"]').press('Shift+ArrowRight');
         const reset = page.getByRole('button', { exact: true, name: 'Reset column widths' });
         if (!(await reset.isVisible())) {
           await page.getByRole('button', { exact: true, name: 'Show Filters' }).click();
         }
         await reset.click();
         await expectWeightedWidths(table, resource.compactId);
-        await expectTableToFit(table);
-        await expectLastResizeHandleVisible(table);
+        await expectReadableTableLayout(table);
+        await expectEveryResizeHandleAligned(table);
         // Async controls can change the available data budget; reset must preserve the preference.
         expect(Math.abs((await getNameShare(table)) - initialShare)).toBeLessThan(SHARE_TOLERANCE);
         await page.setViewportSize({ height: VIEWPORT_HEIGHT, width: 1280 });
         await expectWeightedWidths(table, resource.compactId);
-        await expectTableToFit(table);
+        await expectReadableTableLayout(table);
       });
     }
   }
@@ -89,7 +94,7 @@ test.describe('Weighted default column widths', { tag: '@upstream' }, () => {
     { compactId: 'vmCount', kind: 'Provider', title: 'Providers' },
     { compactId: 'vms', kind: 'Plan', title: 'Migration plans' },
   ]) {
-    test(`${resource.kind}: a compact column below 100px resizes smoothly and persists`, async ({
+    test(`${resource.kind}: a compact column respects its minimum and persists`, async ({
       page,
     }) => {
       await page.setViewportSize({ height: VIEWPORT_HEIGHT, width: 1280 });
@@ -99,9 +104,9 @@ test.describe('Weighted default column widths', { tag: '@upstream' }, () => {
       await expectWeightedWidths(table, resource.compactId);
       const compact = table.locator(`th#${resource.compactId}`);
       const initialWidth = await getWidth(compact);
-      expect(initialWidth).toBeLessThan(100);
+      expect(initialWidth).toBeGreaterThanOrEqual(MIN_READABLE_WIDTH_PX - WIDTH_TOLERANCE_PX);
       const nameWidth = await getWidth(table.locator('th#name'));
-      const box = await compact.locator('button[aria-label]').boundingBox();
+      const box = await compact.locator('button[data-resize-handle="true"]').boundingBox();
       if (!box) {
         throw new Error('The compact column resize handle is not visible');
       }
@@ -109,11 +114,23 @@ test.describe('Weighted default column widths', { tag: '@upstream' }, () => {
       const y = box.y + box.height / 2;
       await page.mouse.move(x, y);
       await page.mouse.down();
-      for (const delta of [-SMALL_DRAG_PX, SMALL_DRAG_PX, LARGE_DRAG_PX]) {
+      for (const delta of [
+        -SMALL_DRAG_PX,
+        SMALL_DRAG_PX,
+        LARGE_DRAG_PX,
+        SHRINK_DRAG_PX,
+        LARGE_DRAG_PX,
+      ]) {
         await page.mouse.move(x + delta, y);
-        expect(Math.abs((await getWidth(compact)) - initialWidth - delta)).toBeLessThan(
-          WIDTH_TOLERANCE_PX,
-        );
+        if (delta > 0) {
+          expect(Math.abs((await getWidth(compact)) - initialWidth - delta)).toBeLessThan(
+            WIDTH_TOLERANCE_PX,
+          );
+        } else {
+          expect(await getWidth(compact)).toBeGreaterThanOrEqual(
+            MIN_READABLE_WIDTH_PX - WIDTH_TOLERANCE_PX,
+          );
+        }
         expect(Math.abs((await getWidth(table.locator('th#name'))) - nameWidth)).toBeLessThan(
           WIDTH_TOLERANCE_PX,
         );

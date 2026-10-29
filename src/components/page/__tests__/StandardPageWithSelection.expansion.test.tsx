@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it, jest } from '@jest/globals';
-import { screen } from '@testing-library/react';
+import { screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
 import { StandardPageWithSelection } from '../StandardPageWithSelection';
@@ -98,5 +98,31 @@ describe('StandardPageWithSelection - expansion', () => {
 
     expect(checkboxes.length).toBeGreaterThan(0);
     expect(expandButtons.length).toBe(mockData.length);
+  });
+
+  it('aligns resizable selection and expansion rows with the visible headers', () => {
+    renderWithRouter(
+      <StandardPageWithSelection
+        dataSource={[mockData, true, null]}
+        expanded={ExpandedContent}
+        expandedIds={['1']}
+        fieldsMetadata={fieldsMetadata}
+        namespace="test-ns"
+        onExpand={jest.fn()}
+        onSelect={jest.fn()}
+        resizableColumns
+        selectedIds={[]}
+        toId={toId}
+      />,
+    );
+
+    const table = screen.getByRole('grid');
+    const visibleHeaderCount = within(table).getAllByRole('columnheader').length;
+    const expandedCell = within(table).getByRole('cell', { name: /Expanded details/u });
+
+    expect(table).not.toHaveClass('pf-m-grid-md');
+    expect(screen.getAllByRole('checkbox')).toHaveLength(mockData.length + 1);
+    expect(screen.getAllByLabelText(/Details/i)).toHaveLength(mockData.length);
+    expect(expandedCell).toHaveAttribute('colspan', String(visibleHeaderCount - 1));
   });
 });

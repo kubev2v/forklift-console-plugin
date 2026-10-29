@@ -2,8 +2,6 @@ import type { FC, ReactElement } from 'react';
 
 import { ExpandableRowContent, Td, Tr } from '@patternfly/react-table';
 
-import { useDataViewCellScope } from '../DataViewTable/DataViewCellScope';
-
 import type { RowProps } from './types';
 
 export const withTr = <T,>(
@@ -12,11 +10,6 @@ export const withTr = <T,>(
 ): FC<RowProps<T>> => {
   const Enhanced = (props: RowProps<T>): ReactElement => {
     const { isExpanded, length } = props;
-    const scope = useDataViewCellScope();
-    if (scope) {
-      return <Component {...props} />;
-    }
-
     if (ExpandedComponent) {
       return (
         <>

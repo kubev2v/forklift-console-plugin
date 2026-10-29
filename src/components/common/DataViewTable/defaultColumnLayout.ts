@@ -5,17 +5,20 @@ import {
 import { isValidColumnWidth } from '../TableView/columnWidthUtils';
 
 import {
-  DATA_ACTION_COLUMN_ATTR,
-  DATA_COLUMN_WIDTH_SPACER_ATTR,
-  DATA_COLUMN_WIDTHS_CUSTOMIZED_ATTR,
-  DATA_CONTROL_COLUMN_ATTR,
+  DATA_COLUMN_RESIZE_ACTIVE_ATTR,
+  DATA_COLUMN_WIDTH_FIXED_ATTR,
   DATA_DEFAULT_COLUMN_WIDTHS_ATTR,
-  DATA_RESIZABLE_COLUMN_ATTR,
-  EXPANSION_COLUMN_WIDTH,
   FORKLIFT_DEFAULT_COLUMN_WIDTH_CSS_VAR,
-  SELECTION_COLUMN_WIDTH,
 } from './dataViewTableConstants';
+import {
+  getControlColumnWidth,
+  getFixedWidth,
+  measureTableHeaders,
+  parsePx,
+} from './defaultColumnLayoutMeasurements';
 import { allocateDefaultColumnWidths } from './defaultColumnWidthUtils';
+import { getHeaderMinimumWidth } from './getHeaderMinimumWidth';
+import { getLayoutPixelWidth } from './layoutPixelUtils';
 
 type DefaultColumnLayout = {
   dispose: () => void;
@@ -23,52 +26,8 @@ type DefaultColumnLayout = {
   refresh: () => void;
 };
 
-type MeasuredHeaders = {
-  all: HTMLTableCellElement[];
-  controls: HTMLTableCellElement[];
-  data: HTMLTableCellElement[];
-};
-
-const measureTableHeaders = (table: HTMLTableElement): MeasuredHeaders =>
-  Array.from(table.tHead?.rows[0]?.cells ?? []).reduce<MeasuredHeaders>(
-    (acc, header) => {
-      if (header.hasAttribute(DATA_COLUMN_WIDTH_SPACER_ATTR)) {
-        return acc;
-      }
-      acc.all.push(header);
-      if (header.getAttribute(DATA_RESIZABLE_COLUMN_ATTR) === 'true') {
-        acc.data.push(header);
-      } else {
-        acc.controls.push(header);
-      }
-      return acc;
-    },
-    { all: [], controls: [], data: [] },
-  );
-
-const parsePx = (value: string): number => parseFloat(value);
-
-const getControlColumnWidth = (header: HTMLTableCellElement): number => {
-  const controlType = header.getAttribute(DATA_CONTROL_COLUMN_ATTR);
-  if (controlType === 'expand') {
-    return parsePx(EXPANSION_COLUMN_WIDTH);
-  }
-  if (controlType === 'select') {
-    return parsePx(SELECTION_COLUMN_WIDTH);
-  }
-  if (header.hasAttribute(DATA_ACTION_COLUMN_ATTR)) {
-    const actionControl = header.querySelector('button');
-    if (actionControl) {
-      const style = getComputedStyle(header);
-      return (
-        actionControl.getBoundingClientRect().width +
-        parseFloat(style.paddingInlineStart) +
-        parseFloat(style.paddingInlineEnd)
-      );
-    }
-  }
-  return header.getBoundingClientRect().width;
-};
+const hasFixedWidth = (header: HTMLTableCellElement): boolean =>
+  header.getAttribute(DATA_COLUMN_WIDTH_FIXED_ATTR) === 'true';
 
 export const createDefaultColumnLayout = (
   table: HTMLTableElement,
@@ -78,73 +37,90 @@ export const createDefaultColumnLayout = (
   const group = document.createElement('colgroup');
   group.setAttribute(DATA_DEFAULT_COLUMN_WIDTHS_ATTR, 'true');
   const columns = headers.map(() => group.appendChild(document.createElement('col')));
-  // DataViewTableBasic does not expose a colgroup slot; this group never owns header sizing.
   table.prepend(group);
 
-  const measureWidths = (): number[] => {
-    const availableWidth =
-      container.getBoundingClientRect().width -
-      controls.reduce((sum, header) => sum + getControlColumnWidth(header), 0);
-    if (availableWidth <= 0) {
-      return [];
-    }
-    return allocateDefaultColumnWidths(
-      availableWidth,
-      dataHeaders.map((header) => {
+  const measureWidths = (): (number | undefined)[] => {
+    const fixedHeaders = dataHeaders.filter(hasFixedWidth);
+    const unsavedHeaders = dataHeaders.filter((header) => !hasFixedWidth(header));
+    const controlWidths = controls.map(getControlColumnWidth);
+    const remainingWidth =
+      getLayoutPixelWidth(container) -
+      controlWidths.reduce((sum, width) => sum + width, 0) -
+      fixedHeaders.reduce((sum, header) => sum + getFixedWidth(header), 0);
+    const unsavedWidths = allocateDefaultColumnWidths(
+      remainingWidth,
+      unsavedHeaders.map((header) => {
         const style = getComputedStyle(header);
-        const minWidth = Number(header.dataset.defaultColumnMinWidth);
+        const preferredMinimum = Number(header.dataset.defaultColumnMinWidth);
         return {
-          minWidth: isValidColumnWidth(minWidth) ? minWidth : DEFAULT_COLUMN_MIN_WIDTH_PX,
-          padding: parseFloat(style.paddingInlineStart) + parseFloat(style.paddingInlineEnd),
+          minWidth: getHeaderMinimumWidth(
+            header,
+            isValidColumnWidth(preferredMinimum) ? preferredMinimum : DEFAULT_COLUMN_MIN_WIDTH_PX,
+          ),
+          padding: parsePx(style.paddingInlineStart) + parsePx(style.paddingInlineEnd),
           weight: Number(header.dataset.defaultColumnWeight),
         };
       }),
     );
+    return headers.map((header) => {
+      const controlIndex = controls.indexOf(header);
+      if (controlIndex >= 0) {
+        return controlWidths[controlIndex];
+      }
+      const unsavedIndex = unsavedHeaders.indexOf(header);
+      return unsavedIndex >= 0 ? unsavedWidths[unsavedIndex] : undefined;
+    });
   };
-  const getColumn = (index: number): HTMLTableColElement =>
-    columns[headers.indexOf(dataHeaders[index])];
+
   const needsRefresh = (): boolean =>
     measureWidths().some((width, index) => {
-      const previous = parseFloat(
-        getColumn(index).style.getPropertyValue(FORKLIFT_DEFAULT_COLUMN_WIDTH_CSS_VAR),
+      const header = headers[index];
+      if (width !== undefined && dataHeaders.includes(header) && !hasFixedWidth(header)) {
+        const currentMinimum = header.style.minWidth;
+        if (
+          currentMinimum === '' ||
+          Math.abs(width - parsePx(currentMinimum)) > COLUMN_MEASUREMENT_TOLERANCE_PX
+        ) {
+          return true;
+        }
+      }
+      const priorValue = columns[index].style.getPropertyValue(
+        FORKLIFT_DEFAULT_COLUMN_WIDTH_CSS_VAR,
       );
+      if (width === undefined) {
+        return priorValue !== '';
+      }
+      const priorWidth = parsePx(priorValue);
       return (
-        !Number.isFinite(previous) || Math.abs(width - previous) > COLUMN_MEASUREMENT_TOLERANCE_PX
+        !Number.isFinite(priorWidth) ||
+        Math.abs(width - priorWidth) > COLUMN_MEASUREMENT_TOLERANCE_PX
       );
     });
-  const clearCachedHeaderStyles = (): void => {
-    for (const header of headers) {
-      header.style.removeProperty('min-width');
-      header.style.removeProperty('max-width');
-    }
-  };
-  const clearColumnWidthVars = (): void => {
-    for (const column of columns) {
-      column.style.removeProperty(FORKLIFT_DEFAULT_COLUMN_WIDTH_CSS_VAR);
-    }
-  };
-  const setColumnWidthVar = (headerIndex: number, width: number): void => {
-    columns[headerIndex]?.style.setProperty(FORKLIFT_DEFAULT_COLUMN_WIDTH_CSS_VAR, `${width}px`);
-  };
+
   const refresh = (): void => {
-    if (table.getAttribute(DATA_COLUMN_WIDTHS_CUSTOMIZED_ATTR) === 'true') {
+    if (table.hasAttribute(DATA_COLUMN_RESIZE_ACTIVE_ATTR)) {
       return;
     }
-    clearCachedHeaderStyles();
-    clearColumnWidthVars();
-    const controlWidths = controls.map((header) => getControlColumnWidth(header));
-    const widths = measureWidths();
-    for (const [index, width] of widths.entries()) {
-      setColumnWidthVar(headers.indexOf(dataHeaders[index]), width);
+    for (const header of headers) {
+      if (!hasFixedWidth(header)) {
+        header.style.removeProperty('min-width');
+        header.style.removeProperty('max-width');
+      }
     }
-    for (const [index, control] of controls.entries()) {
-      const headerIndex = headers.indexOf(control);
-      if (headerIndex >= 0) {
-        const controlWidth = controlWidths[index];
-        setColumnWidthVar(headerIndex, controlWidth);
+    for (const [index, width] of measureWidths().entries()) {
+      const column = columns[index];
+      const header = headers[index];
+      if (width === undefined) {
+        column.style.removeProperty(FORKLIFT_DEFAULT_COLUMN_WIDTH_CSS_VAR);
+      } else {
+        column.style.setProperty(FORKLIFT_DEFAULT_COLUMN_WIDTH_CSS_VAR, `${width}px`);
+        if (dataHeaders.includes(header)) {
+          header.style.minWidth = `${width}px`;
+        }
       }
     }
   };
+
   refresh();
   return {
     dispose: (): void => {

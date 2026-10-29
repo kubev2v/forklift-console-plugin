@@ -1,9 +1,13 @@
-import { type RefObject, useLayoutEffect, useRef, useState } from 'react';
+// cspell:ignore loadingdone
+import { type RefObject, useLayoutEffect, useRef } from 'react';
 
-import { COLUMN_MEASUREMENT_TOLERANCE_PX } from '../TableView/columnWidthConstants';
-
-import { DATA_RESIZABLE_COLUMN_ATTR } from './dataViewTableConstants';
+import {
+  DATA_COLUMN_RESIZE_ACTIVE_ATTR,
+  DATA_COLUMN_TITLE_PROBE_ATTR,
+  DATA_COLUMN_WIDTH_SPACER_ATTR,
+} from './dataViewTableConstants';
 import { createDefaultColumnLayout } from './defaultColumnLayout';
+import { getActionControl } from './defaultColumnLayoutMeasurements';
 
 type UseDefaultColumnLayoutArgs = {
   hasCustomColumnWidths: boolean;
@@ -20,61 +24,93 @@ export const useDefaultColumnLayout = ({
   layoutKey,
 }: UseDefaultColumnLayoutArgs): UseDefaultColumnLayoutResult => {
   const layoutRef = useRef<HTMLDivElement>(null);
-  const [defaultLayoutVersion, setDefaultLayoutVersion] = useState(0);
 
   useLayoutEffect(() => {
     const container = layoutRef.current;
     const table = container?.querySelector('table');
-    if (!container || !table || hasCustomColumnWidths) {
+    if (!container || !table) {
       return undefined;
     }
-    const tableHeaders = Array.from(table.tHead?.rows[0]?.cells ?? []);
-    const headers = tableHeaders.filter(
-      (header) => header.getAttribute(DATA_RESIZABLE_COLUMN_ATTR) === 'true',
+    const headers = Array.from(table.tHead?.rows[0]?.cells ?? []).filter(
+      (header) => !header.hasAttribute(DATA_COLUMN_WIDTH_SPACER_ATTR),
     );
     const defaultLayout = createDefaultColumnLayout(table, container);
     let animationFrame: number | undefined;
-    const needsMeasurement = (): boolean =>
-      headers.some((header) => {
-        const cachedWidth = parseFloat(header.style.minWidth);
-        return (
-          Number.isFinite(cachedWidth) &&
-          Math.abs(header.getBoundingClientRect().width - cachedWidth) >
-            COLUMN_MEASUREMENT_TOLERANCE_PX
-        );
-      });
-    const refreshMeasurements = (): void => {
+    const isActive = (): boolean => table.hasAttribute(DATA_COLUMN_RESIZE_ACTIVE_ATTR);
+    const refresh = (): void => {
       animationFrame = undefined;
-      if (!table.isConnected || table.dataset.columnWidthsCustomized === 'true') {
-        return;
-      }
-      defaultLayout.refresh();
-      if (needsMeasurement()) {
-        setDefaultLayoutVersion((version) => version + 1);
+      if (table.isConnected && !isActive()) {
+        defaultLayout.refresh();
       }
     };
-    if (typeof ResizeObserver === 'undefined') {
-      return defaultLayout.dispose;
-    }
-    const observer = new ResizeObserver(() => {
-      if (table.dataset.columnWidthsCustomized === 'true') {
-        return;
+    const scheduleRefresh = (): void => {
+      if (!isActive() && animationFrame === undefined && defaultLayout.needsRefresh()) {
+        animationFrame = requestAnimationFrame(refresh);
       }
-      if ((needsMeasurement() || defaultLayout.needsRefresh()) && animationFrame === undefined) {
-        // Refresh outside the observer delivery cycle to avoid ResizeObserver loops.
-        animationFrame = requestAnimationFrame(refreshMeasurements);
+    };
+
+    const observer =
+      typeof ResizeObserver === 'undefined' ? undefined : new ResizeObserver(scheduleRefresh);
+    for (const header of headers) observer?.observe(header);
+    observer?.observe(container);
+
+    const observedControls = new Set<Element>();
+    const syncControlObservers = (): void => {
+      const currentControls = new Set<Element>();
+      for (const header of headers) {
+        const controls = Array.from(
+          header.querySelectorAll(`button, svg, [${DATA_COLUMN_TITLE_PROBE_ATTR}]`),
+        );
+        for (const element of controls) {
+          currentControls.add(element);
+        }
+        const actionControl = getActionControl(header);
+        if (actionControl) currentControls.add(actionControl.button);
       }
+      for (const element of observedControls) {
+        if (!currentControls.has(element)) {
+          observer?.unobserve(element);
+          observedControls.delete(element);
+        }
+      }
+      for (const element of currentControls) {
+        if (!observedControls.has(element)) {
+          observer?.observe(element);
+          observedControls.add(element);
+        }
+      }
+    };
+    syncControlObservers();
+
+    const mutationObserver =
+      typeof MutationObserver === 'undefined'
+        ? undefined
+        : new MutationObserver(() => {
+            syncControlObservers();
+            scheduleRefresh();
+          });
+    mutationObserver?.observe(table, {
+      attributeFilter: [DATA_COLUMN_RESIZE_ACTIVE_ATTR],
+      attributes: true,
+      childList: true,
+      subtree: true,
     });
-    for (const header of tableHeaders) observer.observe(header);
-    observer.observe(container);
+    document.fonts?.addEventListener('loadingdone', scheduleRefresh);
+    document.addEventListener('load', scheduleRefresh, true);
+    window.addEventListener('resize', scheduleRefresh);
+
     return (): void => {
-      observer.disconnect();
-      defaultLayout.dispose();
+      observer?.disconnect();
+      mutationObserver?.disconnect();
+      document.fonts?.removeEventListener('loadingdone', scheduleRefresh);
+      document.removeEventListener('load', scheduleRefresh, true);
+      window.removeEventListener('resize', scheduleRefresh);
       if (animationFrame !== undefined) {
         cancelAnimationFrame(animationFrame);
       }
+      defaultLayout.dispose();
     };
-  }, [defaultLayoutVersion, hasCustomColumnWidths, layoutKey]);
+  }, [hasCustomColumnWidths, layoutKey]);
 
-  return { defaultLayoutVersion, layoutRef };
+  return { defaultLayoutVersion: 0, layoutRef };
 };

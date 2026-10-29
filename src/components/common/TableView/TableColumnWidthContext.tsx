@@ -8,31 +8,31 @@ import {
   useMemo,
 } from 'react';
 
-import type { DataViewThResizableProps } from '@patternfly/react-data-view/dist/esm/DataViewTh/DataViewTh';
-
 import type { ColumnWidthsSettings } from '../Page/types';
 import type { ResourceField } from '../utils/types';
 
+import type { ColumnResizeConfig } from './columnWidthUtils';
 import { useTableColumnWidths } from './useTableColumnWidths';
 
 type TableColumnWidthContextValue = {
-  captureColumnWidths: (widths: Record<string, number>) => void;
-  columnLayoutKey: number;
+  columnLayoutKey: string;
+  commitColumnWidths: (fullVisibleSnapshot: Record<string, number>) => void;
   enabled: boolean;
-  getResizableProps: (
-    field: ResourceField,
-    columnLabel: string | null,
-  ) => DataViewThResizableProps | undefined;
+  flushPendingColumnWidths: () => void;
+  getResizeConfig: (field: ResourceField, label: string | null) => ColumnResizeConfig | undefined;
   hasCustomColumnWidths: boolean;
+  hasKnownColumnWidths: boolean;
   resetAllColumnWidths: () => void;
 };
 
 const defaultContext: TableColumnWidthContextValue = {
-  captureColumnWidths: (): void => undefined,
-  columnLayoutKey: 0,
+  columnLayoutKey: '[null,0,0]',
+  commitColumnWidths: (): void => undefined,
   enabled: false,
-  getResizableProps: () => undefined,
+  flushPendingColumnWidths: (): void => undefined,
+  getResizeConfig: () => undefined,
   hasCustomColumnWidths: false,
+  hasKnownColumnWidths: false,
   resetAllColumnWidths: (): void => undefined,
 };
 
@@ -42,39 +42,48 @@ type TableColumnWidthProviderProps = {
   children: ReactNode;
   columnWidthsSettings?: ColumnWidthsSettings;
   enabled: boolean;
+  fields: ResourceField[];
 };
 
 export const TableColumnWidthProvider: FC<TableColumnWidthProviderProps> = ({
   children,
   columnWidthsSettings,
   enabled,
+  fields,
 }): ReactElement => {
   const {
-    captureColumnWidths,
     columnLayoutKey,
-    getResizableProps,
+    commitColumnWidths,
+    flushPendingColumnWidths,
+    getResizeConfig,
     hasCustomColumnWidths,
+    hasKnownColumnWidths,
     resetAllColumnWidths,
   } = useTableColumnWidths({
     columnWidthsSettings,
     enabled,
+    fields,
   });
 
   const value = useMemo(
     (): TableColumnWidthContextValue => ({
-      captureColumnWidths,
       columnLayoutKey,
+      commitColumnWidths,
       enabled,
-      getResizableProps,
+      flushPendingColumnWidths,
+      getResizeConfig,
       hasCustomColumnWidths,
+      hasKnownColumnWidths,
       resetAllColumnWidths,
     }),
     [
-      captureColumnWidths,
       columnLayoutKey,
+      commitColumnWidths,
       enabled,
-      getResizableProps,
+      flushPendingColumnWidths,
+      getResizeConfig,
       hasCustomColumnWidths,
+      hasKnownColumnWidths,
       resetAllColumnWidths,
     ],
   );

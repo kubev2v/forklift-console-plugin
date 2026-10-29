@@ -1,6 +1,5 @@
 import type { FC, ReactElement, ReactNode } from 'react';
 
-import ForkliftDataViewTable from '@components/common/DataViewTable/ForkliftDataViewTable';
 import ForkliftHybridDataViewTable from '@components/common/DataViewTable/ForkliftHybridDataViewTable';
 import type { RowProps, SortType } from '@components/common/TableView/types';
 import type { ResourceField } from '@components/common/utils/types';
@@ -32,37 +31,20 @@ const ResizablePageTable = <T,>({
   toId,
   visibleColumns,
 }: ResizablePageTableProps<T>): ReactElement => {
-  const { getLeadingCells, leadingColumns, useHybridBody } = useDataViewSelection<T>();
-
-  if (useHybridBody) {
-    return (
-      <ForkliftHybridDataViewTable
-        activeSort={activeSort}
-        aria-label={ariaLabel}
-        entities={entities}
-        expandedIds={expandedIds}
-        leadingColumns={leadingColumns}
-        namespace={namespace}
-        placeholder={placeholder}
-        RowComponent={RowComponent}
-        setActiveSort={setActiveSort}
-        toId={toId}
-        visibleColumns={visibleColumns}
-      />
-    );
-  }
+  const { leadingColumns } = useDataViewSelection();
 
   return (
-    <ForkliftDataViewTable
+    <ForkliftHybridDataViewTable
       activeSort={activeSort}
       aria-label={ariaLabel}
       entities={entities}
-      getLeadingCells={getLeadingCells}
+      expandedIds={expandedIds}
       leadingColumns={leadingColumns}
       namespace={namespace}
       placeholder={placeholder}
       RowComponent={RowComponent}
       setActiveSort={setActiveSort}
+      toId={toId}
       visibleColumns={visibleColumns}
     />
   );

@@ -1,10 +1,9 @@
 import type { ReactNode } from 'react';
 
 import type { DataViewTh } from '@patternfly/react-data-view/dist/esm/DataViewTable/DataViewTable';
-import type { DataViewThResizableProps } from '@patternfly/react-data-view/dist/esm/DataViewTh/DataViewTh';
 import type { TdProps, ThProps } from '@patternfly/react-table';
 
-import { getMinWidthForField } from '../TableView/columnWidthUtils';
+import type { ColumnResizeConfig } from '../TableView/columnWidthUtils';
 import { buildSort } from '../TableView/sort';
 import type { SortType } from '../TableView/types';
 import type { ResourceField } from '../utils/types';
@@ -20,12 +19,13 @@ import {
   DATA_RESIZABLE_COLUMN_ATTR,
 } from './dataViewTableConstants';
 import { FORKLIFT_DATA_VIEW_TABLE_STICKY_CELL_CLASS } from './forkliftDataViewTableClass';
-import { prepareColumnResize } from './prepareColumnResize';
 
 const withStickyCellClass = (className?: string): string =>
   className
     ? `${className} ${FORKLIFT_DATA_VIEW_TABLE_STICKY_CELL_CLASS}`
     : FORKLIFT_DATA_VIEW_TABLE_STICKY_CELL_CLASS;
+
+type ForkliftHeaderProps = ThProps & { 'data-column-id'?: string };
 
 export const getColumnWidthSpacerProps = (): TdProps &
   ThProps & { [DATA_COLUMN_WIDTH_SPACER_ATTR]: true } => ({
@@ -52,10 +52,9 @@ export const getActionCellProps = (): TdProps => ({
 type ToDataViewColumnArgs = {
   actionScreenReaderText: string;
   activeSort: SortType;
-  captureColumnWidths?: (widths: Record<string, number>) => void;
   columnIndex: number;
   field: ResourceField;
-  resizableProps?: DataViewThResizableProps;
+  resizeConfig?: ColumnResizeConfig;
   setActiveSort: (sort: SortType) => void;
   visibleColumns: ResourceField[];
 };
@@ -63,34 +62,32 @@ type ToDataViewColumnArgs = {
 export const toDataViewColumn = ({
   actionScreenReaderText,
   activeSort,
-  captureColumnWidths,
   columnIndex,
   field,
-  resizableProps,
+  resizeConfig,
   setActiveSort,
   visibleColumns,
 }: ToDataViewColumnArgs): DataViewTh => {
   const label = field.label ?? '';
-  const headerProps: ThProps = {
+  const headerProps: ForkliftHeaderProps = {
+    'data-column-id': field.resourceFieldId ?? undefined,
     ...(field.isAction ? { ...getActionHeaderProps(), [DATA_ACTION_COLUMN_ATTR]: true } : {}),
     dataLabel: label || undefined,
     id: field.resourceFieldId ?? undefined,
     info: field.info,
-    ...(resizableProps?.isResizable
+    ...(resizeConfig
       ? {
-          [DATA_COLUMN_WIDTH_FIXED_ATTR]: resizableProps.width !== undefined,
-          [DATA_DEFAULT_COLUMN_MIN_WIDTH_ATTR]: getMinWidthForField(field),
+          [DATA_COLUMN_WIDTH_FIXED_ATTR]: resizeConfig.savedWidth !== undefined,
+          [DATA_DEFAULT_COLUMN_MIN_WIDTH_ATTR]: resizeConfig.minWidth,
           [DATA_DEFAULT_COLUMN_WEIGHT_ATTR]: field.defaultWidth?.weight ?? 1,
           [DATA_RESIZABLE_COLUMN_ATTR]: true,
-          onKeyDownCapture: (event): void => {
-            prepareColumnResize(event, resizableProps.resizeButtonAriaLabel, captureColumnWidths);
-          },
-          onMouseDownCapture: (event): void => {
-            prepareColumnResize(event, resizableProps.resizeButtonAriaLabel, captureColumnWidths);
-          },
-          onTouchStartCapture: (event): void => {
-            prepareColumnResize(event, resizableProps.resizeButtonAriaLabel, captureColumnWidths);
-          },
+          ...(resizeConfig.savedWidth === undefined
+            ? {}
+            : {
+                style: {
+                  minWidth: `${resizeConfig.savedWidth}px`,
+                },
+              }),
         }
       : {}),
     sort: field.sortable
@@ -110,7 +107,14 @@ export const toDataViewColumn = ({
       ...(field.testId ? { 'data-testid': field.testId } : {}),
       ...(label ? {} : { screenReaderText: actionScreenReaderText }),
     } as ThProps,
-    resizableProps,
+    resizableProps: resizeConfig
+      ? {
+          isResizable: true,
+          minWidth: resizeConfig.minWidth,
+          resizeButtonAriaLabel: resizeConfig.label,
+          width: resizeConfig.savedWidth,
+        }
+      : undefined,
   };
 };
 
@@ -118,8 +122,3 @@ export const getRenderedColumnCount = (
   columnCount: number,
   hasCustomColumnWidths: boolean,
 ): number => Math.max(columnCount - (hasCustomColumnWidths ? 0 : 1), 1);
-
-export const getBodyCellProps = (field: ResourceField): TdProps => ({
-  ...(field.isAction ? getActionCellProps() : { modifier: 'truncate' as const }),
-  dataLabel: field.label ?? field.resourceFieldId ?? undefined,
-});

@@ -115,6 +115,7 @@ describe('userSettings - behavior', () => {
     const { columnWidths } = loadUserSettings({ pageId: 'providers' });
 
     expect(columnWidths?.data).toEqual({ name: 180 });
+    expect(columnWidths?.scopeId).toBe('forklift/providers');
     columnWidths?.save({ name: 200 });
     expect(mockSave).toHaveBeenCalledWith(
       'forklift/providers',

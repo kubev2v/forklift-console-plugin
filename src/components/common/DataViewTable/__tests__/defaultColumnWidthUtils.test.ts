@@ -20,14 +20,14 @@ describe('allocateDefaultColumnWidths', () => {
     expect(allocateDefaultColumnWidths(300, [column(3, 100), column(1, 100)])).toEqual([200, 100]);
   });
 
-  it('relaxes preferred minimums when they would otherwise overflow', () => {
+  it('preserves readable minimums and allows horizontal overflow', () => {
     const widths = allocateDefaultColumnWidths(200, [
       column(3, 100),
       column(2, 100),
       column(1, 100),
     ]);
-    expectTotal(widths, 200);
-    expect(widths.every((width) => width >= 44)).toBe(true);
+    expect(widths).toEqual([100, 100, 100]);
+    expectTotal(widths, 300);
   });
 
   it('accounts for actual header padding rather than forcing widths below it', () => {

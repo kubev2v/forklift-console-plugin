@@ -1,13 +1,11 @@
-import type { MouseEvent } from 'react';
-
 import type { ResourceField } from '@components/common/utils/types';
 import { act, renderHook, type RenderHookResult } from '@testing-library/react';
 
-import { COLUMN_WIDTH_PERSIST_DEBOUNCE_MS } from '../columnWidthConstants';
 import { useTableColumnWidths } from '../useTableColumnWidths';
 
-const nameField: ResourceField = { label: 'Name', resourceFieldId: 'name' };
-const resizeEvent = {} as MouseEvent;
+const nameField: ResourceField = { isVisible: true, label: 'Name', resourceFieldId: 'name' };
+const hiddenField: ResourceField = { isVisible: false, label: 'Status', resourceFieldId: 'status' };
+const fields = [nameField, hiddenField];
 
 type RenderWidthsResult = RenderHookResult<ReturnType<typeof useTableColumnWidths>, unknown> & {
   clear: jest.Mock<undefined, []>;
@@ -21,73 +19,56 @@ const renderWidths = (data: Record<string, number> = {}): RenderWidthsResult => 
     useTableColumnWidths({
       columnWidthsSettings: { clear, data, save },
       enabled: true,
+      fields,
     }),
   );
   return { ...view, clear, save };
 };
 
 describe('column width reset', () => {
-  beforeEach(() => {
-    jest.useFakeTimers();
-  });
+  beforeEach(() => jest.useFakeTimers());
+  afterEach(() => jest.useRealTimers());
 
-  afterEach(() => {
-    jest.useRealTimers();
-  });
-
-  it('does nothing when widths are already at their defaults', () => {
-    const { clear, result } = renderWidths();
-
+  it('does nothing when no known width was saved', () => {
+    const { clear, result } = renderWidths({ stale: 140 });
+    const initialLayoutKey = result.current.columnLayoutKey;
+    expect(result.current.hasKnownColumnWidths).toBe(false);
     act(() => {
       result.current.resetAllColumnWidths();
     });
-
     expect(clear).not.toHaveBeenCalled();
-    expect(result.current.columnLayoutKey).toBe(0);
+    expect(result.current.columnLayoutKey).toBe(initialLayoutKey);
   });
 
-  it('clears saved minimum widths once, including batched repeated resets', () => {
-    const { clear, result } = renderWidths({ name: 100 });
-
+  it('resets hidden known widths and keeps repeated calls idempotent', () => {
+    const { clear, result } = renderWidths({ status: 79.125 });
+    const initialLayoutKey = result.current.columnLayoutKey;
+    expect(result.current.hasCustomColumnWidths).toBe(false);
+    expect(result.current.hasKnownColumnWidths).toBe(true);
     act(() => {
       result.current.resetAllColumnWidths();
       result.current.resetAllColumnWidths();
     });
-
     expect(clear).toHaveBeenCalledTimes(1);
-    expect(result.current.columnLayoutKey).toBe(1);
-    expect(result.current.getResizableProps(nameField, 'Name')).not.toHaveProperty('width');
+    expect(result.current.hasKnownColumnWidths).toBe(false);
+    expect(result.current.columnLayoutKey).not.toBe(initialLayoutKey);
   });
 
-  it('does not persist queued resize updates after a reset in the same batch', () => {
-    const { clear, result, save } = renderWidths({ name: 100 });
-    let storedWidths: Record<string, number> = { name: 100 };
-    save.mockImplementation((widths): undefined => {
-      storedWidths = widths;
-      return undefined;
-    });
-    clear.mockImplementation((): undefined => {
-      storedWidths = {};
-      return undefined;
-    });
-    const resize = result.current.getResizableProps(nameField, 'Name')?.onResize;
-
+  it('cancels the pending save before clearing settings', () => {
+    const { clear, result, save, unmount } = renderWidths({ name: 100 });
     act(() => {
-      resize?.(resizeEvent, 'name', 200);
-      jest.advanceTimersByTime(COLUMN_WIDTH_PERSIST_DEBOUNCE_MS);
-    });
-    act(() => {
-      resize?.(resizeEvent, 'name', 240);
-      jest.advanceTimersByTime(COLUMN_WIDTH_PERSIST_DEBOUNCE_MS);
+      result.current.commitColumnWidths({ name: 240 });
       result.current.resetAllColumnWidths();
+      window.dispatchEvent(new Event('pagehide'));
     });
-
-    expect(save).toHaveBeenCalledTimes(2);
-    expect(storedWidths).toEqual({});
-    expect(result.current.getResizableProps(nameField, 'Name')).not.toHaveProperty('width');
+    unmount();
+    jest.runAllTimers();
+    expect(save).not.toHaveBeenCalled();
+    expect(clear).toHaveBeenCalledTimes(1);
+    expect(result.current.getResizeConfig(nameField, 'Name')).not.toHaveProperty('savedWidth');
   });
 
-  it('keeps overrides when persistence clear fails', () => {
+  it('preserves widths when clearing storage fails', () => {
     const clear = jest.fn((): void => {
       throw new Error('storage failed');
     });
@@ -95,48 +76,35 @@ describe('column width reset', () => {
       useTableColumnWidths({
         columnWidthsSettings: { clear, data: { name: 100 }, save: jest.fn() },
         enabled: true,
+        fields,
       }),
     );
-
+    const initialLayoutKey = result.current.columnLayoutKey;
     expect(() => {
       act(() => {
         result.current.resetAllColumnWidths();
       });
     }).toThrow('storage failed');
-    expect(result.current.getResizableProps(nameField, 'Name')).toMatchObject({ width: 100 });
-    expect(result.current.columnLayoutKey).toBe(0);
+    expect(result.current.getResizeConfig(nameField, 'Name')).toHaveProperty('savedWidth', 100);
+    expect(result.current.columnLayoutKey).toBe(initialLayoutKey);
   });
 
-  it('keeps the reset handler stable and responsive to later resizes', () => {
+  it('retained Reset callbacks operate on the latest committed widths', () => {
     const { clear, result } = renderWidths();
     const reset = result.current.resetAllColumnWidths;
-
+    const initialLayoutKey = result.current.columnLayoutKey;
     act(() => {
-      result.current.getResizableProps(nameField, 'Name')?.onResize?.(resizeEvent, 'name', 200);
-      jest.advanceTimersByTime(COLUMN_WIDTH_PERSIST_DEBOUNCE_MS);
+      result.current.commitColumnWidths({ name: 180 });
+      result.current.flushPendingColumnWidths();
     });
-
-    expect(result.current.resetAllColumnWidths).toBe(reset);
     act(() => {
       reset();
     });
     expect(clear).toHaveBeenCalledTimes(1);
-    expect(result.current.getResizableProps(nameField, 'Name')).not.toHaveProperty('width');
-
+    expect(result.current.columnLayoutKey).not.toBe(initialLayoutKey);
     act(() => {
       reset();
     });
     expect(clear).toHaveBeenCalledTimes(1);
-    expect(result.current.columnLayoutKey).toBe(1);
-
-    act(() => {
-      result.current.getResizableProps(nameField, 'Name')?.onResize?.(resizeEvent, 'name', 240);
-      jest.advanceTimersByTime(COLUMN_WIDTH_PERSIST_DEBOUNCE_MS);
-    });
-    act(() => {
-      reset();
-    });
-    expect(clear).toHaveBeenCalledTimes(2);
-    expect(result.current.columnLayoutKey).toBe(2);
   });
 });

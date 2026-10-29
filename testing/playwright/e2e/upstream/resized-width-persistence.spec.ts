@@ -2,20 +2,21 @@ import { expect, type Locator, type Page, test } from '@playwright/test';
 
 import { setupPlansIntercepts } from '../../intercepts/plans';
 import { setupProvidersIntercepts } from '../../intercepts/providers';
-import { expectTableToFit } from '../../utils/resizableColumns';
+import { expectReadableTableLayout } from '../../utils/resizableColumns';
 import { V5_1_0 } from '../../utils/version/constants';
 import { requireVersion } from '../../utils/version/version';
 
 const VIEWPORT_HEIGHT = 1080;
 const LARGE_DRAG_PX = 500;
-const KEYBOARD_MINIMUM_PX = 100;
+const MIN_READABLE_WIDTH_PX = 96;
 const KEYBOARD_SHIFT_INCREMENT_PX = 25;
+const WIDTH_TOLERANCE_PX = 1;
 
 const getWidth = (header: Locator): Promise<number> =>
   header.evaluate((element) => element.getBoundingClientRect().width);
 
 const resizeName = async (page: Page, header: Locator, gesture: string): Promise<void> => {
-  const handle = header.locator('button[aria-label="Name"]');
+  const handle = header.locator('button[data-resize-handle="true"]');
   if (gesture === 'mouse') {
     const box = await handle.boundingBox();
     if (!box) {
@@ -30,14 +31,20 @@ const resizeName = async (page: Page, header: Locator, gesture: string): Promise
     await expect.poll(() => getWidth(header)).toBeGreaterThan(LARGE_DRAG_PX);
     return;
   }
-  const maxKeyboardSteps = Math.ceil((await getWidth(header)) / KEYBOARD_SHIFT_INCREMENT_PX) + 1;
+  const maxKeyboardSteps = Math.ceil((await getWidth(header)) / KEYBOARD_SHIFT_INCREMENT_PX) + 2;
+  let previousWidth = await getWidth(header);
   for (let step = 0; step < maxKeyboardSteps; step += 1) {
     await handle.press('Shift+ArrowLeft');
-    if ((await getWidth(header)) < KEYBOARD_MINIMUM_PX) {
+    const currentWidth = await getWidth(header);
+    if (Math.abs(currentWidth - previousWidth) < WIDTH_TOLERANCE_PX) {
       break;
     }
+    previousWidth = currentWidth;
   }
-  await expect.poll(() => getWidth(header)).toBeLessThan(KEYBOARD_MINIMUM_PX);
+  const minimumWidth = await getWidth(header);
+  expect(minimumWidth).toBeGreaterThanOrEqual(MIN_READABLE_WIDTH_PX - WIDTH_TOLERANCE_PX);
+  await handle.press('Shift+ArrowLeft');
+  await expect.poll(() => getWidth(header)).toBeCloseTo(minimumWidth, 1);
 };
 
 const setVisibility = async (page: Page, column: string, visible: boolean): Promise<void> => {
@@ -73,7 +80,7 @@ test.describe('PatternFly rendered widths survive persistence', { tag: '@upstrea
           await page.goto(`/k8s/all-namespaces/forklift.konveyor.io~v1beta1~${resource.kind}`);
           const table = page.getByRole('grid', { exact: true, name: resource.title });
           await expect(table.locator('tbody').getByRole('link').first()).toBeVisible();
-          await expectTableToFit(table);
+          await expectReadableTableLayout(table);
           const name = table.locator('th#name');
           await resizeName(page, name, gesture);
           const resizedWidth = await getWidth(name);

@@ -36,18 +36,13 @@ export const allocateDefaultColumnWidths = (
   availableWidth: number,
   columns: DefaultColumnWidth[],
 ): number[] => {
-  const paddingTotal = columns.reduce((sum, column) => sum + column.padding, 0);
-  const preferredTotal = columns.reduce(
-    (sum, column) => sum + Math.max(column.minWidth, column.padding),
-    0,
-  );
-  const minimumScale =
-    preferredTotal > paddingTotal
-      ? Math.min(1, Math.max(0, (availableWidth - paddingTotal) / (preferredTotal - paddingTotal)))
-      : 1;
-  const minimums = columns.map(
-    ({ minWidth, padding }) => padding + (Math.max(minWidth, padding) - padding) * minimumScale,
-  );
+  const minimums = columns.map(({ minWidth, padding }) => Math.max(minWidth, padding));
+  if (
+    !Number.isFinite(availableWidth) ||
+    minimums.reduce((sum, width) => sum + width, 0) >= availableWidth
+  ) {
+    return minimums;
+  }
   const weights = columns.map(({ weight }) => (isValidColumnWidth(weight) ? weight : 1));
   const widths = columns.map(() => 0);
   distributeRemaining(

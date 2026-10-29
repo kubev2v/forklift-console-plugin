@@ -2,7 +2,7 @@ import { expect, type Locator, test } from '@playwright/test';
 
 import { setupPlansIntercepts } from '../../intercepts/plans';
 import { setupProvidersIntercepts } from '../../intercepts/providers';
-import { expectTableToFit } from '../../utils/resizableColumns';
+import { expectReadableTableLayout } from '../../utils/resizableColumns';
 import { V5_1_0 } from '../../utils/version/constants';
 import { requireVersion } from '../../utils/version/version';
 
@@ -55,7 +55,7 @@ test.describe('Column management and resizing', { tag: '@upstream' }, () => {
         await page.goto(`/k8s/all-namespaces/forklift.konveyor.io~v1beta1~${resource.kind}`);
         const table = page.getByRole('grid', { exact: true, name: resource.title });
         await expect(table.locator('tbody').getByRole('link').first()).toBeVisible();
-        await expectTableToFit(table);
+        await expectReadableTableLayout(table);
         const headerCount = await table.locator('thead th').count();
         const initialActionWidth = await getActionWidth(table);
         await expectContentSizedActions(table, initialActionWidth);
@@ -74,10 +74,12 @@ test.describe('Column management and resizing', { tag: '@upstream' }, () => {
         await modal.getByRole('button', { exact: true, name: 'Save' }).click();
         await expect(modal).not.toBeVisible();
         expect(await initialTable?.evaluate((element) => element.isConnected)).toBe(false);
-        await expectTableToFit(table);
+        await expectReadableTableLayout(table);
         await expectContentSizedActions(table, initialActionWidth);
         const managedTable = await table.elementHandle();
-        await page.getByRole('button', { exact: true, name: 'Reset column widths' }).click();
+        await expect(
+          page.getByRole('button', { exact: true, name: 'Reset column widths' }),
+        ).toBeDisabled();
         expect(await managedTable?.evaluate((element) => element.isConnected)).toBe(true);
 
         const actions = table.locator('tbody tr').first().locator('td').last();
@@ -92,7 +94,7 @@ test.describe('Column management and resizing', { tag: '@upstream' }, () => {
         await modal.getByRole('button', { exact: true, name: 'Save' }).click();
         await expect(modal).not.toBeVisible();
         await expect(table.locator('thead th')).toHaveCount(headerCount);
-        await expectTableToFit(table);
+        await expectReadableTableLayout(table);
         await expectContentSizedActions(table, initialActionWidth);
         if (resource.kind === 'Plan') {
           await expect(table.locator('tbody input[type="checkbox"]').first()).toBeChecked();
@@ -106,10 +108,10 @@ test.describe('Column management and resizing', { tag: '@upstream' }, () => {
         await page.goto(`/k8s/all-namespaces/forklift.konveyor.io~v1beta1~${resource.kind}`);
         const table = page.getByRole('grid', { exact: true, name: resource.title });
         await expect(table.locator('tbody').getByRole('link').first()).toBeVisible();
-        await expectTableToFit(table);
+        await expectReadableTableLayout(table);
         const name = table.locator('th#name');
-        await name.locator('button[aria-label="Name"]').press('Shift+ArrowRight');
-        const resizedWidth = await name.evaluate((header) => header.style.minWidth);
+        await name.locator('button[data-resize-handle="true"]').press('Shift+ArrowRight');
+        const resizedWidth = await name.evaluate((header) => header.getBoundingClientRect().width);
         const resizedTable = await table.elementHandle();
 
         await page.getByRole('button', { exact: true, name: 'Manage columns' }).click();
@@ -118,15 +120,30 @@ test.describe('Column management and resizing', { tag: '@upstream' }, () => {
         await modal.getByRole('button', { exact: true, name: 'Cancel' }).click();
         await expect(modal).not.toBeVisible();
         expect(await resizedTable?.evaluate((element) => element.isConnected)).toBe(true);
-        await expect(name).toHaveCSS('min-width', resizedWidth);
+        await expect
+          .poll(() => name.evaluate((header) => header.getBoundingClientRect().width))
+          .toBeCloseTo(resizedWidth, 1);
 
         await page.getByRole('button', { exact: true, name: 'Manage columns' }).click();
         await modal.getByRole('button', { name: 'Move Name down' }).click();
         await modal.getByRole('button', { exact: true, name: 'Save' }).click();
         await expect(modal).not.toBeVisible();
         expect(await resizedTable?.evaluate((element) => element.isConnected)).toBe(false);
-        await expect(name).toHaveCSS('min-width', resizedWidth);
+        await expect
+          .poll(() => name.evaluate((header) => header.getBoundingClientRect().width))
+          .toBeCloseTo(resizedWidth, 1);
         await expect(table.locator('thead th#namespace + th#name')).toBeVisible();
+
+        await page.getByRole('button', { exact: true, name: 'Manage columns' }).click();
+        await modal.getByRole('button', { name: 'Restore default columns' }).click();
+        await modal.getByRole('button', { exact: true, name: 'Save' }).click();
+        await expect(modal).not.toBeVisible();
+        await expect
+          .poll(() => name.evaluate((header) => header.getBoundingClientRect().width))
+          .toBeCloseTo(resizedWidth, 1);
+        await expect(
+          page.getByRole('button', { exact: true, name: 'Reset column widths' }),
+        ).toBeEnabled();
       });
     }
   }

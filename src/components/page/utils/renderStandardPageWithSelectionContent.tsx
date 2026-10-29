@@ -29,34 +29,23 @@ export const renderStandardPageWithSelectionContent = <T,>({
   toId,
   toolbarItems,
 }: RenderStandardPageArgs<T>): ReactElement => {
-  if (onSelect) {
-    const { cell: _cell, ...rest } = props;
+  const { cell: _cell, header: _header, resizableColumns, ...rest } = props;
+  const selectionProps = onSelect
+    ? {
+        canSelect,
+        expandedIds: internalExpandedIds,
+        GlobalActionToolbarItems: toolbarItems,
+        onSelect: onSelectCallback,
+        pageRef,
+        row,
+        selectedIds: internalSelectedIds,
+        toId,
+      }
+    : { expandedIds: internalExpandedIds, pageRef, row };
 
-    return (
-      <StandardPage
-        {...rest}
-        canSelect={canSelect}
-        expandedIds={internalExpandedIds}
-        GlobalActionToolbarItems={toolbarItems}
-        header={finalHeader}
-        onSelect={onSelectCallback}
-        pageRef={pageRef}
-        row={row}
-        selectedIds={internalSelectedIds}
-        toId={toId}
-      />
-    );
-  }
-
-  const { cell: _cell, ...restWithoutCell } = props;
-
-  return (
-    <StandardPage
-      {...restWithoutCell}
-      expandedIds={internalExpandedIds}
-      header={finalHeader}
-      pageRef={pageRef}
-      row={row}
-    />
+  return resizableColumns ? (
+    <StandardPage {...rest} {...selectionProps} resizableColumns />
+  ) : (
+    <StandardPage {...rest} {...selectionProps} header={finalHeader} />
   );
 };

@@ -23,7 +23,7 @@ export const useForkliftDataViewColumns = ({
   visibleColumns,
 }: UseForkliftDataViewColumnsArgs): DataViewTh[] => {
   const { t } = useForkliftTranslation();
-  const { captureColumnWidths, getResizableProps } = useTableColumnWidthContext();
+  const { getResizeConfig } = useTableColumnWidthContext();
   const actionScreenReaderText = t('Actions');
 
   return useMemo((): DataViewTh[] => {
@@ -36,10 +36,9 @@ export const useForkliftDataViewColumns = ({
       toDataViewColumn({
         actionScreenReaderText,
         activeSort,
-        captureColumnWidths,
         columnIndex,
         field,
-        resizableProps: getResizableProps(field, field.label),
+        resizeConfig: getResizeConfig(field, field.label),
         setActiveSort,
         visibleColumns,
       }),
@@ -52,8 +51,7 @@ export const useForkliftDataViewColumns = ({
   }, [
     actionScreenReaderText,
     activeSort,
-    captureColumnWidths,
-    getResizableProps,
+    getResizeConfig,
     leadingColumns,
     setActiveSort,
     visibleColumns,
