@@ -5,6 +5,8 @@ const GAP_TOLERANCE_PX = 0.5;
 const MIN_HANDLE_SIZE_PX = 31.5;
 const MIN_READABLE_COLUMN_PX = 96;
 const TITLE_HANDLE_GAP_PX = 8;
+// PatternFly help headers shift their title slightly; allow for that gap at 150% zoom.
+const VERTICAL_ALIGNMENT_TOLERANCE_PX = 3;
 const WIDTH_TOLERANCE_PX = 1;
 
 export const expectReadableTableLayout = async (table: Locator): Promise<void> => {
@@ -57,6 +59,10 @@ export const expectEveryResizeHandleAligned = async (table: Locator): Promise<vo
       const headerRect = header.getBoundingClientRect();
       const handleRect = button.getBoundingClientRect();
       const titleRect = title.getBoundingClientRect();
+      const sortButton = title.closest('button');
+      const sortButtonRect = sortButton?.getBoundingClientRect();
+      const handleCenterY = handleRect.top + handleRect.height / 2;
+      const titleCenterY = titleRect.top + titleRect.height / 2;
       const rtl = getComputedStyle(header).direction === 'rtl';
       const target = document.elementFromPoint(
         handleRect.left + handleRect.width / 2,
@@ -68,7 +74,11 @@ export const expectEveryResizeHandleAligned = async (table: Locator): Promise<vo
           : Math.abs(headerRect.right - handleRect.right),
         height: handleRect.height,
         hitTarget: button.contains(target),
+        sortButtonVerticalGap: sortButtonRect
+          ? Math.abs(handleCenterY - (sortButtonRect.top + sortButtonRect.height / 2))
+          : null,
         titleGap: rtl ? titleRect.left - handleRect.right : handleRect.left - titleRect.right,
+        titleVerticalGap: Math.abs(handleCenterY - titleCenterY),
         width: handleRect.width,
       };
     });
@@ -78,6 +88,10 @@ export const expectEveryResizeHandleAligned = async (table: Locator): Promise<vo
     expect(geometry?.height).toBeGreaterThanOrEqual(MIN_HANDLE_SIZE_PX);
     expect(geometry?.width).toBeGreaterThanOrEqual(MIN_HANDLE_SIZE_PX);
     expect(geometry?.titleGap).toBeGreaterThanOrEqual(TITLE_HANDLE_GAP_PX - GAP_TOLERANCE_PX);
+    expect(geometry?.titleVerticalGap).toBeLessThanOrEqual(VERTICAL_ALIGNMENT_TOLERANCE_PX);
+    if (typeof geometry?.sortButtonVerticalGap === 'number') {
+      expect(geometry?.sortButtonVerticalGap).toBeLessThanOrEqual(VERTICAL_ALIGNMENT_TOLERANCE_PX);
+    }
     expect(geometry?.hitTarget).toBe(true);
   }
 };

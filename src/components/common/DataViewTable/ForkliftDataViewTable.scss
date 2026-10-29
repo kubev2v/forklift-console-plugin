@@ -77,20 +77,30 @@
     block-size: 2rem;
     cursor: grab;
     display: flex;
+    font-size: inherit;
     inline-size: 2rem;
-    inset-block-start: 50%;
+    // PatternFly bottom-aligns header text; center the 2rem target on that line box.
+    inset-block-end: calc(var(--pf-v6-c-table--cell--PaddingBlockEnd) + 0.5lh - 1rem);
     inset-inline-end: 0;
     justify-content: center;
+    line-height: inherit;
     min-block-size: 2rem;
     min-inline-size: 2rem;
     padding: 0;
     position: absolute;
     touch-action: none;
-    transform: translateY(-50%);
     z-index: 1;
+
+    svg {
+      font-size: var(--pf-v6-c-button--FontSize);
+    }
 
     &:active {
       cursor: grabbing;
+    }
+
+    &:focus-visible {
+      outline-offset: var(--pf-t--global--focus-ring--position--inset);
     }
   }
 
