@@ -7,8 +7,6 @@ import type { PlanFieldProps } from '../utils/types';
 
 const PlanActions: FC<PlanFieldProps> = ({ plan }) => (
   <Flex flex={{ default: 'flex_3' }} flexWrap={{ default: 'nowrap' }}>
-    <FlexItem grow={{ default: 'grow' }} />
-
     <FlexItem align={{ default: 'alignRight' }}>
       <PlanActionsDropdown plan={plan} />
     </FlexItem>

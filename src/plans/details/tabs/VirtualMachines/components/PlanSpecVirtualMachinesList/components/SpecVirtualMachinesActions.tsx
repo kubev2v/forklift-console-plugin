@@ -18,8 +18,6 @@ const SpecVirtualMachinesActions: FC<SpecVirtualMachinesActionsProps> = ({
 }) => {
   return (
     <Flex flex={{ default: 'flex_3' }} flexWrap={{ default: 'nowrap' }}>
-      <FlexItem grow={{ default: 'grow' }} />
-
       <FlexItem align={{ default: 'alignRight' }}>
         <SpecVirtualMachinesActionsDropdown
           plan={plan}

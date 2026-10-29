@@ -86,6 +86,15 @@ export const getControlColumnWidth = (header: HTMLTableCellElement): number => {
         parsePx(style.paddingInlineEnd)
       );
     }
+    const style = getComputedStyle(header);
+    // An empty Actions header can absorb table space, so its live width is not intrinsic.
+    return Math.max(
+      parsePx(style.minWidth),
+      parsePx(style.paddingInlineStart) +
+        parsePx(style.paddingInlineEnd) +
+        parsePx(style.borderInlineStartWidth) +
+        parsePx(style.borderInlineEndWidth),
+    );
   }
   return getLayoutPixelWidth(header);
 };
