@@ -1,7 +1,6 @@
 import { type FC, useId } from 'react';
 
 import { Button, ButtonVariant } from '@patternfly/react-core';
-import { ArrowsAltHIcon } from '@patternfly/react-icons';
 import { useForkliftTranslation } from '@utils/i18n';
 
 import { useTableColumnWidthContext } from '../TableView/TableColumnWidthContext';
@@ -33,7 +32,22 @@ const ForkliftResizeHandle: FC<ForkliftResizeHandleProps> = ({ columnId, label, 
         className="forklift-data-view-table__resize-handle"
         data-column-id={columnId}
         {...{ [DATA_RESIZE_HANDLE_ATTR]: true }}
-        icon={<ArrowsAltHIcon />}
+        icon={
+          <svg
+            aria-hidden="true"
+            className="pf-v6-svg"
+            fill="currentColor"
+            height="1em"
+            role="img"
+            viewBox="0 0 1024 1024"
+            width="1em"
+          >
+            <path
+              d="M52.7,529.8l190.5,161.9c18.6,15.9,50.5,4.7,50.5-17.8v-324c0-22.4-31.8-33.6-50.5-17.8L52.7,494.2c-11.5,9.8-11.5,25.8,0,35.6ZM480.8,12.9h62.4v998.3h-62.4V12.9ZM971.3,529.8l-190.5,161.9c-18.6,15.9-50.5,4.7-50.5-17.8v-324c0-22.4,31.8-33.6,50.5-17.8l190.5,161.9c11.5,9.8,11.5,25.8,0,35.6Z"
+              fillRule="evenodd"
+            />
+          </svg>
+        }
         onClick={(event): void => {
           event.preventDefault();
           event.stopPropagation();

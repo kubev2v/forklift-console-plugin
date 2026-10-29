@@ -75,7 +75,7 @@
   & &__resize-handle {
     align-items: center;
     block-size: 2rem;
-    cursor: col-resize;
+    cursor: grab;
     display: flex;
     inline-size: 2rem;
     inset-block-start: 50%;
@@ -88,6 +88,10 @@
     touch-action: none;
     transform: translateY(-50%);
     z-index: 1;
+
+    &:active {
+      cursor: grabbing;
+    }
   }
 
   & &__resize-status,
