@@ -75,8 +75,8 @@ const PlanDeleteModal: OverlayComponent<PlanModalProps> = ({ closeOverlay, plan 
             >
               <ForkliftTrans>
                 Deleting a migration plan does not remove temporary resources, it is recommended to{' '}
-                <strong>archive</strong> the plan first before deleting it, to remove temporary
-                resources.
+                <strong className="">archive</strong> the plan first before deleting it, to remove
+                temporary resources.
               </ForkliftTrans>
             </Alert>
           )}
