@@ -31,6 +31,8 @@ const renderLayout = (
   const actionHeader = document.createElement('th');
   actionHeader.id = 'actions';
   actionHeader.dataset.actionColumn = 'true';
+  actionHeader.style.paddingInlineStart = '16px';
+  actionHeader.style.paddingInlineEnd = '16px';
   jest.spyOn(actionHeader, 'getBoundingClientRect').mockReturnValue({ width: 60 } as DOMRect);
   row.append(dataHeader, actionHeader);
   if (actionWidth) {
@@ -101,7 +103,7 @@ describe('useDefaultColumnLayout', () => {
     const { container, result, table } = renderLayout();
     expect(
       table.querySelector('col')?.style.getPropertyValue('--forklift-default-column-width'),
-    ).toBe('440px');
+    ).toBe('468px');
     jest.spyOn(container, 'getBoundingClientRect').mockReturnValue({ width: 700 } as DOMRect);
     deliverResize();
     deliverResize();
@@ -109,7 +111,7 @@ describe('useDefaultColumnLayout', () => {
     deliverFrame();
     expect(
       table.querySelector('col')?.style.getPropertyValue('--forklift-default-column-width'),
-    ).toBe('640px');
+    ).toBe('668px');
     expect(result.current.defaultLayoutVersion).toBe(0);
   });
 
