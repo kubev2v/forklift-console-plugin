@@ -68,6 +68,7 @@ export const buildNetworkMappings = (
         : { name: sourceNetwork.name.replace(/^\//gu, '') };
       const baseMapping: V1beta1NetworkMapSpecMap = {
         destination,
+        ...(mapping.networkIPMode ? { networkIPMode: mapping.networkIPMode } : {}),
         source,
       };
       acc.push(baseMapping);
@@ -81,6 +82,7 @@ export const buildNetworkMappings = (
       };
       const baseMapping: V1beta1NetworkMapSpecMap = {
         destination,
+        ...(mapping.networkIPMode ? { networkIPMode: mapping.networkIPMode } : {}),
         source,
       };
       acc.push(baseMapping);
@@ -159,6 +161,7 @@ export const getMappingValues = (
     };
 
     return {
+      ...(mapping.networkIPMode ? { networkIPMode: mapping.networkIPMode } : {}),
       sourceNetwork,
       targetNetwork,
     };
