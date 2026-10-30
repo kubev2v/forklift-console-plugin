@@ -3,9 +3,10 @@ import type { Dispatch, FC, SetStateAction } from 'react';
 import Select from '@components/common/Select';
 import type { V1beta1NetworkMapSpecMap } from '@forklift-ui/types';
 import { Table, TableVariant, Tbody, Td, Th, Thead, Tr } from '@patternfly/react-table';
-import { IgnoreNetwork, isDefaultNetworkTarget } from '@utils/mappings/constants';
+import { IgnoreNetwork } from '@utils/mappings/constants';
 
 import { NETWORK_IP_MODE_INHERIT } from './constants';
+import { isNetworkIPModeEditable } from './networkIPModeUtils';
 
 type NetworkIPModeOption = {
   label: string;
@@ -82,8 +83,7 @@ const NetworkIPModeMappingTable: FC<NetworkIPModeMappingTableProps> = ({
     </Thead>
     <Tbody>
       {mappings.map((mapping, index) => {
-        const isEditable =
-          !isDefaultNetworkTarget(mapping.destination) && mapping.destination.type !== 'ignored';
+        const isEditable = isNetworkIPModeEditable(mapping.destination);
         const value = mapping.networkIPMode ?? NETWORK_IP_MODE_INHERIT;
         const key = `${getNetworkLabel(mapping, false, translate)}-${getNetworkLabel(mapping, true, translate)}`;
 

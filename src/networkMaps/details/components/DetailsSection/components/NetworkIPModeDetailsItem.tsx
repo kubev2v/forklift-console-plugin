@@ -6,6 +6,8 @@ import { useForkliftTranslation } from 'src/utils/i18n';
 import { NetworkMapModel, type V1beta1NetworkMap } from '@forklift-ui/types';
 import { useOverlay } from '@openshift-console/dynamic-plugin-sdk';
 import { Label } from '@patternfly/react-core';
+import { getNamespace } from '@utils/crds/common/selectors';
+import { getNetworkMapMappings } from '@utils/crds/maps/selectors';
 import { isEmpty } from '@utils/helpers';
 import useGetDeleteAndEditAccessReview from '@utils/hooks/useGetDeleteAndEditAccessReview';
 
@@ -33,9 +35,9 @@ const NetworkIPModeDetailsItem: FC<NetworkIPModeDetailsItemProps> = ({ resource 
   const launchOverlay = useOverlay();
   const { canPatch } = useGetDeleteAndEditAccessReview({
     model: NetworkMapModel,
-    namespace: resource.metadata?.namespace,
+    namespace: getNamespace(resource),
   });
-  const modes = resource.spec?.map?.map((mapping) => mapping.networkIPMode) ?? [];
+  const modes = getNetworkMapMappings(resource).map((mapping) => mapping.networkIPMode);
   const distinctModes = [...new Set(modes)];
   let summary = t('Per mapping');
   if (isEmpty(distinctModes)) {
