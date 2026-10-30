@@ -5,6 +5,24 @@ import { Table, TableVariant, Tbody, Td, Th, Thead, Tr } from '@patternfly/react
 import { useForkliftTranslation } from '@utils/i18n';
 import { NetworkMapFieldId, type NetworkMapping } from '@utils/mappings/networkMap';
 
+const getNetworkIPModeLabel = (
+  mode: NetworkMapping['networkIPMode'],
+  translate: (value: string) => string,
+): string => {
+  switch (mode) {
+    case 'dhcp':
+      return translate('DHCP');
+    case 'none':
+      return translate('Do not configure IP');
+    case 'preserve':
+      return translate('Preserve static IPs');
+    case undefined:
+      return translate('Inherit Plan setting');
+    default:
+      return translate('Unknown');
+  }
+};
+
 type NetworkMapReviewTableProps = {
   networkMap: NetworkMapping[];
 };
@@ -37,7 +55,8 @@ const NetworkMapReviewTable: FC<NetworkMapReviewTableProps> = ({ networkMap }) =
         <Thead>
           <Tr>
             <Th width={50}>{t('Source network')}</Th>
-            <Th width={50}>{t('Target network')}</Th>
+            <Th width={30}>{t('Target network')}</Th>
+            <Th width={20}>{t('Network IP mode')}</Th>
           </Tr>
         </Thead>
 
@@ -55,6 +74,9 @@ const NetworkMapReviewTable: FC<NetworkMapReviewTableProps> = ({ networkMap }) =
                   </Td>
                   <Td dataLabel={NetworkMapFieldId.TargetNetwork}>
                     {mapping[NetworkMapFieldId.TargetNetwork].name}
+                  </Td>
+                  <Td dataLabel="networkIPMode">
+                    {getNetworkIPModeLabel(mapping.networkIPMode, t)}
                   </Td>
                 </Tr>
               );

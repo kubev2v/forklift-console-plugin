@@ -7,6 +7,8 @@ import OwnerDetailsItem from '@components/DetailItems/OwnerDetailItem';
 import type { V1beta1NetworkMap } from '@forklift-ui/types';
 import { DescriptionList } from '@patternfly/react-core';
 
+import NetworkIPModeDetailsItem from './components/NetworkIPModeDetailsItem';
+
 type DetailsSectionProps = {
   obj: V1beta1NetworkMap;
 };
@@ -25,6 +27,8 @@ const DetailsSection: FC<DetailsSectionProps> = ({ obj }) => {
       <CreatedAtDetailsItem resource={obj} />
 
       <OwnerDetailsItem resource={obj} />
+
+      <NetworkIPModeDetailsItem resource={obj} />
     </DescriptionList>
   );
 };
