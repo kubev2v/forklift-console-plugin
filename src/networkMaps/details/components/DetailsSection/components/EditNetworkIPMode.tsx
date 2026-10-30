@@ -10,6 +10,7 @@ import {
 import { k8sPatch } from '@openshift-console/dynamic-plugin-sdk';
 import type { OverlayComponent } from '@openshift-console/dynamic-plugin-sdk/lib/app/modal-support/OverlayProvider';
 import { Alert, AlertVariant, ModalVariant } from '@patternfly/react-core';
+import { getNetworkMapMappings } from '@utils/crds/maps/selectors';
 import { isEmpty } from '@utils/helpers';
 import { useForkliftTranslation } from '@utils/i18n';
 
@@ -25,7 +26,7 @@ const EditNetworkIPMode: OverlayComponent<EditNetworkIPModeProps> = ({
   resource,
 }) => {
   const { t } = useForkliftTranslation();
-  const initialMappings = resource.spec?.map ?? [];
+  const initialMappings = getNetworkMapMappings(resource);
   const [mappings, setMappings] = useState<V1beta1NetworkMapSpecMap[]>(initialMappings);
   const options = useMemo(
     () => [

@@ -1,4 +1,11 @@
-import type { V1beta1NetworkMap, V1beta1StorageMap } from '@forklift-ui/types';
+import type {
+  V1beta1NetworkMap,
+  V1beta1NetworkMapSpecMap,
+  V1beta1StorageMap,
+} from '@forklift-ui/types';
+
+export const getNetworkMapMappings = (map: V1beta1NetworkMap): V1beta1NetworkMapSpecMap[] =>
+  map?.spec?.map ?? [];
 
 export const getMapSourceProviderName = (
   map: V1beta1NetworkMap | V1beta1StorageMap,
