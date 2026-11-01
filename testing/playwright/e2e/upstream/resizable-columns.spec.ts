@@ -65,7 +65,11 @@ const expectSmoothGrowth = async (page: Page, name: Locator, project: Locator): 
   expect(Math.abs((await getWidth(name)) - nameWidth)).toBeLessThan(LAYOUT_TOLERANCE_PX);
   for (const delta of [SMALL_DRAG_PX, SMALL_DRAG_PX * 2, SMALL_DRAG_PX * 10]) {
     await page.mouse.move(x + delta, y);
-    expect(Math.abs((await getWidth(name)) - nameWidth - delta)).toBeLessThan(LAYOUT_TOLERANCE_PX);
+    const grown = await getWidth(name);
+    expect(
+      Math.abs(grown - nameWidth - delta),
+      `after moving ${String(delta)}px the column is ${String(grown)} (started ${String(nameWidth)})`,
+    ).toBeLessThan(LAYOUT_TOLERANCE_PX);
     expect(Math.abs((await getWidth(project)) - projectWidth)).toBeLessThan(LAYOUT_TOLERANCE_PX);
   }
   const widthBeforeRelease = await getWidth(name);

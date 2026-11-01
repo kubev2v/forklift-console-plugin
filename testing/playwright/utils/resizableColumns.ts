@@ -111,6 +111,12 @@ export const expectEveryResizeHandleAligned = async (
           : Math.abs(headerRect.right - handleRect.right),
         headerHeight: headerRect.height,
         height: handleRect.height,
+        hitLabel: target
+          ? [target.tagName, target.getAttribute('aria-label'), target.className]
+              .filter((part) => Boolean(part))
+              .join(' ')
+              .slice(0, 80)
+          : 'none',
         hitTarget: button.contains(target),
         sortButtonVerticalGap: sortButtonRect
           ? Math.abs(handleCenterY - (sortButtonRect.top + sortButtonRect.height / 2))

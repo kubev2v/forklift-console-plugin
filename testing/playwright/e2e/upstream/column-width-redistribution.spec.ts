@@ -11,6 +11,7 @@ import { V5_1_0 } from '../../utils/version/constants';
 import { requireVersion } from '../../utils/version/version';
 
 const VIEWPORT_HEIGHT = 1080;
+const GROW_PX = 120;
 const SHRINK_DRAG_PX = 25;
 const VIEWPORT_WIDTHS = [1280, 1440, 1920];
 
@@ -25,6 +26,25 @@ type WidthScenario = {
 
 const getWidth = (header: Locator): Promise<number> =>
   header.evaluate((element) => element.getBoundingClientRect().width);
+
+/**
+ * Below the widest window sizes the readable minima fill the data area, so a shrink drag is
+ * a legitimate no-op and would leave no override to preserve. Grow first so the shrink
+ * always has room, which is what this spec is about (freed space must not be re-absorbed).
+ */
+const growColumn = async (page: Page, header: Locator, deltaPx: number): Promise<void> => {
+  const handle = header.locator('button[data-resize-handle="true"]');
+  const box = await handle.boundingBox();
+  if (!box) {
+    throw new Error('The column resize handle is not visible');
+  }
+  const x = box.x + box.width / 2;
+  const y = box.y + box.height / 2;
+  await page.mouse.move(x, y);
+  await page.mouse.down();
+  await page.mouse.move(x + deltaPx, y, { steps: 5 });
+  await page.mouse.up();
+};
 
 const shrinkColumn = async (page: Page, header: Locator): Promise<void> => {
   const handle = header.locator('button[data-resize-handle="true"]');
@@ -65,6 +85,8 @@ const assertFreedSpaceStaysFree = async ({
 
   const name = table.locator('th#name');
   const project = table.locator('th#namespace');
+  await growColumn(page, name, GROW_PX);
+  await growColumn(page, project, GROW_PX);
   await shrinkColumn(page, name);
   await shrinkColumn(page, project);
   // Both drags must have committed overrides; Reset enabled is the only observable

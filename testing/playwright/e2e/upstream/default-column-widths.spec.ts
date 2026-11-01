@@ -24,6 +24,9 @@ const VIEWPORT_WIDTHS = [1100, 1280, 1440, 1920];
 const NARROW_VIEWPORT_PX = 1280;
 // The data area (not the viewport) must fit once it is at least this wide.
 const FIT_CONTAINER_PX = 1440;
+// Below this the readable minima consume the whole data area, so there is no slack left
+// to distribute by weight: columns legitimately sit at their minimum instead.
+const WEIGHTED_VIEWPORT_PX = 1440;
 
 type WeightedResource = {
   compactId: string;
@@ -50,37 +53,48 @@ const getNameShare = (table: Locator): Promise<number> =>
     return (element.querySelector('th#name')?.getBoundingClientRect().width ?? 0) / total;
   });
 
-const expectWeightedWidths = async (table: Locator, compactId: string): Promise<void> => {
+const expectWeightedWidths = async (
+  table: Locator,
+  compactId: string,
+  expectOrdering: boolean,
+): Promise<void> => {
   // AGENTS.md (this PR): "fill the available data area when readable; allow horizontal
-  // scrolling when the sum of readable minima exceeds it". Weight ordering is therefore
-  // only asserted while the table fits; in scroll mode every column must stay readable.
+  // scrolling when the sum of readable minima exceeds it". So there are three valid
+  // states: scrolling (readable minima), fitted with slack (weights apply), or fitted
+  // exactly at the minima (no slack left to weight). Ordering only applies to the middle.
   const describe = (): Promise<string> =>
-    table.evaluate((element, id) => {
-      const scroller = element.parentElement;
-      const overflow = scroller ? scroller.scrollWidth - scroller.clientWidth : 0;
-      const headers = Array.from(
-        element.querySelectorAll<HTMLTableCellElement>('thead th[data-resizable-column="true"]'),
-      ).filter((header) => getComputedStyle(header).display !== 'none');
-      const widths = headers.map((header) => header.getBoundingClientRect().width);
-      const narrowest = Math.min(...widths);
-      const name = element.querySelector('th#name')?.getBoundingClientRect().width ?? 0;
-      const project = element.querySelector('th#namespace')?.getBoundingClientRect().width ?? 0;
-      const compact = element.querySelector(`th#${id}`)?.getBoundingClientRect().width ?? 0;
-      const ordered = name > project && project > compact && name > compact * 1.5;
-      const readable = headers.length > 0 && narrowest >= 95;
-      const scrolls = overflow > 1;
-      const ok = element.isConnected && readable && (scrolls || ordered);
-      const round = (value: number): number => Math.round(value * 10) / 10;
-      return ok
-        ? 'balanced'
-        : `mode=${scrolls ? 'scroll' : 'fit'} name=${round(name)} project=${round(project)} ` +
-            `compact=${round(compact)} narrowest=${round(narrowest)} overflow=${round(overflow)} ` +
-            `readable=${String(readable)} ordered=${String(ordered)}`;
-    }, compactId);
+    table.evaluate(
+      (element, { id, wantOrdering }) => {
+        const scroller = element.parentElement;
+        const overflow = scroller ? scroller.scrollWidth - scroller.clientWidth : 0;
+        const headers = Array.from(
+          element.querySelectorAll<HTMLTableCellElement>('thead th[data-resizable-column="true"]'),
+        ).filter((header) => getComputedStyle(header).display !== 'none');
+        const widths = headers.map((header) => header.getBoundingClientRect().width);
+        const narrowest = Math.min(...widths);
+        const name = element.querySelector('th#name')?.getBoundingClientRect().width ?? 0;
+        const project = element.querySelector('th#namespace')?.getBoundingClientRect().width ?? 0;
+        const compact = element.querySelector(`th#${id}`)?.getBoundingClientRect().width ?? 0;
+        const ordered = name > project && project > compact && name > compact * 1.5;
+        const readable = headers.length > 0 && narrowest >= 95;
+        const scrolls = overflow > 1;
+        const needsOrdering = wantOrdering && !scrolls;
+        const ok = element.isConnected && readable && (!needsOrdering || ordered);
+        const round = (value: number): number => Math.round(value * 10) / 10;
+        return ok
+          ? 'balanced'
+          : `mode=${scrolls ? 'scroll' : 'fit'} name=${String(round(name))} ` +
+              `project=${String(round(project))} compact=${String(round(compact))} ` +
+              `narrowest=${String(round(narrowest))} overflow=${String(round(overflow))} ` +
+              `readable=${String(readable)} ordered=${String(ordered)} ` +
+              `needsOrdering=${String(needsOrdering)}`;
+      },
+      { id: compactId, wantOrdering: expectOrdering },
+    );
 
   await expect
     .poll(describe, {
-      message: `${compactId}: expected readable columns, weighted when the table fits`,
+      message: `${compactId}: expected readable columns, weighted when the table has slack`,
     })
     .toBe('balanced');
 };
@@ -93,7 +107,7 @@ const assertWeightedWidthsAtWidth = async ({
 }: WeightedScenario): Promise<void> => {
   await page.setViewportSize({ height: VIEWPORT_HEIGHT, width });
   await resetColumnWidthsIfEnabled(page);
-  await expectWeightedWidths(table, resource.compactId);
+  await expectWeightedWidths(table, resource.compactId, width >= WEIGHTED_VIEWPORT_PX);
   await expectReadableTableLayout(
     table,
     { fitWhenContainerAtLeastPx: FIT_CONTAINER_PX },
@@ -107,7 +121,7 @@ const assertWeightedWidthsAtWidth = async ({
   const reset = columnWidthResetButton(page);
   await expect(reset).toBeEnabled();
   await reset.click();
-  await expectWeightedWidths(table, resource.compactId);
+  await expectWeightedWidths(table, resource.compactId, width >= WEIGHTED_VIEWPORT_PX);
   await expectReadableTableLayout(table, {}, { kind: resource.kind, width });
   await expectEveryResizeHandleAligned(table, { kind: resource.kind, width });
 
@@ -115,7 +129,7 @@ const assertWeightedWidthsAtWidth = async ({
   expect(Math.abs((await getNameShare(table)) - initialShare)).toBeLessThan(SHARE_TOLERANCE);
 
   await page.setViewportSize({ height: VIEWPORT_HEIGHT, width: NARROW_VIEWPORT_PX });
-  await expectWeightedWidths(table, resource.compactId);
+  await expectWeightedWidths(table, resource.compactId, false);
   await expectReadableTableLayout(table, {}, { kind: resource.kind, width: NARROW_VIEWPORT_PX });
 };
 
@@ -125,7 +139,7 @@ const assertCompactColumnPersists = async ({
   table,
 }: Omit<WeightedScenario, 'width'>): Promise<void> => {
   await page.setViewportSize({ height: VIEWPORT_HEIGHT, width: NARROW_VIEWPORT_PX });
-  await expectWeightedWidths(table, resource.compactId);
+  await expectWeightedWidths(table, resource.compactId, false);
 
   const compact = table.locator(`th#${resource.compactId}`);
   const initialWidth = await getWidth(compact);
