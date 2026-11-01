@@ -36,7 +36,6 @@ describe('dataViewColumnUtils', () => {
       columnIndex: 0,
       field: nameField,
       resizeConfig: {
-        id: 'name',
         label: 'Name',
         minWidth: 100,
         savedWidth: 240,
@@ -54,7 +53,7 @@ describe('dataViewColumnUtils', () => {
           id: 'name',
           style: { minWidth: '240px' },
         }),
-        resizableProps: expect.objectContaining({ isResizable: true, width: 240 }),
+        resizableProps: expect.objectContaining({ isResizable: true, minWidth: 100 }),
       }),
     );
     if (typeof column === 'object' && column && 'props' in column) {
@@ -69,7 +68,7 @@ describe('dataViewColumnUtils', () => {
       activeSort,
       columnIndex: 0,
       field: nameField,
-      resizeConfig: { id: 'name', label: 'Name', minWidth: 100 },
+      resizeConfig: { label: 'Name', minWidth: 100 },
       setActiveSort: () => undefined,
       visibleColumns: [nameField],
     });

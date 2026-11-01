@@ -9,11 +9,18 @@ const TITLE_HANDLE_GAP_PX = 8;
 const VERTICAL_ALIGNMENT_TOLERANCE_PX = 3;
 const WIDTH_TOLERANCE_PX = 1;
 
-export const expectReadableTableLayout = async (table: Locator): Promise<void> => {
+type ReadableLayoutOptions = {
+  expectNoOverflow?: boolean;
+};
+
+export const expectReadableTableLayout = async (
+  table: Locator,
+  { expectNoOverflow = false }: ReadableLayoutOptions = {},
+): Promise<void> => {
   await expect
     .poll(() =>
       table.evaluate(
-        (element, { minimum, tolerance }) => {
+        (element, { expectNoOverflow: mustFit, minimum, tolerance }) => {
           const scroller = element.parentElement;
           if (!scroller) {
             return false;
@@ -31,10 +38,10 @@ export const expectReadableTableLayout = async (table: Locator): Promise<void> =
             ) &&
             element.getBoundingClientRect().width >=
               scroller.getBoundingClientRect().width - tolerance &&
-            scroller.scrollWidth >= scroller.clientWidth - tolerance
+            (!mustFit || scroller.scrollWidth - scroller.clientWidth <= tolerance)
           );
         },
-        { minimum: MIN_READABLE_COLUMN_PX, tolerance: WIDTH_TOLERANCE_PX },
+        { expectNoOverflow, minimum: MIN_READABLE_COLUMN_PX, tolerance: WIDTH_TOLERANCE_PX },
       ),
     )
     .toBe(true);

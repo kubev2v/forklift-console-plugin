@@ -2,13 +2,14 @@ import {
   DATA_COLUMN_TITLE_ATTR,
   DATA_COLUMN_TITLE_PROBE_ATTR,
   DATA_RESIZE_HANDLE_ATTR,
+  DEFAULT_ROOT_FONT_SIZE_PX,
   RESIZE_HANDLE_GAP_REM,
   RESIZE_HANDLE_SIZE_REM,
   RESIZE_MIN_COLUMN_WIDTH_REM,
+  TITLE_PROBE_FALLBACK_REM,
 } from './dataViewTableConstants';
+import { parsePx } from './defaultColumnLayoutMeasurements';
 import { getLayoutPixelWidth } from './layoutPixelUtils';
-
-const toPixels = (value: string): number => Number.parseFloat(value) || 0;
 
 const positiveWidthOr = (width: number | undefined, fallback: number): number =>
   width !== undefined && width > 0 ? width : fallback;
@@ -16,7 +17,7 @@ const positiveWidthOr = (width: number | undefined, fallback: number): number =>
 const getInlineMargins = (element: Element | null): number => {
   if (!element) return 0;
   const style = getComputedStyle(element);
-  return toPixels(style.marginInlineStart) + toPixels(style.marginInlineEnd);
+  return parsePx(style.marginInlineStart) + parsePx(style.marginInlineEnd);
 };
 
 const getSortFootprint = (title: HTMLElement | null): number => {
@@ -34,8 +35,8 @@ const getSortFootprint = (title: HTMLElement | null): number => {
   return (
     iconWidth +
     getInlineMargins(indicator ?? null) +
-    toPixels(style.paddingInlineStart) +
-    toPixels(style.paddingInlineEnd)
+    parsePx(style.paddingInlineStart) +
+    parsePx(style.paddingInlineEnd)
   );
 };
 
@@ -61,8 +62,8 @@ export const getHeaderMinimumWidth = (
   preferredMinWidth: number,
 ): number => {
   const rootFontSize = positiveWidthOr(
-    toPixels(getComputedStyle(document.documentElement).fontSize),
-    16,
+    parsePx(getComputedStyle(document.documentElement).fontSize),
+    DEFAULT_ROOT_FONT_SIZE_PX,
   );
   const style = getComputedStyle(header);
   const title = header.querySelector<HTMLElement>(`[${DATA_COLUMN_TITLE_ATTR}]`);
@@ -70,7 +71,7 @@ export const getHeaderMinimumWidth = (
   const handle = header.querySelector<HTMLButtonElement>(`button[${DATA_RESIZE_HANDLE_ATTR}]`);
   const fourCharacters = positiveWidthOr(
     titleProbe ? getLayoutPixelWidth(titleProbe) : undefined,
-    rootFontSize * 2,
+    rootFontSize * TITLE_PROBE_FALLBACK_REM,
   );
   const handleWidth = positiveWidthOr(
     handle ? getLayoutPixelWidth(handle) : undefined,
@@ -78,10 +79,10 @@ export const getHeaderMinimumWidth = (
   );
   const controlFootprint = getSortFootprint(title) + getOtherControlFootprint(header, title);
   const trailingSpace = Math.max(
-    toPixels(style.paddingInlineEnd),
+    parsePx(style.paddingInlineEnd),
     handleWidth + rootFontSize * RESIZE_HANDLE_GAP_REM,
   );
   const usableMinimum =
-    toPixels(style.paddingInlineStart) + fourCharacters + trailingSpace + controlFootprint;
+    parsePx(style.paddingInlineStart) + fourCharacters + trailingSpace + controlFootprint;
   return Math.max(preferredMinWidth, rootFontSize * RESIZE_MIN_COLUMN_WIDTH_REM, usableMinimum);
 };

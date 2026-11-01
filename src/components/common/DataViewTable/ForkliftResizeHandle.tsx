@@ -5,7 +5,7 @@ import { useForkliftTranslation } from '@utils/i18n';
 
 import { useTableColumnWidthContext } from '../TableView/TableColumnWidthContext';
 
-import { DATA_RESIZE_HANDLE_ATTR } from './dataViewTableConstants';
+import { DATA_COLUMN_ID_ATTR, DATA_RESIZE_HANDLE_ATTR } from './dataViewTableConstants';
 import { useColumnResizeGesture } from './useColumnResizeGesture';
 
 type ForkliftResizeHandleProps = {
@@ -16,6 +16,7 @@ type ForkliftResizeHandleProps = {
 
 const ForkliftResizeHandle: FC<ForkliftResizeHandleProps> = ({ columnId, label, minWidth }) => {
   const { t } = useForkliftTranslation();
+  const instructionsId = useId();
   const statusId = useId();
   const { commitColumnWidths, flushPendingColumnWidths } = useTableColumnWidthContext();
   const { announcedWidth, ...handlers } = useColumnResizeGesture({
@@ -27,11 +28,10 @@ const ForkliftResizeHandle: FC<ForkliftResizeHandleProps> = ({ columnId, label, 
   return (
     <>
       <Button
-        aria-describedby={statusId}
+        aria-describedby={`${instructionsId} ${statusId}`}
         aria-label={t('Resize {{column}} column', { column: label })}
         className="forklift-data-view-table__resize-handle"
-        data-column-id={columnId}
-        {...{ [DATA_RESIZE_HANDLE_ATTR]: true }}
+        {...{ [DATA_COLUMN_ID_ATTR]: columnId, [DATA_RESIZE_HANDLE_ATTR]: true }}
         icon={
           <svg
             aria-hidden="true"
@@ -56,6 +56,9 @@ const ForkliftResizeHandle: FC<ForkliftResizeHandleProps> = ({ columnId, label, 
         variant={ButtonVariant.plain}
         {...handlers}
       />
+      <span className="forklift-data-view-table__resize-status" id={instructionsId}>
+        {t('Use arrow keys to resize the column, hold Shift for larger steps')}
+      </span>
       <span
         aria-atomic="true"
         aria-live="polite"
@@ -64,7 +67,7 @@ const ForkliftResizeHandle: FC<ForkliftResizeHandleProps> = ({ columnId, label, 
       >
         {announcedWidth === null
           ? ''
-          : t('{{width}} pixels wide', { width: Math.round(announcedWidth) })}
+          : t('{{count}} pixels wide', { count: Math.round(announcedWidth) })}
       </span>
     </>
   );

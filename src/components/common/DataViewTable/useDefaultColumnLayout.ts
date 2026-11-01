@@ -15,7 +15,6 @@ type UseDefaultColumnLayoutArgs = {
 };
 
 type UseDefaultColumnLayoutResult = {
-  defaultLayoutVersion: number;
   layoutRef: RefObject<HTMLDivElement>;
 };
 
@@ -112,5 +111,5 @@ export const useDefaultColumnLayout = ({
     };
   }, [hasCustomColumnWidths, layoutKey]);
 
-  return { defaultLayoutVersion: 0, layoutRef };
+  return { layoutRef };
 };

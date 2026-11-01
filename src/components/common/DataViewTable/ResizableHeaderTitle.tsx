@@ -3,15 +3,17 @@ import { type FC, useCallback, useLayoutEffect, useRef, useState } from 'react';
 import { Tooltip } from '@patternfly/react-core';
 
 import { subscribeToTableLayoutChanges } from '../TableView/resizableCellLayoutEvents';
+import { CLIP_TOLERANCE_PX } from '../TableView/resizableCellUtils';
 
 import { DATA_COLUMN_TITLE_ATTR } from './dataViewTableConstants';
 
 type ResizableHeaderTitleProps = {
   isSortable: boolean;
   label: string;
+  titleId?: string;
 };
 
-const ResizableHeaderTitle: FC<ResizableHeaderTitleProps> = ({ isSortable, label }) => {
+const ResizableHeaderTitle: FC<ResizableHeaderTitleProps> = ({ isSortable, label, titleId }) => {
   const titleRef = useRef<HTMLSpanElement>(null);
   const sortButtonRef = useRef<HTMLButtonElement | null>(null);
   const [isClipped, setIsClipped] = useState(false);
@@ -19,7 +21,7 @@ const ResizableHeaderTitle: FC<ResizableHeaderTitleProps> = ({ isSortable, label
 
   const checkClipped = useCallback((): boolean => {
     const title = titleRef.current;
-    const clipped = Boolean(title && title.scrollWidth > title.clientWidth + 1);
+    const clipped = Boolean(title && title.scrollWidth - title.clientWidth > CLIP_TOLERANCE_PX);
     setIsClipped(clipped);
     if (!clipped) setIsVisible(false);
     return clipped;
@@ -70,6 +72,7 @@ const ResizableHeaderTitle: FC<ResizableHeaderTitleProps> = ({ isSortable, label
     <>
       <span
         className="forklift-data-view-table__header-title"
+        {...(titleId ? { id: titleId } : {})}
         {...{ [DATA_COLUMN_TITLE_ATTR]: true }}
         onBlur={() => {
           setIsVisible(false);

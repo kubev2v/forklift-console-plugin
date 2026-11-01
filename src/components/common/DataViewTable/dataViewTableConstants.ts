@@ -6,6 +6,8 @@ export const DATA_CONTROL_COLUMN_ATTR = 'data-table-control-column';
 
 export const DATA_COLUMN_WIDTH_SPACER_ATTR = 'data-column-width-spacer';
 
+export const DATA_COLUMN_ID_ATTR = 'data-column-id';
+
 export const DATA_ACTION_COLUMN_ATTR = 'data-action-column';
 
 export const DATA_RESIZABLE_COLUMN_ATTR = 'data-resizable-column';
@@ -41,3 +43,7 @@ export const RESIZE_HANDLE_GAP_REM = 0.5;
 export const RESIZE_MIN_COLUMN_WIDTH_REM = 6;
 
 export const RESIZE_DRAG_THRESHOLD_PX = 4;
+
+export const DEFAULT_ROOT_FONT_SIZE_PX = 16;
+
+export const TITLE_PROBE_FALLBACK_REM = 2;

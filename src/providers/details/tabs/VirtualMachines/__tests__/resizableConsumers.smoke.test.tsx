@@ -1,13 +1,10 @@
 import { MemoryRouter } from 'react-router';
-import { ProviderVirtualMachinesList } from 'src/providers/details/tabs/VirtualMachines/components/ProviderVirtualMachinesList';
-import type { VmData } from 'src/providers/details/tabs/VirtualMachines/components/VMCellProps';
-import { HypervVirtualMachinesCells } from 'src/providers/details/tabs/VirtualMachines/HypervVirtualMachinesRow';
-import { OvaVirtualMachinesCells } from 'src/providers/details/tabs/VirtualMachines/OvaVirtualMachinesRow';
-import { OVirtVirtualMachinesCells } from 'src/providers/details/tabs/VirtualMachines/OVirtVirtualMachinesRow';
 
 import type { ResourceField } from '@components/common/utils/types';
 import InspectionVmTable from '@components/InspectVirtualMachines/InspectionVmTable';
 import type { InspectionVmRowData } from '@components/InspectVirtualMachines/utils/types';
+import { renderWithRouter } from '@components/page/__tests__/standardPageWithSelection.fixtures';
+import { StandardPageWithSelection } from '@components/page/StandardPageWithSelection';
 import { describe, expect, it, jest } from '@jest/globals';
 import { screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
@@ -15,9 +12,11 @@ import { EMPTY_MSG } from '@utils/constants';
 import { INSPECTION_STATUS } from '@utils/crds/conversion/constants';
 import { PROVIDER_TYPES } from '@utils/providers/constants';
 
-import { StandardPageWithSelection } from '../StandardPageWithSelection';
-
-import { renderWithRouter } from './standardPageWithSelection.fixtures';
+import { ProviderVirtualMachinesList } from '../components/ProviderVirtualMachinesList';
+import type { VmData } from '../components/VMCellProps';
+import { HypervVirtualMachinesCells } from '../HypervVirtualMachinesRow';
+import { OvaVirtualMachinesCells } from '../OvaVirtualMachinesRow';
+import { OVirtVirtualMachinesCells } from '../OVirtVirtualMachinesRow';
 
 const inspectionRows: InspectionVmRowData[] = [
   {

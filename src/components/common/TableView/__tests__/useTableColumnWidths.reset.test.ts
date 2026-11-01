@@ -68,7 +68,7 @@ describe('column width reset', () => {
     expect(result.current.getResizeConfig(nameField, 'Name')).not.toHaveProperty('savedWidth');
   });
 
-  it('preserves widths when clearing storage fails', () => {
+  it('clears widths without throwing when clearing storage fails', () => {
     const clear = jest.fn((): void => {
       throw new Error('storage failed');
     });
@@ -84,9 +84,30 @@ describe('column width reset', () => {
       act(() => {
         result.current.resetAllColumnWidths();
       });
-    }).toThrow('storage failed');
-    expect(result.current.getResizeConfig(nameField, 'Name')).toHaveProperty('savedWidth', 100);
-    expect(result.current.columnLayoutKey).toBe(initialLayoutKey);
+    }).not.toThrow();
+    expect(clear).toHaveBeenCalledTimes(1);
+    expect(result.current.getResizeConfig(nameField, 'Name')).not.toHaveProperty('savedWidth');
+    expect(result.current.columnLayoutKey).not.toBe(initialLayoutKey);
+  });
+
+  it('does not throw when persisting widths fails', () => {
+    const save = jest.fn((): void => {
+      throw new Error('quota exceeded');
+    });
+    const { result } = renderHook(() =>
+      useTableColumnWidths({
+        columnWidthsSettings: { clear: jest.fn(), data: {}, save },
+        enabled: true,
+        fields,
+      }),
+    );
+    expect(() => {
+      act(() => {
+        result.current.commitColumnWidths({ name: 240 });
+        result.current.flushPendingColumnWidths();
+      });
+    }).not.toThrow();
+    expect(result.current.getResizeConfig(nameField, 'Name')).toHaveProperty('savedWidth', 240);
   });
 
   it('retained Reset callbacks operate on the latest committed widths', () => {

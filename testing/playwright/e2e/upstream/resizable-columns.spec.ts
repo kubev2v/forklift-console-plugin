@@ -14,6 +14,7 @@ const SMALL_DRAG_PX = 5;
 const MIN_READABLE_WIDTH_PX = 96;
 const SHRINK_DRAG_PX = -400;
 const VIEWPORT_HEIGHT = 1080;
+const WIDE_VIEWPORT_PX = 1440;
 
 const getWidth = (header: Locator): Promise<number> =>
   header.evaluate((cell) => cell.getBoundingClientRect().width);
@@ -94,7 +95,7 @@ test.describe('Resizable list columns', { tag: '@upstream' }, () => {
         await page.goto(`/k8s/all-namespaces/forklift.konveyor.io~v1beta1~${resource.kind}`);
         const table = page.getByRole('grid', { exact: true, name: resource.title });
         await expect(table.locator('tbody').getByRole('link').first()).toBeVisible();
-        await expectReadableTableLayout(table);
+        await expectReadableTableLayout(table, { expectNoOverflow: width >= WIDE_VIEWPORT_PX });
         await expectEveryResizeHandleAligned(table);
         await expectResetDisabled(page);
         const name = table.locator('th#name');
@@ -122,7 +123,7 @@ test.describe('Resizable list columns', { tag: '@upstream' }, () => {
       await expectReadableTableLayout(table);
       for (const width of [1280, 1440, 1100, 1920]) {
         await page.setViewportSize({ height: VIEWPORT_HEIGHT, width });
-        await expectReadableTableLayout(table);
+        await expectReadableTableLayout(table, { expectNoOverflow: width >= WIDE_VIEWPORT_PX });
         await expectEveryResizeHandleAligned(table);
       }
     });

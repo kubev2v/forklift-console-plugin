@@ -67,7 +67,7 @@ const ForkliftHybridDataViewTable = <T,>({
     visibleColumns,
     controlColumnSignature,
   );
-  const { defaultLayoutVersion, layoutRef } = useDefaultColumnLayout({
+  const { layoutRef } = useDefaultColumnLayout({
     hasCustomColumnWidths,
     layoutKey,
   });
@@ -89,7 +89,7 @@ const ForkliftHybridDataViewTable = <T,>({
           data-column-widths-customized={hasCustomColumnWidths}
           gridBreakPoint=""
           isStickyHeader
-          key={`${layoutKey}-${defaultLayoutVersion}`}
+          key={layoutKey}
           variant="compact"
         >
           <ForkliftResizableTableHead columns={columns} />

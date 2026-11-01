@@ -5,6 +5,7 @@ import { Td, type TdProps } from '@patternfly/react-table';
 
 import ColumnWidthSpacer from '../DataViewTable/ColumnWidthSpacer';
 import { getActionCellProps } from '../DataViewTable/dataViewColumnUtils';
+import { DATA_COLUMN_ID_ATTR } from '../DataViewTable/dataViewTableConstants';
 import type { ResourceField } from '../utils/types';
 
 import { useTableColumnWidthContext } from './TableColumnWidthContext';
@@ -54,13 +55,8 @@ const ResizableTd: FC<ResizableTdProps> = ({
     setShowFullText(next.clipped && next.text !== '');
   };
 
-  let cellTabIndex = tabIndex;
-  if (isAction) {
-    cellTabIndex = -1;
-  }
-  if (shouldTruncate) {
-    cellTabIndex = disclosure.clipped && !disclosure.interactive ? 0 : -1;
-  }
+  // Truncation is CSS-only, so assistive tech already reads the full text: never add cell tab stops.
+  const cellTabIndex = isAction ? -1 : tabIndex;
 
   return (
     <>
@@ -71,7 +67,7 @@ const ResizableTd: FC<ResizableTdProps> = ({
         {...(cellTabIndex === undefined ? {} : { tabIndex: cellTabIndex })}
         className={cellClassName || undefined}
         data-clipped={shouldTruncate ? disclosure.clipped : undefined}
-        data-column-id={columnId ?? undefined}
+        {...{ [DATA_COLUMN_ID_ATTR]: columnId ?? undefined }}
         onBlur={(event): void => {
           onBlur?.(event);
           if (shouldTruncate && !event.currentTarget.matches(':hover')) {

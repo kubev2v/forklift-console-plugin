@@ -88,7 +88,7 @@ describe('ResizableTd', () => {
     expect(screen.getByRole('cell')).toHaveAttribute('tabindex', '-1');
   });
 
-  it('reveals clipped React content and makes only a noninteractive cell focusable', async () => {
+  it('reveals clipped React content on hover without adding a cell tab stop', async () => {
     renderCell(true, false, <span>Long virtual machine name</span>);
     const cell = screen.getByRole('cell');
     cell.style.overflow = 'hidden';
@@ -97,7 +97,7 @@ describe('ResizableTd', () => {
 
     fireEvent.mouseEnter(cell);
 
-    expect(cell).toHaveAttribute('tabindex', '0');
+    expect(cell).toHaveAttribute('tabindex', '-1');
     expect(cell).toHaveAttribute('data-clipped', 'true');
     expect(await screen.findByRole('tooltip')).toHaveTextContent('Long virtual machine name');
   });
@@ -141,7 +141,7 @@ describe('ResizableTd', () => {
       ),
       name: 'negative tab index',
     },
-  ])('keeps a clipped cell focusable with an unreachable $name', async ({ child }) => {
+  ])('keeps a clipped cell out of the tab order with an unreachable $name', async ({ child }) => {
     renderCell(true, false, child);
     const cell = screen.getByRole('cell');
     cell.style.overflow = 'hidden';
@@ -150,7 +150,7 @@ describe('ResizableTd', () => {
 
     fireEvent.mouseEnter(cell);
 
-    expect(cell).toHaveAttribute('tabindex', '0');
+    expect(cell).toHaveAttribute('tabindex', '-1');
     expect(await screen.findByRole('tooltip')).toHaveTextContent('Long virtual machine name');
   });
 });

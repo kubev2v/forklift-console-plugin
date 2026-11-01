@@ -96,11 +96,11 @@ describe('useDefaultColumnLayout', () => {
   it('observes only its own headers and the container', () => {
     const { result } = renderLayout(false, true);
     expect(observe).toHaveBeenCalledTimes(3);
-    expect(result.current.defaultLayoutVersion).toBe(0);
+    expect(result.current).not.toHaveProperty('defaultLayoutVersion');
   });
 
   it('refreshes widths after the container changes without remounting', () => {
-    const { container, result, table } = renderLayout();
+    const { container, table } = renderLayout();
     expect(
       table.querySelector('col')?.style.getPropertyValue('--forklift-default-column-width'),
     ).toBe('468px');
@@ -112,7 +112,6 @@ describe('useDefaultColumnLayout', () => {
     expect(
       table.querySelector('col')?.style.getPropertyValue('--forklift-default-column-width'),
     ).toBe('668px');
-    expect(result.current.defaultLayoutVersion).toBe(0);
   });
 
   it('remeasures a late-styled Actions button even while its header box stays fixed', () => {

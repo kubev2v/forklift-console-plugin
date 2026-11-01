@@ -2,6 +2,7 @@ import { isValidColumnWidth } from '../TableView/columnWidthUtils';
 
 import {
   DATA_ACTION_COLUMN_ATTR,
+  DATA_COLUMN_ID_ATTR,
   DATA_COLUMN_WIDTH_SPACER_ATTR,
   DATA_COLUMN_WIDTHS_CUSTOMIZED_ATTR,
   DATA_CONTROL_COLUMN_ATTR,
@@ -37,7 +38,7 @@ export const getActionControl = (
   );
   for (const row of rows) {
     for (const cell of Array.from(row.cells)) {
-      if (cell.dataset.columnId === header.id) {
+      if (cell.getAttribute(DATA_COLUMN_ID_ATTR) === header.id) {
         const button = cell.querySelector<HTMLButtonElement>('button');
         if (button) {
           return { button, cell };

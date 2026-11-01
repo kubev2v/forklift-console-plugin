@@ -12,6 +12,7 @@ import {
   COLUMN_WIDTH_SPACER_ARIA_HIDDEN,
   COLUMN_WIDTH_SPACER_ROLE,
   DATA_ACTION_COLUMN_ATTR,
+  DATA_COLUMN_ID_ATTR,
   DATA_COLUMN_WIDTH_FIXED_ATTR,
   DATA_COLUMN_WIDTH_SPACER_ATTR,
   DATA_DEFAULT_COLUMN_MIN_WIDTH_ATTR,
@@ -25,7 +26,7 @@ const withStickyCellClass = (className?: string): string =>
     ? `${className} ${FORKLIFT_DATA_VIEW_TABLE_STICKY_CELL_CLASS}`
     : FORKLIFT_DATA_VIEW_TABLE_STICKY_CELL_CLASS;
 
-type ForkliftHeaderProps = ThProps & { 'data-column-id'?: string };
+type ForkliftHeaderProps = ThProps & { [DATA_COLUMN_ID_ATTR]?: string };
 
 export const getColumnWidthSpacerProps = (): TdProps &
   ThProps & { [DATA_COLUMN_WIDTH_SPACER_ATTR]: true } => ({
@@ -70,7 +71,7 @@ export const toDataViewColumn = ({
 }: ToDataViewColumnArgs): DataViewTh => {
   const label = field.label ?? '';
   const headerProps: ForkliftHeaderProps = {
-    'data-column-id': field.resourceFieldId ?? undefined,
+    [DATA_COLUMN_ID_ATTR]: field.resourceFieldId ?? undefined,
     ...(field.isAction ? { ...getActionHeaderProps(), [DATA_ACTION_COLUMN_ATTR]: true } : {}),
     dataLabel: label || undefined,
     id: field.resourceFieldId ?? undefined,
@@ -112,7 +113,6 @@ export const toDataViewColumn = ({
           isResizable: true,
           minWidth: resizeConfig.minWidth,
           resizeButtonAriaLabel: resizeConfig.label,
-          width: resizeConfig.savedWidth,
         }
       : undefined,
   };

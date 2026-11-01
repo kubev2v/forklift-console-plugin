@@ -126,9 +126,16 @@ test.describe('Weighted default column widths', { tag: '@upstream' }, () => {
           expect(Math.abs((await getWidth(compact)) - initialWidth - delta)).toBeLessThan(
             WIDTH_TOLERANCE_PX,
           );
-        } else {
+        } else if (delta === SHRINK_DRAG_PX) {
           expect(await getWidth(compact)).toBeGreaterThanOrEqual(
             MIN_READABLE_WIDTH_PX - WIDTH_TOLERANCE_PX,
+          );
+          expect(await getWidth(compact)).toBeGreaterThan(
+            initialWidth + delta + WIDTH_TOLERANCE_PX,
+          );
+        } else {
+          expect(Math.abs((await getWidth(compact)) - initialWidth - delta)).toBeLessThan(
+            WIDTH_TOLERANCE_PX,
           );
         }
         expect(Math.abs((await getWidth(table.locator('th#name'))) - nameWidth)).toBeLessThan(

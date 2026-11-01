@@ -3,13 +3,17 @@
   "projectTitle": "[Forklift $VERSION] UI Localization - Sprint $SPRINT/Branch $BRANCH",
   "templateId": "169304",
   "languages": ["ja", "zh-cn", "ko", "fr", "es"],
-  "languageAliases": { "zh-cn": "zh" },
+  "languageAliases": {
+    "zh-cn": "zh"
+  },
   "pluralOverrides": {
     "{{count}} VM_other": "{{count}} VMs",
     "{{count}} issues impacting this provider_one": "{{count}} issue impacting this provider",
     "{{count}} issues impacting this provider_other": "{{count}} issues impacting this provider",
     "{{count}} virtual machine selected_other": "{{count}} virtual machines selected",
     "Failed to create inspection for {{count}} VM_other": "Failed to create inspections for {{count}} VMs",
-    "Inspect {{count}} VM_other": "Inspect {{count}} VMs"
+    "Inspect {{count}} VM_other": "Inspect {{count}} VMs",
+    "{{count}} pixels wide_one": "{{count}} pixel wide",
+    "{{count}} pixels wide_other": "{{count}} pixels wide"
   }
 }

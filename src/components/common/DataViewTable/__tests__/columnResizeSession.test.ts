@@ -57,6 +57,40 @@ describe('column resize session', () => {
     expect(table.dataset.columnWidthsCustomized).toBe('true');
   });
 
+  it.each([
+    {
+      case: 'an empty column id',
+      mutate: (table: HTMLTableElement): void => {
+        table.querySelector('#name')?.removeAttribute('id');
+      },
+    },
+    {
+      case: 'a zero width',
+      mutate: (table: HTMLTableElement): void => {
+        const name = table.querySelector<HTMLTableCellElement>('#name');
+        if (name)
+          jest.spyOn(name, 'getBoundingClientRect').mockReturnValue({ width: 0 } as DOMRect);
+      },
+    },
+    {
+      case: 'a non-finite width',
+      mutate: (table: HTMLTableElement): void => {
+        const name = table.querySelector<HTMLTableCellElement>('#name');
+        if (name) {
+          jest
+            .spyOn(name, 'getBoundingClientRect')
+            .mockReturnValue({ width: Number.NaN } as DOMRect);
+        }
+      },
+    },
+  ])('refuses to capture the session when any data header has $case', ({ mutate }) => {
+    const { name, table } = createTable();
+    mutate(table);
+
+    expect(captureColumnResizeSession(name)).toBeNull();
+    expect(table.dataset.columnResizeActive).toBeUndefined();
+  });
+
   it('restores the exact previous DOM state when a gesture is cancelled', () => {
     const { name, status, table } = createTable();
     name.style.minWidth = '115px';

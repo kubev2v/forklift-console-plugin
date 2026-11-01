@@ -39,16 +39,10 @@ export const useResizableCellDisclosure = (enabled: boolean): ResizableCellDiscl
     }
 
     measure();
-    const resizeObserver =
-      typeof ResizeObserver === 'undefined' ? null : new ResizeObserver(measure);
-    resizeObserver?.observe(cell);
-    const mutationObserver = new MutationObserver(measure);
-    mutationObserver.observe(cell, { characterData: true, childList: true, subtree: true });
-    const unsubscribe = subscribeToTableLayoutChanges(measure);
+    // One shared table-level observer per table keeps cell measurement from scaling with row count.
+    const unsubscribe = subscribeToTableLayoutChanges(measure, cell.closest('table') ?? cell);
 
     return (): void => {
-      resizeObserver?.disconnect();
-      mutationObserver.disconnect();
       unsubscribe();
     };
   }, [enabled, measure]);

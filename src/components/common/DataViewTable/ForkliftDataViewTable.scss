@@ -79,11 +79,11 @@
     display: flex;
     font-size: inherit;
     inline-size: 2rem;
-    // PatternFly bottom-aligns header text; center the 2rem target on that line box.
-    inset-block-end: calc(var(--pf-v6-c-table--cell--PaddingBlockEnd) + 0.5lh - 1rem);
+    inset-block: 0;
     inset-inline-end: 0;
     justify-content: center;
     line-height: inherit;
+    margin-block: auto;
     min-block-size: 2rem;
     min-inline-size: 2rem;
     padding: 0;

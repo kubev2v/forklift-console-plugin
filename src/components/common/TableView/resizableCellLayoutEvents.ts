@@ -2,8 +2,10 @@
 type LayoutListener = () => void;
 
 const listeners = new Set<LayoutListener>();
+const observedElements = new Map<Element, number>();
 let fontSet: FontFaceSet | undefined;
 let headObserver: MutationObserver | undefined;
+let elementObserver: ResizeObserver | undefined;
 
 const notifyListeners = (): void => {
   for (const listener of listeners) listener();
@@ -33,7 +35,35 @@ const onDocumentLoad = (event: Event): void => {
   }
 };
 
-export const subscribeToTableLayoutChanges = (listener: LayoutListener): (() => void) => {
+const releaseElementObserver = (): void => {
+  elementObserver?.disconnect();
+  elementObserver = undefined;
+  observedElements.clear();
+};
+
+const observeElement = (element: Element): void => {
+  if (!elementObserver && typeof ResizeObserver !== 'undefined') {
+    elementObserver = new ResizeObserver(notifyListeners);
+  }
+  const count = observedElements.get(element) ?? 0;
+  if (count === 0) elementObserver?.observe(element);
+  observedElements.set(element, count + 1);
+};
+
+const unobserveElement = (element: Element): void => {
+  const count = observedElements.get(element) ?? 0;
+  if (count <= 1) {
+    elementObserver?.unobserve(element);
+    observedElements.delete(element);
+  } else {
+    observedElements.set(element, count - 1);
+  }
+};
+
+export const subscribeToTableLayoutChanges = (
+  listener: LayoutListener,
+  element?: Element | null,
+): (() => void) => {
   if (listeners.size === 0) {
     fontSet = document.fonts ?? undefined;
     fontSet?.addEventListener('loadingdone', notifyListeners);
@@ -49,13 +79,16 @@ export const subscribeToTableLayoutChanges = (listener: LayoutListener): (() => 
     }
   }
   listeners.add(listener);
+  if (element) observeElement(element);
 
   return (): void => {
     listeners.delete(listener);
+    if (element) unobserveElement(element);
     if (listeners.size === 0) {
       fontSet?.removeEventListener('loadingdone', notifyListeners);
       document.removeEventListener('load', onDocumentLoad, true);
       headObserver?.disconnect();
+      releaseElementObserver();
       fontSet = undefined;
       headObserver = undefined;
     }

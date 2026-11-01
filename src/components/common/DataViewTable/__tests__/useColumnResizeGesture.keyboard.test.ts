@@ -1,4 +1,4 @@
-import type { KeyboardEvent } from 'react';
+import type { FocusEvent, KeyboardEvent } from 'react';
 
 import { act, renderHook, screen } from '@testing-library/react';
 
@@ -24,7 +24,11 @@ const createTable = (direction: 'ltr' | 'rtl', width = 160): HTMLButtonElement =
     throw new Error('Resizable table fixture is missing');
   }
   name.style.direction = direction;
-  jest.spyOn(name, 'getBoundingClientRect').mockReturnValue({ width } as DOMRect);
+  jest
+    .spyOn(name, 'getBoundingClientRect')
+    .mockImplementation(
+      () => ({ width: Number.parseFloat(name.style.minWidth) || width }) as DOMRect,
+    );
   jest.spyOn(status, 'getBoundingClientRect').mockReturnValue({ width: 140 } as DOMRect);
   return button;
 };
@@ -41,6 +45,9 @@ const keyEvent = (
     shiftKey,
     stopPropagation: jest.fn(),
   }) as unknown as KeyboardEvent<HTMLButtonElement>;
+
+const focusEvent = (button: HTMLButtonElement): FocusEvent<HTMLButtonElement> =>
+  ({ currentTarget: button }) as unknown as FocusEvent<HTMLButtonElement>;
 
 afterEach(() => {
   document.body.innerHTML = '';
@@ -87,7 +94,39 @@ describe('column resize keyboard gesture', () => {
 
     expect(commitColumnWidths).not.toHaveBeenCalled();
     expect(flushPendingColumnWidths).not.toHaveBeenCalled();
+    expect(result.current.announcedWidth).toBe(150);
     expect(screen.getByRole('table').getAttribute('data-column-widths-customized')).toBe('false');
+  });
+
+  it('restores the width captured on focus when Escape is pressed', () => {
+    const button = createTable('ltr');
+    const commitColumnWidths = jest.fn();
+    const { result } = renderHook(() =>
+      useColumnResizeGesture({
+        commitColumnWidths,
+        flushPendingColumnWidths: jest.fn(),
+        minWidth: 100,
+      }),
+    );
+
+    act(() => {
+      result.current.onFocus(focusEvent(button));
+      result.current.onKeyDown(keyEvent(button, 'ArrowRight'));
+      result.current.onKeyDown(keyEvent(button, 'ArrowRight'));
+    });
+    expect(commitColumnWidths).toHaveBeenLastCalledWith({ name: 170, status: 140 });
+
+    act(() => {
+      result.current.onKeyDown(keyEvent(button, 'Escape'));
+    });
+
+    expect(commitColumnWidths).toHaveBeenLastCalledWith({ name: 160, status: 140 });
+    expect(result.current.announcedWidth).toBe(160);
+
+    act(() => {
+      result.current.onKeyDown(keyEvent(button, 'Escape'));
+    });
+    expect(commitColumnWidths).toHaveBeenCalledTimes(3);
   });
 
   it('keeps a legacy narrow width stable on shrink and grows it in normal increments', () => {

@@ -1,5 +1,5 @@
 // cspell:ignore contenteditable
-const CLIP_TOLERANCE_PX = 1;
+export const CLIP_TOLERANCE_PX = 1;
 const FOCUSABLE_CONTENT_SELECTOR =
   'a[href], area[href], button, input, select, textarea, summary, [contenteditable], [tabindex]';
 

@@ -1,15 +1,11 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
-import { createCancellableDebounce } from '@utils/debounce';
 import { isEmpty } from '@utils/helpers';
 
 import type { ColumnWidthsSettings } from '../Page/types';
 import type { ResourceField } from '../utils/types';
 
-import {
-  COLUMN_WIDTH_PERSIST_DEBOUNCE_MS,
-  COLUMN_WIDTH_PERSIST_EVENTS,
-} from './columnWidthConstants';
+import { createColumnWidthsSaver, subscribeColumnWidthPersistence } from './columnWidthPersistence';
 import {
   areColumnWidthsEqual,
   type ColumnResizeConfig,
@@ -44,7 +40,10 @@ export const useTableColumnWidths = ({
   fields,
 }: UseTableColumnWidthsArgs): UseTableColumnWidthsResult => {
   const scopeId = columnWidthsSettings?.scopeId;
-  const persistedWidths = sanitizeColumnWidths(columnWidthsSettings?.data);
+  const persistedWidths = useMemo(
+    () => sanitizeColumnWidths(columnWidthsSettings?.data),
+    [columnWidthsSettings?.data],
+  );
   const [resizeOverrides, setResizeOverrides] = useState<ResizeOverrides | null>(null);
   const scopeVersionRef = useRef({ id: scopeId, version: 0 });
   if (scopeVersionRef.current.id !== scopeId) {
@@ -73,29 +72,11 @@ export const useTableColumnWidths = ({
   clearRef.current = columnWidthsSettings?.clear;
   saveRef.current = columnWidthsSettings?.save;
 
-  const debouncedSaveRef = useRef(
-    createCancellableDebounce(
-      (widths: Record<string, number>, save: ColumnWidthsSettings['save']): void => {
-        save(widths);
-      },
-      COLUMN_WIDTH_PERSIST_DEBOUNCE_MS,
-    ),
-  );
+  const debouncedSaveRef = useRef(createColumnWidthsSaver());
   const pendingScopeRef = useRef(scopeVersion);
   const previousScopeRef = useRef(scopeVersion);
 
-  useEffect(() => {
-    const debouncedSave = debouncedSaveRef.current;
-    for (const eventType of COLUMN_WIDTH_PERSIST_EVENTS) {
-      window.addEventListener(eventType, debouncedSave.flush);
-    }
-    return (): void => {
-      for (const eventType of COLUMN_WIDTH_PERSIST_EVENTS) {
-        window.removeEventListener(eventType, debouncedSave.flush);
-      }
-      debouncedSave.flush();
-    };
-  }, []);
+  useEffect(() => subscribeColumnWidthPersistence(debouncedSaveRef.current), []);
 
   useEffect(() => {
     if (previousScopeRef.current !== scopeVersion) {
@@ -147,7 +128,11 @@ export const useTableColumnWidths = ({
     if (pendingScopeRef.current !== scopeVersionCurrentRef.current) {
       debouncedSaveRef.current.flush();
     }
-    clearRef.current?.();
+    try {
+      clearRef.current?.();
+    } catch {
+      // Storage can fail; Reset must still clear the in-memory overrides.
+    }
     debouncedSaveRef.current.cancel();
     widthsRef.current = {};
     setResizeOverrides({ scopeVersion: scopeVersionCurrentRef.current, widths: {} });

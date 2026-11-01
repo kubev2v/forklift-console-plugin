@@ -9,26 +9,15 @@ import {
 } from 'react';
 
 import {
-  RESIZE_COLUMN_WIDTH_INCREMENT,
-  RESIZE_COLUMN_WIDTH_SHIFT_INCREMENT,
-} from '../TableView/columnWidthConstants';
-
-import {
   type ColumnResizeGestureHandlers,
   type DragState,
   getHeaderForResizeButton,
   releaseColumnResizeCapture,
 } from './columnResizeInputUtils';
-import {
-  activateColumnResize,
-  captureColumnResizeSession,
-  completeColumnResize,
-  previewColumnResize,
-  rollbackColumnResize,
-} from './columnResizeSession';
-import { RESIZE_DRAG_THRESHOLD_PX } from './dataViewTableConstants';
-import { getHeaderMinimumWidth } from './getHeaderMinimumWidth';
-import { getEffectiveCssZoom, getLayoutPixelWidth } from './layoutPixelUtils';
+import { commitKeyboardResize, isArrowResizeKey, restoreColumnWidth } from './columnResizeKeyboard';
+import { createDragState, previewPointerResize } from './columnResizePointer';
+import { completeColumnResize, rollbackColumnResize } from './columnResizeSession';
+import { getLayoutPixelWidth } from './layoutPixelUtils';
 
 type UseColumnResizeGestureArgs = {
   commitColumnWidths: (widths: Record<string, number>) => void;
@@ -42,6 +31,8 @@ export const useColumnResizeGesture = ({
   minWidth,
 }: UseColumnResizeGestureArgs): ColumnResizeGestureHandlers => {
   const dragRef = useRef<DragState | null>(null);
+  const keyboardStartRef = useRef<number | null>(null);
+  const keyboardWidthRef = useRef<number | null>(null);
   const [announcedWidth, setAnnouncedWidth] = useState<number | null>(null);
 
   const cancelDrag = useCallback((): void => {
@@ -67,32 +58,13 @@ export const useColumnResizeGesture = ({
     event.stopPropagation();
     button.focus();
     button.setPointerCapture?.(event.pointerId);
-    dragRef.current = {
-      button,
-      lastWidth: null,
-      minimum: getHeaderMinimumWidth(header, minWidth),
-      pointerId: event.pointerId,
-      rtl: getComputedStyle(header).direction === 'rtl',
-      session: null,
-      startX: event.clientX,
-      zoom: getEffectiveCssZoom(header),
-    };
+    dragRef.current = createDragState(event, header, minWidth);
   };
 
   const onPointerMove = (event: PointerEvent<HTMLButtonElement>): void => {
     const drag = dragRef.current;
     if (drag?.pointerId !== event.pointerId) return;
-    const delta = ((event.clientX - drag.startX) / drag.zoom) * (drag.rtl ? -1 : 1);
-    if (!drag.session && Math.abs(delta) < RESIZE_DRAG_THRESHOLD_PX) return;
-    if (!drag.session) {
-      const header = getHeaderForResizeButton(drag.button);
-      drag.session = header && captureColumnResizeSession(header);
-      if (!drag.session) return;
-      activateColumnResize(drag.session);
-    }
-    const gestureMinimum = Math.min(drag.minimum, drag.session.activeWidth);
-    drag.lastWidth = Math.max(gestureMinimum, drag.session.activeWidth + delta);
-    previewColumnResize(drag.session, drag.lastWidth);
+    if (previewPointerResize(drag, event.clientX) === null) return;
     event.preventDefault();
     event.stopPropagation();
   };
@@ -116,37 +88,51 @@ export const useColumnResizeGesture = ({
   };
 
   const onKeyDown = (event: KeyboardEvent<HTMLButtonElement>): void => {
-    if (event.key === 'Escape' && dragRef.current) {
-      event.preventDefault();
-      cancelDrag();
+    if (event.key === 'Escape') {
+      if (dragRef.current) {
+        event.preventDefault();
+        cancelDrag();
+        return;
+      }
+      const start = keyboardStartRef.current;
+      const { current } = keyboardWidthRef;
+      if (start !== null && current !== null && current !== start) {
+        event.preventDefault();
+        const restored = restoreColumnWidth({
+          button: event.currentTarget,
+          commitColumnWidths,
+          flushPendingColumnWidths,
+          width: start,
+        });
+        if (restored !== null) {
+          keyboardWidthRef.current = restored;
+          setAnnouncedWidth(restored);
+        }
+      }
       return;
     }
-    if (event.key !== 'ArrowLeft' && event.key !== 'ArrowRight') return;
+    if (!isArrowResizeKey(event.key)) return;
     event.preventDefault();
     event.stopPropagation();
     if (dragRef.current) return;
-    const header = getHeaderForResizeButton(event.currentTarget);
-    const session = header && captureColumnResizeSession(header);
-    if (!header || !session) return;
-    const rtl = getComputedStyle(header).direction === 'rtl';
-    const sign = (event.key === 'ArrowRight' ? 1 : -1) * (rtl ? -1 : 1);
-    const increment = event.shiftKey
-      ? RESIZE_COLUMN_WIDTH_SHIFT_INCREMENT
-      : RESIZE_COLUMN_WIDTH_INCREMENT;
-    const gestureMinimum = Math.min(getHeaderMinimumWidth(header, minWidth), session.activeWidth);
-    const width = Math.max(gestureMinimum, session.activeWidth + sign * increment);
-    if (width === session.activeWidth) return;
-    activateColumnResize(session);
-    previewColumnResize(session, width);
-    const widths = completeColumnResize(session, width);
+    const width = commitKeyboardResize({
+      commitColumnWidths,
+      event,
+      flushPendingColumnWidths,
+      minWidth,
+    });
+    if (width === null) return;
+    keyboardWidthRef.current = width;
     setAnnouncedWidth(width);
-    commitColumnWidths(widths);
-    flushPendingColumnWidths();
   };
 
   const onFocus = (event: FocusEvent<HTMLButtonElement>): void => {
     const header = getHeaderForResizeButton(event.currentTarget);
-    if (header) setAnnouncedWidth(getLayoutPixelWidth(header));
+    if (!header) return;
+    const width = getLayoutPixelWidth(header);
+    keyboardStartRef.current = width;
+    keyboardWidthRef.current = width;
+    setAnnouncedWidth(width);
   };
 
   return {

@@ -27,12 +27,10 @@ describe('useTableColumnWidths', () => {
     const { result } = renderHook(() => useTableColumnWidths({ enabled: true, fields }));
 
     expect(result.current.getResizeConfig(nameField, 'Name')).toEqual({
-      id: 'name',
       label: 'Name',
       minWidth: 100,
     });
     expect(result.current.getResizeConfig(compactField, 'VMs')).toEqual({
-      id: 'vms',
       label: 'VMs',
       minWidth: 96,
     });

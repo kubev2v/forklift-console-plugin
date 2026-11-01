@@ -31,7 +31,7 @@ const setCellTextWidth = (cell: HTMLElement, scrollWidth: number): void => {
 };
 
 describe('ResizableTd late text clipping', () => {
-  it('updates keyboard reachability after font load without a cell resize', () => {
+  it('updates clipping after font load without a cell resize', () => {
     const originalFonts = Object.getOwnPropertyDescriptor(document, 'fonts');
     const fonts = new EventTarget();
     const removeEventListener = jest.spyOn(fonts, 'removeEventListener');
@@ -41,14 +41,14 @@ describe('ResizableTd late text clipping', () => {
       const { unmount } = renderDisclosureCell();
       const cell = screen.getByRole('cell');
       setCellTextWidth(cell, 100);
-      expect(cell).toHaveAttribute('tabindex', '-1');
+      expect(cell).toHaveAttribute('data-clipped', 'false');
 
       setCellTextWidth(cell, 300);
-      expect(cell).toHaveAttribute('tabindex', '-1');
+      expect(cell).toHaveAttribute('data-clipped', 'false');
       act(() => {
         fonts.dispatchEvent(new Event('loadingdone'));
       });
-      expect(cell).toHaveAttribute('tabindex', '0');
+      expect(cell).toHaveAttribute('data-clipped', 'true');
 
       unmount();
       expect(removeEventListener).toHaveBeenCalledWith('loadingdone', expect.any(Function));
@@ -68,12 +68,12 @@ describe('ResizableTd late text clipping', () => {
     const { unmount } = renderDisclosureCell();
     const cell = screen.getByRole('cell');
     setCellTextWidth(cell, 100);
-    expect(cell).toHaveAttribute('tabindex', '-1');
+    expect(cell).toHaveAttribute('data-clipped', 'false');
 
     setCellTextWidth(cell, 300);
-    expect(cell).toHaveAttribute('tabindex', '-1');
+    expect(cell).toHaveAttribute('data-clipped', 'false');
     fireEvent.load(link);
-    expect(cell).toHaveAttribute('tabindex', '0');
+    expect(cell).toHaveAttribute('data-clipped', 'true');
 
     unmount();
     link.remove();
@@ -92,7 +92,7 @@ describe('ResizableTd late text clipping', () => {
     setCellTextWidth(cell, 100);
     fireEvent.load(link);
 
-    expect(cell).toHaveAttribute('tabindex', '-1');
+    expect(cell).toHaveAttribute('data-clipped', 'false');
     expect(screen.queryByRole('tooltip')).not.toBeInTheDocument();
     unmount();
     link.remove();

@@ -1,4 +1,4 @@
-import type { FC, ReactNode } from 'react';
+import { type FC, type ReactNode, useId } from 'react';
 
 import type { DataViewTh } from '@patternfly/react-data-view/dist/esm/DataViewTable/DataViewTable';
 import type { DataViewThResizableProps } from '@patternfly/react-data-view/dist/esm/DataViewTh/DataViewTh';
@@ -22,13 +22,14 @@ const isHeaderColumn = (column: DataViewTh): column is HeaderColumn =>
   column !== null && typeof column === 'object' && 'cell' in column;
 
 const ForkliftResizableHeaderCell: FC<ForkliftResizableHeaderCellProps> = ({ column }) => {
+  const titleId = useId();
   const descriptor = isHeaderColumn(column) ? column : { cell: column };
   const { cell, props = {}, resizableProps } = descriptor;
   const isResizable = Boolean(resizableProps?.isResizable && props.id);
   const label = resizableProps?.resizeButtonAriaLabel ?? props.dataLabel ?? props.id ?? '';
 
   const title = isResizable ? (
-    <ResizableHeaderTitle isSortable={Boolean(props.sort)} label={label} />
+    <ResizableHeaderTitle isSortable={Boolean(props.sort)} label={label} titleId={titleId} />
   ) : (
     cell
   );
@@ -55,6 +56,7 @@ const ForkliftResizableHeaderCell: FC<ForkliftResizableHeaderCellProps> = ({ col
   return (
     <Th
       {...props}
+      {...(isResizable ? { 'aria-labelledby': titleId } : {})}
       additionalContent={additionalContent}
       className={
         isResizable

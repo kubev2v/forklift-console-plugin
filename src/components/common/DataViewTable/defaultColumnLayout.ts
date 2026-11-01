@@ -40,8 +40,16 @@ export const createDefaultColumnLayout = (
   table.prepend(group);
 
   const measureWidths = (): (number | undefined)[] => {
-    const fixedHeaders = dataHeaders.filter(hasFixedWidth);
-    const unsavedHeaders = dataHeaders.filter((header) => !hasFixedWidth(header));
+    const { fixedHeaders, unsavedHeaders } = dataHeaders.reduce<{
+      fixedHeaders: HTMLTableCellElement[];
+      unsavedHeaders: HTMLTableCellElement[];
+    }>(
+      (acc, header) => {
+        (hasFixedWidth(header) ? acc.fixedHeaders : acc.unsavedHeaders).push(header);
+        return acc;
+      },
+      { fixedHeaders: [], unsavedHeaders: [] },
+    );
     const controlWidths = controls.map(getControlColumnWidth);
     const remainingWidth =
       getLayoutPixelWidth(container) -

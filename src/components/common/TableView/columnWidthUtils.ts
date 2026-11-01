@@ -3,7 +3,6 @@ import type { ResourceField } from '../utils/types';
 import { DEFAULT_COLUMN_MIN_WIDTH_PX, READABLE_COLUMN_MIN_WIDTH_PX } from './columnWidthConstants';
 
 export type ColumnResizeConfig = {
-  id: string;
   label: string;
   minWidth: number;
   savedWidth?: number;
@@ -49,7 +48,6 @@ export const getColumnResizeConfig = (
   const id = field.resourceFieldId;
   const savedWidth = widths[id];
   return {
-    id,
     label: label ?? id,
     minWidth: getMinWidthForField(field),
     ...(savedWidth === undefined ? {} : { savedWidth }),
