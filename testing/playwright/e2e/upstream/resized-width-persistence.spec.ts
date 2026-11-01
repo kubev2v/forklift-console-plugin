@@ -2,6 +2,7 @@ import { expect, type Locator, type Page, test } from '@playwright/test';
 
 import { setupPlansIntercepts } from '../../intercepts/plans';
 import { setupProvidersIntercepts } from '../../intercepts/providers';
+import { resetColumnWidthsIfEnabled, restoreDefaultColumns } from '../../utils/columnWidthControls';
 import { expectReadableTableLayout } from '../../utils/resizableColumns';
 import { V5_1_0 } from '../../utils/version/constants';
 import { requireVersion } from '../../utils/version/version';
@@ -11,6 +12,23 @@ const LARGE_DRAG_PX = 500;
 const MIN_READABLE_WIDTH_PX = 96;
 const KEYBOARD_SHIFT_INCREMENT_PX = 25;
 const WIDTH_TOLERANCE_PX = 1;
+const VIEWPORT_WIDTHS = [1280, 1440, 1920];
+const GESTURES = ['mouse', 'keyboard'];
+
+type Resource = {
+  added: string;
+  hidden: string;
+  kind: string;
+  title: string;
+};
+
+type GestureScenario = {
+  gesture: string;
+  page: Page;
+  resource: Resource;
+  table: Locator;
+  width: number;
+};
 
 const getWidth = (header: Locator): Promise<number> =>
   header.evaluate((element) => element.getBoundingClientRect().width);
@@ -59,6 +77,35 @@ const expectWidth = async (header: Locator, width: number): Promise<void> => {
   await expect.poll(() => getWidth(header)).toBeCloseTo(width, 1);
 };
 
+const assertPersistedWidthForGesture = async ({
+  gesture,
+  page,
+  resource,
+  table,
+  width,
+}: GestureScenario): Promise<void> => {
+  const name = table.locator('th#name');
+  await page.setViewportSize({ height: VIEWPORT_HEIGHT, width });
+  await resetColumnWidthsIfEnabled(page);
+  await expectReadableTableLayout(table, {}, { kind: resource.kind, width });
+  await resizeName(page, name, gesture);
+  const resizedWidth = await getWidth(name);
+
+  await setVisibility(page, resource.hidden, false);
+  await expectWidth(name, resizedWidth);
+  await setVisibility(page, resource.added, true);
+  await expectWidth(name, resizedWidth);
+  await setVisibility(page, resource.hidden, true);
+  await expectWidth(name, resizedWidth);
+
+  await page.reload();
+  await expect(table.locator('tbody').getByRole('link').first()).toBeVisible();
+  await expectWidth(name, resizedWidth);
+
+  // Visibility and width changes persist across reloads; undo them for the next viewport.
+  await restoreDefaultColumns(page);
+};
+
 test.describe('PatternFly rendered widths survive persistence', { tag: '@upstream' }, () => {
   requireVersion(test, V5_1_0);
 
@@ -71,32 +118,22 @@ test.describe('PatternFly rendered widths survive persistence', { tag: '@upstrea
     { added: 'Clusters', hidden: 'Status', kind: 'Provider', title: 'Providers' },
     { added: 'Description', hidden: 'Migration status', kind: 'Plan', title: 'Migration plans' },
   ]) {
-    for (const width of [1280, 1440, 1920]) {
-      for (const gesture of ['mouse', 'keyboard']) {
-        test(`${resource.kind}: ${gesture} resize keeps its displayed width when columns change at ${width}px`, async ({
-          page,
-        }) => {
-          await page.setViewportSize({ height: VIEWPORT_HEIGHT, width });
+    for (const gesture of GESTURES) {
+      test(`${resource.kind}: ${gesture} resize keeps its displayed width when columns change`, async ({
+        page,
+      }) => {
+        await test.step(`open the ${resource.title} list`, async () => {
           await page.goto(`/k8s/all-namespaces/forklift.konveyor.io~v1beta1~${resource.kind}`);
-          const table = page.getByRole('grid', { exact: true, name: resource.title });
-          await expect(table.locator('tbody').getByRole('link').first()).toBeVisible();
-          await expectReadableTableLayout(table);
-          const name = table.locator('th#name');
-          await resizeName(page, name, gesture);
-          const resizedWidth = await getWidth(name);
-
-          await setVisibility(page, resource.hidden, false);
-          await expectWidth(name, resizedWidth);
-          await setVisibility(page, resource.added, true);
-          await expectWidth(name, resizedWidth);
-          await setVisibility(page, resource.hidden, true);
-          await expectWidth(name, resizedWidth);
-
-          await page.reload();
-          await expect(table.locator('tbody').getByRole('link').first()).toBeVisible();
-          await expectWidth(name, resizedWidth);
         });
-      }
+        const table = page.getByRole('grid', { exact: true, name: resource.title });
+        await expect(table.locator('tbody').getByRole('link').first()).toBeVisible();
+
+        for (const width of VIEWPORT_WIDTHS) {
+          await test.step(`${gesture} resize survives column changes at ${width}px`, async () => {
+            await assertPersistedWidthForGesture({ gesture, page, resource, table, width });
+          });
+        }
+      });
     }
   }
 });

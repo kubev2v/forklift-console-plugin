@@ -3,6 +3,11 @@ import { expect, type Locator, type Page, test } from '@playwright/test';
 import { setupPlansIntercepts } from '../../intercepts/plans';
 import { setupProvidersIntercepts } from '../../intercepts/providers';
 import {
+  columnWidthResetButton,
+  resetColumnWidthsIfEnabled,
+  revealColumnWidthReset,
+} from '../../utils/columnWidthControls';
+import {
   expectEveryResizeHandleAligned,
   expectReadableTableLayout,
 } from '../../utils/resizableColumns';
@@ -15,6 +20,16 @@ const MIN_READABLE_WIDTH_PX = 96;
 const SHRINK_DRAG_PX = -400;
 const VIEWPORT_HEIGHT = 1080;
 const WIDE_VIEWPORT_PX = 1440;
+const VIEWPORT_WIDTHS = [1100, 1280, 1440, 1920];
+
+type Resource = { kind: string; title: string };
+
+type WidthScenario = {
+  page: Page;
+  resource: Resource;
+  table: Locator;
+  width: number;
+};
 
 const getWidth = (header: Locator): Promise<number> =>
   header.evaluate((cell) => cell.getBoundingClientRect().width);
@@ -59,20 +74,45 @@ const expectSmoothGrowth = async (page: Page, name: Locator, project: Locator): 
 };
 
 const resetColumnWidths = async (page: Page): Promise<void> => {
-  const resetButton = page.getByRole('button', { exact: true, name: 'Reset column widths' });
-  if (!(await resetButton.isVisible())) {
-    await page.getByRole('button', { exact: true, name: 'Show Filters' }).click();
-  }
+  await revealColumnWidthReset(page);
+  const resetButton = columnWidthResetButton(page);
   await expect(resetButton).toBeEnabled();
   await resetButton.click();
 };
 
 const expectResetDisabled = async (page: Page): Promise<void> => {
-  const resetButton = page.getByRole('button', { exact: true, name: 'Reset column widths' });
-  if (!(await resetButton.isVisible())) {
-    await page.getByRole('button', { exact: true, name: 'Show Filters' }).click();
-  }
-  await expect(resetButton).toBeDisabled();
+  await revealColumnWidthReset(page);
+  await expect(columnWidthResetButton(page)).toBeDisabled();
+};
+
+const getOverflow = (table: Locator): Promise<number> =>
+  table.evaluate((element) => {
+    const container = element.parentElement;
+    return container ? container.scrollWidth - container.clientWidth : 0;
+  });
+
+const assertLayoutAtWidth = async ({
+  page,
+  resource,
+  table,
+  width,
+}: WidthScenario): Promise<void> => {
+  const context = { kind: resource.kind, width };
+  await page.setViewportSize({ height: VIEWPORT_HEIGHT, width });
+  await resetColumnWidthsIfEnabled(page);
+  await expectReadableTableLayout(table, { expectNoOverflow: width >= WIDE_VIEWPORT_PX }, context);
+  await expectEveryResizeHandleAligned(table, context);
+  await expectResetDisabled(page);
+
+  const name = table.locator('th#name');
+  const project = table.locator('th#namespace');
+  await expectSmoothGrowth(page, name, project);
+  expect(await getOverflow(table)).toBeGreaterThan(0);
+  await resetColumnWidths(page);
+  await expectReadableTableLayout(table, {}, context);
+
+  await expectEveryResizeHandleAligned(table, context);
+  await expectResetDisabled(page);
 };
 
 test.describe('Resizable list columns', { tag: '@upstream' }, () => {
@@ -87,44 +127,36 @@ test.describe('Resizable list columns', { tag: '@upstream' }, () => {
     { kind: 'Provider', title: 'Providers' },
     { kind: 'Plan', title: 'Migration plans' },
   ]) {
-    for (const width of [1100, 1280, 1440, 1920]) {
-      test(`${resource.kind}: initial and reset layouts stay readable at ${width}px`, async ({
-        page,
-      }) => {
-        await page.setViewportSize({ height: VIEWPORT_HEIGHT, width });
+    test(`${resource.kind}: initial and reset layouts stay readable`, async ({ page }) => {
+      await test.step(`open the ${resource.title} list`, async () => {
         await page.goto(`/k8s/all-namespaces/forklift.konveyor.io~v1beta1~${resource.kind}`);
-        const table = page.getByRole('grid', { exact: true, name: resource.title });
-        await expect(table.locator('tbody').getByRole('link').first()).toBeVisible();
-        await expectReadableTableLayout(table, { expectNoOverflow: width >= WIDE_VIEWPORT_PX });
-        await expectEveryResizeHandleAligned(table);
-        await expectResetDisabled(page);
-        const name = table.locator('th#name');
-        const project = table.locator('th#namespace');
-        await expectSmoothGrowth(page, name, project);
-        expect(
-          await table.evaluate((element) => {
-            const container = element.parentElement;
-            return container ? container.scrollWidth - container.clientWidth : 0;
-          }),
-        ).toBeGreaterThan(0);
-        await resetColumnWidths(page);
-        await expectReadableTableLayout(table);
-
-        await expectEveryResizeHandleAligned(table);
-        await expectResetDisabled(page);
       });
-    }
+      const table = page.getByRole('grid', { exact: true, name: resource.title });
+      await expect(table.locator('tbody').getByRole('link').first()).toBeVisible();
+
+      for (const width of VIEWPORT_WIDTHS) {
+        await test.step(`initial and reset layout at ${width}px`, async () => {
+          await assertLayoutAtWidth({ page, resource, table, width });
+        });
+      }
+    });
 
     test(`${resource.kind}: default widths refit when the viewport changes`, async ({ page }) => {
       await page.setViewportSize({ height: VIEWPORT_HEIGHT, width: 1920 });
       await page.goto(`/k8s/all-namespaces/forklift.konveyor.io~v1beta1~${resource.kind}`);
       const table = page.getByRole('grid', { exact: true, name: resource.title });
       await expect(table.locator('tbody').getByRole('link').first()).toBeVisible();
-      await expectReadableTableLayout(table);
+      await expectReadableTableLayout(table, {}, { kind: resource.kind, width: 1920 });
       for (const width of [1280, 1440, 1100, 1920]) {
-        await page.setViewportSize({ height: VIEWPORT_HEIGHT, width });
-        await expectReadableTableLayout(table, { expectNoOverflow: width >= WIDE_VIEWPORT_PX });
-        await expectEveryResizeHandleAligned(table);
+        await test.step(`refit at ${width}px`, async () => {
+          await page.setViewportSize({ height: VIEWPORT_HEIGHT, width });
+          await expectReadableTableLayout(
+            table,
+            { expectNoOverflow: width >= WIDE_VIEWPORT_PX },
+            { kind: resource.kind, width },
+          );
+          await expectEveryResizeHandleAligned(table, { kind: resource.kind, width });
+        });
       }
     });
   }
@@ -137,18 +169,27 @@ test.describe('Resizable list columns', { tag: '@upstream' }, () => {
     await expectResetDisabled(page);
     const name = table.locator('th#name');
     const project = table.locator('th#namespace');
-    await shrinkColumn(page, name);
-    await shrinkColumn(page, project);
-    await expectSmoothGrowth(page, name, project);
+
+    await test.step('shrink Name and Project', async () => {
+      await shrinkColumn(page, name);
+      await shrinkColumn(page, project);
+    });
+
+    await test.step('grow Name without jumping', async () => {
+      await expectSmoothGrowth(page, name, project);
+    });
 
     await page.reload();
     await expect(table.locator('tbody').getByRole('link').first()).toBeVisible();
     const spacer = table.locator('th[data-column-width-spacer="true"]');
     const spareWidth = await getWidth(spacer);
     expect(spareWidth).toBeGreaterThan(SMALL_DRAG_PX * 10);
-    await expectSmoothGrowth(page, name, project);
-    expect(Math.abs((await getWidth(spacer)) - spareWidth + SMALL_DRAG_PX * 10)).toBeLessThan(
-      LAYOUT_TOLERANCE_PX,
-    );
+
+    await test.step('grow Name again after reload and consume the spacer', async () => {
+      await expectSmoothGrowth(page, name, project);
+      expect(Math.abs((await getWidth(spacer)) - spareWidth + SMALL_DRAG_PX * 10)).toBeLessThan(
+        LAYOUT_TOLERANCE_PX,
+      );
+    });
   });
 });

@@ -1,6 +1,7 @@
 import { expect, type Locator, type Page, test } from '@playwright/test';
 
 import { setupForkliftIntercepts } from '../../intercepts/setupForkliftIntercepts';
+import { resetColumnWidthsIfEnabled } from '../../utils/columnWidthControls';
 import { expectReadableTableLayout } from '../../utils/resizableColumns';
 import { V5_1_0 } from '../../utils/version/constants';
 import { requireVersion } from '../../utils/version/version';
@@ -8,6 +9,16 @@ import { requireVersion } from '../../utils/version/version';
 const VIEWPORT_HEIGHT = 1080;
 const GROWTH_PX = 200;
 const TOLERANCE_PX = 1;
+const VIEWPORT_WIDTHS = [1280, 1440, 1920];
+
+type Resource = { kind: string; title: string };
+
+type WidthScenario = {
+  page: Page;
+  resource: Resource;
+  table: Locator;
+  width: number;
+};
 
 const getColumnWidths = (table: Locator): Promise<Record<string, number>> =>
   table.evaluate((element) =>
@@ -50,8 +61,58 @@ const navigateInSidebar = async (page: Page, kind: string): Promise<void> => {
   await link.click();
 };
 
+const assertNavigationPreservesLayout = async ({
+  page,
+  resource,
+  table,
+  width,
+}: WidthScenario): Promise<void> => {
+  await page.setViewportSize({ height: VIEWPORT_HEIGHT, width });
+  await resetColumnWidthsIfEnabled(page);
+  await expectReadableTableLayout(table, {}, { kind: resource.kind, width });
+
+  const initialWidths = await getColumnWidths(table);
+  const initialOverflow = await getOverflow(table);
+  const handle = table.locator('th#name button[data-resize-handle="true"]');
+  const box = await handle.boundingBox();
+  if (!box) {
+    throw new Error('The Name resize handle is not visible');
+  }
+  const x = box.x + box.width / 2;
+  const y = box.y + box.height / 2;
+  await page.mouse.move(x, y);
+  await page.mouse.down();
+  await page.mouse.move(x + GROWTH_PX, y, { steps: 5 });
+  await page.mouse.up();
+  const resizedWidths = await getColumnWidths(table);
+  const nameGrowth = resizedWidths.name - initialWidths.name;
+  const overflow = await getOverflow(table);
+  await expectWidthsAndOverflow(table, resizedWidths, overflow);
+  expect(nameGrowth).toBeGreaterThan(0);
+  expect(Math.abs(overflow - initialOverflow - nameGrowth)).toBeLessThan(TOLERANCE_PX);
+
+  const originalDocument = await page.locator('html').elementHandle();
+  const awayKind = resource.kind === 'Provider' ? 'Plan' : 'Provider';
+  await test.step('navigate away and back', async () => {
+    await navigateInSidebar(page, awayKind);
+    await expect(table).toHaveCount(0);
+    await navigateInSidebar(page, resource.kind);
+  });
+  expect(await originalDocument?.evaluate((element) => element.isConnected)).toBe(true);
+  await expect(table.locator('tbody').getByRole('link').first()).toBeVisible();
+  await expectWidthsAndOverflow(table, resizedWidths, overflow);
+
+  await page.reload();
+  await expect(table.locator('tbody').getByRole('link').first()).toBeVisible();
+  await expectWidthsAndOverflow(table, resizedWidths, overflow);
+
+  await resetColumnWidthsIfEnabled(page);
+  await expectReadableTableLayout(table, {}, { kind: resource.kind, width });
+};
+
 test.describe('Navigation preserves the complete resized layout', { tag: '@upstream' }, () => {
   requireVersion(test, V5_1_0);
+
   test.beforeEach(async ({ page }) => {
     await setupForkliftIntercepts(page);
   });
@@ -62,46 +123,20 @@ test.describe('Navigation preserves the complete resized layout', { tag: '@upstr
     { kind: 'NetworkMap', title: 'Network maps' },
     { kind: 'StorageMap', title: 'Storage maps' },
   ]) {
-    for (const width of [1280, 1440, 1920]) {
-      test(`${resource.kind}: resizing Name preserves every other width and overflow at ${width}px`, async ({
-        page,
-      }) => {
-        await page.setViewportSize({ height: VIEWPORT_HEIGHT, width });
+    test(`${resource.kind}: resizing Name preserves every other width and overflow`, async ({
+      page,
+    }) => {
+      await test.step(`open the ${resource.title} list`, async () => {
         await page.goto(`/k8s/all-namespaces/forklift.konveyor.io~v1beta1~${resource.kind}`);
-        const table = page.getByRole('grid', { exact: true, name: resource.title });
-        await expect(table.locator('tbody').getByRole('link').first()).toBeVisible();
-        await expectReadableTableLayout(table);
-        const initialWidths = await getColumnWidths(table);
-        const initialOverflow = await getOverflow(table);
-        const handle = table.locator('th#name button[data-resize-handle="true"]');
-        const box = await handle.boundingBox();
-        if (!box) throw new Error('The Name resize handle is not visible');
-        const x = box.x + box.width / 2;
-        const y = box.y + box.height / 2;
-        await page.mouse.move(x, y);
-        await page.mouse.down();
-        await page.mouse.move(x + GROWTH_PX, y, { steps: 5 });
-        await page.mouse.up();
-        const resizedWidths = await getColumnWidths(table);
-        const nameGrowth = resizedWidths.name - initialWidths.name;
-        const overflow = await getOverflow(table);
-        await expectWidthsAndOverflow(table, resizedWidths, overflow);
-        expect(nameGrowth).toBeGreaterThan(0);
-        expect(Math.abs(overflow - initialOverflow - nameGrowth)).toBeLessThan(TOLERANCE_PX);
-        const originalDocument = await page.locator('html').elementHandle();
-        const awayKind = resource.kind === 'Provider' ? 'Plan' : 'Provider';
-        await navigateInSidebar(page, awayKind);
-        await expect(table).toHaveCount(0);
-        await navigateInSidebar(page, resource.kind);
-        expect(await originalDocument?.evaluate((element) => element.isConnected)).toBe(true);
-        await expect(table.locator('tbody').getByRole('link').first()).toBeVisible();
-        await expectWidthsAndOverflow(table, resizedWidths, overflow);
-        await page.reload();
-        await expect(table.locator('tbody').getByRole('link').first()).toBeVisible();
-        await expectWidthsAndOverflow(table, resizedWidths, overflow);
-        await page.getByRole('button', { exact: true, name: 'Reset column widths' }).click();
-        await expectReadableTableLayout(table);
       });
-    }
+      const table = page.getByRole('grid', { exact: true, name: resource.title });
+      await expect(table.locator('tbody').getByRole('link').first()).toBeVisible();
+
+      for (const width of VIEWPORT_WIDTHS) {
+        await test.step(`preserved layout at ${width}px`, async () => {
+          await assertNavigationPreservesLayout({ page, resource, table, width });
+        });
+      }
+    });
   }
 });

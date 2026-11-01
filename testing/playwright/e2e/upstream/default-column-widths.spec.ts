@@ -1,9 +1,14 @@
-import { expect, type Locator, test } from '@playwright/test';
+import { expect, type Locator, type Page, test } from '@playwright/test';
 
 import { setupNetworkMapsIntercepts } from '../../intercepts/networkMaps';
 import { setupPlansIntercepts } from '../../intercepts/plans';
 import { setupProvidersIntercepts } from '../../intercepts/providers';
 import { setupStorageMapsIntercepts } from '../../intercepts/storageMaps';
+import {
+  columnWidthResetButton,
+  resetColumnWidthsIfEnabled,
+  revealColumnWidthReset,
+} from '../../utils/columnWidthControls';
 import {
   expectEveryResizeHandleAligned,
   expectReadableTableLayout,
@@ -18,6 +23,21 @@ const MIN_READABLE_WIDTH_PX = 96;
 const SHRINK_DRAG_PX = -400;
 const WIDTH_TOLERANCE_PX = 1;
 const SHARE_TOLERANCE = 0.001;
+const VIEWPORT_WIDTHS = [1100, 1280, 1440, 1920];
+const NARROW_VIEWPORT_PX = 1280;
+
+type WeightedResource = {
+  compactId: string;
+  kind: string;
+  title: string;
+};
+
+type WeightedScenario = {
+  page: Page;
+  resource: WeightedResource;
+  table: Locator;
+  width: number;
+};
 
 const getWidth = (column: Locator): Promise<number> =>
   column.evaluate((element) => element.getBoundingClientRect().width);
@@ -44,6 +64,89 @@ const expectWeightedWidths = async (table: Locator, compactId: string): Promise<
     .toBe(true);
 };
 
+const assertWeightedWidthsAtWidth = async ({
+  page,
+  resource,
+  table,
+  width,
+}: WeightedScenario): Promise<void> => {
+  await page.setViewportSize({ height: VIEWPORT_HEIGHT, width });
+  await resetColumnWidthsIfEnabled(page);
+  await expectWeightedWidths(table, resource.compactId);
+  await expectReadableTableLayout(table, {}, { kind: resource.kind, width });
+  await expectEveryResizeHandleAligned(table, { kind: resource.kind, width });
+
+  const initialShare = await getNameShare(table);
+  await table.locator('th#name button[data-resize-handle="true"]').press('Shift+ArrowRight');
+  await revealColumnWidthReset(page);
+  const reset = columnWidthResetButton(page);
+  await expect(reset).toBeEnabled();
+  await reset.click();
+  await expectWeightedWidths(table, resource.compactId);
+  await expectReadableTableLayout(table, {}, { kind: resource.kind, width });
+  await expectEveryResizeHandleAligned(table, { kind: resource.kind, width });
+
+  // Async controls can change the available data budget; reset must preserve the preference.
+  expect(Math.abs((await getNameShare(table)) - initialShare)).toBeLessThan(SHARE_TOLERANCE);
+
+  await page.setViewportSize({ height: VIEWPORT_HEIGHT, width: NARROW_VIEWPORT_PX });
+  await expectWeightedWidths(table, resource.compactId);
+  await expectReadableTableLayout(table, {}, { kind: resource.kind, width: NARROW_VIEWPORT_PX });
+};
+
+const assertCompactColumnPersists = async ({
+  page,
+  resource,
+  table,
+}: Omit<WeightedScenario, 'width'>): Promise<void> => {
+  await page.setViewportSize({ height: VIEWPORT_HEIGHT, width: NARROW_VIEWPORT_PX });
+  await expectWeightedWidths(table, resource.compactId);
+
+  const compact = table.locator(`th#${resource.compactId}`);
+  const initialWidth = await getWidth(compact);
+  expect(initialWidth).toBeGreaterThanOrEqual(MIN_READABLE_WIDTH_PX - WIDTH_TOLERANCE_PX);
+  const nameWidth = await getWidth(table.locator('th#name'));
+  const box = await compact.locator('button[data-resize-handle="true"]').boundingBox();
+  if (!box) {
+    throw new Error('The compact column resize handle is not visible');
+  }
+  const x = box.x + box.width / 2;
+  const y = box.y + box.height / 2;
+  await page.mouse.move(x, y);
+  await page.mouse.down();
+  for (const delta of [
+    -SMALL_DRAG_PX,
+    SMALL_DRAG_PX,
+    LARGE_DRAG_PX,
+    SHRINK_DRAG_PX,
+    LARGE_DRAG_PX,
+  ]) {
+    await page.mouse.move(x + delta, y);
+    if (delta > 0) {
+      expect(Math.abs((await getWidth(compact)) - initialWidth - delta)).toBeLessThan(
+        WIDTH_TOLERANCE_PX,
+      );
+    } else if (delta === SHRINK_DRAG_PX) {
+      expect(await getWidth(compact)).toBeGreaterThanOrEqual(
+        MIN_READABLE_WIDTH_PX - WIDTH_TOLERANCE_PX,
+      );
+      expect(await getWidth(compact)).toBeGreaterThan(initialWidth + delta + WIDTH_TOLERANCE_PX);
+    } else {
+      expect(Math.abs((await getWidth(compact)) - initialWidth - delta)).toBeLessThan(
+        WIDTH_TOLERANCE_PX,
+      );
+    }
+    expect(Math.abs((await getWidth(table.locator('th#name'))) - nameWidth)).toBeLessThan(
+      WIDTH_TOLERANCE_PX,
+    );
+  }
+  await page.mouse.up();
+  const savedWidth = await getWidth(compact);
+  await page.reload();
+  await expect(table.locator('tbody').getByRole('link').first()).toBeVisible();
+  expect(Math.abs((await getWidth(compact)) - savedWidth)).toBeLessThan(WIDTH_TOLERANCE_PX);
+};
+
 test.describe('Weighted default column widths', { tag: '@upstream' }, () => {
   requireVersion(test, V5_1_0);
 
@@ -60,34 +163,19 @@ test.describe('Weighted default column widths', { tag: '@upstream' }, () => {
     { compactId: 'phase', kind: 'NetworkMap', title: 'Network maps' },
     { compactId: 'phase', kind: 'StorageMap', title: 'Storage maps' },
   ]) {
-    for (const width of [1100, 1280, 1440, 1920]) {
-      test(`${resource.kind}: weighted initial/reset widths remain readable at ${width}px`, async ({
-        page,
-      }) => {
-        await page.setViewportSize({ height: VIEWPORT_HEIGHT, width });
+    test(`${resource.kind}: weighted initial/reset widths remain readable`, async ({ page }) => {
+      await test.step(`open the ${resource.title} list`, async () => {
         await page.goto(`/k8s/all-namespaces/forklift.konveyor.io~v1beta1~${resource.kind}`);
-        const table = page.getByRole('grid', { exact: true, name: resource.title });
-        await expect(table.locator('tbody').getByRole('link').first()).toBeVisible();
-        await expectWeightedWidths(table, resource.compactId);
-        await expectReadableTableLayout(table);
-        await expectEveryResizeHandleAligned(table);
-        const initialShare = await getNameShare(table);
-        await table.locator('th#name button[data-resize-handle="true"]').press('Shift+ArrowRight');
-        const reset = page.getByRole('button', { exact: true, name: 'Reset column widths' });
-        if (!(await reset.isVisible())) {
-          await page.getByRole('button', { exact: true, name: 'Show Filters' }).click();
-        }
-        await reset.click();
-        await expectWeightedWidths(table, resource.compactId);
-        await expectReadableTableLayout(table);
-        await expectEveryResizeHandleAligned(table);
-        // Async controls can change the available data budget; reset must preserve the preference.
-        expect(Math.abs((await getNameShare(table)) - initialShare)).toBeLessThan(SHARE_TOLERANCE);
-        await page.setViewportSize({ height: VIEWPORT_HEIGHT, width: 1280 });
-        await expectWeightedWidths(table, resource.compactId);
-        await expectReadableTableLayout(table);
       });
-    }
+      const table = page.getByRole('grid', { exact: true, name: resource.title });
+      await expect(table.locator('tbody').getByRole('link').first()).toBeVisible();
+
+      for (const width of VIEWPORT_WIDTHS) {
+        await test.step(`weighted widths at ${width}px`, async () => {
+          await assertWeightedWidthsAtWidth({ page, resource, table, width });
+        });
+      }
+    });
   }
 
   for (const resource of [
@@ -97,56 +185,11 @@ test.describe('Weighted default column widths', { tag: '@upstream' }, () => {
     test(`${resource.kind}: a compact column respects its minimum and persists`, async ({
       page,
     }) => {
-      await page.setViewportSize({ height: VIEWPORT_HEIGHT, width: 1280 });
+      await page.setViewportSize({ height: VIEWPORT_HEIGHT, width: NARROW_VIEWPORT_PX });
       await page.goto(`/k8s/all-namespaces/forklift.konveyor.io~v1beta1~${resource.kind}`);
       const table = page.getByRole('grid', { exact: true, name: resource.title });
       await expect(table.locator('tbody').getByRole('link').first()).toBeVisible();
-      await expectWeightedWidths(table, resource.compactId);
-      const compact = table.locator(`th#${resource.compactId}`);
-      const initialWidth = await getWidth(compact);
-      expect(initialWidth).toBeGreaterThanOrEqual(MIN_READABLE_WIDTH_PX - WIDTH_TOLERANCE_PX);
-      const nameWidth = await getWidth(table.locator('th#name'));
-      const box = await compact.locator('button[data-resize-handle="true"]').boundingBox();
-      if (!box) {
-        throw new Error('The compact column resize handle is not visible');
-      }
-      const x = box.x + box.width / 2;
-      const y = box.y + box.height / 2;
-      await page.mouse.move(x, y);
-      await page.mouse.down();
-      for (const delta of [
-        -SMALL_DRAG_PX,
-        SMALL_DRAG_PX,
-        LARGE_DRAG_PX,
-        SHRINK_DRAG_PX,
-        LARGE_DRAG_PX,
-      ]) {
-        await page.mouse.move(x + delta, y);
-        if (delta > 0) {
-          expect(Math.abs((await getWidth(compact)) - initialWidth - delta)).toBeLessThan(
-            WIDTH_TOLERANCE_PX,
-          );
-        } else if (delta === SHRINK_DRAG_PX) {
-          expect(await getWidth(compact)).toBeGreaterThanOrEqual(
-            MIN_READABLE_WIDTH_PX - WIDTH_TOLERANCE_PX,
-          );
-          expect(await getWidth(compact)).toBeGreaterThan(
-            initialWidth + delta + WIDTH_TOLERANCE_PX,
-          );
-        } else {
-          expect(Math.abs((await getWidth(compact)) - initialWidth - delta)).toBeLessThan(
-            WIDTH_TOLERANCE_PX,
-          );
-        }
-        expect(Math.abs((await getWidth(table.locator('th#name'))) - nameWidth)).toBeLessThan(
-          WIDTH_TOLERANCE_PX,
-        );
-      }
-      await page.mouse.up();
-      const savedWidth = await getWidth(compact);
-      await page.reload();
-      await expect(table.locator('tbody').getByRole('link').first()).toBeVisible();
-      expect(Math.abs((await getWidth(compact)) - savedWidth)).toBeLessThan(WIDTH_TOLERANCE_PX);
+      await assertCompactColumnPersists({ page, resource, table });
     });
   }
 });
