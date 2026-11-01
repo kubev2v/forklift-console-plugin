@@ -76,7 +76,7 @@ export default defineConfig({
     navigationTimeout: 15_000,
   },
 
-  // 4 workers starved the kind-hosted console on the 4-vCPU CI runner: list tables
-  // missed their first render (including in specs unrelated to these changes).
-  workers: 3,
+  // 4 workers on the 4-vCPU runner: 836s vs 969s at 3 workers. The failures seen at
+  // both settings came from specs that mock only part of the API, not from contention.
+  workers: process.env.CI ? 4 : 3,
 });

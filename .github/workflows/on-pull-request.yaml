@@ -123,6 +123,11 @@ jobs:
       - name: Increase File Descriptors Limit
         run: ulimit -n 4096
 
+      - name: Report runner resources
+        run: |
+          echo "vCPUs: $(nproc)"
+          free -g
+
       - name: Checkout
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
 
