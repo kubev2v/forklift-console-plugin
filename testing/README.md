@@ -194,3 +194,39 @@ podman build \
 podman login quay.io
 podman push quay.io/kubev2v/forklift-ui-tests:latest
 ```
+
+## Failure triage
+
+Every run writes a machine-readable digest next to the JUnit report, so a failing CI
+run can be diagnosed from one file instead of a 45-minute log:
+
+| File | Contents |
+|------|----------|
+| `test-results/failures.md` | Failed and flaky tests: location, failing `test.step`, retry index, duration, artifact paths, trimmed error |
+| `test-results/failures.json` | Same data for scripts |
+| `test-results/timings.json` | Every test duration, slowest first (use this to find what to optimise next) |
+| `test-results/global-error.txt` | Present only when the run failed before any test executed (e.g. `globalSetup`) |
+
+Failures are also emitted as GitHub `::error` annotations and appended to
+`$GITHUB_STEP_SUMMARY`.
+
+Typical loop:
+
+```bash
+# 1. Read the digest (in CI artifacts, or locally after a run)
+cat test-results/failures.md
+
+# 2. Inspect the trace recorded on the retry
+npx playwright show-trace test-results/<test>-retry1-trace.zip
+
+# 3. Re-run only what failed
+npm run test:upstream:failed
+
+# 4. While developing, run only the specs affected by your diff
+npm run test:upstream:changed
+```
+
+Parallelism: the upstream suite runs with 4 workers on CI (`workers: CI ? 4 : 3`) and
+2 retries. The specs are fully route-mocked, so they are safe to run concurrently —
+keep new tests independent of cluster state. Trace and video are recorded only for
+retried tests, which keeps the happy path free of recording overhead.

@@ -9,6 +9,8 @@
     "test:downstream:remote:docker": "bash run-e2e-docker.sh",
     "test:downstream:local": "BASE_ADDRESS=http://localhost:9000 npx playwright test --grep @downstream",
     "test:upstream": "npx playwright test playwright/e2e/upstream/",
+    "test:upstream:failed": "npx playwright test playwright/e2e/upstream/ --last-failed",
+    "test:upstream:changed": "npx playwright test playwright/e2e/upstream/ --only-changed=origin/main",
     "check:version-gating": "bash check-version-gating.sh",
     "coverage:extract": "npx ts-node scripts/extract-tests.ts"
   },
