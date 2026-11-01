@@ -76,5 +76,7 @@ export default defineConfig({
     navigationTimeout: 15_000,
   },
 
-  workers: process.env.CI ? 4 : 3,
+  // 4 workers starved the kind-hosted console on the 4-vCPU CI runner: list tables
+  // missed their first render (including in specs unrelated to these changes).
+  workers: 3,
 });
