@@ -2,6 +2,7 @@ import { stripVTControlCharacters } from 'node:util';
 
 import type { TestError, TestResult, TestStep } from '@playwright/test/reporter';
 
+const ANNOTATION_MESSAGE_MAX_CHARS = 400;
 const MAX_ERROR_CHARS = 1500;
 const REPO_PATH_MARKER = 'testing/';
 
@@ -184,13 +185,27 @@ export const renderMarkdown = (digest: FailureDigest): string => {
   return lines.join('\n');
 };
 
+const firstLine = (value: string): string =>
+  value
+    .split('\n')
+    .map((line) => line.trim())
+    .find((line) => line.length > 0) ?? '';
+
+const annotationMessage = (outcome: TestOutcome): string => {
+  const parts = [outcome.failingStep, firstLine(outcome.error)].filter(Boolean);
+  const message = parts.length > 0 ? parts.join(': ') : 'test failed';
+  return message.length > ANNOTATION_MESSAGE_MAX_CHARS
+    ? `${message.slice(0, ANNOTATION_MESSAGE_MAX_CHARS)}…`
+    : message;
+};
+
 const sanitizeAnnotationValue = (value: string): string =>
   value.split('\n').join(' ').split('\r').join(' ').split('%').join('%25');
 
 export const renderAnnotations = (digest: FailureDigest): string =>
   digest.failed
     .map((outcome) => {
-      const message = outcome.failingStep || outcome.error.split('\n')[0] || 'test failed';
+      const message = annotationMessage(outcome);
       const properties = [
         `file=${outcome.file}`,
         `line=${outcome.line}`,
