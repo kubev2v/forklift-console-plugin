@@ -1,4 +1,5 @@
 import { existsSync, readFileSync } from 'node:fs';
+import { join } from 'node:path';
 
 import { defineConfig, devices } from '@playwright/test';
 
@@ -41,9 +42,9 @@ export default defineConfig({
         storageState: existsSync(authFile) ? authFile : undefined,
         // Use data-testid to match actual rendered HTML
         testIdAttribute: 'data-testid',
-        trace: 'retain-on-failure-and-retries',
+        trace: 'on-first-retry',
         video: {
-          mode: 'retain-on-failure',
+          mode: 'on-first-retry',
           show: {
             actions: { position: 'top-right' },
           },
@@ -58,9 +59,13 @@ export default defineConfig({
     ['list', { printFailuresInline: true }],
     ['html', { open: 'never' }],
     ['junit', { outputFile: 'test-results/junit.xml' }],
+    // Machine-readable digest (failures.md/json + timings.json) for agents and CI annotations.
+    // Absolute path: Playwright resolves relative reporter paths from its own module directory.
+    [join(__dirname, 'playwright/reporters/failureDigestReporter.ts')],
   ],
 
-  retries: process.env.GITHUB_ACTIONS ? 3 : 0,
+  // Two retries still absorb one flake while capping failure amplification at 3 attempts.
+  retries: process.env.CI ? 2 : 0,
 
   testDir: './playwright/e2e',
 
@@ -71,5 +76,5 @@ export default defineConfig({
     navigationTimeout: 15_000,
   },
 
-  workers: process.env.CI ? 1 : 3,
+  workers: process.env.CI ? 4 : 3,
 });
