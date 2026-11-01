@@ -694,6 +694,7 @@ export const createEslintConfig = () =>
         'testing/playwright/types/**/*.{ts,tsx}',
         'testing/playwright/global.setup.ts',
         'testing/playwright/global.teardown.ts',
+        'testing/playwright/reporters/**/*.{ts,tsx}',
         'testing/playwright.config.ts',
       ],
       rules: {
@@ -711,7 +712,11 @@ export const createEslintConfig = () =>
     },
     // MTV-6509: lifecycle scripts may log
     {
-      files: ['testing/playwright/global.setup.ts', 'testing/playwright/global.teardown.ts'],
+      files: [
+        'testing/playwright/global.setup.ts',
+        'testing/playwright/global.teardown.ts',
+        'testing/playwright/reporters/**/*.{ts,tsx}',
+      ],
       rules: {
         'no-console': 'off',
       },
