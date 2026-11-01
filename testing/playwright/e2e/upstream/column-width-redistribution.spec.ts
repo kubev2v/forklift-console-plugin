@@ -1,7 +1,11 @@
 import { expect, type Locator, type Page, test } from '@playwright/test';
 
 import { setupForkliftIntercepts } from '../../intercepts/setupForkliftIntercepts';
-import { resetColumnWidthsIfEnabled, restoreDefaultColumns } from '../../utils/columnWidthControls';
+import {
+  columnWidthResetButton,
+  resetColumnWidthsIfEnabled,
+  restoreDefaultColumns,
+} from '../../utils/columnWidthControls';
 import { expectReadableTableLayout } from '../../utils/resizableColumns';
 import { V5_1_0 } from '../../utils/version/constants';
 import { requireVersion } from '../../utils/version/version';
@@ -63,6 +67,9 @@ const assertFreedSpaceStaysFree = async ({
   const project = table.locator('th#namespace');
   await shrinkColumn(page, name);
   await shrinkColumn(page, project);
+  // Both drags must have committed overrides; Reset enabled is the only observable
+  // proof, and it narrows a lost width down to the gesture or to the re-render.
+  await expect(columnWidthResetButton(page)).toBeEnabled();
   const nameWidth = await getWidth(name);
   const projectWidth = await getWidth(project);
   const actionsWidth = await getWidth(table.locator('th[data-action-column="true"]'));

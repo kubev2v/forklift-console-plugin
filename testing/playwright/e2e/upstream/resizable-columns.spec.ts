@@ -18,7 +18,8 @@ const SMALL_DRAG_PX = 5;
 const MIN_READABLE_WIDTH_PX = 96;
 const SHRINK_DRAG_PX = -400;
 const VIEWPORT_HEIGHT = 1080;
-const WIDE_VIEWPORT_PX = 1440;
+// The data area (not the viewport) must fit once it is at least this wide.
+const FIT_CONTAINER_PX = 1440;
 const VIEWPORT_WIDTHS = [1100, 1280, 1440, 1920];
 
 type Resource = { kind: string; title: string };
@@ -99,7 +100,7 @@ const assertLayoutAtWidth = async ({
   const context = { kind: resource.kind, width };
   await page.setViewportSize({ height: VIEWPORT_HEIGHT, width });
   await resetColumnWidthsIfEnabled(page);
-  await expectReadableTableLayout(table, { expectNoOverflow: width >= WIDE_VIEWPORT_PX }, context);
+  await expectReadableTableLayout(table, { fitWhenContainerAtLeastPx: FIT_CONTAINER_PX }, context);
   await expectEveryResizeHandleAligned(table, context);
   await expectResetDisabled(page);
 
@@ -150,7 +151,7 @@ test.describe('Resizable list columns', { tag: '@upstream' }, () => {
           await page.setViewportSize({ height: VIEWPORT_HEIGHT, width });
           await expectReadableTableLayout(
             table,
-            { expectNoOverflow: width >= WIDE_VIEWPORT_PX },
+            { fitWhenContainerAtLeastPx: FIT_CONTAINER_PX },
             { kind: resource.kind, width },
           );
           await expectEveryResizeHandleAligned(table, { kind: resource.kind, width });

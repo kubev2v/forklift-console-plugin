@@ -22,8 +22,8 @@ const WIDTH_TOLERANCE_PX = 1;
 const SHARE_TOLERANCE = 0.001;
 const VIEWPORT_WIDTHS = [1100, 1280, 1440, 1920];
 const NARROW_VIEWPORT_PX = 1280;
-// Below this the table scrolls instead of fitting, so weight ordering cannot be asserted.
-const FIT_VIEWPORT_PX = 1440;
+// The data area (not the viewport) must fit once it is at least this wide.
+const FIT_CONTAINER_PX = 1440;
 
 type WeightedResource = {
   compactId: string;
@@ -96,7 +96,7 @@ const assertWeightedWidthsAtWidth = async ({
   await expectWeightedWidths(table, resource.compactId);
   await expectReadableTableLayout(
     table,
-    { expectNoOverflow: width >= FIT_VIEWPORT_PX },
+    { fitWhenContainerAtLeastPx: FIT_CONTAINER_PX },
     { kind: resource.kind, width },
   );
   await expectEveryResizeHandleAligned(table, { kind: resource.kind, width });

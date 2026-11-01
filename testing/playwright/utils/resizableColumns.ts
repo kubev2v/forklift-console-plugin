@@ -13,18 +13,24 @@ const WIDTH_TOLERANCE_PX = 1;
 
 type ReadableLayoutOptions = {
   expectNoOverflow?: boolean;
+  /**
+   * Require a fitted layout once the scroll container itself is at least this wide.
+   * The console sidebar and page padding mean a 1440 viewport leaves ~1030px of table,
+   * so a viewport-based threshold asks for fit where the readable minima cannot fit.
+   */
+  fitWhenContainerAtLeastPx?: number;
 };
 
 export const expectReadableTableLayout = async (
   table: Locator,
-  { expectNoOverflow = false }: ReadableLayoutOptions = {},
+  { expectNoOverflow = false, fitWhenContainerAtLeastPx }: ReadableLayoutOptions = {},
   context?: TableLayoutContext,
 ): Promise<void> => {
   // Returns 'ok' or a diagnostic string, so a failure reports the layout it measured
   // (table vs scroller width, overflow, narrowest column) instead of "true != false".
   const describe = (): Promise<string> =>
     table.evaluate(
-      (element, { minimum, mustFit, tolerance }) => {
+      (element, { fitFrom, minimum, mustFit, tolerance }) => {
         const scroller = element.parentElement;
         if (!scroller) {
           return 'missing scroll container';
@@ -37,20 +43,27 @@ export const expectReadableTableLayout = async (
         const overflow = scroller.scrollWidth - scroller.clientWidth;
         const tableWidth = element.getBoundingClientRect().width;
         const scrollerWidth = scroller.getBoundingClientRect().width;
+        const requireFit =
+          mustFit || (fitFrom !== undefined && scrollerWidth >= fitFrom - tolerance);
         const ok =
           headers.length > 0 &&
           narrowest >= minimum - tolerance &&
           tableWidth >= scrollerWidth - tolerance &&
-          (!mustFit || overflow <= tolerance);
+          (!requireFit || overflow <= tolerance);
         const round = (value: number): string =>
           Number.isFinite(value) ? value.toFixed(1) : 'none';
         return ok
           ? 'ok'
           : `table=${round(tableWidth)} scroller=${round(scrollerWidth)} ` +
               `overflow=${round(overflow)} narrowest=${round(narrowest)} ` +
-              `headers=${String(headers.length)} mustFit=${String(mustFit)}`;
+              `headers=${String(headers.length)} mustFit=${String(requireFit)}`;
       },
-      { minimum: MIN_READABLE_COLUMN_PX, mustFit: expectNoOverflow, tolerance: WIDTH_TOLERANCE_PX },
+      {
+        fitFrom: fitWhenContainerAtLeastPx,
+        minimum: MIN_READABLE_COLUMN_PX,
+        mustFit: expectNoOverflow,
+        tolerance: WIDTH_TOLERANCE_PX,
+      },
     );
 
   await expect
