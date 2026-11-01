@@ -1,8 +1,6 @@
 import { expect, type Locator, type Page, test } from '@playwright/test';
 
-import { setupCoreKubernetesIntercepts } from '../../intercepts/core';
-import { setupPlansIntercepts } from '../../intercepts/plans';
-import { setupProvidersIntercepts } from '../../intercepts/providers';
+import { setupForkliftIntercepts } from '../../intercepts/setupForkliftIntercepts';
 import { resetColumnWidthsIfEnabled, restoreDefaultColumns } from '../../utils/columnWidthControls';
 import { expectReadableTableLayout } from '../../utils/resizableColumns';
 import { V5_1_0 } from '../../utils/version/constants';
@@ -93,9 +91,7 @@ test.describe('Resized columns do not absorb freed space', { tag: '@upstream' },
   requireVersion(test, V5_1_0);
 
   test.beforeEach(async ({ page }) => {
-    await setupCoreKubernetesIntercepts(page);
-    await setupPlansIntercepts(page);
-    await setupProvidersIntercepts(page);
+    await setupForkliftIntercepts(page);
   });
 
   for (const resource of [

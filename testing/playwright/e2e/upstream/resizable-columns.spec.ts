@@ -1,8 +1,6 @@
 import { expect, type Locator, type Page, test } from '@playwright/test';
 
-import { setupCoreKubernetesIntercepts } from '../../intercepts/core';
-import { setupPlansIntercepts } from '../../intercepts/plans';
-import { setupProvidersIntercepts } from '../../intercepts/providers';
+import { setupForkliftIntercepts } from '../../intercepts/setupForkliftIntercepts';
 import {
   columnWidthResetButton,
   resetColumnWidthsIfEnabled,
@@ -120,9 +118,7 @@ test.describe('Resizable list columns', { tag: '@upstream' }, () => {
   requireVersion(test, V5_1_0);
 
   test.beforeEach(async ({ page }) => {
-    await setupCoreKubernetesIntercepts(page);
-    await setupPlansIntercepts(page);
-    await setupProvidersIntercepts(page);
+    await setupForkliftIntercepts(page);
   });
 
   for (const resource of [

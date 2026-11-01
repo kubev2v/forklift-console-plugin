@@ -1,7 +1,6 @@
 import { expect, test } from '@playwright/test';
 
-import { setupCoreKubernetesIntercepts } from '../../intercepts/core';
-import { setupPlansIntercepts } from '../../intercepts/plans';
+import { setupForkliftIntercepts } from '../../intercepts/setupForkliftIntercepts';
 import { PlansListPage } from '../../page-objects/PlansListPage';
 import { V5_1_0 } from '../../utils/version/constants';
 import { requireVersion } from '../../utils/version/version';
@@ -12,8 +11,7 @@ test.describe('Resize handle cursor', { tag: '@upstream' }, () => {
   requireVersion(test, V5_1_0);
 
   test.beforeEach(async ({ page }) => {
-    await setupCoreKubernetesIntercepts(page);
-    await setupPlansIntercepts(page);
+    await setupForkliftIntercepts(page);
     await new PlansListPage(page).navigateDirectly('all-namespaces');
   });
 

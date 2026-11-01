@@ -2,9 +2,7 @@ import { createRequire } from 'node:module';
 
 import { expect, test } from '@playwright/test';
 
-import { setupCoreKubernetesIntercepts } from '../../intercepts/core';
-import { setupPlansIntercepts } from '../../intercepts/plans';
-import { setupProvidersIntercepts } from '../../intercepts/providers';
+import { setupForkliftIntercepts } from '../../intercepts/setupForkliftIntercepts';
 import { expectReadableTableLayout } from '../../utils/resizableColumns';
 import {
   expectActionsPinned,
@@ -31,9 +29,7 @@ test.describe('Sticky Actions during mouse resizing', { tag: '@upstream' }, () =
     test(`${resource.kind}: data stays covered while dragging with late PatternFly styles`, async ({
       page,
     }) => {
-      await setupCoreKubernetesIntercepts(page);
-      await setupPlansIntercepts(page);
-      await setupProvidersIntercepts(page);
+      await setupForkliftIntercepts(page);
       await page.setViewportSize({ height: VIEWPORT_HEIGHT, width: VIEWPORT_WIDTH });
       await page.goto(`/k8s/all-namespaces/forklift.konveyor.io~v1beta1~${resource.kind}`);
       const table = page.getByRole('grid', { exact: true, name: resource.title });
