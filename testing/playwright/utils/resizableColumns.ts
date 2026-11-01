@@ -20,36 +20,44 @@ export const expectReadableTableLayout = async (
   { expectNoOverflow = false }: ReadableLayoutOptions = {},
   context?: TableLayoutContext,
 ): Promise<void> => {
-  await expect
-    .poll(
-      () =>
-        table.evaluate(
-          (element, { expectNoOverflow: mustFit, minimum, tolerance }) => {
-            const scroller = element.parentElement;
-            if (!scroller) {
-              return false;
-            }
+  // Returns 'ok' or a diagnostic string, so a failure reports the layout it measured
+  // (table vs scroller width, overflow, narrowest column) instead of "true != false".
+  const describe = (): Promise<string> =>
+    table.evaluate(
+      (element, { minimum, mustFit, tolerance }) => {
+        const scroller = element.parentElement;
+        if (!scroller) {
+          return 'missing scroll container';
+        }
+        const headers = Array.from(
+          element.querySelectorAll<HTMLTableCellElement>('thead th[data-resizable-column="true"]'),
+        ).filter((header) => getComputedStyle(header).display !== 'none');
+        const widths = headers.map((header) => header.getBoundingClientRect().width);
+        const narrowest = Math.min(...widths);
+        const overflow = scroller.scrollWidth - scroller.clientWidth;
+        const tableWidth = element.getBoundingClientRect().width;
+        const scrollerWidth = scroller.getBoundingClientRect().width;
+        const ok =
+          headers.length > 0 &&
+          narrowest >= minimum - tolerance &&
+          tableWidth >= scrollerWidth - tolerance &&
+          (!mustFit || overflow <= tolerance);
+        const round = (value: number): string =>
+          Number.isFinite(value) ? value.toFixed(1) : 'none';
+        return ok
+          ? 'ok'
+          : `table=${round(tableWidth)} scroller=${round(scrollerWidth)} ` +
+              `overflow=${round(overflow)} narrowest=${round(narrowest)} ` +
+              `headers=${String(headers.length)} mustFit=${String(mustFit)}`;
+      },
+      { minimum: MIN_READABLE_COLUMN_PX, mustFit: expectNoOverflow, tolerance: WIDTH_TOLERANCE_PX },
+    );
 
-            const headers = Array.from(
-              element.querySelectorAll<HTMLTableCellElement>(
-                'thead th[data-resizable-column="true"]',
-              ),
-            ).filter((header) => getComputedStyle(header).display !== 'none');
-            return (
-              headers.length > 0 &&
-              headers.every(
-                (header) => header.getBoundingClientRect().width >= minimum - tolerance,
-              ) &&
-              element.getBoundingClientRect().width >=
-                scroller.getBoundingClientRect().width - tolerance &&
-              (!mustFit || scroller.scrollWidth - scroller.clientWidth <= tolerance)
-            );
-          },
-          { expectNoOverflow, minimum: MIN_READABLE_COLUMN_PX, tolerance: WIDTH_TOLERANCE_PX },
-        ),
-      { message: `${formatTableLayoutContext(context)}expected a readable table layout` },
-    )
-    .toBe(true);
+  await expect
+    .poll(describe, {
+      message: `${formatTableLayoutContext(context)}expected a readable table layout`,
+    })
+    .toBe('ok');
 };
 
 export const expectEveryResizeHandleAligned = async (
