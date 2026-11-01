@@ -49,26 +49,26 @@ const getNameShare = (table: Locator): Promise<number> =>
   });
 
 const expectWeightedWidths = async (table: Locator, compactId: string): Promise<void> => {
-  // The predicate would only report "true != false"; return the measurements so a
-  // failure prints the actual Name / Project / compact widths at that viewport.
+  // Poll a string so a failure prints the measured Name / Project / compact widths
+  // instead of an opaque "ok: false".
+  const describe = (): Promise<string> =>
+    table.evaluate((element, id) => {
+      const name = element.querySelector('th#name')?.getBoundingClientRect().width ?? 0;
+      const project = element.querySelector('th#namespace')?.getBoundingClientRect().width ?? 0;
+      const compact = element.querySelector(`th#${id}`)?.getBoundingClientRect().width ?? 0;
+      const ok = element.isConnected && name > project && project > compact && name > compact * 1.5;
+      const round = (value: number): number => Math.round(value * 10) / 10;
+      return ok
+        ? 'balanced'
+        : `name=${round(name)} project=${round(project)} compact=${round(compact)} ` +
+            `table=${round(element.getBoundingClientRect().width)}`;
+    }, compactId);
+
   await expect
-    .poll(
-      () =>
-        table.evaluate((element, id) => {
-          const name = element.querySelector('th#name')?.getBoundingClientRect().width ?? 0;
-          const project = element.querySelector('th#namespace')?.getBoundingClientRect().width ?? 0;
-          const compact = element.querySelector(`th#${id}`)?.getBoundingClientRect().width ?? 0;
-          return {
-            compact,
-            name,
-            ok: element.isConnected && name > project && project > compact && name > compact * 1.5,
-            project,
-            tableWidth: element.getBoundingClientRect().width,
-          };
-        }, compactId),
-      { message: `${compactId}: expected name > project > compact and name > compact * 1.5` },
-    )
-    .toMatchObject({ ok: true });
+    .poll(describe, {
+      message: `${compactId}: expected name > project > compact and name > compact * 1.5`,
+    })
+    .toBe('balanced');
 };
 
 const assertWeightedWidthsAtWidth = async ({

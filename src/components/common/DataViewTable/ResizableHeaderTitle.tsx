@@ -22,9 +22,12 @@ const syncHandleCenterToTitle = (title: HTMLElement): void => {
   }
   const titleRect = title.getBoundingClientRect();
   const headerRect = header.getBoundingClientRect();
-  const borderTop = Number.parseFloat(getComputedStyle(header).borderTopWidth) || 0;
-  const center = titleRect.top - headerRect.top - borderTop + titleRect.height / 2;
-  header.style.setProperty(HANDLE_CENTER_CSS_VAR, `${center}px`);
+  if (headerRect.height === 0) {
+    return;
+  }
+  // Percentage, not px: CSS `zoom` scales layout rects but not the px we write back.
+  const center = (titleRect.top - headerRect.top + titleRect.height / 2) / headerRect.height;
+  header.style.setProperty(HANDLE_CENTER_CSS_VAR, `${(center * 100).toFixed(2)}%`);
 };
 
 type ResizableHeaderTitleProps = {
