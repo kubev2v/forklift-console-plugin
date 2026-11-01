@@ -1,5 +1,6 @@
 import { expect, type Locator, type Page, test } from '@playwright/test';
 
+import { setupCoreKubernetesIntercepts } from '../../intercepts/core';
 import { setupNetworkMapsIntercepts } from '../../intercepts/networkMaps';
 import { setupPlansIntercepts } from '../../intercepts/plans';
 import { setupProvidersIntercepts } from '../../intercepts/providers';
@@ -151,6 +152,7 @@ test.describe('Weighted default column widths', { tag: '@upstream' }, () => {
   requireVersion(test, V5_1_0);
 
   test.beforeEach(async ({ page }) => {
+    await setupCoreKubernetesIntercepts(page);
     await setupPlansIntercepts(page);
     await setupProvidersIntercepts(page);
     await setupNetworkMapsIntercepts(page);

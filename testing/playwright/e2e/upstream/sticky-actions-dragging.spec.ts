@@ -2,6 +2,7 @@ import { createRequire } from 'node:module';
 
 import { expect, test } from '@playwright/test';
 
+import { setupCoreKubernetesIntercepts } from '../../intercepts/core';
 import { setupPlansIntercepts } from '../../intercepts/plans';
 import { setupProvidersIntercepts } from '../../intercepts/providers';
 import { expectReadableTableLayout } from '../../utils/resizableColumns';
@@ -30,6 +31,7 @@ test.describe('Sticky Actions during mouse resizing', { tag: '@upstream' }, () =
     test(`${resource.kind}: data stays covered while dragging with late PatternFly styles`, async ({
       page,
     }) => {
+      await setupCoreKubernetesIntercepts(page);
       await setupPlansIntercepts(page);
       await setupProvidersIntercepts(page);
       await page.setViewportSize({ height: VIEWPORT_HEIGHT, width: VIEWPORT_WIDTH });

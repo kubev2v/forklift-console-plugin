@@ -1,5 +1,6 @@
 import { expect, type Locator, type Page, test } from '@playwright/test';
 
+import { setupCoreKubernetesIntercepts } from '../../intercepts/core';
 import { setupPlansIntercepts } from '../../intercepts/plans';
 import { PlansListPage } from '../../page-objects/PlansListPage';
 import {
@@ -43,6 +44,7 @@ test.describe('Resizable column UX regressions', { tag: '@upstream' }, () => {
   test.use({ hasTouch: true });
 
   test.beforeEach(async ({ page }) => {
+    await setupCoreKubernetesIntercepts(page);
     await setupPlansIntercepts(page);
     await new PlansListPage(page).navigateDirectly('all-namespaces');
   });

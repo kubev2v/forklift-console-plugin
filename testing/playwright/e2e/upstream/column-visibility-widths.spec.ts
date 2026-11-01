@@ -1,5 +1,6 @@
 import { expect, type Locator, type Page, test } from '@playwright/test';
 
+import { setupCoreKubernetesIntercepts } from '../../intercepts/core';
 import { setupPlansIntercepts } from '../../intercepts/plans';
 import { setupProvidersIntercepts } from '../../intercepts/providers';
 import { resetColumnWidthsIfEnabled, restoreDefaultColumns } from '../../utils/columnWidthControls';
@@ -96,6 +97,7 @@ test.describe('Column visibility preserves widths', { tag: '@upstream' }, () => 
   requireVersion(test, V5_1_0);
 
   test.beforeEach(async ({ page }) => {
+    await setupCoreKubernetesIntercepts(page);
     await setupPlansIntercepts(page);
     await setupProvidersIntercepts(page);
   });
