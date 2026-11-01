@@ -54,7 +54,15 @@ test.describe('default Actions widths', { tag: '@upstream' }, () => {
       const table = page.getByRole('grid', { exact: true, name: 'Migration plans' });
       await expect(table.locator('tbody')).toContainText('No plans found');
       await expect(table.locator('tbody td[data-column-id="actions"]')).toHaveCount(0);
-      await expect(table.locator('thead th[data-resizable-column="true"]')).toHaveCount(8);
+      // Column set depends on the namespace scope (Project is only shown for all namespaces),
+      // so assert the invariant: every data header is resizable.
+      const dataHeaders = table.locator(
+        'thead th[data-column-id]:not([data-action-column="true"]):not([data-table-control-column])',
+      );
+      await expect(dataHeaders.first()).toBeVisible();
+      await expect(table.locator('thead th[data-resizable-column="true"]')).toHaveCount(
+        await dataHeaders.count(),
+      );
       await page.evaluate(() => document.fonts.ready);
       const drift = await table.evaluate(
         async (element, { frames, settleFrames }) => {

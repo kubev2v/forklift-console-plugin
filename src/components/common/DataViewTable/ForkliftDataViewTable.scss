@@ -79,16 +79,20 @@
     display: flex;
     font-size: inherit;
     inline-size: 2rem;
-    inset-block: 0;
+    // Anchored to the measured title centre (see ResizableHeaderTitle) so the handle
+    // lines up with the column title instead of the header's padding box.
+    inset-block-end: auto;
+    inset-block-start: var(--forklift-resize-handle-center, 50%);
     inset-inline-end: 0;
     justify-content: center;
     line-height: inherit;
-    margin-block: auto;
+    margin-block: 0;
     min-block-size: 2rem;
     min-inline-size: 2rem;
     padding: 0;
     position: absolute;
     touch-action: none;
+    transform: translateY(-50%);
     z-index: 1;
 
     svg {

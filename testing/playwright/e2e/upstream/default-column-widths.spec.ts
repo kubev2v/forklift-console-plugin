@@ -49,16 +49,26 @@ const getNameShare = (table: Locator): Promise<number> =>
   });
 
 const expectWeightedWidths = async (table: Locator, compactId: string): Promise<void> => {
+  // The predicate would only report "true != false"; return the measurements so a
+  // failure prints the actual Name / Project / compact widths at that viewport.
   await expect
-    .poll(() =>
-      table.evaluate((element, id) => {
-        const name = element.querySelector('th#name')?.getBoundingClientRect().width ?? 0;
-        const project = element.querySelector('th#namespace')?.getBoundingClientRect().width ?? 0;
-        const compact = element.querySelector(`th#${id}`)?.getBoundingClientRect().width ?? 0;
-        return element.isConnected && name > project && project > compact && name > compact * 1.5;
-      }, compactId),
+    .poll(
+      () =>
+        table.evaluate((element, id) => {
+          const name = element.querySelector('th#name')?.getBoundingClientRect().width ?? 0;
+          const project = element.querySelector('th#namespace')?.getBoundingClientRect().width ?? 0;
+          const compact = element.querySelector(`th#${id}`)?.getBoundingClientRect().width ?? 0;
+          return {
+            compact,
+            name,
+            ok: element.isConnected && name > project && project > compact && name > compact * 1.5,
+            project,
+            tableWidth: element.getBoundingClientRect().width,
+          };
+        }, compactId),
+      { message: `${compactId}: expected name > project > compact and name > compact * 1.5` },
     )
-    .toBe(true);
+    .toMatchObject({ ok: true });
 };
 
 const assertWeightedWidthsAtWidth = async ({

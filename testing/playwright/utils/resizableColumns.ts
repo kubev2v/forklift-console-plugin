@@ -88,12 +88,14 @@ export const expectEveryResizeHandleAligned = async (
         edgeGap: rtl
           ? Math.abs(handleRect.left - headerRect.left)
           : Math.abs(headerRect.right - handleRect.right),
+        headerHeight: headerRect.height,
         height: handleRect.height,
         hitTarget: button.contains(target),
         sortButtonVerticalGap: sortButtonRect
           ? Math.abs(handleCenterY - (sortButtonRect.top + sortButtonRect.height / 2))
           : null,
         titleGap: rtl ? titleRect.left - handleRect.right : handleRect.left - titleRect.right,
+        titleHeight: titleRect.height,
         titleVerticalGap: Math.abs(handleCenterY - titleCenterY),
         width: handleRect.width,
       };
@@ -115,7 +117,9 @@ export const expectEveryResizeHandleAligned = async (
     ).toBeGreaterThanOrEqual(TITLE_HANDLE_GAP_PX - GAP_TOLERANCE_PX);
     expect(
       geometry?.titleVerticalGap,
-      `${message}handle must line up with the column title`,
+      `${message}handle must line up with the column title (gap ${String(geometry?.titleVerticalGap)}px, ` +
+        `title ${String(geometry?.titleHeight)}px, handle ${String(geometry?.height)}px, ` +
+        `header ${String(geometry?.headerHeight)}px)`,
     ).toBeLessThanOrEqual(VERTICAL_ALIGNMENT_TOLERANCE_PX);
     if (typeof geometry?.sortButtonVerticalGap === 'number') {
       expect(
