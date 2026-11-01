@@ -36,6 +36,15 @@ const getWidth = (header: Locator): Promise<number> =>
 
 const startResize = async (page: Page, header: Locator): Promise<{ x: number; y: number }> => {
   const handle = header.locator('button[data-resize-handle="true"]');
+  // A scrolled table slides the column under the sticky Actions cell, where the pointer
+  // would land on the sticky cell instead of the handle.
+  await header.evaluate((cell) => {
+    const scroller = cell.closest('table')?.parentElement;
+    if (scroller) {
+      scroller.scrollLeft = 0;
+    }
+  });
+  await handle.scrollIntoViewIfNeeded();
   const box = await handle.boundingBox();
   if (!box) {
     throw new Error('The column resize handle is not visible');

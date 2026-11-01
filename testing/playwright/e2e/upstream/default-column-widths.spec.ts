@@ -145,7 +145,15 @@ const assertCompactColumnPersists = async ({
   const initialWidth = await getWidth(compact);
   expect(initialWidth).toBeGreaterThanOrEqual(MIN_READABLE_WIDTH_PX - WIDTH_TOLERANCE_PX);
   const nameWidth = await getWidth(table.locator('th#name'));
-  const box = await compact.locator('button[data-resize-handle="true"]').boundingBox();
+  const compactHandle = compact.locator('button[data-resize-handle="true"]');
+  await compact.evaluate((cell) => {
+    const scroller = cell.closest('table')?.parentElement;
+    if (scroller) {
+      scroller.scrollLeft = 0;
+    }
+  });
+  await compactHandle.scrollIntoViewIfNeeded();
+  const box = await compactHandle.boundingBox();
   if (!box) {
     throw new Error('The compact column resize handle is not visible');
   }

@@ -101,6 +101,13 @@ test.describe('Resizable column UX regressions', { tag: '@upstream' }, () => {
     const name = table.locator('th#name');
     const neighbor = table.locator('th#phase');
     const handle = name.locator('button[data-resize-handle="true"]');
+    await table.evaluate((element): void => {
+      const scroller = element.parentElement;
+      if (scroller) {
+        scroller.scrollLeft = 0;
+      }
+    });
+    await handle.scrollIntoViewIfNeeded();
     const initialNameWidth = await getWidth(name);
     const initialNeighborWidth = await getWidth(neighbor);
     const { x, y } = await getHandleCenter(handle);
@@ -150,6 +157,13 @@ test.describe('Resizable column UX regressions', { tag: '@upstream' }, () => {
     const name = table.locator('th#name');
     const neighbor = table.locator('th#phase');
     const handle = name.locator('button[data-resize-handle="true"]');
+    await table.evaluate((element): void => {
+      const scroller = element.parentElement;
+      if (scroller) {
+        scroller.scrollLeft = 0;
+      }
+    });
+    await handle.scrollIntoViewIfNeeded();
     const initialNameWidth = await getWidth(name);
     const initialNeighborWidth = await getWidth(neighbor);
     const { x, y } = await getHandleCenter(handle);

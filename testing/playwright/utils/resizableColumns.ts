@@ -106,6 +106,9 @@ export const expectEveryResizeHandleAligned = async (
         handleRect.top + handleRect.height / 2,
       );
       return {
+        coveredByControl: Boolean(
+          target?.closest('[data-action-column="true"], [data-table-control-column]'),
+        ),
         edgeGap: rtl
           ? Math.abs(handleRect.left - headerRect.left)
           : Math.abs(headerRect.right - handleRect.right),
@@ -154,6 +157,14 @@ export const expectEveryResizeHandleAligned = async (
         `${message}handle must line up with the sort button`,
       ).toBeLessThanOrEqual(VERTICAL_ALIGNMENT_TOLERANCE_PX);
     }
-    expect(geometry?.hitTarget, `${message}handle must be the hit target`).toBe(true);
+    // A scrolled table slides data columns under the sticky Actions/selection cells, which
+    // paint above the handle by design ("keep Actions clickable"). Such a handle is not
+    // expected to be the hit target; anything else covering it is a real regression.
+    const isHitTarget = geometry?.hitTarget ?? false;
+    const isCoveredByControl = geometry?.coveredByControl ?? false;
+    expect(
+      isHitTarget || isCoveredByControl,
+      `${message}handle must be the hit target, but the point hits "${geometry?.hitLabel ?? 'none'}"`,
+    ).toBe(true);
   }
 };
