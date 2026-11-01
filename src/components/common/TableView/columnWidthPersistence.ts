@@ -9,7 +9,7 @@ import {
 
 type PersistArgs = [widths: Record<string, number>, save: ColumnWidthsSettings['save']];
 
-export type ColumnWidthsSaver = CancellableDebouncedFn<PersistArgs>;
+type ColumnWidthsSaver = CancellableDebouncedFn<PersistArgs>;
 
 export const createColumnWidthsSaver = (): ColumnWidthsSaver =>
   createCancellableDebounce((widths: PersistArgs[0], save: PersistArgs[1]): void => {
