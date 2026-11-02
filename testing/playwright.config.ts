@@ -22,7 +22,9 @@ if (existsSync(ENV_RELAY_FILE)) {
 
 export default defineConfig({
   expect: {
-    timeout: 15_000,
+    // The plugin loads ~90 lazy chunks; a cold first render has been measured around 15s
+    // under 4-worker load, so a 15s assertion budget makes page-load checks a coin flip.
+    timeout: 25_000,
   },
   fullyParallel: true,
   globalSetup: './playwright/global.setup.ts',
