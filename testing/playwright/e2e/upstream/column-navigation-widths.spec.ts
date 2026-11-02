@@ -89,7 +89,11 @@ const assertNavigationPreservesLayout = async ({
   const overflow = await getOverflow(table);
   await expectWidthsAndOverflow(table, resizedWidths, overflow);
   expect(nameGrowth).toBeGreaterThan(0);
-  expect(Math.abs(overflow - initialOverflow - nameGrowth)).toBeLessThan(TOLERANCE_PX);
+  // A customized layout keeps a spacer that absorbs spare space, so the first pixels of
+  // growth come out of that spacer and only the remainder becomes horizontal overflow.
+  // Assert the monotonic bound rather than an exact equality.
+  expect(overflow).toBeGreaterThanOrEqual(initialOverflow - TOLERANCE_PX);
+  expect(overflow).toBeLessThanOrEqual(initialOverflow + nameGrowth + TOLERANCE_PX);
 
   const originalDocument = await page.locator('html').elementHandle();
   const awayKind = resource.kind === 'Provider' ? 'Plan' : 'Provider';

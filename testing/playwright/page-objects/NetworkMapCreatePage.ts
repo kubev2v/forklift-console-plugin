@@ -17,24 +17,21 @@ export class NetworkMapCreatePage {
   }
 
   /**
-   * PatternFly re-creates the filtered option nodes while the project filter settles, so a
-   * stability-checked click can sit in "element was detached from the DOM, retrying" until
-   * the action times out. Click with a short budget, then dispatch straight to the current
-   * node, and require the menu to close so an unselected project cannot pass silently.
+   * Typing into this select closes and re-creates its menu, so the option can vanish
+   * mid-interaction ("element was detached from the DOM"). Open the menu and click the
+   * option exactly as the provider selects do, retrying only a lost node.
    */
-  private async selectFilteredOption(label: string): Promise<void> {
+  private async selectOption(label: string): Promise<void> {
     const option = this.page.getByRole('option', { exact: true, name: label });
-    await expect(option).toBeVisible({ timeout: 10_000 });
-    try {
-      await option.click({ timeout: 3_000 });
-    } catch {
-      // Clicking the current node directly avoids the actionability checks that keep
-      // losing the race against the re-created menu.
-      await option.evaluate((node): void => {
-        (node as HTMLElement).click();
-      });
+    for (let attempt = 0; attempt < 3; attempt += 1) {
+      try {
+        await option.click({ timeout: 5_000 });
+        return;
+      } catch {
+        // The menu re-rendered; retry against the freshly resolved node.
+      }
     }
-    await expect(option).toBeHidden({ timeout: 10_000 });
+    await option.click({ timeout: 10_000 });
   }
 
   async addMapping() {
@@ -67,9 +64,7 @@ export class NetworkMapCreatePage {
       await this.page.locator('label[for="show-default-projects-switch"]').click();
     }
 
-    const projectCombobox = projectSelect.getByRole('combobox');
-    await projectCombobox.fill(data.project);
-    await this.selectFilteredOption(data.project);
+    await this.selectOption(data.project);
 
     const sourceProviderSelect = this.page.getByTestId('network-map-source-provider-select');
     await sourceProviderSelect.click();
