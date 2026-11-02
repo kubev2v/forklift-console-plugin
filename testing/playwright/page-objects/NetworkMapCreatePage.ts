@@ -28,7 +28,7 @@ export class NetworkMapCreatePage {
         await toggle.click();
       }
       try {
-        await option.click({ timeout: 5_000 });
+        await option.click({ force: true, timeout: 5_000 });
         await expect(option).toBeHidden({ timeout: 5_000 });
         return;
       } catch {

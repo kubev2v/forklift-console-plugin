@@ -74,6 +74,15 @@ const assertNavigationPreservesLayout = async ({
   const initialWidths = await getColumnWidths(table);
   const initialOverflow = await getOverflow(table);
   const handle = table.locator('th#name button[data-resize-handle="true"]');
+  // A scrolled table slides the column under the sticky Actions cell, where the pointer
+  // lands on the sticky cell and the drag silently does nothing.
+  await table.evaluate((element) => {
+    const scroller = element.parentElement;
+    if (scroller) {
+      scroller.scrollLeft = 0;
+    }
+  });
+  await handle.scrollIntoViewIfNeeded();
   const box = await handle.boundingBox();
   if (!box) {
     throw new Error('The Name resize handle is not visible');
