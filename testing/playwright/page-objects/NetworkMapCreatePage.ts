@@ -16,6 +16,23 @@ export class NetworkMapCreatePage {
     this.page = page;
   }
 
+  /**
+   * PatternFly re-creates the filtered option nodes while the project filter settles, so a
+   * stability-checked click can sit in "element was detached from the DOM, retrying" until
+   * the action times out. Click with a short budget, then dispatch straight to the current
+   * node, and require the menu to close so an unselected project cannot pass silently.
+   */
+  private async selectFilteredOption(label: string): Promise<void> {
+    const option = this.page.getByRole('option', { exact: true, name: label });
+    await expect(option).toBeVisible({ timeout: 10_000 });
+    try {
+      await option.click({ timeout: 5_000 });
+    } catch {
+      await option.dispatchEvent('click');
+    }
+    await expect(option).toBeHidden({ timeout: 10_000 });
+  }
+
   async addMapping() {
     const addMappingButton = this.page.getByRole('button', { name: 'Add mapping' });
     await expect(addMappingButton).toBeEnabled({ timeout: 30_000 });
@@ -48,7 +65,7 @@ export class NetworkMapCreatePage {
 
     const projectCombobox = projectSelect.getByRole('combobox');
     await projectCombobox.fill(data.project);
-    await this.page.getByRole('option', { name: data.project }).click();
+    await this.selectFilteredOption(data.project);
 
     const sourceProviderSelect = this.page.getByTestId('network-map-source-provider-select');
     await sourceProviderSelect.click();
