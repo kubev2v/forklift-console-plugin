@@ -81,7 +81,8 @@ export default defineConfig({
     navigationTimeout: 15_000,
   },
 
-  // 4 workers on the 4-vCPU runner: 836s vs 969s at 3 workers. The failures seen at
-  // both settings came from specs that mock only part of the API, not from contention.
-  workers: process.env.CI ? 4 : 3,
+  // 4 workers finished in 836s vs 969s at 3, but the 4-vCPU runner also hosts the kind
+  // cluster (console, forklift, kubevirt) and a rotating set of timing assertions flaked
+  // under that load. 3 workers trades ~2 minutes for a stable run.
+  workers: 3,
 });
