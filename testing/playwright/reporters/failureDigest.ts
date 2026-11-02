@@ -94,8 +94,16 @@ const finalsOf = (attempts: TestAttempt[][]): FinalOutcome[] =>
     if (!last) {
       return [];
     }
-    const flaky = testAttempts.length > 1 && testAttempts.some((attempt) => !attempt.passed);
-    return [{ flaky, outcome: last.outcome }];
+    const failedAttempt = testAttempts.find((attempt) => !attempt.passed);
+    const flaky = testAttempts.length > 1 && Boolean(failedAttempt);
+    // A flake only matters for the reason it failed the first time; the passing retry
+    // carries no error, so keep the first failure's message and step trail.
+    const firstFailure = failedAttempt?.outcome;
+    const outcome: TestOutcome =
+      flaky && firstFailure
+        ? { ...last.outcome, error: firstFailure.error, failingStep: firstFailure.failingStep }
+        : last.outcome;
+    return [{ flaky, outcome }];
   });
 
 const uniqueOutcomes = (attempts: TestAttempt[][]): TestOutcome[] =>
