@@ -88,6 +88,8 @@ export const useTableColumnWidths = ({
 
   const commitColumnWidths = useCallback((snapshot: Record<string, number>): void => {
     const visibleFieldIds = [...visibleIdsRef.current];
+    // Deliberately all-or-nothing: a partial snapshot would save a layout the engine could
+    // not measure. The gesture layer must therefore keep the preview and the commit in sync.
     if (!visibleFieldIds.every((id) => isValidColumnWidth(snapshot[id]))) {
       return;
     }

@@ -16,8 +16,9 @@ import {
 } from './columnResizeInputUtils';
 import { commitKeyboardResize, isArrowResizeKey, restoreColumnWidth } from './columnResizeKeyboard';
 import { createDragState, previewPointerResize } from './columnResizePointer';
-import { completeColumnResize, rollbackColumnResize } from './columnResizeSession';
+import { finishColumnResize, rollbackColumnResize } from './columnResizeSession';
 import { getLayoutPixelWidth } from './layoutPixelUtils';
+import { subscribeToPointerRelease } from './pointerReleaseSubscription';
 
 type UseColumnResizeGestureArgs = {
   commitColumnWidths: (widths: Record<string, number>) => void;
@@ -69,23 +70,33 @@ export const useColumnResizeGesture = ({
     event.stopPropagation();
   };
 
+  const finishDrag = useCallback(
+    (drag: DragState, clientX: number | null): void => {
+      if (dragRef.current !== drag) {
+        return;
+      }
+      if (clientX !== null) {
+        previewPointerResize(drag, clientX);
+      }
+      dragRef.current = null;
+      finishColumnResize(drag, commitColumnWidths, flushPendingColumnWidths, setAnnouncedWidth);
+      releaseColumnResizeCapture(drag);
+    },
+    [commitColumnWidths, flushPendingColumnWidths],
+  );
+
   const onPointerUp = (event: PointerEvent<HTMLButtonElement>): void => {
     const drag = dragRef.current;
     if (drag?.pointerId !== event.pointerId) return;
-    onPointerMove(event);
-    dragRef.current = null;
-    if (drag.session && drag.lastWidth !== null && drag.lastWidth !== drag.session.activeWidth) {
-      const widths = completeColumnResize(drag.session, drag.lastWidth);
-      setAnnouncedWidth(drag.lastWidth);
-      commitColumnWidths(widths);
-      flushPendingColumnWidths();
-    } else if (drag.session) {
-      rollbackColumnResize(drag.session);
-    }
-    releaseColumnResizeCapture(drag);
     event.preventDefault();
     event.stopPropagation();
+    finishDrag(drag, event.clientX);
   };
+
+  useEffect(
+    () => subscribeToPointerRelease(() => dragRef.current, finishDrag, cancelDrag),
+    [cancelDrag, finishDrag],
+  );
 
   const onKeyDown = (event: KeyboardEvent<HTMLButtonElement>): void => {
     if (event.key === 'Escape') {
@@ -126,6 +137,15 @@ export const useColumnResizeGesture = ({
     setAnnouncedWidth(width);
   };
 
+  /**
+   * Re-rendering or unmounting the handle can drop pointer capture mid-gesture. Reverting
+   * there threw away a drag the user had already made; commit what was dragged instead.
+   */
+  const onLostPointerCapture = (): void => {
+    const drag = dragRef.current;
+    if (drag) finishDrag(drag, null);
+  };
+
   const onFocus = (event: FocusEvent<HTMLButtonElement>): void => {
     const header = getHeaderForResizeButton(event.currentTarget);
     if (!header) return;
@@ -139,7 +159,7 @@ export const useColumnResizeGesture = ({
     announcedWidth,
     onFocus,
     onKeyDown,
-    onLostPointerCapture: cancelDrag,
+    onLostPointerCapture,
     onPointerCancel: cancelDrag,
     onPointerDown,
     onPointerMove,

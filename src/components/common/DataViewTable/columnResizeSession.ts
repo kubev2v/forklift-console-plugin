@@ -1,3 +1,4 @@
+import type { DragState } from './columnResizeInputUtils';
 import {
   DATA_COLUMN_RESIZE_ACTIVE_ATTR,
   DATA_COLUMN_WIDTH_FIXED_ATTR,
@@ -112,4 +113,27 @@ export const completeColumnResize = (
   return Object.fromEntries(
     session.headers.map(({ id, width }) => [id, id === session.activeId ? activeWidth : width]),
   );
+};
+
+/**
+ * Commits the width the user dragged to. A gesture that ends at its starting width changes
+ * nothing, which is the only case that restores the captured layout.
+ */
+export const finishColumnResize = (
+  drag: DragState,
+  commit: (widths: Record<string, number>) => void,
+  flush: () => void,
+  announce: (width: number) => void,
+): void => {
+  const { lastWidth, session } = drag;
+  if (!session || lastWidth === null) {
+    return;
+  }
+  if (lastWidth === session.activeWidth) {
+    rollbackColumnResize(session);
+    return;
+  }
+  announce(lastWidth);
+  commit(completeColumnResize(session, lastWidth));
+  flush();
 };
