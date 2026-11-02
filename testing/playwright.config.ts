@@ -69,7 +69,10 @@ export default defineConfig({
 
   testDir: './playwright/e2e',
 
-  timeout: process.env.JENKINS ? 15 * 60_000 : 60_000,
+  // Collapsed table specs run four viewport steps (modal + reload each) in one test:
+  // measured p50 23s, p95 55s, max 62s. A 60s ceiling made those a coin flip, so the
+  // timeout has to cover the work the test actually does.
+  timeout: process.env.JENKINS ? 15 * 60_000 : 120_000,
 
   use: {
     actionTimeout: 15_000,
