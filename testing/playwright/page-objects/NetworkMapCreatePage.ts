@@ -26,9 +26,13 @@ export class NetworkMapCreatePage {
     const option = this.page.getByRole('option', { exact: true, name: label });
     await expect(option).toBeVisible({ timeout: 10_000 });
     try {
-      await option.click({ timeout: 5_000 });
+      await option.click({ timeout: 3_000 });
     } catch {
-      await option.dispatchEvent('click');
+      // Clicking the current node directly avoids the actionability checks that keep
+      // losing the race against the re-created menu.
+      await option.evaluate((node): void => {
+        (node as HTMLElement).click();
+      });
     }
     await expect(option).toBeHidden({ timeout: 10_000 });
   }
