@@ -30,7 +30,7 @@ alwaysApply: false
 
 ### StandardPage / StandardPageWithSelection
 
-**StandardPage** composes `TableSortContextProvider` → `StandardPageInner` → `PageToolbar` (FilterGroup) + `PageTable` (TableView). Props: `dataSource: [data, loaded, error]`, `fieldsMetadata: ResourceField[]`, optional `row`/`cell`/`header`, `userSettings`, `pagination`, `showManageColumns`.
+**StandardPage** composes `TableSortContextProvider` → `StandardPageInner` → `PageToolbar` (FilterGroup) + `PageTable` (TableView). Props: `dataSource: [data, loaded, error]`, `fieldsMetadata: ResourceField[]`, optional `row`/`cell`, `userSettings`, `pagination`, `showManageColumns`, and the `resizableColumns` / `header` pair. `resizableColumns` (literal `true`) is mutually exclusive with a caller-supplied `header`: resizable pages always render the shared hybrid table and resize header. Every current list page opts in.
 
 **StandardPageWithSelection** wraps StandardPage with compile-time discriminated unions:
 
@@ -93,6 +93,15 @@ Hooks: `usePageSelectionConfig<T>()`, `usePageSelectionState()`. Config uses ref
 5. `TableView` uses `uidFieldId` (default `UID`) for stable keys; `visibleColumns` drives header + cells.
 
 Row components read selection state via `usePageSelectionConfig` / `usePageSelectionState` when inside `StandardPageWithSelection`.
+
+### Resizable tables
+
+Passing `resizableColumns` swaps `PageTable` for the shared hybrid table: `TableColumnWidthProvider` (`common/TableView/`) owns per-page width settings, `ForkliftHybridDataViewTable` renders `ForkliftResizableTableHead` plus one native row per item, and `DataViewTable/ForkliftResizeHandle` owns the pointer/keyboard gesture. Details live in the AGENTS.md **Resizable Tables** section; the rules that bite:
+
+- Put weight and preferred minimum on `ResourceField.defaultWidth`; the shared readable floor (96 px) wins over smaller minima.
+- Row components must render data cells through `ResizableTd` / `VisibleTableData` so `data-column-id`, spacer columns and truncation stay aligned with the header. A raw `<Td>` misaligns the body.
+- Resizable tables set `gridBreakPoint=""` (no stacked/card layout) and scroll horizontally at narrow widths.
+- Width persistence is keyed by `pageId`, so two different tables must not share one page-id constant.
 
 ### VsphereFoldersTable — tree pagination
 

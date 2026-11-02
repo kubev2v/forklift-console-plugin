@@ -18,11 +18,15 @@ const pointerEvent = (
     stopPropagation: jest.fn(),
   }) as unknown as PointerEvent<HTMLButtonElement>;
 
-const windowPointerEvent = (type: string, clientX: number): globalThis.PointerEvent => {
+const windowPointerEvent = (
+  type: string,
+  clientX: number,
+  pointerId = 1,
+): globalThis.PointerEvent => {
   const event = new Event(type) as unknown as globalThis.PointerEvent;
   Object.defineProperties(event, {
     clientX: { value: clientX },
-    pointerId: { value: 1 },
+    pointerId: { value: pointerId },
   });
   return event;
 };
@@ -31,6 +35,7 @@ const renderGesture = (): {
   button: HTMLButtonElement;
   commitColumnWidths: jest.Mock;
   result: { current: ReturnType<typeof useColumnResizeGesture> };
+  unmount: () => void;
 } => {
   document.body.innerHTML = `
     <table><thead><tr>
@@ -46,14 +51,14 @@ const renderGesture = (): {
   jest.spyOn(name, 'getBoundingClientRect').mockReturnValue({ width: 160 } as DOMRect);
   jest.spyOn(status, 'getBoundingClientRect').mockReturnValue({ width: 140 } as DOMRect);
   const commitColumnWidths = jest.fn();
-  const { result } = renderHook(() =>
+  const { result, unmount } = renderHook(() =>
     useColumnResizeGesture({
       commitColumnWidths,
       flushPendingColumnWidths: jest.fn(),
       minWidth: 100,
     }),
   );
-  return { button, commitColumnWidths, result };
+  return { button, commitColumnWidths, result, unmount };
 };
 
 describe('column resize release outside the handle', () => {
@@ -75,6 +80,55 @@ describe('column resize release outside the handle', () => {
     });
 
     expect(commitColumnWidths).toHaveBeenCalledWith({ name: 200, status: 140 });
+  });
+
+  it('ignores a window release from a different pointer', () => {
+    const { button, commitColumnWidths, result } = renderGesture();
+
+    act(() => {
+      result.current.onPointerDown(pointerEvent(button, 80));
+      result.current.onPointerMove(pointerEvent(button, 100));
+    });
+    act(() => {
+      window.dispatchEvent(windowPointerEvent('pointerup', 120, 2));
+    });
+
+    expect(commitColumnWidths).not.toHaveBeenCalled();
+    expect(screen.getByRole('table').hasAttribute('data-column-resize-active')).toBe(true);
+  });
+
+  it('rolls back when the window reports a cancel for the drag pointer', () => {
+    const { button, commitColumnWidths, result } = renderGesture();
+
+    act(() => {
+      result.current.onPointerDown(pointerEvent(button, 80));
+      result.current.onPointerMove(pointerEvent(button, 100));
+    });
+    act(() => {
+      window.dispatchEvent(windowPointerEvent('pointercancel', 120));
+    });
+
+    expect(commitColumnWidths).not.toHaveBeenCalled();
+    expect(screen.getByRole('table').hasAttribute('data-column-resize-active')).toBe(false);
+    const [header] = screen.getAllByRole('columnheader');
+    expect(header.style.minWidth).toBe('');
+  });
+
+  it('stops listening on the window after unmount', () => {
+    const { button, commitColumnWidths, result, unmount } = renderGesture();
+
+    act(() => {
+      result.current.onPointerDown(pointerEvent(button, 80));
+      result.current.onPointerMove(pointerEvent(button, 100));
+    });
+    act(() => {
+      unmount();
+    });
+    act(() => {
+      window.dispatchEvent(windowPointerEvent('pointerup', 120));
+    });
+
+    expect(commitColumnWidths).not.toHaveBeenCalled();
   });
 
   it('keeps the dragged width when pointer capture is lost mid-drag', () => {

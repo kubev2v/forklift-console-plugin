@@ -1,4 +1,4 @@
-import type { PointerEvent } from 'react';
+import { type PointerEvent, type RefObject, useEffect } from 'react';
 
 import type { DragState } from './columnResizeInputUtils';
 import { getHeaderForResizeButton } from './columnResizeInputUtils';
@@ -10,6 +10,7 @@ import {
 import { RESIZE_DRAG_THRESHOLD_PX } from './dataViewTableConstants';
 import { getHeaderMinimumWidth } from './getHeaderMinimumWidth';
 import { getEffectiveCssZoom } from './layoutPixelUtils';
+import { subscribeToPointerRelease } from './pointerReleaseSubscription';
 
 export const createDragState = (
   event: PointerEvent<HTMLButtonElement>,
@@ -39,4 +40,20 @@ export const previewPointerResize = (drag: DragState, clientX: number): number |
   drag.lastWidth = Math.max(gestureMinimum, drag.session.activeWidth + delta);
   previewColumnResize(drag.session, drag.lastWidth);
   return drag.lastWidth;
+};
+
+export const usePointerRelease = (
+  dragRef: RefObject<DragState | null>,
+  cancelDrag: () => void,
+  finishDrag: (drag: DragState, clientX: number | null) => void,
+): void => {
+  useEffect(
+    () =>
+      subscribeToPointerRelease({
+        cancelDrag,
+        finishDrag,
+        getDrag: () => dragRef.current,
+      }),
+    [cancelDrag, dragRef, finishDrag],
+  );
 };

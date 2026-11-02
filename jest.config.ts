@@ -37,11 +37,14 @@ export const config: JestConfigWithTsJest = {
   moduleNameMapper,
   modulePaths: ['<rootDir>'],
   preset: 'ts-jest',
-  roots: ['<rootDir>/src'],
+  roots: ['<rootDir>/src', '<rootDir>/testing/playwright/reporters'],
   setupFiles: ['<rootDir>/src/__mocks__/envvars.ts'],
   setupFilesAfterEnv: ['<rootDir>/jest.setup.ts'],
   testEnvironment: 'jest-environment-jsdom',
-  testMatch: ['<rootDir>/src/**/*.{test,spec}.{js,jsx,ts,tsx}'],
+  testMatch: [
+    '<rootDir>/src/**/*.{test,spec}.{js,jsx,ts,tsx}',
+    '<rootDir>/testing/playwright/reporters/**/*.{test,spec}.{js,jsx,ts,tsx}',
+  ],
   transform: {
     '^.+\\.[t|j]sx?$': 'ts-jest',
   },

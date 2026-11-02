@@ -110,7 +110,8 @@ const ResizableHeaderTitle: FC<ResizableHeaderTitleProps> = ({ isSortable, label
           if (!isSortable) setIsVisible(checkClipped());
         }}
         onMouseLeave={() => {
-          if (!isSortable) setIsVisible(false);
+          const keepsFocus = titleRef.current?.contains(document.activeElement) ?? false;
+          if (!isSortable && !keepsFocus) setIsVisible(false);
         }}
         ref={titleRef}
         tabIndex={!isSortable && isClipped ? 0 : undefined}

@@ -2,7 +2,7 @@
   "extends": "../tsconfig.json",
   "compilerOptions": {
     "baseUrl": ".",
-    "types": ["node"],
+    "types": ["node", "jest"],
     "skipLibCheck": true
   },
   "include": ["playwright/**/*.ts", "playwright/**/*.tsx", "*.ts"],

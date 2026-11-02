@@ -81,7 +81,10 @@ const expectWeightedWidths = async (
         const readable = headers.length > 0 && narrowest >= 95;
         const scrolls = overflow > 1;
         const needsOrdering = wantOrdering && !scrolls;
-        const ok = element.isConnected && readable && (!needsOrdering || ordered);
+        // Always hold the heaviest column above the lightest one, in every layout state;
+        // strict per-step weight ordering is only observable where the table has slack.
+        const weaklyOrdered = name >= compact;
+        const ok = element.isConnected && readable && weaklyOrdered && (!needsOrdering || ordered);
         const round = (value: number): number => Math.round(value * 10) / 10;
         return ok
           ? 'balanced'

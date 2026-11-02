@@ -50,7 +50,7 @@ const formatError = (error?: TestError): string => {
   if (!error) {
     return '';
   }
-  const text = stripVTControlCharacters(error.stack ?? error.message).trim();
+  const text = stripVTControlCharacters(error.stack ?? error.message ?? '').trim();
   return text.length > MAX_ERROR_CHARS ? `${text.slice(0, MAX_ERROR_CHARS)}…` : text;
 };
 
@@ -95,10 +95,11 @@ const finalsOf = (attempts: TestAttempt[][]): FinalOutcome[] =>
       return [];
     }
     const failedAttempt = testAttempts.find((attempt) => !attempt.passed);
-    const flaky = testAttempts.length > 1 && Boolean(failedAttempt);
+    const flaky = testAttempts.length > 1 && Boolean(failedAttempt) && last.passed;
     // A flake only matters for the reason it failed the first time; the passing retry
-    // carries no error, so keep the first failure's message and step trail.
-    const firstFailure = failedAttempt?.outcome;
+    // carries no error, so keep the first failure's message and step trail. A test that
+    // failed every attempt must report the last attempt's failure instead.
+    const firstFailure = flaky ? failedAttempt?.outcome : undefined;
     const outcome: TestOutcome =
       flaky && firstFailure
         ? { ...last.outcome, error: firstFailure.error, failingStep: firstFailure.failingStep }

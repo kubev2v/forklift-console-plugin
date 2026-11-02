@@ -226,7 +226,7 @@ npm run test:upstream:failed
 npm run test:upstream:changed
 ```
 
-Parallelism: the upstream suite runs with 4 workers on CI (`workers: CI ? 4 : 3`) and
-2 retries. The specs are fully route-mocked, so they are safe to run concurrently —
-keep new tests independent of cluster state. Trace and video are recorded only for
+Parallelism: the upstream suite runs with 3 workers (`workers: 3`, tuned for the CI
+runner) and 2 retries on CI. The specs are fully route-mocked, so they are safe to run
+concurrently — keep new tests independent of cluster state. Trace and video are recorded only for
 retried tests, which keeps the happy path free of recording overhead.

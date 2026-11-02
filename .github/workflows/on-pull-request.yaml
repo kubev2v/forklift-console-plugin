@@ -115,8 +115,10 @@ jobs:
   e2e:
     name: Run e2e tests
     runs-on: ubuntu-latest
-    # 4 workers + 2 retries: happy path ~15 min, worst case ~30 min.
-    timeout-minutes: 30
+    # 3 workers + 2 retries: happy path ~17 min, worst case ~45 min. The cap must stay
+    # above the worst case or the job is cancelled before the if: always() step uploads
+    # the failure digest and traces.
+    timeout-minutes: 45
     env:
       BASE_ADDRESS: http://localhost:30080
     steps:

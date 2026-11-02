@@ -15,10 +15,9 @@ import {
   releaseColumnResizeCapture,
 } from './columnResizeInputUtils';
 import { commitKeyboardResize, isArrowResizeKey, restoreColumnWidth } from './columnResizeKeyboard';
-import { createDragState, previewPointerResize } from './columnResizePointer';
+import { createDragState, previewPointerResize, usePointerRelease } from './columnResizePointer';
 import { finishColumnResize, rollbackColumnResize } from './columnResizeSession';
 import { getLayoutPixelWidth } from './layoutPixelUtils';
-import { subscribeToPointerRelease } from './pointerReleaseSubscription';
 
 type UseColumnResizeGestureArgs = {
   commitColumnWidths: (widths: Record<string, number>) => void;
@@ -93,10 +92,7 @@ export const useColumnResizeGesture = ({
     finishDrag(drag, event.clientX);
   };
 
-  useEffect(
-    () => subscribeToPointerRelease(() => dragRef.current, finishDrag, cancelDrag),
-    [cancelDrag, finishDrag],
-  );
+  usePointerRelease(dragRef, cancelDrag, finishDrag);
 
   const onKeyDown = (event: KeyboardEvent<HTMLButtonElement>): void => {
     if (event.key === 'Escape') {

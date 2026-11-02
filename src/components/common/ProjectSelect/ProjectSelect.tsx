@@ -1,4 +1,4 @@
-import { type FC, useEffect, useMemo, useRef } from 'react';
+import { type FC, useEffect, useMemo, useRef, useState } from 'react';
 
 import ProjectSelectEmptyState from '@components/common/ProjectSelect/ProjectSelectEmptyState';
 import type { ProjectSelectProps } from '@components/common/ProjectSelect/types';
@@ -42,7 +42,8 @@ const ProjectSelect: FC<ProjectSelectProps> = ({
   const { t } = useForkliftTranslation();
   const launchOverlay = useOverlay();
   const inputRef = useRef<HTMLInputElement | null>(null);
-  const refocusAfterRepopulateRef = useRef(false);
+  const shouldRefocusFilterRef = useRef(false);
+  const [refocusRequest, setRefocusRequest] = useState(0);
   const [canCreate, loadingCreate] = useAccessReview({
     group: ProjectModel.apiGroup,
     resource: ProjectModel.plural,
@@ -66,15 +67,16 @@ const ProjectSelect: FC<ProjectSelectProps> = ({
   }, [projectNames, defaultProject, showDefaultProjects, value]);
 
   // Toggling "show default projects" steals focus into the switch, so the filter input is
-  // re-focused once the repopulated options commit. An effect keeps this on the render that
-  // shows the new list; a timer used to fire mid-click and close the menu under the pointer.
+  // re-focused once the repopulated options commit. The request counter makes the effect run
+  // even when a caller pins the prop (map wizards force it true for a system default project)
+  // and the option list keeps its identity; a timer used to fire mid-click.
   useEffect(() => {
-    if (!refocusAfterRepopulateRef.current) {
+    if (!shouldRefocusFilterRef.current) {
       return;
     }
-    refocusAfterRepopulateRef.current = false;
+    shouldRefocusFilterRef.current = false;
     inputRef.current?.focus();
-  }, [projectOptions]);
+  }, [projectOptions, refocusRequest]);
 
   const onProjectCreated = (newProject: K8sResourceCommon): void => {
     const projectName = getName(newProject);
@@ -113,8 +115,9 @@ const ProjectSelect: FC<ProjectSelectProps> = ({
               isChecked={showDefaultProjects}
               label={t('Show default projects')}
               onChange={(_event, checked) => {
-                refocusAfterRepopulateRef.current = true;
+                shouldRefocusFilterRef.current = true;
                 setShowDefaultProjects(checked);
+                setRefocusRequest((request) => request + 1);
               }}
             />
           </div>

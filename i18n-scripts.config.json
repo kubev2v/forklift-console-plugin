@@ -3,9 +3,7 @@
   "projectTitle": "[Forklift $VERSION] UI Localization - Sprint $SPRINT/Branch $BRANCH",
   "templateId": "169304",
   "languages": ["ja", "zh-cn", "ko", "fr", "es"],
-  "languageAliases": {
-    "zh-cn": "zh"
-  },
+  "languageAliases": { "zh-cn": "zh" },
   "pluralOverrides": {
     "{{count}} VM_other": "{{count}} VMs",
     "{{count}} issues impacting this provider_one": "{{count}} issue impacting this provider",
