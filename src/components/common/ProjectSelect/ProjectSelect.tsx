@@ -1,4 +1,4 @@
-import { type FC, useMemo, useRef } from 'react';
+import { type FC, useEffect, useMemo, useRef } from 'react';
 
 import ProjectSelectEmptyState from '@components/common/ProjectSelect/ProjectSelectEmptyState';
 import type { ProjectSelectProps } from '@components/common/ProjectSelect/types';
@@ -42,6 +42,7 @@ const ProjectSelect: FC<ProjectSelectProps> = ({
   const { t } = useForkliftTranslation();
   const launchOverlay = useOverlay();
   const inputRef = useRef<HTMLInputElement | null>(null);
+  const refocusAfterRepopulateRef = useRef(false);
   const [canCreate, loadingCreate] = useAccessReview({
     group: ProjectModel.apiGroup,
     resource: ProjectModel.plural,
@@ -63,6 +64,17 @@ const ProjectSelect: FC<ProjectSelectProps> = ({
     }
     return defaultProject ? [{ content: defaultProject, value: defaultProject }] : [];
   }, [projectNames, defaultProject, showDefaultProjects, value]);
+
+  // Toggling "show default projects" steals focus into the switch, so the filter input is
+  // re-focused once the repopulated options commit. An effect keeps this on the render that
+  // shows the new list; a timer used to fire mid-click and close the menu under the pointer.
+  useEffect(() => {
+    if (!refocusAfterRepopulateRef.current) {
+      return;
+    }
+    refocusAfterRepopulateRef.current = false;
+    inputRef.current?.focus();
+  }, [projectOptions]);
 
   const onProjectCreated = (newProject: K8sResourceCommon): void => {
     const projectName = getName(newProject);
@@ -101,9 +113,8 @@ const ProjectSelect: FC<ProjectSelectProps> = ({
               isChecked={showDefaultProjects}
               label={t('Show default projects')}
               onChange={(_event, checked) => {
+                refocusAfterRepopulateRef.current = true;
                 setShowDefaultProjects(checked);
-                // Delay here so that the list is repopulated before attempting to re-focus
-                setTimeout(() => inputRef.current?.focus(), 500);
               }}
             />
           </div>

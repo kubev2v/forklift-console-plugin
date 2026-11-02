@@ -62,6 +62,8 @@ export class NetworkMapCreatePage {
     const switchElement = this.page.locator('#show-default-projects-switch');
     if (!(await switchElement.isChecked())) {
       await this.page.locator('label[for="show-default-projects-switch"]').click();
+      // The toggle repopulates the option list; wait for it to take effect before selecting.
+      await expect(switchElement).toBeChecked();
     }
 
     await this.selectOption(data.project);
