@@ -36,7 +36,6 @@ const NetworkMapActionsDropdown: FC<NetworkMapActionsDropdownProps> = ({ data, i
 
   return (
     <Flex flex={{ default: 'flex_3' }} flexWrap={{ default: 'nowrap' }}>
-      <FlexItem grow={{ default: 'grow' }} />
       <FlexItem align={{ default: 'alignRight' }}>
         <Dropdown
           className={isDetailsPage ? 'forklift-dropdown pf-c-menu-toggle' : undefined}

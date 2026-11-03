@@ -17,6 +17,7 @@ import { extraSupportedFilters, extraSupportedMatchers } from './constants';
 import type { VmData } from './VMCellProps';
 
 const EMPTY_SELECTED_IDS: string[] = [];
+const EMPTY_EXPANDED_IDS: string[] = [];
 
 type ProviderVirtualMachinesListProps = {
   cellMapper: FC<RowProps<VmData>>;
@@ -95,7 +96,7 @@ export const ProviderVirtualMachinesList: FC<ProviderVirtualMachinesListProps> =
 
     if (handleSelectedIds) {
       return {
-        ...(ec2 ? {} : { expandedIds: [] }),
+        ...(!isProviderOpenshift(provider) && !ec2 ? { expandedIds: EMPTY_EXPANDED_IDS } : {}),
         ...(GlobalActionToolbarItems ? { GlobalActionToolbarItems } : {}),
         onSelect: handleSelectedIds,
         selectedIds: initialSelectedIds,
@@ -105,7 +106,7 @@ export const ProviderVirtualMachinesList: FC<ProviderVirtualMachinesListProps> =
 
     if (!isProviderOpenshift(provider) && !ec2) {
       return {
-        expandedIds: [],
+        expandedIds: EMPTY_EXPANDED_IDS,
         onExpand: (): void => undefined,
         toId: getVmId,
       };

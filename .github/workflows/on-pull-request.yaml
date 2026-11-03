@@ -115,11 +115,20 @@ jobs:
   e2e:
     name: Run e2e tests
     runs-on: ubuntu-latest
+    # 3 workers + 2 retries: happy path ~17 min, worst case ~45 min. The cap must stay
+    # above the worst case or the job is cancelled before the if: always() step uploads
+    # the failure digest and traces.
+    timeout-minutes: 45
     env:
       BASE_ADDRESS: http://localhost:30080
     steps:
       - name: Increase File Descriptors Limit
         run: ulimit -n 4096
+
+      - name: Report runner resources
+        run: |
+          echo "vCPUs: $(nproc)"
+          free -g
 
       - name: Checkout
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
@@ -161,4 +170,3 @@ jobs:
           path: |
             testing/test-results/
             testing/playwright-report/
-

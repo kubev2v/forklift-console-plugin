@@ -1,4 +1,5 @@
 import { existsSync, readFileSync } from 'node:fs';
+import { join } from 'node:path';
 
 import { defineConfig, devices } from '@playwright/test';
 
@@ -21,7 +22,9 @@ if (existsSync(ENV_RELAY_FILE)) {
 
 export default defineConfig({
   expect: {
-    timeout: 15_000,
+    // The plugin loads ~90 lazy chunks; a cold first render has been measured around 15s
+    // under 4-worker load, so a 15s assertion budget makes page-load checks a coin flip.
+    timeout: 25_000,
   },
   fullyParallel: true,
   globalSetup: './playwright/global.setup.ts',
@@ -41,9 +44,9 @@ export default defineConfig({
         storageState: existsSync(authFile) ? authFile : undefined,
         // Use data-testid to match actual rendered HTML
         testIdAttribute: 'data-testid',
-        trace: 'retain-on-failure-and-retries',
+        trace: 'on-first-retry',
         video: {
-          mode: 'retain-on-failure',
+          mode: 'on-first-retry',
           show: {
             actions: { position: 'top-right' },
           },
@@ -58,18 +61,28 @@ export default defineConfig({
     ['list', { printFailuresInline: true }],
     ['html', { open: 'never' }],
     ['junit', { outputFile: 'test-results/junit.xml' }],
+    // Machine-readable digest (failures.md/json + timings.json) for agents and CI annotations.
+    // Absolute path: Playwright resolves relative reporter paths from its own module directory.
+    [join(__dirname, 'playwright/reporters/failureDigestReporter.ts')],
   ],
 
-  retries: process.env.GITHUB_ACTIONS ? 3 : 0,
+  // Two retries still absorb one flake while capping failure amplification at 3 attempts.
+  retries: process.env.CI ? 2 : 0,
 
   testDir: './playwright/e2e',
 
-  timeout: process.env.JENKINS ? 15 * 60_000 : 60_000,
+  // Collapsed table specs run four viewport steps (modal + reload each) in one test:
+  // measured p50 23s, p95 55s, max 62s. A 60s ceiling made those a coin flip, so the
+  // timeout has to cover the work the test actually does.
+  timeout: process.env.JENKINS ? 15 * 60_000 : 120_000,
 
   use: {
     actionTimeout: 15_000,
     navigationTimeout: 15_000,
   },
 
-  workers: process.env.CI ? 1 : 3,
+  // 4 workers finished in 836s vs 969s at 3, but the 4-vCPU runner also hosts the kind
+  // cluster (console, forklift, kubevirt) and a rotating set of timing assertions flaked
+  // under that load. 3 workers trades ~2 minutes for a stable run.
+  workers: 3,
 });

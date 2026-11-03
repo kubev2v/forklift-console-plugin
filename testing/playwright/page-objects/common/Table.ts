@@ -123,12 +123,15 @@ export class Table {
   ): Promise<Locator> {
     const row = this.getRow({ [rowColumnName]: rowValue });
     const tableContainer = this.getTableContainer();
-    const headers = await tableContainer
-      .locator('thead th, thead [role="columnheader"]')
-      .allTextContents();
-    // PF appends screen-reader text inside <th> for the `info` prop, so match exact label OR
-    // label followed by a space to avoid "Name" matching "Namespace".
-    const targetIndex = headers.findIndex((header) => {
+    const headers = tableContainer.locator('thead th, thead [role="columnheader"]');
+    const headerTexts = await Promise.all(
+      (await headers.all()).map(async (header) => {
+        const title = header.locator('[data-column-title]');
+        return (await title.count()) > 0 ? title.textContent() : header.textContent();
+      }),
+    );
+    // Prefer the visible title: resize controls and help text also contribute to header text.
+    const targetIndex = headerTexts.findIndex((header) => {
       const trimmed = header?.trim() ?? '';
       return trimmed === targetColumnName || trimmed.startsWith(`${targetColumnName} `);
     });
@@ -140,6 +143,11 @@ export class Table {
 
   async getColumns(): Promise<string[]> {
     const tableContainer = this.getTableContainer();
+    const titles = tableContainer.locator('thead [data-column-title]');
+
+    if ((await titles.count()) > 0) {
+      return (await titles.allTextContents()).map((title) => title.trim()).filter(Boolean);
+    }
 
     const headers = tableContainer.getByRole('columnheader');
     const count = await headers.count();
@@ -179,7 +187,9 @@ export class Table {
   async isColumnVisible(columnName: string): Promise<boolean> {
     const tableContainer = this.getTableContainer();
     const header = tableContainer
-      .getByRole('columnheader', { exact: true, name: columnName })
+      .locator('thead')
+      .getByText(columnName, { exact: true })
+      .or(tableContainer.getByRole('columnheader', { exact: true, name: columnName }))
       .first();
     return header.isVisible().catch(() => false);
   }
@@ -203,6 +213,39 @@ export class Table {
     await checkbox.check();
   }
 
+  async verifyResizeHandlesAtHeaderEdges(): Promise<void> {
+    const headers = this.getTableContainer().locator('thead th:has([data-resize-handle="true"])');
+    const count = await headers.count();
+    expect(count).toBeGreaterThan(0);
+
+    for (let index = 0; index < count; index += 1) {
+      const header = headers.nth(index);
+      const columnId = await header.getAttribute('data-column-id');
+      const geometry = await header.evaluate((cell) => {
+        const handle = cell.querySelector<HTMLElement>('[data-resize-handle="true"]');
+        if (!handle) return null;
+        const cellBounds = cell.getBoundingClientRect();
+        const handleBounds = handle.getBoundingClientRect();
+        const isRtl = getComputedStyle(cell).direction === 'rtl';
+        return {
+          edgeDistance: isRtl
+            ? Math.abs(handleBounds.left - cellBounds.left)
+            : Math.abs(handleBounds.right - cellBounds.right),
+          handleHeight: handleBounds.height,
+          handleWidth: handleBounds.width,
+        };
+      });
+
+      expect(geometry, `Resize handle geometry for ${columnId ?? index}`).not.toBeNull();
+      expect(
+        geometry?.edgeDistance,
+        `Resize handle edge for ${columnId ?? index}`,
+      ).toBeLessThanOrEqual(2);
+      expect(geometry?.handleWidth).toBeGreaterThanOrEqual(32);
+      expect(geometry?.handleHeight).toBeGreaterThanOrEqual(32);
+    }
+  }
+
   async verifyRowIsVisible(options: Record<string, string>): Promise<void> {
     const row = this.getRow(options);
     await expect(row).toBeVisible();
@@ -211,7 +254,11 @@ export class Table {
   async waitForColumnVisible(columnName: string): Promise<void> {
     const tableContainer = this.getTableContainer();
     await expect(
-      tableContainer.getByRole('columnheader', { exact: true, name: columnName }).first(),
+      tableContainer
+        .locator('thead')
+        .getByText(columnName, { exact: true })
+        .or(tableContainer.getByRole('columnheader', { exact: true, name: columnName }))
+        .first(),
     ).toBeVisible({ timeout: K8S_RECONCILE_TIMEOUT });
   }
 

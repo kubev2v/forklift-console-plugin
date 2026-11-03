@@ -1,13 +1,12 @@
-import type { MouseEvent } from 'react';
-
+import type { ColumnWidthsSettings } from '@components/common/Page/types';
 import type { ResourceField } from '@components/common/utils/types';
 import { act, renderHook, type RenderHookResult } from '@testing-library/react';
 
 import { COLUMN_WIDTH_PERSIST_DEBOUNCE_MS } from '../columnWidthConstants';
 import { useTableColumnWidths } from '../useTableColumnWidths';
 
-const nameField: ResourceField = { label: 'Name', resourceFieldId: 'name' };
-const resizeEvent = {} as MouseEvent;
+const nameField: ResourceField = { isVisible: true, label: 'Name', resourceFieldId: 'name' };
+const fields = [nameField];
 
 type RenderWidthsResult = RenderHookResult<ReturnType<typeof useTableColumnWidths>, unknown> & {
   save: jest.Mock<undefined, [Record<string, number>]>;
@@ -19,73 +18,59 @@ const renderWidths = (data: Record<string, number> = {}): RenderWidthsResult => 
     useTableColumnWidths({
       columnWidthsSettings: { clear: jest.fn(), data, save },
       enabled: true,
+      fields,
     }),
   );
   return { ...view, save };
 };
 
 describe('exact column width persistence', () => {
-  beforeEach(() => {
-    jest.useFakeTimers();
-  });
-
-  afterEach(() => {
-    jest.useRealTimers();
-  });
+  beforeEach(() => jest.useFakeTimers());
+  afterEach(() => jest.useRealTimers());
 
   it.each([79.125, 100, 184.125, 624.125, 1200])(
-    'loads %spx without imposing storage bounds',
+    'loads a finite positive saved width of %spx exactly',
     (width) => {
       const { result } = renderWidths({ name: width });
-
-      expect(result.current.getResizableProps(nameField, 'Name')).toMatchObject({
+      expect(result.current.getResizeConfig(nameField, 'Name')).toMatchObject({
         minWidth: 100,
-        width,
+        savedWidth: width,
       });
     },
   );
 
-  it.each([79.125, 624.125, 1200])('saves the exact %spx reported by PatternFly', (width) => {
+  it.each([79.125, 624.125, 1200])('saves the exact committed %spx width', (width) => {
     const { result, save } = renderWidths();
-
     act(() => {
-      result.current.getResizableProps(nameField, 'Name')?.onResize?.(resizeEvent, 'name', width);
+      result.current.commitColumnWidths({ name: width });
       jest.advanceTimersByTime(COLUMN_WIDTH_PERSIST_DEBOUNCE_MS);
     });
-
     expect(save).toHaveBeenLastCalledWith({ name: width });
-    expect(result.current.getResizableProps(nameField, 'Name')).toMatchObject({ width });
-    expect(result.current.columnLayoutKey).toBe(0);
+    expect(result.current.getResizeConfig(nameField, 'Name')).toHaveProperty('savedWidth', width);
   });
 
-  it.each([0, -10, NaN, Infinity])(
-    'ignores an invalid %spx resize instead of inventing a width',
-    (width) => {
-      const { result, save } = renderWidths({ name: 624.125 });
-
-      act(() => {
-        result.current.getResizableProps(nameField, 'Name')?.onResize?.(resizeEvent, 'name', width);
-      });
-
-      expect(save).not.toHaveBeenCalled();
-      expect(result.current.getResizableProps(nameField, 'Name')).toMatchObject({ width: 624.125 });
-    },
-  );
+  it.each([0, -10, NaN, Infinity])('ignores invalid %spx reports', (width) => {
+    const { result, save } = renderWidths({ name: 624.125 });
+    act(() => {
+      result.current.commitColumnWidths({ name: width });
+      result.current.flushPendingColumnWidths();
+    });
+    expect(save).not.toHaveBeenCalled();
+    expect(result.current.getResizeConfig(nameField, 'Name')).toHaveProperty('savedWidth', 624.125);
+  });
 
   it.each(['mouseup', 'touchend', 'keyup', 'pagehide'])(
-    'saves the final pending width on %s before the debounce expires',
+    'flushes a pending save on %s',
     (eventType) => {
       const { result, save } = renderWidths();
       act(() => {
-        result.current
-          .getResizableProps(nameField, 'Name')
-          ?.onResize?.(resizeEvent, 'name', 624.125);
+        result.current.commitColumnWidths({ name: 624.125 });
       });
       expect(save).not.toHaveBeenCalled();
       act(() => {
         window.dispatchEvent(new Event(eventType));
       });
-      expect(save).toHaveBeenLastCalledWith({ name: 624.125 });
+      expect(save).toHaveBeenCalledWith({ name: 624.125 });
       act(() => {
         jest.runAllTimers();
       });
@@ -93,30 +78,51 @@ describe('exact column width persistence', () => {
     },
   );
 
-  it('saves pending widths when unmounting and does not restore canceled widths after Reset', () => {
+  it('flushes a pending save on unmount', () => {
     const { result, save, unmount } = renderWidths();
     act(() => {
-      result.current.getResizableProps(nameField, 'Name')?.onResize?.(resizeEvent, 'name', 79.125);
+      result.current.commitColumnWidths({ name: 79.125 });
     });
     unmount();
-    expect(save).toHaveBeenLastCalledWith({ name: 79.125 });
-    const { result: resetResult, save: resetSave, unmount: resetUnmount } = renderWidths();
-    act(() => {
-      resetResult.current
-        .getResizableProps(nameField, 'Name')
-        ?.onResize?.(resizeEvent, 'name', 79.125);
-      resetResult.current.resetAllColumnWidths();
-      window.dispatchEvent(new Event('pagehide'));
-    });
-    resetUnmount();
-    jest.runAllTimers();
-    expect(resetSave).not.toHaveBeenCalled();
+    expect(save).toHaveBeenCalledWith({ name: 79.125 });
   });
 
-  it('ignores invalid saved widths instead of marking the table customized', () => {
-    const { result } = renderWidths({ name: -1 });
-
-    expect(result.current.getResizableProps(nameField, 'Name')).not.toHaveProperty('width');
-    expect(result.current.hasCustomColumnWidths).toBe(false);
+  it('saves pending widths to the originating scope when settings switch', () => {
+    const saveA = jest.fn();
+    const saveB = jest.fn();
+    const settingsA: ColumnWidthsSettings = {
+      clear: jest.fn(),
+      data: {},
+      save: saveA,
+      scopeId: 'a',
+    };
+    const settingsB: ColumnWidthsSettings = {
+      clear: jest.fn(),
+      data: { name: 300 },
+      save: saveB,
+      scopeId: 'b',
+    };
+    const { result, rerender } = renderHook(
+      ({ settings }: { settings: ColumnWidthsSettings }) =>
+        useTableColumnWidths({ columnWidthsSettings: settings, enabled: true, fields }),
+      { initialProps: { settings: settingsA } },
+    );
+    const originalLayoutKey = result.current.columnLayoutKey;
+    act(() => {
+      result.current.commitColumnWidths({ name: 200 });
+    });
+    rerender({ settings: settingsB });
+    expect(saveA).toHaveBeenCalledWith({ name: 200 });
+    expect(saveB).not.toHaveBeenCalled();
+    expect(result.current.getResizeConfig(nameField, 'Name')).toHaveProperty('savedWidth', 300);
+    expect(result.current.columnLayoutKey).not.toBe(originalLayoutKey);
+    act(() => {
+      result.current.commitColumnWidths({ name: 350 });
+      result.current.flushPendingColumnWidths();
+    });
+    expect(saveB).toHaveBeenCalledWith({ name: 350 });
+    rerender({ settings: settingsA });
+    expect(result.current.getResizeConfig(nameField, 'Name')).not.toHaveProperty('savedWidth');
+    expect(result.current.columnLayoutKey).not.toBe(originalLayoutKey);
   });
 });

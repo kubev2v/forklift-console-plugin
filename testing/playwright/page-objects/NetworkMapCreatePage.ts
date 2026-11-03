@@ -1,4 +1,4 @@
-import { expect, type Page } from '@playwright/test';
+import { expect, type Locator, type Page } from '@playwright/test';
 
 import { V2_12_0 } from '../utils/version/constants';
 import { isVersionAtLeast } from '../utils/version/version';
@@ -14,6 +14,28 @@ export class NetworkMapCreatePage {
 
   constructor(page: Page) {
     this.page = page;
+  }
+
+  /**
+   * The project menu can close while the option is being clicked (the toggle repopulates the
+   * list and the typeahead re-renders), which leaves the click on a detached node. Treat
+   * opening the menu as part of the retry: if the option is gone, open it again.
+   */
+  private async selectProjectOption(toggle: Locator, label: string): Promise<void> {
+    const option = this.page.getByRole('option', { exact: true, name: label });
+    for (let attempt = 0; attempt < 4; attempt += 1) {
+      if ((await option.count()) === 0) {
+        await toggle.click();
+      }
+      try {
+        await option.click({ force: true, timeout: 5_000 });
+        await expect(option).toBeHidden({ timeout: 5_000 });
+        return;
+      } catch {
+        // Menu closed or re-rendered again; loop and reopen.
+      }
+    }
+    await expect(option).toBeVisible({ timeout: 5_000 });
   }
 
   async addMapping() {
@@ -44,11 +66,11 @@ export class NetworkMapCreatePage {
     const switchElement = this.page.locator('#show-default-projects-switch');
     if (!(await switchElement.isChecked())) {
       await this.page.locator('label[for="show-default-projects-switch"]').click();
+      // The toggle repopulates the option list; wait for it to take effect before selecting.
+      await expect(switchElement).toBeChecked();
     }
 
-    const projectCombobox = projectSelect.getByRole('combobox');
-    await projectCombobox.fill(data.project);
-    await this.page.getByRole('option', { name: data.project }).click();
+    await this.selectProjectOption(projectSelect, data.project);
 
     const sourceProviderSelect = this.page.getByTestId('network-map-source-provider-select');
     await sourceProviderSelect.click();

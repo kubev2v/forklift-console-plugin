@@ -18,8 +18,6 @@ const VMMigrationActions: FC<VMMigrationActionsProps> = ({ migration, statusVM, 
 
   return (
     <Flex flex={{ default: 'flex_3' }} flexWrap={{ default: 'nowrap' }}>
-      <FlexItem grow={{ default: 'grow' }} />
-
       <FlexItem align={{ default: 'alignRight' }}>
         <VMCutoverActionsDropdown
           isCompleted={isCompleted}

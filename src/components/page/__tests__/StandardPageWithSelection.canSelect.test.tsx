@@ -38,6 +38,24 @@ describe('StandardPageWithSelection - canSelect', () => {
     expect(checkboxes[3]).not.toBeDisabled();
   });
 
+  it('keeps nonselectable rows disabled in a resizable table', () => {
+    renderWithRouter(
+      <StandardPageWithSelection
+        canSelect={(item): boolean => item.id !== '2'}
+        dataSource={[mockData, true, null]}
+        fieldsMetadata={fieldsMetadata}
+        namespace="test-ns"
+        onSelect={jest.fn()}
+        resizableColumns
+        selectedIds={[]}
+        toId={toId}
+      />,
+    );
+
+    expect(screen.getByRole('checkbox', { name: 'Select row 1' })).toBeDisabled();
+    expect(screen.getAllByRole('checkbox')).toHaveLength(mockData.length + 1);
+  });
+
   it('should only select eligible items when Select All is used', async () => {
     const user = userEvent.setup();
     const onSelect = jest.fn();
