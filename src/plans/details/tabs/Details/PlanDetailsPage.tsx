@@ -9,6 +9,7 @@ import { CATEGORY_TYPES } from '@utils/constants';
 import { isEmpty } from '@utils/helpers';
 
 import { usePlan } from '../../hooks/usePlan';
+import { usePlanMigrations } from '../../hooks/usePlanMigrations';
 import type { PlanPageProps } from '../../utils/types';
 
 import ConditionsSection from './components/ConditionsSection/ConditionsSection';
@@ -19,6 +20,7 @@ import ProvidersSection from './components/ProvidersSection/ProvidersSection';
 const PlanDetailsPage: FC<PlanPageProps> = ({ name, namespace }) => {
   const { t } = useForkliftTranslation();
   const { plan } = usePlan(name, namespace);
+  const [migrations, migrationsLoaded, migrationsLoadError] = usePlanMigrations(plan);
 
   const criticalCondition = plan?.status?.conditions?.find(
     (condition) => condition?.category === CATEGORY_TYPES.CRITICAL,
@@ -38,7 +40,16 @@ const PlanDetailsPage: FC<PlanPageProps> = ({ name, namespace }) => {
       <Divider />
       <PageSection hasBodyWrapper={false}>
         <ExpandableSectionHeading
-          section={<MigrationsSection plan={plan} />}
+          section={
+            plan ? (
+              <MigrationsSection
+                loaded={migrationsLoaded}
+                loadError={migrationsLoadError}
+                migrations={migrations}
+                plan={plan}
+              />
+            ) : null
+          }
           sectionHelpTip={t(
             `All past migration runs for this plan. This includes both successful and failed attempts, but detailed logs and other data are not available after the migration pods are deleted. If you retry an incomplete migration, only the failed VMs will migrate again.`,
           )}

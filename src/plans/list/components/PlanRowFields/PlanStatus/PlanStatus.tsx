@@ -33,6 +33,7 @@ import { isEmpty } from '@utils/helpers';
 import type { PlanFieldProps } from '../utils/types';
 
 import usePipelineTaskProgress from './hooks/usePipelineTaskProgress';
+import PlanStatusPopover from './PlanStatusPopover';
 
 import './PlanStatus.style.scss';
 
@@ -86,18 +87,22 @@ const PlanStatus: FC<PlanFieldProps> = ({ plan }) => {
       spaceItems={{ default: 'spaceItemsSm' }}
     >
       <FlexItem className="plan-status-cell-label-section">
-        {isPlanRunning &&
-        PlanStatuses.Paused !== planStatus &&
-        PlanStatuses.Pending !== planStatus ? (
-          <Split hasGutter>
-            <Spinner data-testid="plan-progress-spinner" size="md" />
-            <span className="pf-v6-u-font-size-sm" data-testid="plan-progress-percentage">
-              {Math.trunc(pipelinesProgressPercentage)}%
-            </span>
-          </Split>
-        ) : (
-          <PlanStatusLabel plan={plan} />
-        )}
+        <PlanStatusPopover plan={plan}>
+          <span className="plan-status-cell-label-section__trigger">
+            {isPlanRunning &&
+            PlanStatuses.Paused !== planStatus &&
+            PlanStatuses.Pending !== planStatus ? (
+              <Split hasGutter>
+                <Spinner data-testid="plan-progress-spinner" size="md" />
+                <span className="pf-v6-u-font-size-sm" data-testid="plan-progress-percentage">
+                  {Math.trunc(pipelinesProgressPercentage)}%
+                </span>
+              </Split>
+            ) : (
+              <PlanStatusLabel plan={plan} />
+            )}
+          </span>
+        </PlanStatusPopover>
       </FlexItem>
       {canPlanResumeConversion(plan) && loaded && !hasActiveMigration && (
         <FlexItem>

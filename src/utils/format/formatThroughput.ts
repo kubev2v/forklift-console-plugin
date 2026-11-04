@@ -1,4 +1,4 @@
-const UNITS = ['B/s', 'KB/s', 'MB/s', 'GB/s', 'TB/s'];
+const UNITS = ['B/s', 'KiB/s', 'MiB/s', 'GiB/s', 'TiB/s'];
 const DIVISOR = 1024;
 
 export const formatThroughput = (bytesPerSecond: number): string => {

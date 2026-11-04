@@ -10,11 +10,11 @@ import {
   ChartVoronoiContainer,
 } from '@patternfly/react-charts/victory';
 import { Bullseye } from '@patternfly/react-core';
+import { formatThroughput, formatThroughputTick } from '@utils/format/formatThroughput';
 import { isEmpty } from '@utils/helpers';
 import { useForkliftTranslation } from '@utils/i18n';
 
 import type { ThroughputSeries } from '../../hooks/useThroughputQuery';
-import { formatThroughput, formatThroughputTick } from '../../utils/formatThroughput';
 import {
   type BaseChartDatum,
   type BaseChartLineEntry,

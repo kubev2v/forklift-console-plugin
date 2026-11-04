@@ -1,3 +1,8 @@
 .plan-status-cell-label-section {
   white-space: nowrap;
+
+  &__trigger {
+    cursor: help;
+    display: inline-block;
+  }
 }
