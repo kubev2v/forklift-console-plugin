@@ -2,7 +2,7 @@ import type { V1beta1Plan } from '@forklift-ui/types';
 
 import { getPlanMigrationPerformance } from '../migrationPerformance';
 
-import { MIB, task } from './migrationPerformance.fixtures';
+import { buildPipelineTask, MIB } from './migrationPerformance.fixtures';
 
 describe('getPlanMigrationPerformance', () => {
   it('derives performance from the plan status mirror', () => {
@@ -19,7 +19,13 @@ describe('getPlanMigrationPerformance', () => {
                 {
                   name: 'DiskTransfer',
                   tasks: [
-                    task('DiskTransfer', '2026-01-01T00:05:00Z', '2026-01-01T00:25:00Z', 200, 200),
+                    buildPipelineTask(
+                      'DiskTransfer',
+                      '2026-01-01T00:05:00Z',
+                      '2026-01-01T00:25:00Z',
+                      200,
+                      200,
+                    ),
                   ],
                 },
               ],

@@ -1,13 +1,13 @@
 import type { FC } from 'react';
-import { shouldShowCopyTime } from 'src/plans/utils/migrationPerformanceTime';
-import type { MigrationPerformance } from 'src/plans/utils/migrationPerformanceTypes';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
-import { EMPTY_MSG } from '@utils/constants';
 import { formatBytes } from '@utils/format/formatBytes';
+import { EMPTY_VALUE } from '@utils/format/formatConstants';
 import { formatDuration } from '@utils/format/formatDuration';
 import { formatThroughput } from '@utils/format/formatThroughput';
 import { isEmpty } from '@utils/helpers';
+import { shouldShowCopyTime } from '@utils/migrations/migrationPerformanceTime';
+import type { MigrationPerformance } from '@utils/migrations/migrationPerformanceTypes';
 
 type MigrationPerformanceDetailsProps = {
   performance: MigrationPerformance;
@@ -28,29 +28,32 @@ const MigrationPerformanceDetails: FC<MigrationPerformanceDetailsProps> = ({ per
 
   return (
     <div className="pf-v6-u-font-size-sm">
-      <div>{t('Total duration: {{duration}}', { duration: formatDuration(durationSeconds) })}</div>
+      <div>
+        <strong>{t('Total duration')}:</strong> {formatDuration(durationSeconds)}
+      </div>
       {shouldShowCopyTime(durationSeconds, transferSeconds) && (
-        <div>{t('Copy time: {{duration}}', { duration: formatDuration(transferSeconds) })}</div>
+        <div>
+          <strong>{t('Copy time')}:</strong> {formatDuration(transferSeconds)}
+        </div>
       )}
       <div>
-        {t('Data transferred: {{copied}} of {{expected}}', {
-          copied: formatBytes(copiedBytes),
-          expected: expectedBytes ? formatBytes(expectedBytes) : EMPTY_MSG,
+        <strong>{t('Data transferred')}:</strong> {formatBytes(copiedBytes)}{' '}
+        {t('of {{expected}}', {
+          expected: expectedBytes ? formatBytes(expectedBytes) : EMPTY_VALUE,
         })}
       </div>
       <div>
-        {t('Average rate: {{rate}}', {
-          rate: avgTransferRate ? formatThroughput(avgTransferRate) : EMPTY_MSG,
-        })}
+        <strong>{t('Average rate')}:</strong>{' '}
+        {avgTransferRate === undefined ? EMPTY_VALUE : formatThroughput(avgTransferRate)}
       </div>
       <div>
-        {t('Overall rate: {{rate}}', {
-          rate: overallRate ? formatThroughput(overallRate) : EMPTY_MSG,
-        })}
+        <strong>{t('Overall rate')}:</strong>{' '}
+        {overallRate === undefined ? EMPTY_VALUE : formatThroughput(overallRate)}
       </div>
       {!isEmpty(vms) && (
         <div>
-          {t('VMs succeeded: {{succeeded}} of {{total}}', { succeeded, total: vms.length })}
+          <strong>{t('VMs succeeded')}:</strong>{' '}
+          {t('{{succeeded}} of {{total}}', { succeeded, total: vms.length })}
         </div>
       )}
     </div>

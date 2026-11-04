@@ -1,38 +1,72 @@
 import { getMigrationPerformance } from '../migrationPerformance';
 
-import { at, META, MIB, source, task } from './migrationPerformance.fixtures';
+import {
+  buildMigrationSource,
+  buildPipelineTask,
+  MIB,
+  PERFORMANCE_META,
+  toTimestamp,
+} from './migrationPerformance.fixtures';
 
 describe('getMigrationPerformance', () => {
   it('sums only disk transfer steps and converts MiB to bytes', () => {
     const result = getMigrationPerformance(
-      source([
+      buildMigrationSource([
         {
           id: 'vm-1',
           pipeline: [
             {
               name: 'Initialize',
-              tasks: [task('Initialize', '2026-01-01T00:00:00Z', '2026-01-01T00:01:00Z', 1, 1)],
+              tasks: [
+                buildPipelineTask(
+                  'Initialize',
+                  '2026-01-01T00:00:00Z',
+                  '2026-01-01T00:01:00Z',
+                  1,
+                  1,
+                ),
+              ],
             },
             {
               name: 'DiskAllocation',
               tasks: [
-                task('DiskAllocation', '2026-01-01T00:01:00Z', '2026-01-01T00:02:00Z', 50, 50),
+                buildPipelineTask(
+                  'DiskAllocation',
+                  '2026-01-01T00:01:00Z',
+                  '2026-01-01T00:02:00Z',
+                  50,
+                  50,
+                ),
               ],
             },
             {
               name: 'DiskTransfer',
               tasks: [
-                task('DiskTransfer', '2026-01-01T00:02:00Z', '2026-01-01T00:12:00Z', 100, 100),
+                buildPipelineTask(
+                  'DiskTransfer',
+                  '2026-01-01T00:02:00Z',
+                  '2026-01-01T00:12:00Z',
+                  100,
+                  100,
+                ),
               ],
             },
             {
               name: 'Cutover',
-              tasks: [task('Cutover', '2026-01-01T00:12:00Z', '2026-01-01T00:22:00Z', 25, 25)],
+              tasks: [
+                buildPipelineTask(
+                  'Cutover',
+                  '2026-01-01T00:12:00Z',
+                  '2026-01-01T00:22:00Z',
+                  25,
+                  25,
+                ),
+              ],
             },
           ],
         },
       ]),
-      META,
+      PERFORMANCE_META,
     );
 
     expect(result.copiedBytes).toBe(100 * MIB);
@@ -43,7 +77,7 @@ describe('getMigrationPerformance', () => {
 
   it('uses the widest disk-task window across VMs', () => {
     const result = getMigrationPerformance(
-      source(
+      buildMigrationSource(
         [
           {
             id: 'a',
@@ -51,7 +85,13 @@ describe('getMigrationPerformance', () => {
               {
                 name: 'DiskTransferV2v',
                 tasks: [
-                  task('DiskTransferV2v', '2026-01-01T00:00:00Z', '2026-01-01T00:10:00Z', 10, 10),
+                  buildPipelineTask(
+                    'DiskTransferV2v',
+                    '2026-01-01T00:00:00Z',
+                    '2026-01-01T00:10:00Z',
+                    10,
+                    10,
+                  ),
                 ],
               },
             ],
@@ -62,7 +102,13 @@ describe('getMigrationPerformance', () => {
               {
                 name: 'DiskTransfer',
                 tasks: [
-                  task('DiskTransfer', '2026-01-01T00:05:00Z', '2026-01-01T00:30:00Z', 30, 30),
+                  buildPipelineTask(
+                    'DiskTransfer',
+                    '2026-01-01T00:05:00Z',
+                    '2026-01-01T00:30:00Z',
+                    30,
+                    30,
+                  ),
                 ],
               },
             ],
@@ -71,7 +117,7 @@ describe('getMigrationPerformance', () => {
         '2026-01-01T00:00:00Z',
         '2026-01-01T01:00:00Z',
       ),
-      META,
+      PERFORMANCE_META,
     );
 
     expect(result.transferSeconds).toBe(1800);
@@ -81,14 +127,16 @@ describe('getMigrationPerformance', () => {
 
   it('treats an open task with progress as running up to now', () => {
     const result = getMigrationPerformance(
-      source(
+      buildMigrationSource(
         [
           {
             id: 'a',
             pipeline: [
               {
                 name: 'DiskTransfer',
-                tasks: [task('DiskTransfer', '2026-01-01T00:10:00Z', undefined, 50, 100)],
+                tasks: [
+                  buildPipelineTask('DiskTransfer', '2026-01-01T00:10:00Z', undefined, 50, 100),
+                ],
               },
             ],
             started: '2026-01-01T00:00:00Z',
@@ -96,8 +144,8 @@ describe('getMigrationPerformance', () => {
         ],
         '2026-01-01T00:00:00Z',
       ),
-      META,
-      at('2026-01-01T00:20:00Z'),
+      PERFORMANCE_META,
+      toTimestamp('2026-01-01T00:20:00Z'),
     );
 
     expect(result.durationSeconds).toBe(1200);

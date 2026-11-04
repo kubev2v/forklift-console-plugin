@@ -1,1 +1,0 @@
-export const MIN_COPY_TIME_DIFFERENCE_SECONDS = 60;

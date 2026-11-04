@@ -1,10 +1,11 @@
+import { EMPTY_VALUE } from './formatConstants';
+
 const SECONDS_PER_MINUTE = 60;
 const MINUTES_PER_HOUR = 60;
-const EM_DASH = '—';
 
 export const formatDuration = (seconds: number | undefined): string => {
   if (seconds === undefined || seconds === null || !Number.isFinite(seconds) || seconds < 0) {
-    return EM_DASH;
+    return EMPTY_VALUE;
   }
 
   if (seconds < SECONDS_PER_MINUTE) {

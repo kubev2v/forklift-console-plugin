@@ -1,10 +1,11 @@
+import { EMPTY_VALUE } from './formatConstants';
+
 const UNITS = ['B', 'KiB', 'MiB', 'GiB', 'TiB', 'PiB'];
 const DIVISOR = 1024;
-const EM_DASH = '—';
 
 export const formatBytes = (bytes: number | undefined): string => {
   if (!bytes || bytes <= 0 || !Number.isFinite(bytes)) {
-    return EM_DASH;
+    return EMPTY_VALUE;
   }
 
   let value = bytes;

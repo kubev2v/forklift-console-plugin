@@ -1,6 +1,4 @@
 import type { TFunction } from 'i18next';
-import { getMigrationResourcePerformance } from 'src/plans/utils/migrationPerformance';
-import type { MigrationPerformance } from 'src/plans/utils/migrationPerformanceTypes';
 
 import {
   COMPACT_COLUMN_WIDTH,
@@ -9,6 +7,8 @@ import {
 } from '@components/common/TableView/columnWidthConstants';
 import { FilterDefType, type ResourceField } from '@components/common/utils/types';
 import type { V1beta1Migration } from '@forklift-ui/types';
+import { getMigrationResourcePerformance } from '@utils/migrations/migrationPerformance';
+import type { MigrationPerformance } from '@utils/migrations/migrationPerformanceTypes';
 
 import { getMigrationStatusFromVMs } from './migrationStatus';
 

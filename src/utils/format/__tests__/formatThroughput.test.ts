@@ -1,4 +1,4 @@
-import { formatThroughput, formatThroughputTick } from '@utils/format/formatThroughput';
+import { formatThroughput, formatThroughputTick } from '../formatThroughput';
 
 const BYTES_PER_KIB = 1024;
 const BYTES_PER_MIB = BYTES_PER_KIB * 1024;

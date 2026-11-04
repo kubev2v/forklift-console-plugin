@@ -118,3 +118,9 @@ export const ConfigMapModel = {
   namespaced: true,
   plural: 'configmaps',
 };
+
+export const PIPELINE_STEP_NAMES = {
+  DISK_ALLOCATION: 'DiskAllocation',
+  DISK_TRANSFER: 'DiskTransfer',
+  DISK_TRANSFER_V2V: 'DiskTransferV2v',
+} as const;

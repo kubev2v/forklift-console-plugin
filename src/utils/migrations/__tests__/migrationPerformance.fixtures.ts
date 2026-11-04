@@ -2,7 +2,7 @@ import type { MigrationPerformanceMeta, MigrationSource } from '../migrationPerf
 
 export const MIB = 1024 * 1024;
 
-export const META: MigrationPerformanceMeta = {
+export const PERFORMANCE_META: MigrationPerformanceMeta = {
   migrationName: 'mig-1',
   migrationUid: 'uid-1',
   namespace: 'ns',
@@ -14,21 +14,21 @@ type TestTask = {
   completed?: string;
   name: string;
   progress: { completed: number; total: number };
-  started: string;
+  started?: string;
 };
 
-export const task = (
+export const buildPipelineTask = (
   name: string,
-  started: string,
+  started: string | undefined,
   completed: string | undefined,
   done: number,
   total: number,
 ): TestTask => ({ completed, name, progress: { completed: done, total }, started });
 
-export const source = (
+export const buildMigrationSource = (
   vms: MigrationSource['vms'],
   started?: string,
   completed?: string,
 ): MigrationSource => ({ completed, started, vms });
 
-export const at = (value: string): number => new Date(value).getTime();
+export const toTimestamp = (value: string): number => new Date(value).getTime();

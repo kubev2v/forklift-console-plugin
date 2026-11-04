@@ -1,11 +1,15 @@
 import { getMigrationPerformance } from '../migrationPerformance';
 
-import { at, META, source } from './migrationPerformance.fixtures';
+import {
+  buildMigrationSource,
+  PERFORMANCE_META,
+  toTimestamp,
+} from './migrationPerformance.fixtures';
 
 describe('getMigrationPerformance status', () => {
   it('labels mixed outcomes as Partial', () => {
     const result = getMigrationPerformance(
-      source(
+      buildMigrationSource(
         [
           { conditions: [{ status: 'True', type: 'Succeeded' }], id: 'a' },
           { conditions: [{ status: 'True', type: 'Failed' }], id: 'b' },
@@ -13,7 +17,7 @@ describe('getMigrationPerformance status', () => {
         '2026-01-01T00:00:00Z',
         '2026-01-01T01:00:00Z',
       ),
-      META,
+      PERFORMANCE_META,
     );
 
     expect(result.status).toBe('Partial');
@@ -23,12 +27,12 @@ describe('getMigrationPerformance status', () => {
 
   it('reports a fully failed run as Failed', () => {
     const result = getMigrationPerformance(
-      source(
+      buildMigrationSource(
         [{ conditions: [{ status: 'True', type: 'Failed' }], id: 'a' }],
         '2026-01-01T00:00:00Z',
         '2026-01-01T00:30:00Z',
       ),
-      META,
+      PERFORMANCE_META,
     );
 
     expect(result.status).toBe('Failed');
@@ -36,12 +40,12 @@ describe('getMigrationPerformance status', () => {
 
   it('has no rate when there is no disk data', () => {
     const result = getMigrationPerformance(
-      source(
+      buildMigrationSource(
         [{ conditions: [{ status: 'True', type: 'Succeeded' }], id: 'live' }],
         '2026-01-01T00:00:00Z',
         '2026-01-01T00:08:00Z',
       ),
-      META,
+      PERFORMANCE_META,
     );
 
     expect(result.copiedBytes).toBe(0);
@@ -59,8 +63,8 @@ describe('getMigrationPerformance status', () => {
         started: '2026-01-01T00:00:00Z',
         vms: [{ conditions: [{ status: 'True', type: 'Canceled' }], id: 'a' }],
       },
-      META,
-      at('2026-01-01T05:00:00Z'),
+      PERFORMANCE_META,
+      toTimestamp('2026-01-01T05:00:00Z'),
     );
 
     expect(result.status).toBe('Canceled');
@@ -73,11 +77,22 @@ describe('getMigrationPerformance status', () => {
         started: '2026-01-01T00:00:00Z',
         vms: [{ conditions: [{ status: 'True', type: 'Canceled' }], id: 'a' }],
       },
-      META,
-      at('2026-01-01T05:00:00Z'),
+      PERFORMANCE_META,
+      toTimestamp('2026-01-01T05:00:00Z'),
     );
 
     expect(result.status).toBe('Canceled');
+    expect(result.durationSeconds).toBeUndefined();
+  });
+
+  it('reports a queued run as Pending instead of Running', () => {
+    const result = getMigrationPerformance(
+      buildMigrationSource([{ conditions: [], id: 'a' }], '2026-01-01T00:00:00Z'),
+      PERFORMANCE_META,
+      toTimestamp('2026-01-01T01:00:00Z'),
+    );
+
+    expect(result.status).toBe('Pending');
     expect(result.durationSeconds).toBeUndefined();
   });
 });

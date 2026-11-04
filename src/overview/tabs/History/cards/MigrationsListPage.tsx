@@ -43,7 +43,7 @@ const MigrationsListPage: FC = () => {
 
   return (
     <LoadingSuspend loaded={plansLoaded} loadError={plansLoadError} obj={plans}>
-      <MigrationPerformanceSummary migrations={migrations ?? []} />
+      <MigrationPerformanceSummary loaded={migrationsLoaded} migrations={migrations ?? []} />
       <StandardPage
         data-testid="migrations-list"
         dataSource={[migrations ?? [], migrationsLoaded, migrationsLoadError]}

@@ -88,7 +88,11 @@ const PlanStatus: FC<PlanFieldProps> = ({ plan }) => {
     >
       <FlexItem className="plan-status-cell-label-section">
         <PlanStatusPopover plan={plan}>
-          <span className="plan-status-cell-label-section__trigger">
+          <span
+            aria-label={t('Show migration performance details')}
+            className="plan-status-cell-label-section__trigger"
+            tabIndex={0}
+          >
             {isPlanRunning &&
             PlanStatuses.Paused !== planStatus &&
             PlanStatuses.Pending !== planStatus ? (

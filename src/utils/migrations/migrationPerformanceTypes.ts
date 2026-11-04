@@ -1,14 +1,18 @@
-export type MigrationPerformanceStatus =
-  'Canceled' | 'Failed' | 'Partial' | 'Running' | 'Succeeded';
+import type { MigrationPerformanceStatus } from './migrationPerformanceConstants';
+
+export type { MigrationPerformanceStatus };
 
 export type PipelineTask = {
   completed?: string;
+  name?: string;
   progress?: { completed?: number; total?: number };
   started?: string;
 };
 
 export type PipelineStep = {
+  completed?: string;
   name?: string;
+  started?: string;
   tasks?: PipelineTask[];
 };
 
@@ -22,6 +26,7 @@ export type MigrationVmSource = {
   completed?: string;
   conditions?: VmCondition[];
   id?: string;
+  name?: string;
   pipeline?: PipelineStep[];
   started?: string;
 };
@@ -46,7 +51,7 @@ export type VmMigrationPerformance = {
   expectedBytes: number;
   id: string;
   name: string;
-  status: string;
+  status: MigrationPerformanceStatus;
   transferRate?: number;
   transferSeconds?: number;
 };

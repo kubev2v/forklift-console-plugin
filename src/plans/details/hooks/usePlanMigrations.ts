@@ -12,22 +12,28 @@ import { useK8sWatchResource } from '@utils/hooks/useK8sWatchResource';
 export const usePlanMigrations = (
   plan?: V1beta1Plan,
 ): [V1beta1Migration[], boolean, Error | null] => {
-  const [migrations, loaded, loadError] = useK8sWatchResource<V1beta1Migration[]>({
-    groupVersionKind: MigrationModelGroupVersionKind,
-    isList: true,
-    namespace: plan ? getNamespace(plan) : undefined,
-    namespaced: true,
-  });
+  const namespace = plan ? getNamespace(plan) : undefined;
+
+  const [migrations, loaded, loadError] = useK8sWatchResource<V1beta1Migration[]>(
+    namespace
+      ? {
+          groupVersionKind: MigrationModelGroupVersionKind,
+          isList: true,
+          namespace,
+          namespaced: true,
+        }
+      : null,
+  );
 
   const planMigrations = useMemo(() => {
-    if (!plan) {
+    if (!plan || !namespace) {
       return [];
     }
 
     return sortMigrationsByStartedAtDate(
       migrations.filter((migration) => getOwnerReference(migration)?.uid === getUID(plan)),
     );
-  }, [migrations, plan]);
+  }, [migrations, namespace, plan]);
 
-  return [planMigrations, loaded, loadError];
+  return [planMigrations, Boolean(namespace) && loaded, loadError];
 };

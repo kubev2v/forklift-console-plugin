@@ -1,21 +1,43 @@
 import { type FC, useMemo } from 'react';
-import { getMigrationResourcePerformance } from 'src/plans/utils/migrationPerformance';
-import type { MigrationPerformanceStatus } from 'src/plans/utils/migrationPerformanceTypes';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import type { V1beta1Migration } from '@forklift-ui/types';
 import { Card, CardBody, Gallery } from '@patternfly/react-core';
 import { formatBytes } from '@utils/format/formatBytes';
+import { EMPTY_VALUE } from '@utils/format/formatConstants';
 import { formatDuration } from '@utils/format/formatDuration';
 import { formatThroughput } from '@utils/format/formatThroughput';
+import { isEmpty } from '@utils/helpers';
+import { getMigrationResourcePerformance } from '@utils/migrations/migrationPerformance';
+import {
+  MIGRATION_PERFORMANCE_STATUS,
+  type MigrationPerformanceStatus,
+} from '@utils/migrations/migrationPerformanceConstants';
 
-const FINISHED_STATUSES: MigrationPerformanceStatus[] = ['Failed', 'Partial', 'Succeeded'];
+const FINISHED_STATUSES: MigrationPerformanceStatus[] = [
+  MIGRATION_PERFORMANCE_STATUS.FAILED,
+  MIGRATION_PERFORMANCE_STATUS.PARTIAL,
+  MIGRATION_PERFORMANCE_STATUS.SUCCEEDED,
+];
+
+const getMedian = (values: number[]): number | undefined => {
+  if (isEmpty(values)) {
+    return undefined;
+  }
+
+  const middle = Math.floor(values.length / 2);
+  return values.length % 2 === 0 ? (values[middle - 1] + values[middle]) / 2 : values[middle];
+};
 
 type MigrationPerformanceSummaryProps = {
+  loaded: boolean;
   migrations: V1beta1Migration[];
 };
 
-const MigrationPerformanceSummary: FC<MigrationPerformanceSummaryProps> = ({ migrations }) => {
+const MigrationPerformanceSummary: FC<MigrationPerformanceSummaryProps> = ({
+  loaded,
+  migrations,
+}) => {
   const { t } = useForkliftTranslation();
 
   const stats = useMemo(() => {
@@ -33,12 +55,18 @@ const MigrationPerformanceSummary: FC<MigrationPerformanceSummaryProps> = ({ mig
 
     return {
       avgRate: rates.length ? rates.reduce((sum, rate) => sum + rate, 0) / rates.length : undefined,
-      medianDuration: durations[Math.floor(durations.length / 2)],
-      running: performances.filter((performance) => performance.status === 'Running').length,
+      medianDuration: getMedian(durations),
+      running: performances.filter(
+        (performance) => performance.status === MIGRATION_PERFORMANCE_STATUS.RUNNING,
+      ).length,
       totalBytes: performances.reduce((sum, performance) => sum + performance.copiedBytes, 0),
       totalRuns: performances.length,
     };
   }, [migrations]);
+
+  if (!loaded) {
+    return null;
+  }
 
   const items = [
     {
@@ -59,7 +87,7 @@ const MigrationPerformanceSummary: FC<MigrationPerformanceSummaryProps> = ({ mig
     {
       hint: t('Finished runs'),
       label: t('Average rate'),
-      value: stats.avgRate ? formatThroughput(stats.avgRate) : '—',
+      value: stats.avgRate ? formatThroughput(stats.avgRate) : EMPTY_VALUE,
     },
   ];
 

@@ -1,10 +1,10 @@
 import type { FC, ReactElement } from 'react';
 import MigrationPerformanceDetails from 'src/plans/details/components/PlanStatus/MigrationPerformanceDetails';
-import { getPlanMigrationPerformance } from 'src/plans/utils/migrationPerformance';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
 import type { V1beta1Plan } from '@forklift-ui/types';
 import { Popover } from '@patternfly/react-core';
+import { getPlanMigrationPerformance } from '@utils/migrations/migrationPerformance';
 
 type PlanStatusPopoverProps = {
   children: ReactElement;
