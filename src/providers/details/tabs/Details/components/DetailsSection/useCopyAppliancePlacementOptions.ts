@@ -45,7 +45,12 @@ export const useCopyAppliancePlacementOptions = (
   );
 
   const folderOptions = useMemo(
-    () => toSelectOptions((Array.isArray(folders) ? folders : []).map((item) => item.path ?? '')),
+    () =>
+      toSelectOptions(
+        (Array.isArray(folders) ? folders : [])
+          .map((item) => item.path ?? '')
+          .filter((path) => /(?:^|\/)vm(?:\/|$)/u.test(path)),
+      ),
     [folders],
   );
   const networkOptions = useMemo(
