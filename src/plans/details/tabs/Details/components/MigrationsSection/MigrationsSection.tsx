@@ -1,41 +1,21 @@
-import { type FC, useMemo } from 'react';
+import type { FC } from 'react';
 
 import LoadingSuspend from '@components/LoadingSuspend';
-import {
-  MigrationModelGroupVersionKind,
-  type V1beta1Migration,
-  type V1beta1Plan,
-} from '@forklift-ui/types';
-import { getNamespace, getOwnerReference, getUID } from '@utils/crds/common/selectors';
-import { useK8sWatchResource } from '@utils/hooks/useK8sWatchResource';
+import type { V1beta1Migration, V1beta1Plan } from '@forklift-ui/types';
 
 import MigrationsTable from './components/MigrationsTable';
-import { sortMigrationsByStartedAtDate } from './utils/utils';
 
 type MigrationsSectionProps = {
+  loaded: boolean;
+  loadError: Error | null;
+  migrations: V1beta1Migration[];
   plan: V1beta1Plan;
 };
 
-const MigrationsSection: FC<MigrationsSectionProps> = ({ plan }) => {
-  const [migrations, loaded, loadError] = useK8sWatchResource<V1beta1Migration[]>({
-    groupVersionKind: MigrationModelGroupVersionKind,
-    isList: true,
-    namespace: getNamespace(plan),
-    namespaced: true,
-  });
-
-  const planMigrations = useMemo(() => {
-    const filtered = migrations.filter(
-      (migration) => getOwnerReference(migration)?.uid === getUID(plan),
-    );
-    return sortMigrationsByStartedAtDate(filtered);
-  }, [migrations, plan]);
-
-  return (
-    <LoadingSuspend loaded={loaded} loadError={loadError} obj={planMigrations}>
-      <MigrationsTable migrations={planMigrations} plan={plan} />
-    </LoadingSuspend>
-  );
-};
+const MigrationsSection: FC<MigrationsSectionProps> = ({ loaded, loadError, migrations, plan }) => (
+  <LoadingSuspend loaded={loaded} loadError={loadError} obj={migrations}>
+    <MigrationsTable migrations={migrations} plan={plan} />
+  </LoadingSuspend>
+);
 
 export default MigrationsSection;
