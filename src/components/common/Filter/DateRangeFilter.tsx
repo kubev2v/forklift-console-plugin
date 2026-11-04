@@ -1,6 +1,7 @@
-import { type FormEvent, type ReactElement, useState } from 'react';
+import { type FormEvent, type ReactElement, useContext, useState } from 'react';
 import { DateTime } from 'luxon';
 
+import { ResetContext } from '@components/common/FilterGroup/resetFieldContext';
 import {
   DatePicker,
   InputGroup,
@@ -9,6 +10,7 @@ import {
   type ToolbarLabel,
   Tooltip,
 } from '@patternfly/react-core';
+import { isEmpty } from '@utils/helpers';
 
 import {
   isValidDate,
@@ -41,10 +43,17 @@ export const DateRangeFilter = ({
   showFilter = true,
   title,
 }: FilterTypeProps): ReactElement => {
-  const validFilters = selectedFilters?.filter(isValidInterval) ?? [];
-
+  const resetSig = useContext(ResetContext);
+  const [prevResetSig, setPrevResetSig] = useState(resetSig);
   const [from, setFrom] = useState<Date>();
   const [to, setTo] = useState<Date>();
+
+  if (prevResetSig !== resetSig) {
+    setPrevResetSig(resetSig);
+    setFrom(undefined);
+    setTo(undefined);
+  }
+  const validFilters = selectedFilters?.filter(isValidInterval) ?? [];
 
   const rangeToOption = (range: string): { key: string; node: ReactElement } => {
     const formatted = localizeInterval(range);
@@ -61,7 +70,20 @@ export const DateRangeFilter = ({
 
   const clearSingleRange = (option: ToolbarLabel): void => {
     const target = optionToRange(option);
-    onFilterUpdate([...validFilters.filter((range) => range !== target)]);
+    const remainingFilters = validFilters.filter((range) => range !== target);
+    const displayedRange = from && to ? toISODateInterval(from, to) : undefined;
+
+    if (isEmpty(remainingFilters) || target === displayedRange) {
+      setFrom(undefined);
+      setTo(undefined);
+    }
+    onFilterUpdate(remainingFilters);
+  };
+
+  const clearEveryRange = (): void => {
+    setFrom(undefined);
+    setTo(undefined);
+    onFilterUpdate([]);
   };
 
   const onFromDateChange: (
@@ -97,7 +119,7 @@ export const DateRangeFilter = ({
       deleteLabel={(category, option) => {
         clearSingleRange(option as ToolbarLabel);
       }}
-      deleteLabelGroup={() => onFilterUpdate([])}
+      deleteLabelGroup={clearEveryRange}
       key={filterId}
       labels={validFilters.map(rangeToOption)}
       showToolbarItem={showFilter}
@@ -111,6 +133,7 @@ export const DateRangeFilter = ({
           dateParse={(str: string) => DateTime.fromISO(str).toJSDate()}
           // disable error text (no space in toolbar scenario)
           invalidFormatText={''}
+          key={`from-${resetSig}`}
           onChange={onFromDateChange}
           placeholder={placeholderLabel}
           popoverProps={{
@@ -126,6 +149,7 @@ export const DateRangeFilter = ({
           // disable error text (no space in toolbar scenario)
           invalidFormatText={''}
           isDisabled={!isValidJSDate(from)}
+          key={`to-${resetSig}`}
           onChange={onToDateChange}
           placeholder={placeholderLabel}
           popoverProps={{

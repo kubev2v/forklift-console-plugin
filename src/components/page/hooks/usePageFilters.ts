@@ -1,4 +1,4 @@
-import { useCallback, useMemo } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 
 import {
   createMetaMatcher,
@@ -36,6 +36,7 @@ type UsePageFiltersResult = {
   clearAllFilters: () => void;
   excludeFromClearFiltersIds: string[];
   metaMatcher: ReturnType<typeof createMetaMatcher>;
+  resetSignal: number;
   selectedFilters: GlobalFilters;
   setSelectedFilters: (filters: GlobalFilters) => void;
   supportedFilters: Record<string, FilterRenderer>;
@@ -52,6 +53,7 @@ export const usePageFilters = ({
     fields: fieldsMetadata,
     userSettings,
   });
+  const [resetSignal, setResetSignal] = useState(0);
 
   const supportedMatchers = useMemo(
     () =>
@@ -93,12 +95,14 @@ export const usePageFilters = ({
 
   const clearAllFilters = useCallback(() => {
     setSelectedFilters(selectedFiltersAfterClearAll);
+    setResetSignal((prev) => prev + 1);
   }, [selectedFiltersAfterClearAll, setSelectedFilters]);
 
   return {
     clearAllFilters,
     excludeFromClearFiltersIds,
     metaMatcher,
+    resetSignal,
     selectedFilters,
     setSelectedFilters,
     supportedFilters,
