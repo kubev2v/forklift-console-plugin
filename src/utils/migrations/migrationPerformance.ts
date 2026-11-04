@@ -38,13 +38,16 @@ const getStepWindow = (
     )
     .filter((value): value is number => value !== undefined);
 
-  if (!isEmpty(taskStarts) && !isEmpty(taskEnds)) {
-    return { ends: taskEnds, starts: taskStarts };
-  }
+  const stepStarts = [toMilliseconds(step.started)].filter(
+    (value): value is number => value !== undefined,
+  );
+  const stepEnds = [toMilliseconds(step.completed)].filter(
+    (value): value is number => value !== undefined,
+  );
 
   return {
-    ends: [toMilliseconds(step.completed)].filter((value): value is number => value !== undefined),
-    starts: [toMilliseconds(step.started)].filter((value): value is number => value !== undefined),
+    ends: isEmpty(taskEnds) ? stepEnds : taskEnds,
+    starts: isEmpty(taskStarts) ? stepStarts : taskStarts,
   };
 };
 
@@ -91,7 +94,7 @@ export const getMigrationPerformance = (
   now: number = Date.now(),
 ): MigrationPerformance => {
   const sourceVms = source.vms ?? [];
-  const status = getOverallStatus(sourceVms, now);
+  const status = getOverallStatus(source, now);
   const openEnd = status === MIGRATION_PERFORMANCE_STATUS.RUNNING ? now : undefined;
   const vms = sourceVms.map((vm) => computeVm(vm, now, openEnd));
   const copiedBytes = vms.reduce((sum, vm) => sum + vm.copiedBytes, 0);

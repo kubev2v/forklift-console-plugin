@@ -33,7 +33,7 @@ const MigrationsTable: FC<MigrationTableProps> = ({ migrations, plan }) => {
   };
 
   return (
-    <Table>
+    <Table data-testid="plan-migration-history">
       <Thead>
         <Tr>
           <Th />

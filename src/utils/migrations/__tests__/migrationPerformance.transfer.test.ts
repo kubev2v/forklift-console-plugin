@@ -40,4 +40,26 @@ describe('getMigrationPerformance transfer window', () => {
     expect(result.transferSeconds).toBeUndefined();
     expect(result.avgTransferRate).toBeUndefined();
   });
+
+  it('uses a task start with a step completion when the step start is missing', () => {
+    const result = getMigrationPerformance(
+      buildMigrationSource([
+        {
+          conditions: [{ status: 'True', type: 'Succeeded' }],
+          id: 'vm-1',
+          pipeline: [
+            {
+              completed: '2026-01-01T01:40:00Z',
+              name: 'DiskTransfer',
+              tasks: [buildPipelineTask('DiskTransfer', '2026-01-01T00:00:00Z', undefined, 0, 100)],
+            },
+          ],
+        },
+      ]),
+      PERFORMANCE_META,
+    );
+
+    expect(result.transferSeconds).toBe(6000);
+    expect(result.avgTransferRate).toBeUndefined();
+  });
 });

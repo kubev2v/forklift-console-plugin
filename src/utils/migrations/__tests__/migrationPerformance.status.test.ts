@@ -95,4 +95,36 @@ describe('getMigrationPerformance status', () => {
     expect(result.status).toBe('Pending');
     expect(result.durationSeconds).toBeUndefined();
   });
+
+  it('keeps a failed run with queued VMs out of the finished stats', () => {
+    const result = getMigrationPerformance(
+      buildMigrationSource(
+        [
+          { conditions: [{ status: 'True', type: 'Failed' }], id: 'failed' },
+          { conditions: [], id: 'queued' },
+        ],
+        '2026-01-01T00:00:00Z',
+      ),
+      PERFORMANCE_META,
+      toTimestamp('2026-01-01T01:00:00Z'),
+    );
+
+    expect(result.status).toBe('Running');
+  });
+
+  it('reports a completed failed run with queued VMs as Failed', () => {
+    const result = getMigrationPerformance(
+      buildMigrationSource(
+        [
+          { conditions: [{ status: 'True', type: 'Failed' }], id: 'failed' },
+          { conditions: [], id: 'queued' },
+        ],
+        '2026-01-01T00:00:00Z',
+        '2026-01-01T01:00:00Z',
+      ),
+      PERFORMANCE_META,
+    );
+
+    expect(result.status).toBe('Failed');
+  });
 });

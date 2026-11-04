@@ -88,24 +88,18 @@ const PlanStatus: FC<PlanFieldProps> = ({ plan }) => {
     >
       <FlexItem className="plan-status-cell-label-section">
         <PlanStatusPopover plan={plan}>
-          <span
-            aria-label={t('Show migration performance details')}
-            className="plan-status-cell-label-section__trigger"
-            tabIndex={0}
-          >
-            {isPlanRunning &&
-            PlanStatuses.Paused !== planStatus &&
-            PlanStatuses.Pending !== planStatus ? (
-              <Split hasGutter>
-                <Spinner data-testid="plan-progress-spinner" size="md" />
-                <span className="pf-v6-u-font-size-sm" data-testid="plan-progress-percentage">
-                  {Math.trunc(pipelinesProgressPercentage)}%
-                </span>
-              </Split>
-            ) : (
-              <PlanStatusLabel plan={plan} />
-            )}
-          </span>
+          {isPlanRunning &&
+          PlanStatuses.Paused !== planStatus &&
+          PlanStatuses.Pending !== planStatus ? (
+            <Split hasGutter>
+              <Spinner data-testid="plan-progress-spinner" size="md" />
+              <span className="pf-v6-u-font-size-sm" data-testid="plan-progress-percentage">
+                {Math.trunc(pipelinesProgressPercentage)}%
+              </span>
+            </Split>
+          ) : (
+            <PlanStatusLabel plan={plan} />
+          )}
         </PlanStatusPopover>
       </FlexItem>
       {canPlanResumeConversion(plan) && loaded && !hasActiveMigration && (

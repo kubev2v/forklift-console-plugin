@@ -3,6 +3,7 @@ import type { Page } from '@playwright/test';
 import { setupCoreKubernetesIntercepts } from './core';
 import { setupDatastoresIntercepts } from './datastores';
 import { setupHostsIntercepts } from './hosts';
+import { setupEmptyMigrationsIntercepts } from './migrations';
 import { setupNetworkMapsIntercepts } from './networkMaps';
 import { setupPlanDetailsIntercepts } from './planDetails';
 import { setupPlansIntercepts } from './plans';
@@ -19,6 +20,7 @@ export const setupForkliftIntercepts = async (page: Page): Promise<void> => {
   await setupProvidersIntercepts(page);
   await setupPlansIntercepts(page);
   await setupPlanDetailsIntercepts(page);
+  await setupEmptyMigrationsIntercepts(page);
   await setupProjectsIntercepts(page);
   await setupNetworkMapsIntercepts(page);
   await setupStorageMapsIntercepts(page);

@@ -16,7 +16,7 @@ const PlanStatusPopover: FC<PlanStatusPopoverProps> = ({ children, plan }) => {
   const performance = getPlanMigrationPerformance(plan);
 
   if (!performance) {
-    return children;
+    return <>{children}</>;
   }
 
   return (
@@ -27,7 +27,14 @@ const PlanStatusPopover: FC<PlanStatusPopoverProps> = ({ children, plan }) => {
       showClose={false}
       triggerAction="hover"
     >
-      {children}
+      <span
+        aria-label={t('Show migration performance details')}
+        className="plan-status-cell-label-section__trigger"
+        data-testid="plan-status-popover-trigger"
+        tabIndex={0}
+      >
+        {children}
+      </span>
     </Popover>
   );
 };
