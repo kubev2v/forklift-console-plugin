@@ -69,7 +69,7 @@ const PlansListPage: FC<PlansListPageProps> = ({ namespace }) => {
   );
 
   return (
-    <LearningExperienceDrawer>
+    <LearningExperienceDrawer contentClassName="forklift-plans-list__drawer-content">
       <StandardPageWithSelection
         addButton={
           <PlansAddButton canCreate={canCreate} namespace={namespace} testId="create-plan-button" />
