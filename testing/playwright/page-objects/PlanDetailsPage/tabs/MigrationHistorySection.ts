@@ -16,6 +16,11 @@ export class MigrationHistorySection {
     await expect(this.vmBreakdown).toBeVisible();
   }
 
+  async expandSection(): Promise<void> {
+    await this.page.getByRole('button', { name: 'Migration history' }).click();
+    await expect(this.table).toBeVisible();
+  }
+
   row(migrationUid: string): Locator {
     return this.page.getByTestId(`migration-history-row-${migrationUid}`);
   }

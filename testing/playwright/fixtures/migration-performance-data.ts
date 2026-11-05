@@ -169,7 +169,7 @@ const destinationRef = {
 };
 
 const planStatus = {
-  conditions: [condition('Ready', -700)],
+  conditions: [condition('Succeeded', -140)],
   migration: {
     completed: at(-140),
     started: at(-240),

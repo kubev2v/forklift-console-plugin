@@ -45,7 +45,6 @@ const MigrationsListPage: FC = () => {
     <LoadingSuspend loaded={plansLoaded} loadError={plansLoadError} obj={plans}>
       <MigrationPerformanceSummary loaded={migrationsLoaded} migrations={migrations ?? []} />
       <StandardPage
-        data-testid="migrations-list"
         dataSource={[migrations ?? [], migrationsLoaded, migrationsLoadError]}
         extraSupportedFilters={{
           recent: SwitchFilter,
@@ -60,6 +59,7 @@ const MigrationsListPage: FC = () => {
         resizableColumns
         row={(props) => <MigrationRow {...props} liveRates={liveRates} plans={plans} />}
         showManageColumns
+        testId="migrations-list"
         userSettings={userSettings}
       />
     </LoadingSuspend>

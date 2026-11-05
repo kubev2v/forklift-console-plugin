@@ -19,6 +19,7 @@ import {
 import { setupForkliftIntercepts } from '../../intercepts/setupForkliftIntercepts';
 import { HistoryTab } from '../../page-objects/OverviewPage/tabs/HistoryTab';
 import { PlanDetailsPage } from '../../page-objects/PlanDetailsPage/PlanDetailsPage';
+import { PlansListPage } from '../../page-objects/PlansListPage';
 import { MTV_NAMESPACE } from '../../utils/resource-manager/constants';
 
 test.describe('Migration performance', { tag: '@upstream' }, () => {
@@ -121,6 +122,7 @@ test.describe('Migration performance', { tag: '@upstream' }, () => {
     await planDetailsPage.navigate(PERFORMANCE_PLAN_NAME, MTV_NAMESPACE);
 
     const historySection = planDetailsPage.detailsTab.migrationHistorySection;
+    await historySection.expandSection();
     await expect(historySection.table).toBeVisible();
     await expect(historySection.cell(MIGRATION_SUCCEEDED_UID, 5)).toHaveText('1h 40m');
     await expect(historySection.cell(MIGRATION_SUCCEEDED_UID, 6)).toHaveText('100 GiB');
@@ -136,16 +138,22 @@ test.describe('Migration performance', { tag: '@upstream' }, () => {
     await planDetailsPage.navigate(PERFORMANCE_PLAN_NAME, MTV_NAMESPACE);
 
     const historySection = planDetailsPage.detailsTab.migrationHistorySection;
+    await historySection.expandSection();
     await historySection.row(MIGRATION_EMPTY_UID).getByRole('button').first().click();
 
     await expect(page.getByText('No per-VM data for this run.')).toBeVisible();
   });
 
   test('The plan status popover shows the performance details', async ({ page }) => {
-    const planDetailsPage = new PlanDetailsPage(page);
-    await planDetailsPage.navigate(PERFORMANCE_PLAN_NAME, MTV_NAMESPACE);
+    const plansListPage = new PlansListPage(page);
+    await plansListPage.navigateDirectly();
+    await plansListPage.expectPlanVisible(PERFORMANCE_PLAN_NAME);
 
-    const trigger = page.getByTestId('plan-status-popover-trigger');
+    const performancePlanRow = page.locator('tr').filter({
+      has: page.getByTestId(`plan-link-${PERFORMANCE_PLAN_NAME}`),
+    });
+    const trigger = performancePlanRow.getByTestId('plan-status-popover-trigger');
+    await expect(trigger).toBeVisible();
     await trigger.hover();
 
     const popover = page.locator('.pf-v6-c-popover');
