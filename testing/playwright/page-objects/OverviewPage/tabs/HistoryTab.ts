@@ -22,6 +22,8 @@ export class HistoryTab {
   }
 
   async filterByStatus(label: string): Promise<void> {
+    await this.page.getByTestId('attribute-filter-toggle').click();
+    await this.page.getByTestId('filter-option-vms').click();
     await this.page.getByTestId('filter-toggle-vms').click();
     await this.page.getByTestId(`filter-value-${label}`).click();
   }
@@ -38,7 +40,7 @@ export class HistoryTab {
   }
 
   row(migrationUid: string): Locator {
-    return this.page.getByTestId(`migration-row-${migrationUid}`);
+    return this.table.getByRole('row').filter({ has: this.cell(migrationUid, 'status') });
   }
 
   get runsCard(): Locator {

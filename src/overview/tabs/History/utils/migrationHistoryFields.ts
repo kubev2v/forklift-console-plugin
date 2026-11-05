@@ -35,6 +35,7 @@ export const getMigrationHistoryFields = (t: TFunction): ResourceField[] => [
       values: [
         { id: 'Running', label: t('Running') },
         { id: 'Succeeded', label: t('Succeeded') },
+        { id: 'Partial', label: t('Partially migrated') },
         { id: 'Failed', label: t('Failed') },
         { id: 'Canceled', label: t('Canceled') },
       ],

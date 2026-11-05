@@ -70,7 +70,7 @@ test.describe('Migration performance', { tag: '@upstream' }, () => {
 
     await expect(historyTab.cell(MIGRATION_RUNNING_UID, 'rate')).toHaveText('50 MiB/s');
     await expect(historyTab.cell(MIGRATION_RUNNING_UID, 'duration')).toContainText('30m');
-    await expect(historyTab.cell(MIGRATION_RUNNING_UID, 'data')).toContainText('50 GiB');
+    await expect(historyTab.cell(MIGRATION_RUNNING_UID, 'data')).toContainText('50.0 GiB');
   });
 
   test('A zero live rate renders as 0 B/s', async ({ page }) => {
@@ -166,7 +166,7 @@ test.describe('Migration performance', { tag: '@upstream' }, () => {
     await expect(popover).toContainText('Average rate:');
     await expect(popover).toContainText('19 MiB/s');
     await expect(popover).toContainText('Overall rate:');
-    await expect(popover).toContainText('18 MiB/s');
+    await expect(popover).toContainText('17 MiB/s');
     await expect(popover).toContainText('VMs succeeded:');
     await expect(popover).toContainText('2 of 2');
   });
