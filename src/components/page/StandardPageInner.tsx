@@ -1,5 +1,6 @@
 import { type ComponentProps, type ReactElement, useMemo } from 'react';
 
+import { ResetContext } from '@components/common/FilterGroup/resetFieldContext';
 import { useFields } from '@components/common/Page/useFields';
 import { DefaultHeader } from '@components/common/TableView/DefaultHeader';
 import { DefaultRow } from '@components/common/TableView/DefaultRow';
@@ -43,13 +44,19 @@ const StandardPageInner = <T,>(props: StandardPageInnerProps<T>): ReactElement =
     ...viewProps
   } = props;
 
-  const { clearAllFilters, metaMatcher, selectedFilters, setSelectedFilters, supportedFilters } =
-    usePageFilters({
-      extraSupportedFilters,
-      extraSupportedMatchers,
-      fieldsMetadata,
-      userSettings,
-    });
+  const {
+    clearAllFilters,
+    metaMatcher,
+    resetSignal,
+    selectedFilters,
+    setSelectedFilters,
+    supportedFilters,
+  } = usePageFilters({
+    extraSupportedFilters,
+    extraSupportedMatchers,
+    fieldsMetadata,
+    userSettings,
+  });
 
   const defaultFieldsWithoutFilters = useMemo(
     () => fieldsMetadata.filter(({ isForFilterOnly }) => !isForFilterOnly),
@@ -98,37 +105,39 @@ const StandardPageInner = <T,>(props: StandardPageInnerProps<T>): ReactElement =
   });
 
   return (
-    <TableColumnWidthProvider
-      columnWidthsSettings={userSettings?.columnWidths}
-      enabled={resizableColumns}
-      fields={fields}
-    >
-      <StandardPageInnerView
-        {...viewProps}
-        clearAllFilters={clearAllFilters}
-        defaultFieldsWithoutFilters={defaultFieldsWithoutFilters}
-        error={error}
+    <ResetContext.Provider value={resetSignal}>
+      <TableColumnWidthProvider
+        columnWidthsSettings={userSettings?.columnWidths}
+        enabled={resizableColumns}
         fields={fields}
-        fieldsMetadata={fieldsMetadata}
-        finalFilteredData={finalFilteredData}
-        flatData={flatData}
-        header={header}
-        itemsPerPage={itemsPerPage}
-        loaded={loaded}
-        namespace={namespace}
-        onPerPageSelect={onPerPageSelect}
-        onSetPage={onSetPage}
-        page={page}
-        resizableColumns={resizableColumns}
-        selectedFilters={selectedFilters}
-        setFields={setFields}
-        setSelectedFilters={setSelectedFilters}
-        showPagination={showPagination}
-        sortedData={sortedData}
-        supportedFilters={supportedFilters}
-        {...innerData}
-      />
-    </TableColumnWidthProvider>
+      >
+        <StandardPageInnerView
+          {...viewProps}
+          clearAllFilters={clearAllFilters}
+          defaultFieldsWithoutFilters={defaultFieldsWithoutFilters}
+          error={error}
+          fields={fields}
+          fieldsMetadata={fieldsMetadata}
+          finalFilteredData={finalFilteredData}
+          flatData={flatData}
+          header={header}
+          itemsPerPage={itemsPerPage}
+          loaded={loaded}
+          namespace={namespace}
+          onPerPageSelect={onPerPageSelect}
+          onSetPage={onSetPage}
+          page={page}
+          resizableColumns={resizableColumns}
+          selectedFilters={selectedFilters}
+          setFields={setFields}
+          setSelectedFilters={setSelectedFilters}
+          showPagination={showPagination}
+          sortedData={sortedData}
+          supportedFilters={supportedFilters}
+          {...innerData}
+        />
+      </TableColumnWidthProvider>
+    </ResetContext.Provider>
   );
 };
 
