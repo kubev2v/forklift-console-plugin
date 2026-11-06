@@ -17,6 +17,7 @@ const VIEWPORT_HEIGHT = 1080;
 const SMALL_DRAG_PX = 5;
 const LARGE_DRAG_PX = 50;
 const MIN_READABLE_WIDTH_PX = 96;
+const HANDLE_CLEARANCE_PX = 2;
 const SHRINK_DRAG_PX = -400;
 const WIDTH_TOLERANCE_PX = 1;
 const SHARE_TOLERANCE = 0.001;
@@ -158,6 +159,17 @@ const assertCompactColumnPersists = async ({
     }
   });
   await compactHandle.scrollIntoViewIfNeeded();
+  // Viewport visibility alone does not account for the sticky Actions header.
+  await compactHandle.evaluate((handle, clearance) => {
+    const tableElement = handle.closest('table');
+    const scroller = tableElement?.parentElement;
+    const actions = tableElement?.querySelector('thead th[data-action-column="true"]');
+    if (scroller && actions) {
+      const overlap = handle.getBoundingClientRect().right - actions.getBoundingClientRect().left;
+      if (overlap > 0) scroller.scrollLeft += overlap + clearance;
+    }
+  }, HANDLE_CLEARANCE_PX);
+  await compactHandle.click({ trial: true });
   const box = await compactHandle.boundingBox();
   if (!box) {
     throw new Error('The compact column resize handle is not visible');
