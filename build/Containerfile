@@ -1,5 +1,5 @@
 # Builder container
-FROM registry.access.redhat.com/ubi9/nodejs-22@sha256:57ad03c5db9382cd266af665819f60e5b1490fc27ee589320159df59f9eb453b AS build
+FROM registry.access.redhat.com/ubi9/nodejs-22@sha256:18efae02a19cdfbda303ff98d096cfcc2e123f300aff146e7dab1e75b9116dec AS build
 
 # VERSION default value should match the forklift-console-plugin package version
 # The VERSION value can be customize during build by using --build-arg:
