@@ -72,21 +72,25 @@ const MigrationPerformanceSummary: FC<MigrationPerformanceSummaryProps> = ({
     {
       hint: t('{{running}} running', { running: stats.running }),
       label: t('Migration runs'),
+      testId: 'migration-summary-runs',
       value: String(stats.totalRuns),
     },
     {
       hint: t('All runs'),
       label: t('Data transferred'),
+      testId: 'migration-summary-data',
       value: formatBytes(stats.totalBytes),
     },
     {
       hint: t('Finished runs'),
       label: t('Median duration'),
+      testId: 'migration-summary-median',
       value: formatDuration(stats.medianDuration),
     },
     {
       hint: t('Finished runs'),
       label: t('Average rate'),
+      testId: 'migration-summary-rate',
       value: stats.avgRate ? formatThroughput(stats.avgRate) : EMPTY_VALUE,
     },
   ];
@@ -94,7 +98,7 @@ const MigrationPerformanceSummary: FC<MigrationPerformanceSummaryProps> = ({
   return (
     <Gallery className="pf-v6-u-mb-xl" hasGutter minWidths={{ default: '180px' }}>
       {items.map((item) => (
-        <Card isCompact key={item.label}>
+        <Card data-testid={item.testId} isCompact key={item.label}>
           <CardBody>
             <div className="pf-v6-u-font-size-sm pf-v6-u-color-200">{item.label}</div>
             <div className="pf-v6-u-font-size-2xl pf-v6-u-font-weight-bold">{item.value}</div>

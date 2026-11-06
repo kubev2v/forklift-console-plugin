@@ -19,6 +19,7 @@ import { EMPTY_VALUE } from '@utils/format/formatConstants';
 import { formatDuration } from '@utils/format/formatDuration';
 import { formatThroughput } from '@utils/format/formatThroughput';
 import { isEmpty } from '@utils/helpers';
+import { getMigrationPerformanceStatusLabel } from '@utils/migrations/getMigrationPerformanceStatusLabel';
 import { getMigrationResourcePerformance } from '@utils/migrations/migrationPerformance';
 import { MIGRATION_PERFORMANCE_STATUS } from '@utils/migrations/migrationPerformanceConstants';
 
@@ -48,6 +49,13 @@ const MigrationHistoryRow: FC<MigrationHistoryRowProps> = ({
   const vmStatuses = getMigrationVMsStatusCounts(migrationVMs, migrationVMs.length, planStatus);
   const performance = getMigrationResourcePerformance(migration);
   const rate = performance.avgTransferRate;
+  const statusLabel = getMigrationPerformanceStatusLabel(
+    performance.status,
+    getMigrationStatusLabel(vmStatuses, migrationVMs.length),
+    t,
+  );
+
+  const rowTestId = `migration-history-row-${performance.migrationUid}`;
 
   const getVmStatusLabel = (status: string): string => {
     if (status === MIGRATION_PERFORMANCE_STATUS.SUCCEEDED) {
@@ -64,7 +72,7 @@ const MigrationHistoryRow: FC<MigrationHistoryRowProps> = ({
 
   return (
     <>
-      <Tr>
+      <Tr data-testid={rowTestId}>
         <Td expand={{ isExpanded: expanded, onToggle, rowIndex }} />
         <Td>
           <ResourceLink
@@ -75,7 +83,7 @@ const MigrationHistoryRow: FC<MigrationHistoryRowProps> = ({
         </Td>
         <Td>
           <Split hasGutter>
-            {getMigrationStatusLabel(vmStatuses, migrationVMs.length)}
+            {statusLabel}
             <VMStatusIconsRow plan={plan} statuses={vmStatuses} />
           </Split>
         </Td>
@@ -95,7 +103,7 @@ const MigrationHistoryRow: FC<MigrationHistoryRowProps> = ({
             {isEmpty(performance.vms) ? (
               <HelpText>{t('No per-VM data for this run.')}</HelpText>
             ) : (
-              <Table variant="compact">
+              <Table data-testid="migration-history-vm-breakdown" variant="compact">
                 <Thead>
                   <Tr>
                     <Th>{t('VM')}</Th>

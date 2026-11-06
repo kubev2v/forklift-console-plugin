@@ -10,6 +10,8 @@ import { TargetAffinityModal } from '../modals/TargetAffinityModal';
 import { TargetLabelsModal } from '../modals/TargetLabelsModal';
 import { TargetNodeSelectorModal } from '../modals/TargetNodeSelectorModal';
 
+import { MigrationHistorySection } from './MigrationHistorySection';
+
 type ModalLike = { waitForModalToOpen: () => Promise<void> };
 
 export class DetailsTab {
@@ -28,6 +30,7 @@ export class DetailsTab {
   readonly labelsModal: TargetLabelsModal;
   readonly liveMigrationRadio: Locator;
   readonly migrateSharedDisksCheckbox: Locator;
+  readonly migrationHistorySection: MigrationHistorySection;
   readonly nodeSelectorModal: TargetNodeSelectorModal;
   protected readonly page: Page;
   readonly powerStateOptionAuto: Locator;
@@ -44,6 +47,7 @@ export class DetailsTab {
 
   constructor(page: Page) {
     this.page = page;
+    this.migrationHistorySection = new MigrationHistorySection(page);
     this.editDescriptionModal = this.page.getByRole('dialog', { name: 'Edit description' });
     this.descriptionTextbox = this.editDescriptionModal.getByRole('textbox');
     this.editMigrationTypeModal = this.page.getByTestId('edit-migration-type-modal');

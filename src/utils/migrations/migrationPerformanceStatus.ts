@@ -41,17 +41,31 @@ export const getVmStatus = (vm: MigrationVmSource, now: number): MigrationPerfor
 };
 
 export const getOverallStatus = (
-  vms: MigrationVmSource[],
+  source: MigrationSource,
   now: number,
 ): MigrationPerformanceStatus => {
-  const statuses = vms.map((vm) => getVmStatus(vm, now));
+  const statuses = (source.vms ?? []).map((vm) => getVmStatus(vm, now));
   const count = (status: MigrationPerformanceStatus): number =>
     statuses.filter((value) => value === status).length;
   const succeeded = count(MIGRATION_PERFORMANCE_STATUS.SUCCEEDED);
   const failed = count(MIGRATION_PERFORMANCE_STATUS.FAILED);
   const canceled = count(MIGRATION_PERFORMANCE_STATUS.CANCELED);
+  const pending = count(MIGRATION_PERFORMANCE_STATUS.PENDING);
+
+  if (
+    (source.conditions ?? []).some(
+      (condition) =>
+        condition.type === CATEGORY_TYPES.CANCELED && condition.status === CONDITION_STATUS.TRUE,
+    )
+  ) {
+    return MIGRATION_PERFORMANCE_STATUS.CANCELED;
+  }
 
   if (count(MIGRATION_PERFORMANCE_STATUS.RUNNING) > 0) {
+    return MIGRATION_PERFORMANCE_STATUS.RUNNING;
+  }
+
+  if (!source.completed && pending > 0 && (failed > 0 || succeeded > 0)) {
     return MIGRATION_PERFORMANCE_STATUS.RUNNING;
   }
 

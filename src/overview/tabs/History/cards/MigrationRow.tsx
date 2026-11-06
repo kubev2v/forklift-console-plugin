@@ -21,6 +21,7 @@ import { formatBytes } from '@utils/format/formatBytes';
 import { EMPTY_VALUE } from '@utils/format/formatConstants';
 import { formatDuration } from '@utils/format/formatDuration';
 import { formatThroughput } from '@utils/format/formatThroughput';
+import { getMigrationPerformanceStatusLabel } from '@utils/migrations/getMigrationPerformanceStatusLabel';
 import { getMigrationResourcePerformance } from '@utils/migrations/migrationPerformance';
 import { MIGRATION_PERFORMANCE_STATUS } from '@utils/migrations/migrationPerformanceConstants';
 import { shouldShowCopyTime } from '@utils/migrations/migrationPerformanceTime';
@@ -39,6 +40,7 @@ const MigrationRow: FC<MigrationRowProps> = ({
   resourceFields,
 }) => {
   const { t } = useForkliftTranslation();
+  const rowTestId = `migration-row-${getUID(migration) ?? ''}`;
   const plan = plans.find((pl) => {
     return (
       getUID(pl) === migration.spec?.plan?.uid ||
@@ -49,23 +51,30 @@ const MigrationRow: FC<MigrationRowProps> = ({
   const migrationVMs = migration?.status?.vms;
   const vmStatuses = getMigrationVMsStatusCounts(migrationVMs ?? [], migrationVMs?.length ?? 0);
   const performance = getMigrationResourcePerformance(migration);
+  const liveRatePlanUid = performance.planUid || (plan ? (getUID(plan) ?? '') : '');
   const liveRate =
     performance.status === MIGRATION_PERFORMANCE_STATUS.RUNNING
-      ? liveRates?.get(performance.planUid)
+      ? liveRates?.get(liveRatePlanUid)
       : undefined;
   const rate = liveRate ?? performance.avgTransferRate;
   const isPartial = performance.status === MIGRATION_PERFORMANCE_STATUS.PARTIAL;
   const { durationSeconds, transferSeconds } = performance;
   const showsCopyTime = shouldShowCopyTime(durationSeconds, transferSeconds);
-  const statusLabel = isPartial
-    ? t('Partially migrated')
-    : getMigrationStatusLabel(vmStatuses, migrationVMs?.length);
+  const statusLabel = getMigrationPerformanceStatusLabel(
+    performance.status,
+    getMigrationStatusLabel(vmStatuses, migrationVMs?.length),
+    t,
+  );
 
   const rowFields = {
-    averageRate: <span>{rate === undefined ? EMPTY_VALUE : formatThroughput(rate)}</span>,
+    averageRate: (
+      <span data-testid={`${rowTestId}-rate`}>
+        {rate === undefined ? EMPTY_VALUE : formatThroughput(rate)}
+      </span>
+    ),
     completed: <ConsoleTimestamp timestamp={migration.status?.completed ?? ''} />,
     dataTransferred: (
-      <div>
+      <div data-testid={`${rowTestId}-data`}>
         <div>{formatBytes(performance.copiedBytes)}</div>
         {performance.expectedBytes > performance.copiedBytes && (
           <div className="pf-v6-u-font-size-sm pf-v6-u-color-200">
@@ -75,7 +84,7 @@ const MigrationRow: FC<MigrationRowProps> = ({
       </div>
     ),
     duration: (
-      <div>
+      <div data-testid={`${rowTestId}-duration`}>
         <div>{formatDuration(durationSeconds)}</div>
         {showsCopyTime && (
           <div className="pf-v6-u-font-size-sm pf-v6-u-color-200">
@@ -102,7 +111,7 @@ const MigrationRow: FC<MigrationRowProps> = ({
     ),
     started: <ConsoleTimestamp timestamp={migration.status?.started ?? ''} />,
     vms: (
-      <Split hasGutter>
+      <Split data-testid={`${rowTestId}-status`} hasGutter>
         {isPartial ? (
           <Tooltip
             content={t(

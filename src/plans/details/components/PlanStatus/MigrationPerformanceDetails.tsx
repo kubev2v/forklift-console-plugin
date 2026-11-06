@@ -6,6 +6,7 @@ import { EMPTY_VALUE } from '@utils/format/formatConstants';
 import { formatDuration } from '@utils/format/formatDuration';
 import { formatThroughput } from '@utils/format/formatThroughput';
 import { isEmpty } from '@utils/helpers';
+import { MIGRATION_PERFORMANCE_STATUS } from '@utils/migrations/migrationPerformanceConstants';
 import { shouldShowCopyTime } from '@utils/migrations/migrationPerformanceTime';
 import type { MigrationPerformance } from '@utils/migrations/migrationPerformanceTypes';
 
@@ -24,7 +25,7 @@ const MigrationPerformanceDetails: FC<MigrationPerformanceDetailsProps> = ({ per
     transferSeconds,
     vms,
   } = performance;
-  const succeeded = vms.filter((vm) => vm.status === 'Succeeded').length;
+  const succeeded = vms.filter((vm) => vm.status === MIGRATION_PERFORMANCE_STATUS.SUCCEEDED).length;
 
   return (
     <div className="pf-v6-u-font-size-sm">
