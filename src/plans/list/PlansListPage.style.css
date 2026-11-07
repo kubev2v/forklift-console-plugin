@@ -1,3 +1,7 @@
+.forklift-plans-list__drawer-content {
+  scrollbar-gutter: stable;
+}
+
 .forklift-empty-state__icon {
   max-width: 14rem;
   max-height: 14rem;
