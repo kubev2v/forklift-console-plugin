@@ -6,7 +6,15 @@ import LearningExperiencePanel from '../learningExperienceStructure/LearningExpe
 
 import { LearningExperienceContext } from './context/LearningExperienceContext';
 
-const LearningExperienceDrawer: FC<{ children: ReactNode }> = ({ children }) => {
+type LearningExperienceDrawerProps = {
+  children: ReactNode;
+  contentClassName?: string;
+};
+
+const LearningExperienceDrawer: FC<LearningExperienceDrawerProps> = ({
+  children,
+  contentClassName,
+}) => {
   const { isLearningExperienceOpen } = useContext(LearningExperienceContext);
 
   useEffect(() => {
@@ -28,7 +36,7 @@ const LearningExperienceDrawer: FC<{ children: ReactNode }> = ({ children }) => 
 
   return (
     <Drawer isExpanded={isLearningExperienceOpen} isInline position="right">
-      <DrawerContent panelContent={<LearningExperiencePanel />}>
+      <DrawerContent className={contentClassName} panelContent={<LearningExperiencePanel />}>
         <DrawerContentBody>{children}</DrawerContentBody>
       </DrawerContent>
     </Drawer>
