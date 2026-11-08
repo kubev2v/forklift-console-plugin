@@ -5,7 +5,7 @@ import type { Ec2TargetResolutionFailure } from '../types';
 /**
  * Builds the user-facing copy at call time so language changes are picked up.
  */
-export const getEc2TargetResolutionMessage = (reason: Ec2TargetResolutionFailure): string => {
+const getEc2TargetResolutionMessage = (reason: Ec2TargetResolutionFailure): string => {
   switch (reason) {
     case 'secretForbidden':
       return t(
