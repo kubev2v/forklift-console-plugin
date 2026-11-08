@@ -48,6 +48,34 @@ export class NetworkMapCreatePage {
     return this.page.getByTestId('network-map-create-button');
   }
 
+  async expectTargetProviderOptions({
+    excluded = [],
+    included,
+  }: {
+    excluded?: string[];
+    included: string[];
+  }): Promise<void> {
+    const targetProviderSelect = this.page.getByTestId('network-map-target-provider-select');
+    await expect(targetProviderSelect).toBeVisible();
+    await expect(targetProviderSelect).toBeEnabled();
+    await targetProviderSelect.click();
+
+    const listbox = this.page.getByRole('listbox');
+    await expect(listbox).toBeVisible();
+
+    for (const providerName of included) {
+      await expect(listbox.getByRole('option', { name: providerName })).toBeVisible({
+        timeout: 30_000,
+      });
+    }
+    for (const providerName of excluded) {
+      await expect(listbox.getByRole('option', { name: providerName })).toHaveCount(0);
+    }
+
+    // Close without selecting so the caller keeps its current selection.
+    await this.page.keyboard.press('Escape');
+  }
+
   async fillRequiredFields(data: {
     mapName: string;
     project: string;
