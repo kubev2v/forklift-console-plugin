@@ -20,7 +20,10 @@ const Ec2CrossAccountCredentialsFields: FC = () => {
 
   const handleCheckboxChange = (_event: FormEvent<HTMLInputElement>, checked: boolean): void => {
     setValue(ProviderFormFieldId.Ec2UseCrossAccountCredentials, checked);
-    if (!checked) {
+    if (checked) {
+      // Auto-detect and cross-account credentials describe the same thing and cannot both apply.
+      setValue(ProviderFormFieldId.Ec2AutoTargetCredentials, false);
+    } else {
       unregister([
         ProviderFormFieldId.Ec2TargetAccessKeyId,
         ProviderFormFieldId.Ec2TargetSecretAccessKey,
@@ -34,7 +37,7 @@ const Ec2CrossAccountCredentialsFields: FC = () => {
         <Checkbox
           data-testid="ec2-cross-account-credentials-checkbox"
           description={t(
-            'Enable this if the target AWS account is different from the source account',
+            'Enable this if the target AWS account is different from the source account. When disabled, the source credentials are used for the target account.',
           )}
           id={ProviderFormFieldId.Ec2UseCrossAccountCredentials}
           isChecked={useCrossAccount ?? false}

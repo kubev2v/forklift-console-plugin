@@ -41,7 +41,7 @@ const EditProviderCredentials: OverlayComponent<EditProviderCredentialsProps> = 
   } = methods;
 
   const onSubmit = async (formData: Partial<CreateProviderFormData>): Promise<void> => {
-    const secretData = buildSecretData(formData, provider);
+    const secretData = buildSecretData(formData, provider, secret.data);
     const isOpenstack = providerType === PROVIDER_TYPES.openstack;
 
     await patchSecretData(

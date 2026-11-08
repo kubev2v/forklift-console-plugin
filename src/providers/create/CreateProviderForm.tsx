@@ -3,16 +3,7 @@ import { FormProvider, useForm, useWatch } from 'react-hook-form';
 import { useNavigate, useSearchParams } from 'react-router';
 import { getProviderDetailsPageUrl } from 'src/providers/utils/getProviderDetailsPageUrl';
 
-import {
-  Alert,
-  AlertVariant,
-  Button,
-  ButtonVariant,
-  Flex,
-  FlexItem,
-  Form,
-  Split,
-} from '@patternfly/react-core';
+import { Button, ButtonVariant, Flex, FlexItem, Form, Split } from '@patternfly/react-core';
 import { TELEMETRY_EVENTS } from '@utils/analytics/constants';
 import { useForkliftAnalytics } from '@utils/analytics/hooks/useForkliftAnalytics';
 import { getType } from '@utils/crds/common/selectors';
@@ -25,6 +16,8 @@ import { createProvider } from './utils/createProvider';
 import { createProviderSecret } from './utils/createProviderSecret';
 import { getDefaultFormValues } from './utils/getDefaultFormValues';
 import { patchProviderSecretOwner } from './utils/patchProviderSecretOwner';
+import { prepareProviderSubmission } from './utils/prepareProviderSubmission';
+import CreateProviderErrorAlert from './CreateProviderErrorAlert';
 import CreateProviderFormContextProvider from './CreateProviderFormContextProvider';
 import ProviderTypeFields from './ProviderTypeFields';
 import type { CreateProviderFormData } from './types';
@@ -73,7 +66,11 @@ const CreateProviderForm: FC = () => {
       });
 
       try {
-        const { provider: newProvider, secret: newSecret } = buildProviderResources(formData);
+        const submission = await prepareProviderSubmission(formData);
+        const { provider: newProvider, secret: newSecret } = buildProviderResources(
+          submission.formData,
+          submission.ec2Target,
+        );
 
         const secret = await createProviderSecret(newProvider, newSecret);
         const provider = await createProvider(newProvider, secret);
@@ -113,16 +110,7 @@ const CreateProviderForm: FC = () => {
           <Form>
             <ProviderTypeFields />
 
-            {apiError && (
-              <Alert
-                className="pf-v6-u-mt-md"
-                isInline
-                title={t('Error creating provider')}
-                variant={AlertVariant.danger}
-              >
-                {apiError.message}
-              </Alert>
-            )}
+            {apiError && <CreateProviderErrorAlert apiError={apiError} />}
           </Form>
 
           <FlexItem>

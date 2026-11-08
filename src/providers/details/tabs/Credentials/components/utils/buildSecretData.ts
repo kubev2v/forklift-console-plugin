@@ -29,11 +29,14 @@ const secretKeyToFormFieldId: Record<string, keyof typeof ProviderFormFieldId> =
 };
 
 /**
- * Build the secret data from form values
+ * Build the secret data from form values.
+ * `existingSecretData` keeps secret keys that the edit form cannot change (EC2 target credentials),
+ * because the whole secret data map is replaced on save.
  */
 export const buildSecretData = (
   formData: Partial<CreateProviderFormData>,
   provider: V1beta1Provider,
+  existingSecretData?: Record<string, string>,
 ): Record<string, string> => {
   const providerType = getType(provider);
   const insecureSkipVerify =
@@ -126,12 +129,16 @@ export const buildSecretData = (
 
     case PROVIDER_TYPES.ec2: {
       const ec2Region = provider?.spec?.settings?.ec2Region ?? '';
+      const targetAccessKeyId = existingSecretData?.targetAccessKeyId;
+      const targetSecretAccessKey = existingSecretData?.targetSecretAccessKey;
 
       return {
         accessKeyId: encode(formData[ProviderFormFieldId.Ec2AccessKeyId] ?? ''),
         insecureSkipVerify: encode('false'),
         region: encode(ec2Region),
         secretAccessKey: encode(formData[ProviderFormFieldId.Ec2SecretAccessKey] ?? ''),
+        ...(targetAccessKeyId && { targetAccessKeyId }),
+        ...(targetSecretAccessKey && { targetSecretAccessKey }),
         url: encode(getEc2Url(ec2Region)),
       };
     }
