@@ -1,4 +1,5 @@
 import { Base64 } from 'js-base64';
+import { CA_CERT_SECRET_KEY, SecretFieldsId } from 'src/providers/utils/constants';
 
 import { ADD, REPLACE } from '@components/ModalForm/utils/constants';
 import { type IoK8sApiCoreV1Secret, SecretModel } from '@forklift-ui/types';
@@ -12,9 +13,10 @@ const cleanObject = (obj: Record<string, string> | undefined): Record<string, st
     }
   }
 
-  // Don't save cacert when insecureSkipVerify is true
+  // Don't save any CA certificate key when insecureSkipVerify is true
   if (Base64.decode(obj?.insecureSkipVerify ?? '') === 'true') {
-    delete result.cacert;
+    delete result[CA_CERT_SECRET_KEY];
+    delete result[SecretFieldsId.CaCert];
   }
 
   return result;
