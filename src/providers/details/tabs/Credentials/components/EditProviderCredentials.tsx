@@ -14,6 +14,7 @@ import type { CreateProviderFormData } from '../../../../create/types';
 
 import { buildSecretData } from './utils/buildSecretData';
 import { getDefaultFormValues } from './utils/getDefaultFormValues';
+import { patchEc2Credentials } from './utils/patchEc2Credentials';
 import { patchSecretData } from './utils/patchSecretData';
 import CredentialFieldsByType from './CredentialFieldsByType';
 export type EditProviderCredentialsProps = {
@@ -41,16 +42,19 @@ const EditProviderCredentials: OverlayComponent<EditProviderCredentialsProps> = 
   } = methods;
 
   const onSubmit = async (formData: Partial<CreateProviderFormData>): Promise<void> => {
-    const secretData = buildSecretData(formData, provider, secret.data);
-    const isOpenstack = providerType === PROVIDER_TYPES.openstack;
-
-    await patchSecretData(
-      {
-        ...secret,
-        data: secretData,
-      },
-      isOpenstack, // clean old values for openstack since auth type can change
-    );
+    if (providerType === PROVIDER_TYPES.ec2) {
+      // EC2 rotates keys in place: patching only the edited keys preserves concurrently rotated
+      // target keys that the dialog never displayed.
+      await patchEc2Credentials(secret, formData);
+    } else {
+      await patchSecretData(
+        {
+          ...secret,
+          data: buildSecretData(formData, provider),
+        },
+        providerType === PROVIDER_TYPES.openstack, // auth type can change, so clean old values
+      );
+    }
 
     reset(formData);
   };

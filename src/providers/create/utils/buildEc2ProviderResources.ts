@@ -9,6 +9,7 @@ import type { Ec2FormData, Ec2ResolvedTarget } from '../types';
 
 import { buildProviderObject } from './buildProviderObject';
 import { buildSecretObject } from './buildSecretObject';
+import { Ec2CrossAccountCredentialsError } from './ec2CrossAccountCredentialsError';
 import { firstNonEmpty } from './firstNonEmpty';
 
 type ProviderResources = {
@@ -20,6 +21,8 @@ type ProviderResources = {
  * Explicit form values win, then target settings resolved from the cluster, then the source
  * credentials (same-account default). The never-emitted `autoTargetCredentials` key is gone:
  * the target keys are mandatory for every EC2 provider, so they are always written.
+ * Cross-account mode never falls back to the source credentials: a half-configured pair is
+ * rejected with a typed error instead of writing a secret that cannot authenticate.
  */
 export const buildEc2ProviderResources = (
   formData: Ec2FormData,
@@ -36,16 +39,28 @@ export const buildEc2ProviderResources = (
     formData[ProviderFormFieldId.Ec2TargetRegion],
     ec2Target?.targetRegion,
   );
-  const targetAccessKeyId = firstNonEmpty(
+  const useCrossAccount = formData[ProviderFormFieldId.Ec2UseCrossAccountCredentials] === true;
+  const explicitTargetAccessKeyId = firstNonEmpty(
     formData[ProviderFormFieldId.Ec2TargetAccessKeyId],
-    ec2Target?.targetAccessKeyId,
-    accessKeyId,
   );
-  const targetSecretAccessKey = firstNonEmpty(
+  const explicitTargetSecretAccessKey = firstNonEmpty(
     formData[ProviderFormFieldId.Ec2TargetSecretAccessKey],
-    ec2Target?.targetSecretAccessKey,
-    secretAccessKey,
   );
+
+  if (useCrossAccount && (!explicitTargetAccessKeyId || !explicitTargetSecretAccessKey)) {
+    throw new Ec2CrossAccountCredentialsError();
+  }
+
+  const targetAccessKeyId = useCrossAccount
+    ? explicitTargetAccessKeyId
+    : firstNonEmpty(explicitTargetAccessKeyId, ec2Target?.targetAccessKeyId, accessKeyId);
+  const targetSecretAccessKey = useCrossAccount
+    ? explicitTargetSecretAccessKey
+    : firstNonEmpty(
+        explicitTargetSecretAccessKey,
+        ec2Target?.targetSecretAccessKey,
+        secretAccessKey,
+      );
 
   const ec2Url = getEc2Url(ec2Region);
 

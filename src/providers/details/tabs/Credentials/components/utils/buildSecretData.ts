@@ -6,7 +6,6 @@ import {
 } from 'src/providers/create/fields/constants';
 import type { CreateProviderFormData } from 'src/providers/create/types';
 import { getAuthTypeValue } from 'src/providers/create/utils/buildOpenstackProviderResources';
-import { getEc2Url } from 'src/providers/utils/helpers/getEc2Url';
 
 import type { V1beta1Provider } from '@forklift-ui/types';
 import { getType } from '@utils/crds/common/selectors';
@@ -29,14 +28,12 @@ const secretKeyToFormFieldId: Record<string, keyof typeof ProviderFormFieldId> =
 };
 
 /**
- * Build the secret data from form values.
- * `existingSecretData` keeps secret keys that the edit form cannot change (EC2 target credentials),
- * because the whole secret data map is replaced on save.
+ * Build the secret data from form values. The whole secret data map is replaced on save, so EC2
+ * is handled separately by `buildEc2CredentialPatch` to avoid clobbering rotated target keys.
  */
 export const buildSecretData = (
   formData: Partial<CreateProviderFormData>,
   provider: V1beta1Provider,
-  existingSecretData?: Record<string, string>,
 ): Record<string, string> => {
   const providerType = getType(provider);
   const insecureSkipVerify =
@@ -126,22 +123,6 @@ export const buildSecretData = (
         password: encode(formData[ProviderFormFieldId.NutanixPassword] ?? ''),
         user: encode(formData[ProviderFormFieldId.NutanixUsername] ?? ''),
       };
-
-    case PROVIDER_TYPES.ec2: {
-      const ec2Region = provider?.spec?.settings?.ec2Region ?? '';
-      const targetAccessKeyId = existingSecretData?.targetAccessKeyId;
-      const targetSecretAccessKey = existingSecretData?.targetSecretAccessKey;
-
-      return {
-        accessKeyId: encode(formData[ProviderFormFieldId.Ec2AccessKeyId] ?? ''),
-        insecureSkipVerify: encode('false'),
-        region: encode(ec2Region),
-        secretAccessKey: encode(formData[ProviderFormFieldId.Ec2SecretAccessKey] ?? ''),
-        ...(targetAccessKeyId && { targetAccessKeyId }),
-        ...(targetSecretAccessKey && { targetSecretAccessKey }),
-        url: encode(getEc2Url(ec2Region)),
-      };
-    }
 
     case PROVIDER_TYPES.ova:
     case undefined:

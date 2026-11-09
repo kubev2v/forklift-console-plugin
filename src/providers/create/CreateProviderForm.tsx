@@ -1,4 +1,4 @@
-import { type FC, useCallback, useState } from 'react';
+import { type FC, useCallback, useEffect, useRef, useState } from 'react';
 import { FormProvider, useForm, useWatch } from 'react-hook-form';
 import { useNavigate, useSearchParams } from 'react-router';
 import { getProviderDetailsPageUrl } from 'src/providers/utils/getProviderDetailsPageUrl';
@@ -32,6 +32,16 @@ const CreateProviderForm: FC = () => {
   const { trackEvent } = useForkliftAnalytics();
   const [apiError, setApiError] = useState<Error | null>(null);
   const [searchParams] = useSearchParams();
+  // Auto-detection can outlive the dialog. The ref ignores a late resolution after Cancel or
+  // unmount so a cancelled submission never creates resources or updates state.
+  const submissionCancelledRef = useRef(false);
+
+  useEffect(() => {
+    submissionCancelledRef.current = false;
+    return (): void => {
+      submissionCancelledRef.current = true;
+    };
+  }, []);
 
   const urlProviderType = searchParams.get('providerType');
   const validatedProviderType =
@@ -67,6 +77,10 @@ const CreateProviderForm: FC = () => {
 
       try {
         const submission = await prepareProviderSubmission(formData);
+        if (submissionCancelledRef.current) {
+          return;
+        }
+
         const { provider: newProvider, secret: newSecret } = buildProviderResources(
           submission.formData,
           submission.ec2Target,
@@ -84,6 +98,10 @@ const CreateProviderForm: FC = () => {
         const providerURL = getProviderDetailsPageUrl(provider);
         navigate(providerURL)?.catch(() => undefined);
       } catch (err) {
+        if (submissionCancelledRef.current) {
+          return;
+        }
+
         trackEvent(TELEMETRY_EVENTS.PROVIDER_CREATE_FAILED, {
           error: err instanceof Error ? err.message : 'Unknown error',
           namespace,
@@ -127,6 +145,7 @@ const CreateProviderForm: FC = () => {
               <Button
                 data-testid="provider-cancel-button"
                 onClick={() => {
+                  submissionCancelledRef.current = true;
                   navigate(-1)?.catch(() => undefined);
                 }}
                 variant={ButtonVariant.secondary}

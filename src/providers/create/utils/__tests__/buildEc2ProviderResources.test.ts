@@ -112,7 +112,9 @@ describe('buildEc2ProviderResources', () => {
     buildWith({ [ProviderFormFieldId.Ec2AutoTargetCredentials]: true }, resolvedTarget);
     buildWith({ [ProviderFormFieldId.Ec2AutoTargetCredentials]: false });
     buildWith({
+      [ProviderFormFieldId.Ec2TargetAccessKeyId]: 'TARGETKEY',
       [ProviderFormFieldId.Ec2TargetAz]: 'us-east-1a',
+      [ProviderFormFieldId.Ec2TargetSecretAccessKey]: 'target-secret',
       [ProviderFormFieldId.Ec2UseCrossAccountCredentials]: true,
     });
   });
