@@ -37,7 +37,7 @@ const Ec2CrossAccountCredentialsFields: FC = () => {
         <Checkbox
           data-testid="ec2-cross-account-credentials-checkbox"
           description={t(
-            'Enable this if the target AWS account is different from the source account. When disabled, the source credentials are used for the target account.',
+            'Enable this if the target AWS account is different from the source account. When disabled and auto-detect is off, the source credentials are used for the target account. When auto-detect is on, the target credentials are read from the kube-system/aws-creds secret.',
           )}
           id={ProviderFormFieldId.Ec2UseCrossAccountCredentials}
           isChecked={useCrossAccount ?? false}

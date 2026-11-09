@@ -14,13 +14,17 @@ type CreateProviderErrorAlertProps = {
 
 const CreateProviderErrorAlert: FC<CreateProviderErrorAlertProps> = ({ apiError }) => {
   const { t } = useForkliftTranslation();
-  const { setValue, unregister } = useFormContext<CreateProviderFormData>();
+  const { getValues, setValue, unregister } = useFormContext<CreateProviderFormData>();
 
   const isTargetResolutionError = apiError instanceof Ec2TargetResolutionError;
 
   const handleEnterTargetSettingsManually = (): void => {
-    setValue(ProviderFormFieldId.Ec2AutoTargetCredentials, false);
-    unregister([ProviderFormFieldId.Ec2TargetAz, ProviderFormFieldId.Ec2TargetRegion]);
+    // The action stays visible after switching to manual mode; only leave auto-detect once so
+    // reusing it does not wipe AZ/region values the user already typed.
+    if (getValues(ProviderFormFieldId.Ec2AutoTargetCredentials)) {
+      setValue(ProviderFormFieldId.Ec2AutoTargetCredentials, false);
+      unregister([ProviderFormFieldId.Ec2TargetAz, ProviderFormFieldId.Ec2TargetRegion]);
+    }
     // The AZ input only mounts on the next commit, so focus after it is rendered.
     requestAnimationFrame(() => {
       document.getElementById(ProviderFormFieldId.Ec2TargetAz)?.focus();
