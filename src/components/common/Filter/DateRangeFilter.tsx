@@ -9,6 +9,7 @@ import {
   type ToolbarLabel,
   Tooltip,
 } from '@patternfly/react-core';
+import { isEmpty } from '@utils/helpers';
 
 import {
   isValidDate,
@@ -20,7 +21,6 @@ import {
 } from '../utils/dates';
 
 import type { FilterTypeProps } from './types';
-
 /**
  * This Filter type enables selecting an closed date range.
  * Precisely given range [A,B] a date X in the range if A <= X <= B.
@@ -45,6 +45,15 @@ export const DateRangeFilter = ({
 
   const [from, setFrom] = useState<Date>();
   const [to, setTo] = useState<Date>();
+
+  const committedRange = from && to ? toISODateInterval(from, to) : undefined;
+  if (
+    (committedRange && !validFilters.includes(committedRange)) ||
+    (committedRange && isEmpty(validFilters))
+  ) {
+    setFrom(undefined);
+    setTo(undefined);
+  }
 
   const rangeToOption = (range: string): { key: string; node: ReactElement } => {
     const formatted = localizeInterval(range);
