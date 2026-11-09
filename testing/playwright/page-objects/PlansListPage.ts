@@ -64,6 +64,15 @@ export class PlansListPage {
     await expect(this.page.getByTestId(`plan-link-${planName}`)).toBeVisible();
   }
 
+  async expectSelectionCount(count: number): Promise<void> {
+    if (count === 0) {
+      await expect(this.page.getByText(/^\d+ selected$/u)).toHaveCount(0);
+      return;
+    }
+
+    await expect(this.page.getByText(`${count} selected`)).toBeVisible();
+  }
+
   async navigateDirectly(namespace = MTV_NAMESPACE): Promise<void> {
     await this.navigation.navigateToK8sResource({ namespace, resource: 'Plan' });
     await this.waitForPageLoad();

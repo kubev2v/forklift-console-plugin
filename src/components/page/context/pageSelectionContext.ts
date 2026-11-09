@@ -8,6 +8,7 @@ export type PageSelectionConfigValue<T> = {
   getSelectDisabledReasonRef: MutableRefObject<((item: T) => string | undefined) | undefined>;
   hasExpansion: boolean;
   hasSelection: boolean;
+  pruneSelectionRef: MutableRefObject<(removedIds: string[]) => void>;
   toggleExpandForRef: MutableRefObject<(items: T[]) => void>;
   toggleSelectForRef: MutableRefObject<(items: T[]) => void>;
   toIdRef: MutableRefObject<((item: T) => string) | undefined>;

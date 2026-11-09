@@ -22,10 +22,20 @@ export type BulkPlanActionFailure = {
 export const getPlanRowId = (plan: V1beta1Plan): string =>
   getUID(plan) ?? `${getNamespace(plan) ?? ''}/${getName(plan) ?? ''}`;
 
+export const getPlanIds = (plans: V1beta1Plan[]): string[] => plans.map(getPlanRowId);
+
 export const getSelectedPlans = (plans: V1beta1Plan[], selectedIds: string[]): V1beta1Plan[] => {
   const idSet = new Set(selectedIds);
   return plans.filter((plan) => idSet.has(getPlanRowId(plan)));
 };
+
+export const getSucceededPlanIds = (
+  plans: V1beta1Plan[],
+  results: PromiseSettledResult<unknown>[],
+): string[] =>
+  plans.flatMap((plan, index) =>
+    results[index]?.status === 'fulfilled' ? [getPlanRowId(plan)] : [],
+  );
 
 export const isPlanRunningOrPending = (plan: V1beta1Plan): boolean => {
   const status = getPlanStatus(plan);

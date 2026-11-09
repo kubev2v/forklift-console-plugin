@@ -1,13 +1,19 @@
 import { type FC, useCallback, useMemo } from 'react';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
+import { usePageSelectionConfig } from '@components/page/context/usePageSelectionConfig';
 import type { V1beta1Plan } from '@forklift-ui/types';
 import { useOverlay } from '@openshift-console/dynamic-plugin-sdk';
 import { DropdownItem } from '@patternfly/react-core';
 import { isEmpty } from '@utils/helpers';
 
 import BulkArchivePlansModal, { type BulkArchivePlansModalProps } from './BulkArchivePlansModal';
-import { getPlansEligibleForArchive, getSelectedPlans, isPlanRunningOrPending } from './utils';
+import {
+  getPlanIds,
+  getPlansEligibleForArchive,
+  getSelectedPlans,
+  isPlanRunningOrPending,
+} from './utils';
 
 type BulkArchivePlansDropdownItemProps = {
   canPatch: boolean;
@@ -22,6 +28,7 @@ const BulkArchivePlansDropdownItem: FC<BulkArchivePlansDropdownItemProps> = ({
 }) => {
   const { t } = useForkliftTranslation();
   const launchOverlay = useOverlay();
+  const { pruneSelectionRef } = usePageSelectionConfig<V1beta1Plan>();
 
   const selectedPlans = useMemo(() => getSelectedPlans(plans, selectedIds), [plans, selectedIds]);
   const eligiblePlans = useMemo(() => getPlansEligibleForArchive(selectedPlans), [selectedPlans]);
@@ -30,6 +37,10 @@ const BulkArchivePlansDropdownItem: FC<BulkArchivePlansDropdownItemProps> = ({
     [selectedPlans],
   );
   const skippedArchivedCount = selectedPlans.length - eligiblePlans.length;
+  const skippedPlanIds = useMemo(
+    () => getPlanIds(selectedPlans.filter((plan) => !eligiblePlans.includes(plan))),
+    [eligiblePlans, selectedPlans],
+  );
 
   const disabledReason = useMemo(() => {
     if (!canPatch) {
@@ -47,16 +58,24 @@ const BulkArchivePlansDropdownItem: FC<BulkArchivePlansDropdownItemProps> = ({
     return undefined;
   }, [canPatch, eligiblePlans, hasRunningOrPending, selectedIds, t]);
 
+  const onComplete = useCallback(
+    (succeededPlanIds: string[]) => {
+      pruneSelectionRef.current([...succeededPlanIds, ...skippedPlanIds]);
+    },
+    [pruneSelectionRef, skippedPlanIds],
+  );
+
   const onClick = useCallback(() => {
     if (disabledReason) {
       return;
     }
 
     launchOverlay<BulkArchivePlansModalProps>(BulkArchivePlansModal, {
+      onComplete,
       plans: eligiblePlans,
       skippedArchivedCount,
     });
-  }, [disabledReason, eligiblePlans, launchOverlay, skippedArchivedCount]);
+  }, [disabledReason, eligiblePlans, launchOverlay, onComplete, skippedArchivedCount]);
 
   return (
     <DropdownItem
