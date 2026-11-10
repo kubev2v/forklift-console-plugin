@@ -1,4 +1,4 @@
-export type SecretDocument = {
+type SecretDocument = {
   data?: Record<string, string>;
   metadata?: { resourceVersion?: string };
 };
