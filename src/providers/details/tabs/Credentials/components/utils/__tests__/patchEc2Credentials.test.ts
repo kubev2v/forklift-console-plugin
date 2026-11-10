@@ -14,6 +14,11 @@ import { type IoK8sApiCoreV1Secret, SecretModel } from '@forklift-ui/types';
 
 import { patchEc2Credentials } from '../patchEc2Credentials';
 
+const formData = {
+  [ProviderFormFieldId.Ec2AccessKeyId]: 'NEWKEY',
+  [ProviderFormFieldId.Ec2SecretAccessKey]: 'new-secret',
+};
+
 describe('patchEc2Credentials - patch', () => {
   beforeEach(() => {
     mockK8sPatch.mockReset();
@@ -31,10 +36,7 @@ describe('patchEc2Credentials - patch', () => {
       metadata: { name: 'ec2-secret', namespace: 'ns' },
     };
 
-    await patchEc2Credentials(secret, {
-      [ProviderFormFieldId.Ec2AccessKeyId]: 'NEWKEY',
-      [ProviderFormFieldId.Ec2SecretAccessKey]: 'new-secret',
-    });
+    await patchEc2Credentials(secret, formData);
 
     expect(mockK8sPatch).toHaveBeenCalledWith(
       expect.objectContaining({
@@ -44,6 +46,47 @@ describe('patchEc2Credentials - patch', () => {
         ],
         model: SecretModel,
         resource: secret,
+      }),
+    );
+  });
+
+  it('rejects a stale save through the resourceVersion of the loaded secret', async () => {
+    const secret: IoK8sApiCoreV1Secret = {
+      data: {
+        accessKeyId: encode('OLDKEY'),
+        secretAccessKey: encode('old-secret'),
+      },
+      metadata: { name: 'ec2-secret', namespace: 'ns', resourceVersion: '4711' },
+    };
+
+    await patchEc2Credentials(secret, formData);
+
+    expect(mockK8sPatch).toHaveBeenCalledWith(
+      expect.objectContaining({
+        data: expect.arrayContaining([
+          { op: 'test', path: '/metadata/resourceVersion', value: '4711' },
+        ]),
+      }),
+    );
+  });
+
+  it('creates the data map for a secret without data keys', async () => {
+    const secret: IoK8sApiCoreV1Secret = {
+      metadata: { name: 'ec2-secret', namespace: 'ns', resourceVersion: '4711' },
+    };
+
+    await patchEc2Credentials(secret, formData);
+
+    expect(mockK8sPatch).toHaveBeenCalledWith(
+      expect.objectContaining({
+        data: [
+          { op: 'test', path: '/metadata/resourceVersion', value: '4711' },
+          {
+            op: 'add',
+            path: '/data',
+            value: { accessKeyId: encode('NEWKEY'), secretAccessKey: encode('new-secret') },
+          },
+        ],
       }),
     );
   });
