@@ -47,6 +47,7 @@ export const QUICK_REFERENCE = {
 export const EXTERNAL_LINKS = [
   'Documentation',
   'Get support',
+  'VirtIO drivers',
   'Red Hat OpenShift Virtualization Administration I course',
 ] as const;
 
