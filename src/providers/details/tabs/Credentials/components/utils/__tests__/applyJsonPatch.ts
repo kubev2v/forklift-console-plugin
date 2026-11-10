@@ -1,8 +1,3 @@
-type SecretDocument = {
-  data?: Record<string, string>;
-  metadata?: { resourceVersion?: string };
-};
-
 export type PatchOperation = { op: string; path: string; value?: unknown };
 
 const getAtPath = (document: unknown, path: string): unknown => {
