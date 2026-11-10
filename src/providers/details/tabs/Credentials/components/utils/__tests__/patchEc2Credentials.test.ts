@@ -14,6 +14,8 @@ import { type IoK8sApiCoreV1Secret, SecretModel } from '@forklift-ui/types';
 
 import { patchEc2Credentials } from '../patchEc2Credentials';
 
+import { applyJsonPatch, type PatchOperation } from './applyJsonPatch';
+
 const formData = {
   [ProviderFormFieldId.Ec2AccessKeyId]: 'NEWKEY',
   [ProviderFormFieldId.Ec2SecretAccessKey]: 'new-secret',
@@ -89,5 +91,35 @@ describe('patchEc2Credentials - patch', () => {
         ],
       }),
     );
+  });
+
+  it('rejects a stale save and keeps target keys rotated after the dialog loaded', async () => {
+    const loadedSecret: IoK8sApiCoreV1Secret = {
+      data: {
+        accessKeyId: encode('OLDKEY'),
+        secretAccessKey: encode('old-secret'),
+        targetAccessKeyId: encode('OLDKEY'),
+        targetSecretAccessKey: encode('old-secret'),
+      },
+      metadata: { name: 'ec2-secret', namespace: 'ns', resourceVersion: '4711' },
+    };
+
+    await patchEc2Credentials(loadedSecret, formData);
+
+    const patchRequest = mockK8sPatch.mock.calls[0][0] as { data: PatchOperation[] };
+    const rotatedSecret = {
+      data: {
+        ...loadedSecret.data,
+        targetAccessKeyId: encode('ROTATEDKEY'),
+        targetSecretAccessKey: encode('rotated-secret'),
+      },
+      metadata: { resourceVersion: '4712' },
+    };
+
+    expect(() => applyJsonPatch(rotatedSecret, patchRequest.data)).toThrow(
+      'test operation failed for /metadata/resourceVersion',
+    );
+    expect(rotatedSecret.data?.targetAccessKeyId).toBe(encode('ROTATEDKEY'));
+    expect(rotatedSecret.data?.targetSecretAccessKey).toBe(encode('rotated-secret'));
   });
 });
