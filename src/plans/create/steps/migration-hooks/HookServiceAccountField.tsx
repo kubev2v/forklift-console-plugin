@@ -1,6 +1,6 @@
 import type { FC } from 'react';
 import { Controller, useWatch } from 'react-hook-form';
-import { getServiceAccountHelperText } from 'src/plans/details/tabs/Hooks/utils/utils';
+import { ServiceAccountHelpText } from 'src/plans/details/tabs/Hooks/components/ServiceAccountHelpText';
 
 import FormGroupWithErrorText from '@components/common/FormGroupWithErrorText';
 import { FormGroupWithHelpText } from '@components/common/FormGroupWithHelpText/FormGroupWithHelpText';
@@ -57,7 +57,9 @@ const HookServiceAccountField: FC<HookServiceAccountFieldProps> = ({ fieldId }) 
               validated={getInputValidated(error)}
             />
             <FormGroupWithHelpText
-              helperText={getServiceAccountHelperText(fieldId === HooksFormFieldId.PreMigration)}
+              helperText={
+                <ServiceAccountHelpText isPreHook={fieldId === HooksFormFieldId.PreMigration} />
+              }
             />
           </>
         )}

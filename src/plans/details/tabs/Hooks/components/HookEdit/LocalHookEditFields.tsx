@@ -18,7 +18,7 @@ import { useForkliftTranslation } from '@utils/i18n';
 import type { HookEditFormValues } from '../../state/types';
 import { HookField } from '../../state/types';
 import { type HookType, hookTypes } from '../../utils/constants';
-import { getServiceAccountHelperText } from '../../utils/utils';
+import { ServiceAccountHelpText } from '../ServiceAccountHelpText';
 
 type LocalHookEditFieldsProps = {
   control: Control<HookEditFormValues>;
@@ -69,7 +69,7 @@ const LocalHookEditFields: FC<LocalHookEditFieldsProps> = ({ control, plan, step
             fieldId={HookField.ServiceAccount}
             helperText={
               isEmpty(error) ? (
-                getServiceAccountHelperText(step === hookTypes.PreHook, plan)
+                <ServiceAccountHelpText isPreHook={step === hookTypes.PreHook} plan={plan} />
               ) : (
                 <FormErrorHelperText error={error} showIcon />
               )

@@ -142,12 +142,3 @@ export const validateHooks = (plan: V1beta1Plan): string => {
 
   return '';
 };
-
-export const getServiceAccountHelperText = (isPreHook: boolean, plan?: V1beta1Plan): string => {
-  const serviceAccountProject = isPreHook ? plan?.metadata?.namespace : plan?.spec?.targetNamespace;
-  const serviceAccountProjectLabel = isPreHook ? "plan's project." : "plan's target project.";
-
-  return t(
-    `Red Hat OpenShift service account. The service account is needed for manipulating any resources of the cluster. Note that the provided service account should be in the ${serviceAccountProject ?? ''} ${serviceAccountProjectLabel}`,
-  );
-};

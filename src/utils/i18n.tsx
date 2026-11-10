@@ -6,9 +6,10 @@ import type { TOptions } from 'i18next';
 export const useForkliftTranslation = (): ReturnType<typeof useTranslation> => {
   return useTranslation('plugin__forklift-console-plugin');
 };
+type ForkLiftTransChild = ReactNode | Record<string, unknown>;
 
 type ForkLiftTrans = FC<{
-  children?: ReactNode;
+  children?: ForkLiftTransChild | readonly ForkLiftTransChild[];
   components?: Node[];
   values?: object;
 }>;
