@@ -1,5 +1,5 @@
 import { type IoK8sApiCoreV1Secret, SecretModel } from '@forklift-ui/types';
-import { k8sGet, k8sListItems } from '@openshift-console/dynamic-plugin-sdk';
+import { k8sGet, k8sList } from '@openshift-console/dynamic-plugin-sdk';
 
 import { ProviderFormFieldId } from '../fields/constants';
 import {
@@ -15,9 +15,11 @@ import type {
   Ec2ResolvedTarget,
   Ec2TargetResolutionFailure,
   Ec2WorkerNode,
+  Ec2WorkerNodeList,
 } from '../types';
 
 import { getRegionFromAz, getTargetAzFromNodes, parseAwsCredsSecret } from './ec2TargetDetection';
+import { getEc2TargetErrorCode, getEc2TargetErrorMessage } from './ec2TargetErrorDetails';
 import { Ec2TargetResolutionError } from './ec2TargetResolutionError';
 import { firstNonEmpty } from './firstNonEmpty';
 
@@ -30,11 +32,8 @@ type ResolveEc2TargetSettingsOptions = {
   ec2Region: string;
   fetchAwsCredsSecret?: () => Promise<unknown>;
   formData: Ec2FormData;
-  listWorkerNodes?: () => Promise<Ec2WorkerNode[]>;
+  listWorkerNodes?: () => Promise<Ec2WorkerNodeList>;
 };
-
-const isRecord = (value: unknown): value is Record<string, unknown> =>
-  typeof value === 'object' && value !== null;
 
 const fetchAwsCredsSecretFromCluster = async (): Promise<unknown> =>
   k8sGet<IoK8sApiCoreV1Secret>({
@@ -43,22 +42,17 @@ const fetchAwsCredsSecretFromCluster = async (): Promise<unknown> =>
     ns: AWS_CREDS_NAMESPACE,
   });
 
-const listWorkerNodesFromCluster = async (): Promise<Ec2WorkerNode[]> =>
-  k8sListItems<Ec2WorkerNode>({
+const listWorkerNodesFromCluster = async (): Promise<Ec2WorkerNodeList> =>
+  k8sList({
     model: NODE_MODEL,
     queryParams: { labelSelector: WORKER_NODE_ROLE_LABEL },
   });
 
-const getErrorCode = (error: unknown): number | undefined => {
-  if (!isRecord(error)) {
-    return undefined;
-  }
-
-  return typeof error.code === 'number' ? error.code : undefined;
-};
+const toWorkerNodes = (response: Ec2WorkerNodeList): Ec2WorkerNode[] =>
+  Array.isArray(response) ? response : (response.items ?? []);
 
 const mapSecretError = (error: unknown): Ec2TargetResolutionFailure => {
-  const code = getErrorCode(error);
+  const code = getEc2TargetErrorCode(error);
   if (code === HTTP_FORBIDDEN) {
     return 'secretForbidden';
   }
@@ -83,24 +77,24 @@ const loadAwsCredentials = async (
       throw error;
     }
 
-    throw new Ec2TargetResolutionError(mapSecretError(error));
+    throw new Ec2TargetResolutionError(mapSecretError(error), getEc2TargetErrorMessage(error));
   }
 };
 
 const mapNodesError = (error: unknown): Ec2TargetResolutionFailure =>
-  getErrorCode(error) === HTTP_FORBIDDEN ? 'nodesForbidden' : 'unknown';
+  getEc2TargetErrorCode(error) === HTTP_FORBIDDEN ? 'nodesForbidden' : 'unknown';
 
 const detectTargetAz = async (
-  listWorkerNodes: () => Promise<Ec2WorkerNode[]>,
+  listWorkerNodes: () => Promise<Ec2WorkerNodeList>,
 ): Promise<string | undefined> => {
-  let nodes: Ec2WorkerNode[];
+  let response: Ec2WorkerNodeList;
   try {
-    nodes = await listWorkerNodes();
+    response = await listWorkerNodes();
   } catch (error) {
-    throw new Ec2TargetResolutionError(mapNodesError(error));
+    throw new Ec2TargetResolutionError(mapNodesError(error), getEc2TargetErrorMessage(error));
   }
 
-  const az = getTargetAzFromNodes(nodes);
+  const az = getTargetAzFromNodes(toWorkerNodes(response));
   if (!az) {
     throw new Ec2TargetResolutionError('noWorkerZone');
   }

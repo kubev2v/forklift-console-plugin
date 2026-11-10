@@ -150,6 +150,8 @@ export type Ec2TargetResolutionFailure =
 
 export type Ec2WorkerNode = K8sResourceCommon;
 
+export type Ec2WorkerNodeList = Ec2WorkerNode[] | { items?: Ec2WorkerNode[] };
+
 export type ProviderSubmission = {
   ec2Target?: Ec2ResolvedTarget;
   formData: CreateProviderFormData;
