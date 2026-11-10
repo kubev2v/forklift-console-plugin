@@ -2,10 +2,20 @@ import { t } from '@utils/i18n';
 
 import type { Ec2TargetResolutionFailure } from '../types';
 
+const MAX_ERROR_DETAIL_LENGTH = 200;
+
+const truncateErrorDetail = (detail: string): string =>
+  detail.length > MAX_ERROR_DETAIL_LENGTH
+    ? `${detail.slice(0, MAX_ERROR_DETAIL_LENGTH)}...`
+    : detail;
+
 /**
  * Builds the user-facing copy at call time so language changes are picked up.
  */
-const getEc2TargetResolutionMessage = (reason: Ec2TargetResolutionFailure): string => {
+const getEc2TargetResolutionMessage = (
+  reason: Ec2TargetResolutionFailure,
+  detail?: string,
+): string => {
   switch (reason) {
     case 'secretForbidden':
       return t(
@@ -29,9 +39,14 @@ const getEc2TargetResolutionMessage = (reason: Ec2TargetResolutionFailure): stri
       );
     case 'unknown':
     default:
-      return t(
-        'The target settings could not be detected because of an unexpected error. Enter the target settings manually.',
-      );
+      return detail
+        ? t(
+            'The target settings could not be detected: {{message}}. Enter the target settings manually.',
+            { message: truncateErrorDetail(detail) },
+          )
+        : t(
+            'The target settings could not be detected because of an unexpected error. Enter the target settings manually.',
+          );
   }
 };
 
@@ -40,8 +55,8 @@ const getEc2TargetResolutionMessage = (reason: Ec2TargetResolutionFailure): stri
 export class Ec2TargetResolutionError extends Error {
   public readonly reason: Ec2TargetResolutionFailure;
 
-  public constructor(reason: Ec2TargetResolutionFailure) {
-    super(getEc2TargetResolutionMessage(reason));
+  public constructor(reason: Ec2TargetResolutionFailure, detail?: string) {
+    super(getEc2TargetResolutionMessage(reason, detail));
     this.name = 'Ec2TargetResolutionError';
     this.reason = reason;
   }
