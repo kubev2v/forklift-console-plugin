@@ -12,6 +12,7 @@ import { planStepNames, PlanWizardStepId } from '../../constants';
 import { useCreatePlanFormContext } from '../../hooks/useCreatePlanFormContext';
 import { validateVmSelection } from '../../utils/vmValidation';
 import { MigrationTypeFieldId } from '../migration-type/constants';
+import { OtherSettingsFormFieldId } from '../other-settings/constants';
 import { CreatePlanStorageMapFieldId } from '../storage-map/constants';
 import { VmFormFieldId } from '../virtual-machines/constants';
 
@@ -51,6 +52,7 @@ const GeneralInformationStep: FC = () => {
       NetworkMapFieldId.NetworkMap,
       CreatePlanStorageMapFieldId.StorageMap,
       MigrationTypeFieldId.MigrationType,
+      OtherSettingsFormFieldId.OffloadPopulatorPriorityClassName,
     ]);
   }, [setValue, setError, unregister]);
 

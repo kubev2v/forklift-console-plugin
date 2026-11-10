@@ -30,6 +30,32 @@ const storageMapRef = {
   metadata: { name: 'sm', namespace: 'ns', uid: 's1' },
 } as never;
 
+const getCreatedSpec = (): { offloadPopulatorPriorityClassName?: string } => {
+  const [firstCall] = mockK8sCreate.mock.calls;
+  const [{ data }] = firstCall as [
+    { data: { spec: { offloadPopulatorPriorityClassName?: string } } },
+  ];
+  return data.spec;
+};
+
+const createParams = (
+  offloadPopulatorPriorityClassName?: string,
+): Parameters<typeof createPlan>[0] => ({
+  migrateSharedDisks: true,
+  migrationType: MigrationTypeValue.Cold,
+  networkMap: mapRef,
+  ...(offloadPopulatorPriorityClassName === undefined ? {} : { offloadPopulatorPriorityClassName }),
+  planName: 'plan-1',
+  planProject: 'ns',
+  preserveStaticIps: true,
+  sourceProvider: provider,
+  storageMap: storageMapRef,
+  targetPowerState: 'on',
+  targetProject: 'target-ns',
+  targetProvider: provider,
+  vms: [],
+});
+
 describe('createPlan - create', () => {
   beforeEach(() => {
     mockK8sCreate.mockReset();
@@ -107,5 +133,23 @@ describe('createPlan - create', () => {
     expect(spec.warm).toBe(true);
     expect(spec.type).toBe(MigrationTypeValue.Warm);
     expect(spec.description).toBe('desc');
+  });
+
+  it('includes offloadPopulatorPriorityClassName in the spec when it is set', async () => {
+    await createPlan(createParams('high-priority'));
+
+    expect(getCreatedSpec().offloadPopulatorPriorityClassName).toBe('high-priority');
+  });
+
+  it('omits offloadPopulatorPriorityClassName from the spec when it is empty', async () => {
+    await createPlan(createParams(''));
+
+    expect(getCreatedSpec()).not.toHaveProperty('offloadPopulatorPriorityClassName');
+  });
+
+  it('omits offloadPopulatorPriorityClassName from the spec when it is not provided', async () => {
+    await createPlan(createParams());
+
+    expect(getCreatedSpec()).not.toHaveProperty('offloadPopulatorPriorityClassName');
   });
 });

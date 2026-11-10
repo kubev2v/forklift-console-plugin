@@ -9,7 +9,9 @@ import {
   DescriptionListTerm,
   useWizardContext,
 } from '@patternfly/react-core';
+import { FEATURE_NAMES } from '@utils/constants';
 import { isEmpty } from '@utils/helpers';
+import { useFeatureFlags } from '@utils/hooks/useFeatureFlags';
 import { useForkliftTranslation } from '@utils/i18n';
 import { PROVIDER_TYPES } from '@utils/providers/constants';
 
@@ -30,12 +32,14 @@ const OtherSettingsReviewSection: FC<{ isLiveMigrationFeatureEnabled: boolean }>
   const { t } = useForkliftTranslation();
   const { goToStepById } = useWizardContext();
   const { control } = useCreatePlanFormContext();
+  const { isFeatureEnabled } = useFeatureFlags();
   const [
     sourceProvider,
     diskPassPhrases,
     diskDecryptionType,
     existingLUKSSecret,
     nbdeClevis,
+    offloadPopulatorPriorityClassName,
     transferNetwork,
     preserveStaticIps,
     rootDevice,
@@ -52,6 +56,7 @@ const OtherSettingsReviewSection: FC<{ isLiveMigrationFeatureEnabled: boolean }>
       OtherSettingsFormFieldId.DiskDecryptionType,
       OtherSettingsFormFieldId.ExistingLUKSSecret,
       OtherSettingsFormFieldId.NBDEClevis,
+      OtherSettingsFormFieldId.OffloadPopulatorPriorityClassName,
       OtherSettingsFormFieldId.TransferNetwork,
       OtherSettingsFormFieldId.PreserveStaticIps,
       OtherSettingsFormFieldId.RootDevice,
@@ -67,6 +72,7 @@ const OtherSettingsReviewSection: FC<{ isLiveMigrationFeatureEnabled: boolean }>
     Boolean(value),
   );
   const isVsphere = sourceProvider?.spec?.type === PROVIDER_TYPES.vsphere;
+  const isCopyOffloadEnabled = isFeatureEnabled(FEATURE_NAMES.COPY_OFFLOAD);
 
   const isTransferNetworkVisible =
     !hasLiveMigrationProviderType(sourceProvider) ||
@@ -86,9 +92,11 @@ const OtherSettingsReviewSection: FC<{ isLiveMigrationFeatureEnabled: boolean }>
           <>
             <VsphereOtherSettingsReviewItems
               nbdeClevis={nbdeClevis}
+              offloadPopulatorPriorityClassName={offloadPopulatorPriorityClassName}
               preserveStaticIps={preserveStaticIps}
               rootDevice={rootDevice}
               sharedDisks={sharedDisks}
+              showOffloadPriorityClass={isCopyOffloadEnabled}
             />
             <DiskDecryptionReviewItem
               diskDecryptionType={diskDecryptionType}

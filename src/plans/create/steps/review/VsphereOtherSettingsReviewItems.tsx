@@ -5,22 +5,27 @@ import {
   DescriptionListGroup,
   DescriptionListTerm,
 } from '@patternfly/react-core';
+import { isEmpty } from '@utils/helpers';
 import { useForkliftTranslation } from '@utils/i18n';
 
 import { otherFormFieldLabels, OtherSettingsFormFieldId } from '../other-settings/constants';
 
 type VsphereOtherSettingsReviewItemsProps = {
   nbdeClevis?: boolean;
+  offloadPopulatorPriorityClassName?: string;
   preserveStaticIps?: boolean;
   rootDevice?: string;
   sharedDisks?: boolean;
+  showOffloadPriorityClass: boolean;
 };
 
 const VsphereOtherSettingsReviewItems: FC<VsphereOtherSettingsReviewItemsProps> = ({
   nbdeClevis,
+  offloadPopulatorPriorityClassName,
   preserveStaticIps,
   rootDevice,
   sharedDisks,
+  showOffloadPriorityClass,
 }) => {
   const { t } = useForkliftTranslation();
 
@@ -59,6 +64,19 @@ const VsphereOtherSettingsReviewItems: FC<VsphereOtherSettingsReviewItemsProps> 
           {sharedDisks ? t('Enabled') : t('Disabled')}
         </DescriptionListDescription>
       </DescriptionListGroup>
+
+      {showOffloadPriorityClass && (
+        <DescriptionListGroup>
+          <DescriptionListTerm>
+            {otherFormFieldLabels[OtherSettingsFormFieldId.OffloadPopulatorPriorityClassName]}
+          </DescriptionListTerm>
+          <DescriptionListDescription data-testid="review-offload-populator-priority-class">
+            {isEmpty(offloadPopulatorPriorityClassName)
+              ? t('Cluster default')
+              : offloadPopulatorPriorityClassName}
+          </DescriptionListDescription>
+        </DescriptionListGroup>
+      )}
     </>
   );
 };

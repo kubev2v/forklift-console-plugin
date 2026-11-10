@@ -2,7 +2,7 @@ import type { ReactElement } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 
 import { beforeEach, describe, expect, it } from '@jest/globals';
-import { render, screen } from '@testing-library/react';
+import { render, type RenderResult, screen } from '@testing-library/react';
 import { PROVIDER_TYPES } from '@utils/providers/constants';
 
 import { GeneralFormFieldId } from '../../general-information/constants';
@@ -15,6 +15,13 @@ jest.mock('../../../hooks/useCreatePlanFormContext', () => ({
     mockUseCreatePlanFormContext(),
 }));
 
+const mockIsFeatureEnabled = jest.fn();
+jest.mock('@utils/hooks/useFeatureFlags', () => ({
+  useFeatureFlags: (): { isFeatureEnabled: typeof mockIsFeatureEnabled } => ({
+    isFeatureEnabled: mockIsFeatureEnabled,
+  }),
+}));
+
 const mockGoToStepById = jest.fn();
 jest.mock('@patternfly/react-core', () => ({
   ...jest.requireActual('@patternfly/react-core'),
@@ -24,6 +31,16 @@ jest.mock('@patternfly/react-core', () => ({
 }));
 
 const EMPTY_DISK_PASS_PHRASES: unknown[] = [];
+const vsphereProvider = { spec: { type: PROVIDER_TYPES.vsphere } };
+
+type TestWrapperProps = {
+  diskDecryptionType?: DiskDecryptionType;
+  diskPassPhrases?: unknown[];
+  existingLUKSSecret?: unknown;
+  nbdeClevis?: boolean;
+  offloadPopulatorPriorityClassName?: string;
+  sourceProvider: unknown;
+};
 
 const TestWrapper = ({
   sourceProvider,
@@ -31,13 +48,8 @@ const TestWrapper = ({
   diskPassPhrases = EMPTY_DISK_PASS_PHRASES,
   diskDecryptionType = DiskDecryptionType.New,
   existingLUKSSecret,
-}: {
-  diskDecryptionType?: DiskDecryptionType;
-  diskPassPhrases?: any[];
-  existingLUKSSecret?: any;
-  nbdeClevis?: boolean;
-  sourceProvider: any;
-}): ReactElement => {
+  offloadPopulatorPriorityClassName,
+}: TestWrapperProps): ReactElement => {
   const methods = useForm({
     defaultValues: {
       [GeneralFormFieldId.SourceProvider]: sourceProvider,
@@ -45,6 +57,8 @@ const TestWrapper = ({
       [OtherSettingsFormFieldId.DiskDecryptionPassPhrases]: diskPassPhrases,
       [OtherSettingsFormFieldId.DiskDecryptionType]: diskDecryptionType,
       [OtherSettingsFormFieldId.ExistingLUKSSecret]: existingLUKSSecret,
+      [OtherSettingsFormFieldId.OffloadPopulatorPriorityClassName]:
+        offloadPopulatorPriorityClassName,
       [OtherSettingsFormFieldId.TransferNetwork]: null,
       [OtherSettingsFormFieldId.PreserveStaticIps]: true,
       [OtherSettingsFormFieldId.RootDevice]: '',
@@ -62,12 +76,14 @@ const TestWrapper = ({
   );
 };
 
+const renderVsphereReview = (props: Omit<TestWrapperProps, 'sourceProvider'> = {}): RenderResult =>
+  render(<TestWrapper {...props} sourceProvider={vsphereProvider} />);
+
 describe('OtherSettingsReviewSection', () => {
   beforeEach(() => {
     jest.clearAllMocks();
+    mockIsFeatureEnabled.mockReturnValue(true);
   });
-
-  const vsphereProvider = { spec: { type: PROVIDER_TYPES.vsphere } };
 
   it('shows abbreviated NBDE label', () => {
     render(<TestWrapper sourceProvider={vsphereProvider} />);
@@ -96,13 +112,7 @@ describe('OtherSettingsReviewSection', () => {
 
   it('hides passphrases when NBDE is enabled', () => {
     const diskPassPhrases = [{ value: 'test-pass' }];
-    render(
-      <TestWrapper
-        diskPassPhrases={diskPassPhrases}
-        nbdeClevis={true}
-        sourceProvider={vsphereProvider}
-      />,
-    );
+    renderVsphereReview({ diskPassPhrases, nbdeClevis: true });
 
     expect(screen.queryByText('Disk decryption passphrases')).not.toBeInTheDocument();
     expect(screen.queryByText('test-pass')).not.toBeInTheDocument();
@@ -121,15 +131,35 @@ describe('OtherSettingsReviewSection', () => {
     expect(screen.queryByText('Use NBDE/Clevis')).not.toBeInTheDocument();
   });
 
+  it('shows the selected offload populator priority class', () => {
+    renderVsphereReview({ offloadPopulatorPriorityClassName: 'high-priority' });
+
+    expect(screen.getByTestId('review-offload-populator-priority-class')).toHaveTextContent(
+      'high-priority',
+    );
+  });
+
+  it('shows the cluster default when no offload populator priority class is set', () => {
+    renderVsphereReview();
+
+    expect(screen.getByTestId('review-offload-populator-priority-class')).toHaveTextContent(
+      'Cluster default',
+    );
+  });
+
+  it('hides the offload populator priority class when copy offload is disabled', () => {
+    mockIsFeatureEnabled.mockReturnValue(false);
+    renderVsphereReview();
+
+    expect(screen.queryByTestId('review-offload-populator-priority-class')).not.toBeInTheDocument();
+  });
+
   it('shows existing secret name when diskDecryptionType is Existing', () => {
     const existingSecret = { metadata: { name: 'my-luks-secret' } };
-    render(
-      <TestWrapper
-        diskDecryptionType={DiskDecryptionType.Existing}
-        existingLUKSSecret={existingSecret}
-        sourceProvider={vsphereProvider}
-      />,
-    );
+    renderVsphereReview({
+      diskDecryptionType: DiskDecryptionType.Existing,
+      existingLUKSSecret: existingSecret,
+    });
 
     expect(screen.getByTestId('review-existing-luks-secret')).toHaveTextContent('my-luks-secret');
     expect(screen.queryByText('Disk decryption passphrases')).not.toBeInTheDocument();
@@ -137,13 +167,7 @@ describe('OtherSettingsReviewSection', () => {
 
   it('shows passphrase count when diskDecryptionType is New', () => {
     const diskPassPhrases = [{ value: 'pass-1' }];
-    render(
-      <TestWrapper
-        diskDecryptionType={DiskDecryptionType.New}
-        diskPassPhrases={diskPassPhrases}
-        sourceProvider={vsphereProvider}
-      />,
-    );
+    renderVsphereReview({ diskDecryptionType: DiskDecryptionType.New, diskPassPhrases });
 
     expect(screen.getByTestId('review-disk-decryption-passphrases')).toHaveTextContent(
       'passphrase configured',
