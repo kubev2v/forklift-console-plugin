@@ -10,7 +10,7 @@ export const patchEc2Credentials = async (
   formData: Partial<CreateProviderFormData>,
 ): Promise<void> => {
   await k8sPatch({
-    data: buildEc2CredentialPatch(formData, secret.data),
+    data: buildEc2CredentialPatch(formData, secret.data, secret.metadata?.resourceVersion),
     model: SecretModel,
     resource: secret,
   });

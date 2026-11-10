@@ -10,8 +10,17 @@ const formData = {
   [ProviderFormFieldId.Ec2SecretAccessKey]: 'new-secret',
 };
 
-const valuesByPath = (operations: SecretDataPatchOperation[]): Record<string, string> =>
-  Object.fromEntries(operations.map(({ path, value }) => [path, decode(value)]));
+const decodeOperationValue = (
+  value: SecretDataPatchOperation['value'],
+): string | Record<string, string> | undefined =>
+  typeof value === 'string' ? decode(value) : value;
+
+const valuesByPath = (
+  operations: SecretDataPatchOperation[],
+): Record<string, string | Record<string, string> | undefined> =>
+  Object.fromEntries(
+    operations.map(({ path, value }) => [path, decodeOperationValue(value)] as const),
+  );
 
 describe('buildEc2CredentialPatch', () => {
   it('patches only the edited source keys, preserving independent target keys', () => {
@@ -52,5 +61,32 @@ describe('buildEc2CredentialPatch', () => {
     const operations = buildEc2CredentialPatch(formData, { accessKeyId: encode('OLDKEY') });
 
     expect(operations).toHaveLength(2);
+  });
+
+  it('guards the patch with the observed resourceVersion so a concurrent rotation is rejected', () => {
+    const operations = buildEc2CredentialPatch(
+      formData,
+      { accessKeyId: encode('OLDKEY'), secretAccessKey: encode('old-secret') },
+      '4711',
+    );
+
+    expect(operations[0]).toEqual({
+      op: 'test',
+      path: '/metadata/resourceVersion',
+      value: '4711',
+    });
+  });
+
+  it('creates the data map when the secret has no data yet', () => {
+    const operations = buildEc2CredentialPatch(formData, undefined, '4711');
+
+    expect(operations).toEqual([
+      { op: 'test', path: '/metadata/resourceVersion', value: '4711' },
+      {
+        op: 'add',
+        path: '/data',
+        value: { accessKeyId: encode('NEWKEY'), secretAccessKey: encode('new-secret') },
+      },
+    ]);
   });
 });
