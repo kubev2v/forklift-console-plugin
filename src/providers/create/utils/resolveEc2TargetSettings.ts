@@ -8,7 +8,6 @@ import {
   HTTP_FORBIDDEN,
   HTTP_NOT_FOUND,
   NODE_MODEL,
-  WORKER_NODE_ROLE_LABEL,
 } from '../fields/ec2/constants';
 import type {
   Ec2FormData,
@@ -43,10 +42,7 @@ const fetchAwsCredsSecretFromCluster = async (): Promise<unknown> =>
   });
 
 const listWorkerNodesFromCluster = async (): Promise<Ec2WorkerNodeList> =>
-  k8sList({
-    model: NODE_MODEL,
-    queryParams: { labelSelector: WORKER_NODE_ROLE_LABEL },
-  });
+  k8sList({ model: NODE_MODEL, queryParams: {} });
 
 const toWorkerNodes = (response: Ec2WorkerNodeList): Ec2WorkerNode[] =>
   Array.isArray(response) ? response : (response.items ?? []);
