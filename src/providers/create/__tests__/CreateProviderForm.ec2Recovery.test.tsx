@@ -95,4 +95,31 @@ describe('CreateProviderForm - EC2 recovery', () => {
     expect(mockCreateProvider).not.toHaveBeenCalled();
     expect(mockNavigate).toHaveBeenCalledWith(-1);
   });
+
+  it('allows a new submission when Cancel leaves the form mounted', async () => {
+    const pendingTarget: { resolve?: (target: Ec2ResolvedTarget) => void } = {};
+    mockedResolve.mockReturnValueOnce(
+      new Promise<Ec2ResolvedTarget>((resolve) => {
+        pendingTarget.resolve = resolve;
+      }),
+    );
+    mockedResolve.mockResolvedValueOnce({ targetAz: 'us-east-1a', targetRegion: 'us-east-1' });
+    await fillAndEnableAutoDetect();
+    await submit();
+
+    const user = userEvent.setup();
+    await user.click(screen.getByTestId('provider-cancel-button'));
+
+    pendingTarget.resolve?.({ targetAz: 'us-east-1a', targetRegion: 'us-east-1' });
+    await waitFor(() => {
+      expect(screen.getByTestId('provider-create-button')).toBeEnabled();
+    });
+    expect(mockCreateProvider).not.toHaveBeenCalled();
+
+    await user.click(screen.getByTestId('provider-create-button'));
+
+    await waitFor(() => {
+      expect(mockCreateProvider).toHaveBeenCalledTimes(1);
+    });
+  });
 });

@@ -1,4 +1,4 @@
-import { type FC, useCallback, useEffect, useRef, useState } from 'react';
+import { type FC, useCallback, useState } from 'react';
 import { FormProvider, useForm, useWatch } from 'react-hook-form';
 import { useNavigate, useSearchParams } from 'react-router';
 import { getProviderDetailsPageUrl } from 'src/providers/utils/getProviderDetailsPageUrl';
@@ -11,6 +11,7 @@ import { useForkliftTranslation } from '@utils/i18n';
 import { PROVIDER_TYPES } from '@utils/providers/constants';
 
 import { ProviderFormFieldId } from './fields/constants';
+import { useSubmissionCancellation } from './hooks/useSubmissionCancellation';
 import { buildProviderResources } from './utils/buildProviderResources';
 import { createProvider } from './utils/createProvider';
 import { createProviderSecret } from './utils/createProviderSecret';
@@ -32,16 +33,8 @@ const CreateProviderForm: FC = () => {
   const { trackEvent } = useForkliftAnalytics();
   const [apiError, setApiError] = useState<Error | null>(null);
   const [searchParams] = useSearchParams();
-  // Auto-detection can outlive the dialog. The ref ignores a late resolution after Cancel or
-  // unmount so a cancelled submission never creates resources or updates state.
-  const submissionCancelledRef = useRef(false);
-
-  useEffect(() => {
-    submissionCancelledRef.current = false;
-    return (): void => {
-      submissionCancelledRef.current = true;
-    };
-  }, []);
+  const { cancelCurrentSubmission, isSubmissionCancelled, startSubmission } =
+    useSubmissionCancellation();
 
   const urlProviderType = searchParams.get('providerType');
   const validatedProviderType =
@@ -66,6 +59,7 @@ const CreateProviderForm: FC = () => {
   const onSubmit = useCallback(
     async (formData: CreateProviderFormData) => {
       setApiError(null);
+      const submissionId = startSubmission();
 
       const providerType = formData[ProviderFormFieldId.ProviderType];
       const namespace = formData[ProviderFormFieldId.ProviderProject];
@@ -77,7 +71,7 @@ const CreateProviderForm: FC = () => {
 
       try {
         const submission = await prepareProviderSubmission(formData);
-        if (submissionCancelledRef.current) {
+        if (isSubmissionCancelled(submissionId)) {
           return;
         }
 
@@ -98,7 +92,7 @@ const CreateProviderForm: FC = () => {
         const providerURL = getProviderDetailsPageUrl(provider);
         navigate(providerURL)?.catch(() => undefined);
       } catch (err) {
-        if (submissionCancelledRef.current) {
+        if (isSubmissionCancelled(submissionId)) {
           return;
         }
 
@@ -111,7 +105,7 @@ const CreateProviderForm: FC = () => {
         setApiError(err as Error);
       }
     },
-    [navigate, trackEvent],
+    [isSubmissionCancelled, navigate, startSubmission, trackEvent],
   );
 
   return (
@@ -145,7 +139,7 @@ const CreateProviderForm: FC = () => {
               <Button
                 data-testid="provider-cancel-button"
                 onClick={() => {
-                  submissionCancelledRef.current = true;
+                  cancelCurrentSubmission();
                   navigate(-1)?.catch(() => undefined);
                 }}
                 variant={ButtonVariant.secondary}
