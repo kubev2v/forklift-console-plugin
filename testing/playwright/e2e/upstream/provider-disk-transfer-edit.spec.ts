@@ -52,6 +52,7 @@ test.describe('Provider disk transfer edit', { tag: '@upstream' }, () => {
               uid: source.uid,
             },
             spec: {
+              secret: { name: `${source.name}-secret`, namespace: MTV_NAMESPACE },
               settings: {
                 sdkEndpoint: 'vcenter',
                 useVddkAioOptimization: 'true',
