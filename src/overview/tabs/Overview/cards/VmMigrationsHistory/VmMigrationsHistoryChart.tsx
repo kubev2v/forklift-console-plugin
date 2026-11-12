@@ -46,9 +46,7 @@ const VmMigrationsHistoryChart = ({
   const { failed, running, succeeded } = vmMigrationsDataPoints;
   const navigate = useNavigate();
   const [activeArea, setActiveArea] = useState<string | null>(null);
-  const [activeInterval, setActiveInterval] = useState<Interval<true> | Interval<false> | null>(
-    null,
-  );
+  const [activeInterval, setActiveInterval] = useState<Interval | null>(null);
 
   const plansListURL = useMemo(() => {
     return getResourceUrl({
