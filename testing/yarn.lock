@@ -7,12 +7,12 @@
   resolved "https://registry.yarnpkg.com/@kubev2v/types/-/types-0.0.24.tgz#12f72a153d5a5c18b3edadd8c24577d09d4dd5b1"
   integrity sha512-F7DPS/GmVOqB8hZRPe8eU0dNXzjqbFe0vwBOUSWDa1brPRzbVAr/UHKEpREmyYYbzi63XNYGxSgBzEPUhI6VPQ==
 
-"@playwright/test@1.54.2":
-  version "1.54.2"
-  resolved "https://registry.npmjs.org/@playwright/test/-/test-1.54.2.tgz"
-  integrity sha512-A+znathYxPf+72riFd1r1ovOLqsIIB0jKIoPjyK2kqEIe30/6jF6BC7QNluHuwUmsD2tv1XZVugN8GqfTMOxsA==
+"@playwright/test@1.65.0":
+  version "1.65.0"
+  resolved "https://registry.yarnpkg.com/@playwright/test/-/test-1.65.0.tgz#11038333bcbe91badadbb1dbf0449d252c754f2e"
+  integrity sha512-iGURLGuKDLakSEl7Pgfv8h7f+XLT+V861Wfhz0zlEl5nyFuKUopdkFBPKqTllTUp06aOwPuH8iuUEb3yp3MpbQ==
   dependencies:
-    playwright "1.54.2"
+    playwright "1.65.0"
 
 "@types/node@^20.0.0":
   version "20.19.23"
@@ -21,24 +21,17 @@
   dependencies:
     undici-types "~6.21.0"
 
-fsevents@2.3.2:
-  version "2.3.2"
-  resolved "https://registry.npmjs.org/fsevents/-/fsevents-2.3.2.tgz"
-  integrity sha512-xiqMQR4xAeHTuB9uWm+fFRcIOgKBMiOBP+eXiyT7jsgVCq1bkVygt00oASowB7EdtpOHaaPgKt812P9ab+DDKA==
+playwright-core@1.65.0:
+  version "1.65.0"
+  resolved "https://registry.yarnpkg.com/playwright-core/-/playwright-core-1.65.0.tgz#2b4671949db79c6ea47facf09f4aeffb90bc5c7f"
+  integrity sha512-vNSKgH6YqtN7cdT/L334zo0a+YwkrpicyrHJlWWPIm/Q+Nn2SWInil01oT0mbu96U4GgoRtCYQD9CzJQgju+lA==
 
-playwright-core@1.54.2:
-  version "1.54.2"
-  resolved "https://registry.npmjs.org/playwright-core/-/playwright-core-1.54.2.tgz"
-  integrity sha512-n5r4HFbMmWsB4twG7tJLDN9gmBUeSPcsBZiWSE4DnYz9mJMAFqr2ID7+eGC9kpEnxExJ1epttwR59LEWCk8mtA==
-
-playwright@1.54.2:
-  version "1.54.2"
-  resolved "https://registry.npmjs.org/playwright/-/playwright-1.54.2.tgz"
-  integrity sha512-Hu/BMoA1NAdRUuulyvQC0pEqZ4vQbGfn8f7wPXcnqQmM+zct9UliKxsIkLNmz/ku7LElUNqmaiv1TG/aL5ACsw==
+playwright@1.65.0:
+  version "1.65.0"
+  resolved "https://registry.yarnpkg.com/playwright/-/playwright-1.65.0.tgz#d890f700bf7a04b42cbdc4baab8d0e16b1d73f41"
+  integrity sha512-F3AMWcR44qMBt4kq+6Kb6mX7bjGXshktKFOPULd7reED6ZJWevjbNRqysP7q+AATE9kdPEZBibex1BYsvpVoeA==
   dependencies:
-    playwright-core "1.54.2"
-  optionalDependencies:
-    fsevents "2.3.2"
+    playwright-core "1.65.0"
 
 typescript@^5.8.2:
   version "5.9.2"
