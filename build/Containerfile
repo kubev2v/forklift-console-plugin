@@ -1,5 +1,6 @@
 # Builder container
-FROM registry.access.redhat.com/ubi9/nodejs-22@sha256:57ad03c5db9382cd266af665819f60e5b1490fc27ee589320159df59f9eb453b AS build
+# registry.access.redhat.com/ubi9/nodejs-22:9.9-1793849239
+FROM registry.access.redhat.com/ubi9/nodejs-22@sha256:88f3404fb31987036052725243f2bce5f37c475f13596b74eec6447e701e3203 AS build
 
 # VERSION default value should match the forklift-console-plugin package version
 # The VERSION value can be customize during build by using --build-arg:
@@ -19,7 +20,8 @@ USER 0
 RUN npm ci && npm run build
 
 # Web server container
-FROM registry.access.redhat.com/ubi9/nginx-122@sha256:e43c8f9d87591e16bbb7d301c9abd1cbf1515e36f3ef9e73b0e08ec0aca3dcb1
+# registry.access.redhat.com/ubi9/nginx-126:9.9-1793849146
+FROM registry.access.redhat.com/ubi9/nginx-126@sha256:f3d687eb2c9cf74ba1bb5b20f2a5f79138cfc97f78a4447fdf317e42bd8aace6
 
 # Use none-root user
 USER 1001
@@ -27,7 +29,7 @@ USER 1001
 # Set nginx configuration
 # COPY nginx.conf /etc/nginx/nginx.conf
 
-# When using ubi9/nginx-120 defaults:
+# When using ubi9/nginx-126 defaults:
 #  listen       8080 default_server;
 #  root         /opt/app-root/src;
 
