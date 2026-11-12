@@ -232,7 +232,7 @@ Columns: `src/providers/list/utils/providerFields.ts` — Name, Project, Status,
 
 `PROVIDER_TYPES`: `ec2`, `hyperv`, `nutanix`, `openshift`, `openstack`, `ova`, `ovirt`, `vsphere`.
 
-- **Tech preview** (`isTechPreviewProvider`): `ec2`, `hyperv` → `TechPreviewLabel`
+- **Tech preview** (`isTechPreviewProvider`): `ec2` → `TechPreviewLabel` (Hyper-V is GA)
 - **Dev preview** (`isDevPreviewProvider`): `nutanix` → `DevPreviewLabel`
 - **EC2 platform gate**: `useClusterIsAwsPlatform` hides EC2 in create/overview; `CreatePlanAction` hidden for EC2 on non-AWS clusters
 

@@ -47,7 +47,7 @@ ProviderStatus {
 | `OpenStack` | `openstack` | Source |
 | `Ova` | `ova` | Source |
 | `EC2` | `ec2` | Source (tech preview; AWS platform only) |
-| `HyperV` | `hyperv` | Source (tech preview) |
+| `HyperV` | `hyperv` | Source (GA) |
 | `Nutanix` | `nutanix` | Source (dev preview in UI) |
 | `Azure` | `azure` | Backend only (not in console plugin yet) |
 | `Undefined` | `""` | — |

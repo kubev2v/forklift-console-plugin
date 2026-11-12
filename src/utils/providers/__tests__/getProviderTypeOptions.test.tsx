@@ -21,6 +21,14 @@ describe('getProviderTypeOptions', () => {
     expect(ec2Option?.label).toBe('Amazon EC2');
   });
 
+  it('should include EC2 option with techPreview flag when cluster is on AWS platform', () => {
+    const options = getProviderTypeOptions(false, true);
+    const ec2Option = options.find((option) => option.value === PROVIDER_TYPES.ec2);
+
+    expect(ec2Option).toBeDefined();
+    expect(ec2Option?.techPreview).toBe(true);
+  });
+
   it('should exclude EC2 option when cluster is not on AWS platform', () => {
     const options = getProviderTypeOptions(false, false);
     const ec2Option = options.find((option) => option.value === PROVIDER_TYPES.ec2);
@@ -46,6 +54,14 @@ describe('getProviderTypeOptions', () => {
       expect(awsOptions.find((option) => option.value === type)).toBeDefined();
       expect(nonAwsOptions.find((option) => option.value === type)).toBeDefined();
     }
+  });
+
+  it('should include Hyper-V option without techPreview flag', () => {
+    const options = getProviderTypeOptions(false, false);
+    const hypervOption = options.find((option) => option.value === PROVIDER_TYPES.hyperv);
+
+    expect(hypervOption).toBeDefined();
+    expect(hypervOption?.techPreview).toBeUndefined();
   });
 
   it('should include Nutanix AHV option with devPreview flag', () => {
