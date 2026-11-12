@@ -19,7 +19,7 @@ const mapDataPoints = (dataPoints: MigrationDataPoint[], name = ''): ChartDatumW
 
 type GetAreaPropsArgs = {
   activeArea: string | null;
-  activeInterval: Interval<true> | Interval<false> | null;
+  activeInterval: Interval | null;
   areaName: string;
   color: string;
   dataPoints: MigrationDataPoint[];
