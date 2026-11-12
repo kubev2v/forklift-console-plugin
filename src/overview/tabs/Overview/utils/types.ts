@@ -6,13 +6,13 @@ export type ChartDatum = {
 };
 
 export type ChartDatumWithName = ChartDatum & {
-  interval: Interval<true> | Interval<false>;
+  interval: Interval;
   name: string;
 };
 
 export type MigrationDataPoint = {
   dateLabel: string;
-  interval: Interval<true> | Interval<false>;
+  interval: Interval;
   migrations: string[];
   value: number;
 };
