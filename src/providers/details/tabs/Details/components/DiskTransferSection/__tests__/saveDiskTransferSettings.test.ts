@@ -59,10 +59,10 @@ describe('saveDiskTransferSettings', () => {
     mockCreateTemplate.mockClear();
   });
 
-  it('updates placement on Provider only when the template already exists', async () => {
+  it('updates Provider settings and the existing template placement', async () => {
     await saveDiskTransferSettings(provider, template, values);
 
-    expect(mockK8sPatch).toHaveBeenCalledTimes(1);
+    expect(mockK8sPatch).toHaveBeenCalledTimes(2);
     expect(mockK8sPatch).toHaveBeenCalledWith(
       expect.objectContaining({
         data: expect.arrayContaining([
@@ -74,6 +74,28 @@ describe('saveDiskTransferSettings', () => {
         ]),
       }),
     );
+    expect(mockK8sPatch).toHaveBeenLastCalledWith(
+      expect.objectContaining({
+        data: [
+          { op: 'add', path: '/spec/datastore', value: 'new-datastore' },
+          { op: 'add', path: '/spec/folder', value: '/new-folder' },
+          { op: 'add', path: '/spec/network', value: 'new-network' },
+        ],
+      }),
+    );
+    expect(mockK8sDelete).not.toHaveBeenCalled();
+    expect(mockCreateTemplate).not.toHaveBeenCalled();
+  });
+
+  it('skips the template patch when its placement already matches', async () => {
+    const templateWithPlacement = {
+      ...template,
+      spec: { datastore: 'new-datastore', folder: '/new-folder', network: 'new-network' },
+    } as V1beta1CopyApplianceTemplate;
+
+    await saveDiskTransferSettings(provider, templateWithPlacement, values);
+
+    expect(mockK8sPatch).toHaveBeenCalledTimes(1);
     expect(mockK8sDelete).not.toHaveBeenCalled();
     expect(mockCreateTemplate).not.toHaveBeenCalled();
   });

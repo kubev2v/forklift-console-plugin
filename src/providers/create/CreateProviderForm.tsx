@@ -48,16 +48,16 @@ const CreateProviderForm: FC = () => {
   });
   const {
     apiError,
+    canCreateCopyApplianceTemplate,
     createdProvider,
     isDeploying,
     isProviderPersisted,
-    isSecretCreated,
+    onCancel,
     onCreate,
     onDeploy,
   } = useCreateProviderWorkflow({ handleSubmit });
   const placement = useCreateProviderPlacement(createdProvider);
-  const canRetryProviderOnly =
-    isSecretCreated && !isProviderPersisted && selectedProviderType === PROVIDER_TYPES.vsphere;
+  const canDeploy = placement.canDeploy && canCreateCopyApplianceTemplate;
   const isApplianceSelected = createdProvider
     ? isProviderUsingCopyAppliance(createdProvider)
     : selectedProviderType === PROVIDER_TYPES.vsphere &&
@@ -73,14 +73,13 @@ const CreateProviderForm: FC = () => {
           footer={
             <CreateProviderWizardFooter
               canCreate={isValid}
-              canDeploy={placement.canDeploy}
+              canDeploy={canDeploy}
               createdProviderUrl={createdProviderUrl}
               isApplianceSelected={isApplianceSelected}
               isSubmitting={isSubmitting || isDeploying}
+              onCancel={onCancel}
               onCreate={onCreate}
-              onDeploy={async () =>
-                onDeploy({ canDeploy: placement.canDeploy, placement: placement.values })
-              }
+              onDeploy={async () => onDeploy({ canDeploy, placement: placement.values })}
             />
           }
           isVisitRequired
@@ -94,14 +93,9 @@ const CreateProviderForm: FC = () => {
             <Form aria-label={t('Provider details')} className="create-provider-form">
               <fieldset
                 className="create-provider-form__fields"
-                disabled={
-                  isSubmitting ||
-                  Boolean(createdProvider) ||
-                  isProviderPersisted ||
-                  (isSecretCreated && !canRetryProviderOnly)
-                }
+                disabled={isSubmitting || Boolean(createdProvider) || isProviderPersisted}
               >
-                <ProviderTypeFields lockSecretFields={canRetryProviderOnly} />
+                <ProviderTypeFields />
               </fieldset>
               {apiError && !createdProvider && (
                 <Alert isInline title={t('Error creating provider')} variant={AlertVariant.danger}>
@@ -118,6 +112,13 @@ const CreateProviderForm: FC = () => {
           >
             {createdProvider && (
               <>
+                {!canCreateCopyApplianceTemplate && (
+                  <Alert
+                    isInline
+                    title={t('You do not have permission to create a copy appliance template.')}
+                    variant={AlertVariant.danger}
+                  />
+                )}
                 <CreateProviderPlacementStep placement={placement} />
                 {apiError && (
                   <Alert

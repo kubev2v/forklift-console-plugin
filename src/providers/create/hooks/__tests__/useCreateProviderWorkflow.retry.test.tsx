@@ -19,6 +19,10 @@ jest.mock('@utils/analytics/hooks/useForkliftAnalytics', (): object => ({
   useForkliftAnalytics: (): object => ({ trackEvent: mockTrackEvent }),
 }));
 jest.mock('../../utils/createProviderOnce', () => ({ createProviderOnce: jest.fn() }));
+jest.mock('@openshift-console/dynamic-plugin-sdk', () => ({
+  k8sDelete: jest.fn(() => Promise.resolve()),
+  useAccessReview: (): [boolean, boolean] => [true, false],
+}));
 jest.mock(
   'src/providers/details/tabs/Details/components/DetailsSection/onCreateCopyApplianceTemplate',
   () => ({ __esModule: true, default: jest.fn() }),

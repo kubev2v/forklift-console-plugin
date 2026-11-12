@@ -1,10 +1,10 @@
+import type { SelectOptionProps } from '@patternfly/react-core';
+
 import {
   COPY_APPLIANCE_SETTING_FIELDS,
   type CopyAppliancePlacementValues,
   type CopyApplianceSettingField,
-} from 'src/providers/details/tabs/Details/components/DetailsSection/copyAppliancePlacementConfig';
-
-import type { SelectOptionProps } from '@patternfly/react-core';
+} from './copyAppliancePlacementConfig';
 
 type PlacementOptions = Record<CopyApplianceSettingField, SelectOptionProps[]>;
 

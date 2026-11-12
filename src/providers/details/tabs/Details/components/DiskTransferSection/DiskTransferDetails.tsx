@@ -64,7 +64,7 @@ const DiskTransferDetails: FC<DiskTransferDetailsProps> = ({
         />
       )}
       {method === VddkSetupMode.CopyAppliance &&
-        templateStatus !== 'pending' &&
+        (templateStatus === 'configured' || templateStatus === 'pending') &&
         COPY_APPLIANCE_SETTING_FIELDS.map((field) => (
           <DetailsItem
             content={

@@ -1,3 +1,5 @@
+import { getDiskTransferMethod } from 'src/providers/utils/getDiskTransferMethod';
+
 import type { V1beta1Provider } from '@forklift-ui/types';
 import { getUseVddkAioOptimization, getVddkInitImage } from '@utils/crds/common/selectors';
 import {
@@ -7,7 +9,6 @@ import {
   getCopyApplianceResourcePool,
 } from '@utils/crds/providers/selectors';
 
-import { getDiskTransferMethod } from './getDiskTransferMethod';
 import type { DiskTransferFormValues } from './types';
 
 export const getDiskTransferDefaultValues = (

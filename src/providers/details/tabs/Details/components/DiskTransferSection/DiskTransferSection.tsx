@@ -1,5 +1,6 @@
 import type { FC } from 'react';
 import { VddkSetupMode } from 'src/providers/utils/constants';
+import { getDiskTransferMethod } from 'src/providers/utils/getDiskTransferMethod';
 
 import SectionHeadingWithEdit from '@components/headers/SectionHeadingWithEdit';
 import {
@@ -8,24 +9,16 @@ import {
 } from '@forklift-ui/types';
 import { useOverlay } from '@openshift-console/dynamic-plugin-sdk';
 import { Alert, AlertVariant, PageSection, Stack, StackItem } from '@patternfly/react-core';
-import { FEATURE_NAMES } from '@utils/constants';
 import { getName, getNamespace, getType } from '@utils/crds/common/selectors';
 import { getCopyApplianceTemplateName } from '@utils/crds/providers/selectors';
-import { useFeatureFlags } from '@utils/hooks/useFeatureFlags';
 import { useK8sWatchResource } from '@utils/hooks/useK8sWatchResource';
 import { useForkliftTranslation } from '@utils/i18n';
 import { PROVIDER_TYPES } from '@utils/providers/constants';
 import type { ProviderData } from '@utils/providers/types';
 
-import {
-  COPY_APPLIANCE_SETTING_FIELDS,
-  COPY_APPLIANCE_SETTING_GETTERS,
-} from '../DetailsSection/copyAppliancePlacementConfig';
-
 import DiskTransferDetails from './DiskTransferDetails';
 import { getCopyApplianceDisplayStatus } from './diskTransferDisplay';
 import EditDiskTransfer from './EditDiskTransfer';
-import { getDiskTransferMethod } from './getDiskTransferMethod';
 import { isMissingCopyApplianceTemplate } from './isMissingCopyApplianceTemplate';
 
 type DiskTransferSectionProps = { data: ProviderData };
@@ -33,15 +26,14 @@ type DiskTransferSectionProps = { data: ProviderData };
 const DiskTransferSection: FC<DiskTransferSectionProps> = ({ data }) => {
   const { t } = useForkliftTranslation();
   const launchOverlay = useOverlay();
-  const { isFeatureEnabled } = useFeatureFlags();
   const { permissions, provider } = data;
   const namespace = getNamespace(provider);
   const templateName = getCopyApplianceTemplateName(provider);
   const isVsphere = getType(provider) === PROVIDER_TYPES.vsphere;
-  const copyApplianceEnabled = isFeatureEnabled(FEATURE_NAMES.COPY_APPLIANCE);
 
+  const shouldWatchTemplate = isVsphere && Boolean(namespace) && Boolean(templateName);
   const [watchedTemplate, loaded, loadError] = useK8sWatchResource<V1beta1CopyApplianceTemplate>(
-    isVsphere && namespace && templateName && copyApplianceEnabled
+    shouldWatchTemplate
       ? {
           groupVersionKind: CopyApplianceTemplateModelGroupVersionKind,
           name: templateName,
@@ -55,20 +47,20 @@ const DiskTransferSection: FC<DiskTransferSectionProps> = ({ data }) => {
     return null;
   }
 
-  const template =
-    copyApplianceEnabled && getName(watchedTemplate) === templateName ? watchedTemplate : undefined;
+  const template = getName(watchedTemplate) === templateName ? watchedTemplate : undefined;
   const templateIsMissing = isMissingCopyApplianceTemplate(loadError, templateName);
-  const templateLookupUnavailable =
-    copyApplianceEnabled && !templateIsMissing && (!loaded || Boolean(loadError));
+  const templateLookupUnavailable = Boolean(loadError) && !templateIsMissing;
+  const isTemplateLoading = shouldWatchTemplate && !loaded && !loadError;
   const method = getDiskTransferMethod(provider, Boolean(template));
-  const hasPlacement = COPY_APPLIANCE_SETTING_FIELDS.some((field) =>
-    Boolean(COPY_APPLIANCE_SETTING_GETTERS[field](provider)),
-  );
   const isPending =
-    method === VddkSetupMode.CopyAppliance &&
-    !template &&
-    (!hasPlacement || templateIsMissing || (loaded && !loadError));
-  const templateStatus = getCopyApplianceDisplayStatus(Boolean(template), isPending);
+    method === VddkSetupMode.CopyAppliance && !template && !isTemplateLoading
+      ? !templateLookupUnavailable
+      : false;
+  const templateStatus = getCopyApplianceDisplayStatus({
+    isPending,
+    loading: isTemplateLoading,
+    templateExists: Boolean(template),
+  });
 
   return (
     <PageSection className="forklift-page-section" hasBodyWrapper={false}>
@@ -76,10 +68,7 @@ const DiskTransferSection: FC<DiskTransferSectionProps> = ({ data }) => {
         <StackItem>
           <SectionHeadingWithEdit
             data-testid="disk-transfer-edit-button"
-            editable={
-              permissions.canPatch &&
-              (method !== VddkSetupMode.CopyAppliance || templateStatus !== 'unavailable')
-            }
+            editable={permissions.canPatch}
             onClick={() => {
               launchOverlay(EditDiskTransfer, {
                 provider,
@@ -110,7 +99,7 @@ const DiskTransferSection: FC<DiskTransferSectionProps> = ({ data }) => {
               title={t('Copy appliance template status is unavailable')}
               variant={AlertVariant.warning}
             >
-              {t('Retry after the copy appliance templates finish loading.')}
+              {t('Edit disk transfer to review the configuration or switch to another method.')}
             </Alert>
           </StackItem>
         )}

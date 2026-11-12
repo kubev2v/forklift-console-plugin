@@ -5,20 +5,37 @@ import type { V1beta1Provider } from '@forklift-ui/types';
 import { getAnnotation, getAnnotations } from '@utils/crds/common/selectors';
 import { isEmpty } from '@utils/helpers';
 
+import {
+  COPY_APPLIANCE_SETTING_FIELDS,
+  COPY_APPLIANCE_SETTING_KEY,
+} from '../DetailsSection/copyAppliancePlacementConfig';
+
 import { ANNOTATIONS_PATH, METHOD_PATH, SETTINGS_PATH } from './diskTransferPatchConstants';
 import type { DiskTransferPatch, DiskTransferValues } from './types';
+
+const TEST = 'test' as const;
 
 const getDesiredSettings = (values: DiskTransferValues): Record<string, string | undefined> => {
   const isAppliance = values.method === VddkSetupMode.CopyAppliance;
   const isVddk = values.method === VddkSetupMode.Manual || values.method === VddkSetupMode.Upload;
+  const placementSettings = Object.fromEntries(
+    COPY_APPLIANCE_SETTING_FIELDS.map((field) => [
+      COPY_APPLIANCE_SETTING_KEY[field],
+      isAppliance ? values.placement[field] : undefined,
+    ]),
+  );
   return {
-    copyApplianceDatastore: isAppliance ? values.placement.datastore : undefined,
-    copyApplianceFolder: isAppliance ? values.placement.folder : undefined,
-    copyApplianceNetwork: isAppliance ? values.placement.network : undefined,
-    copyApplianceResourcePool: isAppliance ? values.placement.resourcePool : undefined,
+    ...placementSettings,
     useVddkAioOptimization: isVddk && values.aioEnabled ? 'true' : undefined,
     vddkInitImage: isVddk ? values.vddkImage.trim() : undefined,
   };
+};
+
+const buildResourceVersionPatch = (provider: V1beta1Provider): DiskTransferPatch[] => {
+  const resourceVersion = provider.metadata?.resourceVersion;
+  return resourceVersion
+    ? [{ op: TEST, path: '/metadata/resourceVersion', value: resourceVersion }]
+    : [];
 };
 
 const buildSettingPatch = (
@@ -77,7 +94,10 @@ const buildMethodAnnotationPatches = (
 export const buildDiskTransferProviderPatches = (
   provider: V1beta1Provider,
   values: DiskTransferValues,
-): DiskTransferPatch[] => [
-  ...buildSettingsPatches(provider.spec?.settings, values),
-  ...buildMethodAnnotationPatches(provider, values.method),
-];
+): DiskTransferPatch[] => {
+  const patches = [
+    ...buildSettingsPatches(provider.spec?.settings, values),
+    ...buildMethodAnnotationPatches(provider, values.method),
+  ];
+  return isEmpty(patches) ? [] : [...buildResourceVersionPatch(provider), ...patches];
+};

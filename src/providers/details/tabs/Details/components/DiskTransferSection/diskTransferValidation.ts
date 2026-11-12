@@ -28,7 +28,7 @@ export const getTemplateLookupError = (
     return undefined;
   }
   return t(
-    'Unable to check whether a sourcing appliance template exists. Verify that CopyApplianceTemplate resources are available and readable, then try again.',
+    'Could not check the sourcing appliance setup. Try again; if the problem continues, contact your administrator.',
   );
 };
 

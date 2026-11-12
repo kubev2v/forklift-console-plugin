@@ -21,17 +21,28 @@ export const getApplianceStatusLabel = (status: CopyApplianceDisplayStatus): str
   if (status === 'pending') {
     return t('Not configured');
   }
+  if (status === 'loading') {
+    return t('Checking status');
+  }
   return t('Unavailable');
 };
 
-export const getCopyApplianceDisplayStatus = (
-  templateExists: boolean,
-  isPending: boolean,
-): CopyApplianceDisplayStatus => {
+export const getCopyApplianceDisplayStatus = ({
+  isPending,
+  loading,
+  templateExists,
+}: {
+  isPending: boolean;
+  loading: boolean;
+  templateExists: boolean;
+}): CopyApplianceDisplayStatus => {
   if (templateExists) {
     return 'configured';
   }
-  return isPending ? 'pending' : 'unavailable';
+  if (isPending) {
+    return 'pending';
+  }
+  return loading ? 'loading' : 'unavailable';
 };
 
 export const getPlacementErrorTitle = (

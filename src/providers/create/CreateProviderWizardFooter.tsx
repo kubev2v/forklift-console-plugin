@@ -21,6 +21,7 @@ type CreateProviderWizardFooterProps = {
   createdProviderUrl?: string;
   isApplianceSelected: boolean;
   isSubmitting: boolean;
+  onCancel: () => Promise<void>;
   onCreate: (onContinue: () => void) => Promise<void>;
   onDeploy: () => Promise<void>;
 };
@@ -31,6 +32,7 @@ const CreateProviderWizardFooter: FC<CreateProviderWizardFooterProps> = ({
   createdProviderUrl,
   isApplianceSelected,
   isSubmitting,
+  onCancel,
   onCreate,
   onDeploy,
 }) => {
@@ -82,11 +84,8 @@ const CreateProviderWizardFooter: FC<CreateProviderWizardFooterProps> = ({
             <Button
               data-testid="provider-cancel-button"
               isDisabled={isSubmitting}
-              onClick={() => {
-                if (createdProviderUrl) {
-                  navigate(createdProviderUrl)?.catch(() => undefined);
-                  return;
-                }
+              onClick={async () => {
+                await onCancel();
                 navigate(-1)?.catch(() => undefined);
               }}
               variant={ButtonVariant.link}

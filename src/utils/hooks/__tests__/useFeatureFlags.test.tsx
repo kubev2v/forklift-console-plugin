@@ -28,10 +28,10 @@ describe('useFeatureFlags', () => {
     jest.clearAllMocks();
   });
 
-  it('uses the enabled default when copy appliance is absent from the controller spec', () => {
+  it('defaults copy appliance to disabled when absent from the controller spec', () => {
     mockUseK8sWatchResource.mockReturnValue([[{ spec: {} }], true, null]);
 
-    expectFeatureFlag(FEATURE_NAMES.COPY_APPLIANCE, true);
+    expectFeatureFlag(FEATURE_NAMES.COPY_APPLIANCE, false);
   });
 
   it.each([

@@ -4,10 +4,12 @@ import onCreateCopyApplianceTemplate from 'src/providers/details/tabs/Details/co
 import { getProviderDetailsPageUrl } from 'src/providers/utils/getProviderDetailsPageUrl';
 import { isProviderUsingCopyAppliance } from 'src/providers/utils/isProviderUsingCopyAppliance';
 
-import type { V1beta1Provider } from '@forklift-ui/types';
+import { CopyApplianceTemplateModel, SecretModel, type V1beta1Provider } from '@forklift-ui/types';
+import { k8sDelete, useAccessReview } from '@openshift-console/dynamic-plugin-sdk';
 import { TELEMETRY_EVENTS } from '@utils/analytics/constants';
 import { useForkliftAnalytics } from '@utils/analytics/hooks/useForkliftAnalytics';
-import { getType } from '@utils/crds/common/selectors';
+import { getNamespace, getType } from '@utils/crds/common/selectors';
+import { t } from '@utils/i18n';
 
 import { ProviderFormFieldId } from '../fields/constants';
 import { createProviderOnce } from '../utils/createProviderOnce';
@@ -32,6 +34,12 @@ export const useCreateProviderWorkflow = ({
   const creationProgress = useRef<ProviderCreationProgress>({});
   const deploymentInFlight = useRef(false);
   const templateCreated = useRef(false);
+  const [canCreateCopyApplianceTemplate] = useAccessReview({
+    group: CopyApplianceTemplateModel.apiGroup,
+    namespace: getNamespace(createdProvider),
+    resource: CopyApplianceTemplateModel.plural,
+    verb: 'create',
+  });
 
   const onCreate = useCallback(
     async (onContinue: () => void): Promise<void> => {
@@ -76,6 +84,12 @@ export const useCreateProviderWorkflow = ({
       if (!provider || !canDeploy || deploymentInFlight.current) {
         return;
       }
+      if (!canCreateCopyApplianceTemplate) {
+        setApiError(
+          new Error(t('You do not have permission to create a copy appliance template.')),
+        );
+        return;
+      }
 
       deploymentInFlight.current = true;
       setApiError(null);
@@ -95,15 +109,28 @@ export const useCreateProviderWorkflow = ({
         setIsDeploying(false);
       }
     },
-    [navigate],
+    [canCreateCopyApplianceTemplate, navigate],
   );
+
+  const onCancel = useCallback(async (): Promise<void> => {
+    const { provider, secret } = creationProgress.current;
+    if (secret && !provider) {
+      await k8sDelete({ model: SecretModel, resource: secret }).catch(() => undefined);
+    }
+    // eslint-disable-next-line require-atomic-updates -- Cancelling ends this wizard session.
+    creationProgress.current = {};
+    deploymentInFlight.current = false;
+    templateCreated.current = false;
+  }, []);
 
   return {
     apiError,
+    canCreateCopyApplianceTemplate,
     createdProvider,
     isDeploying,
     isProviderPersisted,
     isSecretCreated,
+    onCancel,
     onCreate,
     onDeploy,
   };

@@ -1,6 +1,7 @@
 import type { V1beta1Provider } from '@forklift-ui/types';
 import { getName, getNamespace, getType, getUrl } from '@utils/crds/common/selectors';
 import { hasObjectChangedInGivenFields } from '@utils/helpers/hasObjectChangedInGivenFields';
+import { t } from '@utils/i18n';
 
 import type { ProviderCreationProgress, ProviderResources } from './providerCreation.types';
 
@@ -16,31 +17,28 @@ const getCredentialResources = ({ provider, secret }: ProviderResources): object
   secret,
 });
 
+export const providerCredentialsChanged = (
+  requested: ProviderResources,
+  previous: ProviderResources | undefined,
+): boolean =>
+  hasObjectChangedInGivenFields({
+    fieldsToAvoidComparing: [],
+    newObject: getCredentialResources(requested),
+    oldObject: previous && getCredentialResources(previous),
+  });
+
 export const validateProviderRetry = (
   requested: ProviderResources,
-  { provider, resources, secret }: ProviderCreationProgress,
+  { provider, resources }: ProviderCreationProgress,
 ): void => {
-  if (provider) {
-    if (
-      hasObjectChangedInGivenFields({
-        fieldsToAvoidComparing: [],
-        newObject: requested,
-        oldObject: resources,
-      })
-    ) {
-      throw new Error('Provider already exists. Retry with the original settings.');
-    }
-    return;
-  }
-
   if (
-    secret &&
+    provider &&
     hasObjectChangedInGivenFields({
       fieldsToAvoidComparing: [],
-      newObject: getCredentialResources(requested),
-      oldObject: resources && getCredentialResources(resources),
+      newObject: requested,
+      oldObject: resources,
     })
   ) {
-    throw new Error('Credentials and Provider identity cannot change after Secret creation.');
+    throw new Error(t('Provider already exists. Retry with the original settings.'));
   }
 };

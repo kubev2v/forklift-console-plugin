@@ -24,6 +24,7 @@ const WizardHarness: FC = () => {
           createdProviderUrl={providerCreated ? '/provider/details' : undefined}
           isApplianceSelected
           isSubmitting={false}
+          onCancel={(): Promise<void> => Promise.resolve()}
           onCreate={async (onContinue) => {
             await Promise.resolve();
             setProviderCreated(true);

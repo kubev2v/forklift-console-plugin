@@ -1,5 +1,6 @@
 import type { V1beta1Provider, V1beta1ProviderStatus } from '@forklift-ui/types';
 
+import type { ProviderStatus } from '../../types';
 import { getName } from '../common/selectors';
 
 type ProviderStatusWithCopyApplianceSSH = V1beta1ProviderStatus & {
@@ -51,5 +52,6 @@ export const getCopyApplianceTemplateName = (
   return name ? `${name}-copy-appliance-template` : undefined;
 };
 
-export const getProviderPhase = (provider: V1beta1Provider | undefined): string | undefined =>
-  provider?.status?.phase;
+export const getProviderPhase = (
+  provider: V1beta1Provider | undefined,
+): ProviderStatus | undefined => provider?.status?.phase as ProviderStatus | undefined;

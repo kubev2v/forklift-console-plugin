@@ -1,5 +1,4 @@
 import type { FC } from 'react';
-import { COPY_APPLIANCE_INVENTORY_ENDPOINTS } from 'src/providers/details/tabs/Details/components/DetailsSection/copyApplianceInventoryConstants';
 import { COPY_APPLIANCE_SETTING_FIELDS } from 'src/providers/details/tabs/Details/components/DetailsSection/copyAppliancePlacementConfig';
 import CopyAppliancePlacementForm from 'src/providers/details/tabs/Details/components/DetailsSection/CopyAppliancePlacementForm';
 import { useCopyAppliancePlacementLabels } from 'src/providers/details/tabs/Details/components/DetailsSection/useCopyAppliancePlacementLabels';
@@ -83,9 +82,7 @@ const CreateProviderPlacementInventory: FC<{ placement: CreateProviderPlacement 
           >
             <ul>
               {missingFields.map((field) => (
-                <li key={field}>
-                  {labels[field].label} ({COPY_APPLIANCE_INVENTORY_ENDPOINTS[field]})
-                </li>
+                <li key={field}>{labels[field].label}</li>
               ))}
             </ul>
           </Alert>

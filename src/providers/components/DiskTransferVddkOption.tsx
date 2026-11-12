@@ -30,7 +30,7 @@ const DiskTransferVddkOption: FC<DiskTransferVddkOptionProps> = ({
   return (
     <>
       {method === VddkSetupMode.Upload ? (
-        <VddkUploader onChangeVddk={onVddkImageChange} />
+        <VddkUploader errorMessage={imageError} onChangeVddk={onVddkImageChange} />
       ) : (
         <FormGroupWithHelpText
           fieldId="vsphereVddkInitImage"
@@ -52,11 +52,6 @@ const DiskTransferVddkOption: FC<DiskTransferVddkOptionProps> = ({
             value={vddkImage}
           />
         </FormGroupWithHelpText>
-      )}
-      {method === VddkSetupMode.Upload && imageError && (
-        <span className="pf-v6-u-danger-color-100" role="alert">
-          {imageError}
-        </span>
       )}
       <Checkbox
         className="pf-v6-u-mt-xs"

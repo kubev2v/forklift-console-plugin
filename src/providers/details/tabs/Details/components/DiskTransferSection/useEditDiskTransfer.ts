@@ -2,12 +2,13 @@ import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { validateVsphereDiskTransfer } from 'src/providers/create/fields/vsphere/vsphereFieldValidators';
 import { VddkSetupMode } from 'src/providers/utils/constants';
+import { getDiskTransferMethod } from 'src/providers/utils/getDiskTransferMethod';
 
 import { FEATURE_NAMES } from '@utils/constants';
 import { useFeatureFlags } from '@utils/hooks/useFeatureFlags';
 import { useForkliftTranslation } from '@utils/i18n';
 
-import { COPY_APPLIANCE_SETTING_FIELDS } from '../DetailsSection/copyAppliancePlacementConfig';
+import { isValidCopyAppliancePlacement } from '../DetailsSection/isValidCopyAppliancePlacement';
 import { useCopyAppliancePlacementOptions } from '../DetailsSection/useCopyAppliancePlacementOptions';
 
 import { wasCopyApplianceTemplateDeleted } from './diskTransferSaveErrors';
@@ -17,7 +18,6 @@ import {
   getTemplateOperation,
 } from './diskTransferValidation';
 import { getDiskTransferDefaultValues } from './getDiskTransferDefaultValues';
-import { getDiskTransferMethod } from './getDiskTransferMethod';
 import { saveDiskTransferSettings } from './saveDiskTransferSettings';
 import type { DiskTransferFormValues, EditDiskTransferProps, EditDiskTransferState } from './types';
 import { useCopyApplianceTemplateAccess } from './useCopyApplianceTemplateAccess';
@@ -49,8 +49,11 @@ export const useEditDiskTransfer = ({
     getDiskTransferMethod(provider, Boolean(template)),
     templateLookupUnavailable,
   );
-  const validation = validateVsphereDiskTransfer(values.method, values.vddkImage);
-  const imageError = typeof validation === 'string' ? validation : undefined;
+  const validationError = validateVsphereDiskTransfer(values.method, values.vddkImage);
+  const imageError =
+    values.method === VddkSetupMode.Upload && !values.vddkImage.trim()
+      ? undefined
+      : validationError;
   const permissionError = getCopyAppliancePermissionError(
     isAppliance,
     copyApplianceEnabled,
@@ -58,14 +61,19 @@ export const useEditDiskTransfer = ({
     access.permissionError,
   );
   const placementReady =
-    COPY_APPLIANCE_SETTING_FIELDS.every((field) => Boolean(values.placement[field])) &&
     !placementOptions.inventoryLoading &&
-    !placementOptions.inventoryError;
+    !placementOptions.inventoryError &&
+    isValidCopyAppliancePlacement(values.placement, {
+      datastore: placementOptions.datastoreOptions,
+      folder: placementOptions.folderOptions,
+      network: placementOptions.networkOptions,
+      resourcePool: placementOptions.resourcePoolOptions,
+    });
   const canSubmit =
     !access.loading &&
     !permissionError &&
     !templateError &&
-    !imageError &&
+    !validationError &&
     (!isAppliance || placementReady) &&
     (!requiresDeletion || values.confirmedDeletion);
 

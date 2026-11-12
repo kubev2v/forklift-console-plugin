@@ -3,14 +3,15 @@ import type {
   CopyAppliancePlacementValues,
   CopyApplianceSettingField,
 } from 'src/providers/details/tabs/Details/components/DetailsSection/copyAppliancePlacementConfig';
+import { isValidCopyAppliancePlacement } from 'src/providers/details/tabs/Details/components/DetailsSection/isValidCopyAppliancePlacement';
 import { useCopyAppliancePlacementOptions } from 'src/providers/details/tabs/Details/components/DetailsSection/useCopyAppliancePlacementOptions';
 
 import { ProviderModelGroupVersionKind, type V1beta1Provider } from '@forklift-ui/types';
 import { getName, getNamespace } from '@utils/crds/common/selectors';
 import { getProviderPhase } from '@utils/crds/providers/selectors';
 import { useK8sWatchResource } from '@utils/hooks/useK8sWatchResource';
+import { ProviderStatus } from '@utils/types';
 
-import { isValidCopyAppliancePlacement } from '../utils/isValidCopyAppliancePlacement';
 import { EMPTY_COPY_APPLIANCE_PLACEMENT } from '../utils/wizardConstants';
 
 import type { CreateProviderPlacement } from './createProviderPlacement.types';
@@ -32,7 +33,7 @@ export const useCreateProviderPlacement = (
       : null,
   );
   const phase = getProviderPhase(watchedProvider);
-  const isReady = Boolean(provider) && loaded && !error && phase === 'Ready';
+  const isReady = Boolean(provider) && loaded && !error && phase === ProviderStatus.Ready;
   const options = useCopyAppliancePlacementOptions(
     isReady ? watchedProvider : undefined,
     values.resourcePool,

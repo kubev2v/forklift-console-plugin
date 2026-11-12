@@ -1,4 +1,4 @@
-import type { FC } from 'react';
+import { type FC, useRef } from 'react';
 
 import { FormGroupWithHelpText } from '@components/common/FormGroupWithHelpText/FormGroupWithHelpText';
 import Select from '@components/common/Select';
@@ -40,6 +40,10 @@ const DiskTransferMethodSelection: FC<DiskTransferMethodSelectionProps> = ({
 }) => {
   const { t } = useForkliftTranslation();
   const isConfigured = method !== undefined && method !== VddkSetupMode.Skip;
+  const lastConfiguredMethod = useRef<VddkSetupMode>(VddkSetupMode.Manual);
+  if (isConfigured) {
+    lastConfiguredMethod.current = method;
+  }
   const options = [
     { label: t('Specify a VDDK image URL'), value: VddkSetupMode.Manual },
     { label: t('Upload a VDDK archive'), value: VddkSetupMode.Upload },
@@ -49,7 +53,7 @@ const DiskTransferMethodSelection: FC<DiskTransferMethodSelectionProps> = ({
   ];
 
   return (
-    <div aria-label={t('Disk transfer method')} role="radiogroup">
+    <div>
       <Stack hasGutter>
         <Radio
           body={
@@ -98,10 +102,10 @@ const DiskTransferMethodSelection: FC<DiskTransferMethodSelectionProps> = ({
           data-testid="disk-transfer-configure-radio"
           id="disk-transfer-configure"
           isChecked={isConfigured}
-          label={t('Configure disk transfer method')}
+          label={t('Configure')}
           name="disk-transfer-setup"
           onChange={() => {
-            onMethodChange(VddkSetupMode.Manual);
+            onMethodChange(lastConfiguredMethod.current);
           }}
         />
         <Radio

@@ -40,7 +40,8 @@ describe('CreateProviderPlacementStep inventory retry', () => {
   it('reissues a failed inventory endpoint when Retry is clicked', async () => {
     render(<PlacementHarness />);
 
-    await screen.findByText(/Resource pool \(resourcepools\?detail=1\): 404 Not Found/);
+    fireEvent.click(await screen.findByRole('button', { name: 'Show details' }));
+    await screen.findByText(/Resource pool: 404 Not Found/);
     const poolRequests = (): number =>
       mockConsoleFetchJSON.mock.calls.filter(([url]: [string]) =>
         url.includes('resourcepools?detail=1'),
@@ -52,8 +53,7 @@ describe('CreateProviderPlacementStep inventory retry', () => {
     await waitFor(() => {
       expect(poolRequests()).toBe(2);
     });
-    expect(
-      await screen.findByText(/Resource pool \(resourcepools\?detail=1\): 404 Not Found/),
-    ).toBeInTheDocument();
+    fireEvent.click(screen.getByRole('button', { name: 'Show details' }));
+    expect(await screen.findByText(/Resource pool: 404 Not Found/)).toBeInTheDocument();
   });
 });

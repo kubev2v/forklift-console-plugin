@@ -1,9 +1,15 @@
 import type { V1beta1Provider } from '@forklift-ui/types';
-import { getAnnotations, getType } from '@utils/crds/common/selectors';
+import { getType } from '@utils/crds/common/selectors';
 import { PROVIDER_TYPES } from '@utils/providers/constants';
 
-import { DISK_TRANSFER_METHOD_ANNOTATION, VddkSetupMode } from './constants';
+import { VddkSetupMode } from './constants';
+import { getDiskTransferMethod } from './getDiskTransferMethod';
 
-export const isProviderUsingCopyAppliance = (provider: V1beta1Provider | undefined): boolean =>
+export const isProviderUsingCopyAppliance = (
+  provider: V1beta1Provider | undefined,
+  templateExists = false,
+): boolean =>
+  Boolean(provider) &&
   getType(provider) === PROVIDER_TYPES.vsphere &&
-  getAnnotations(provider)?.[DISK_TRANSFER_METHOD_ANNOTATION] === VddkSetupMode.CopyAppliance;
+  getDiskTransferMethod(provider as V1beta1Provider, templateExists) ===
+    VddkSetupMode.CopyAppliance;

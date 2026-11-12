@@ -22,8 +22,15 @@ jest.mock('@utils/hooks/useFeatureFlags', () => ({
 }));
 jest.mock('../../DetailsSection/useCopyAppliancePlacementOptions', () => ({
   useCopyAppliancePlacementOptions: (): unknown => ({
+    datastoreOptions: [{ itemId: 'datastore' }],
+    datastoreWarning: (): undefined => undefined,
+    folderOptions: [{ itemId: '/folder' }],
     inventoryError: mockInventoryError,
+    inventoryErrors: {},
     inventoryLoading: false,
+    networkOptions: [{ itemId: 'network' }],
+    onRetry: (): void => undefined,
+    resourcePoolOptions: [{ itemId: '/pool' }],
   }),
 }));
 jest.mock('../saveDiskTransferSettings', () => ({
@@ -92,7 +99,7 @@ it('clears an old VDDK image when starting an upload and validates the uploaded 
     result.current.onMethodChange(VddkSetupMode.Upload);
   });
   expect(result.current.values.vddkImage).toBe('');
-  expect(result.current.imageError).toBeDefined();
+  expect(result.current.imageError).toBeUndefined();
   expect(result.current.canSubmit).toBe(false);
   act(() => {
     result.current.setValue('vddkImage', 'quay.io/vddk:new');

@@ -3,6 +3,7 @@ import type { CopyApplianceSettingField } from 'src/providers/details/tabs/Detai
 import type { CopyAppliancePlacementFieldLabels } from 'src/providers/details/tabs/Details/components/DetailsSection/useCopyAppliancePlacementLabels';
 
 import { fireEvent, render, screen } from '@testing-library/react';
+import { ProviderStatus } from '@utils/types';
 
 import CreateProviderPlacementInventory from '../CreateProviderPlacementInventory';
 
@@ -46,7 +47,13 @@ const renderInventory = (onRetry = jest.fn()): ReturnType<typeof render> =>
     <CreateProviderPlacementInventory
       placement={{
         canDeploy: false,
-        connection: { error: null, isMissing: false, isReady: true, loaded: true, phase: 'Ready' },
+        connection: {
+          error: null,
+          isMissing: false,
+          isReady: true,
+          loaded: true,
+          phase: ProviderStatus.Ready,
+        },
         onChange: jest.fn(),
         options: { ...mockOptions, onRetry },
         values: { datastore: '', folder: '', network: '', resourcePool: '' },
@@ -86,9 +93,8 @@ describe('CreateProviderPlacementInventory', () => {
     const onRetry = jest.fn();
     renderInventory(onRetry);
 
-    expect(
-      screen.getByText(/Resource pool \(resourcepools\?detail=1\): 404 Not Found/),
-    ).toBeInTheDocument();
+    fireEvent.click(screen.getByRole('button', { name: 'Show details' }));
+    expect(screen.getByText(/Resource pool: 404 Not Found/)).toBeInTheDocument();
     expect(screen.queryByTestId('placement-fields')).not.toBeInTheDocument();
     fireEvent.click(screen.getByRole('button', { name: 'Retry' }));
     expect(onRetry).toHaveBeenCalledTimes(1);
@@ -100,7 +106,7 @@ describe('CreateProviderPlacementInventory', () => {
     renderInventory();
 
     expect(screen.getByText(/Required vSphere inventory/)).toBeInTheDocument();
-    expect(screen.getByText('Resource pool (resourcepools?detail=1)')).toBeInTheDocument();
+    expect(screen.getByText('Resource pool')).toBeInTheDocument();
     expect(screen.getByTestId('placement-fields')).toBeInTheDocument();
   });
 });

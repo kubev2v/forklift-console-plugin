@@ -4,6 +4,8 @@ import type {
 } from 'src/providers/details/tabs/Details/components/DetailsSection/copyAppliancePlacementConfig';
 import type { useCopyAppliancePlacementOptions } from 'src/providers/details/tabs/Details/components/DetailsSection/useCopyAppliancePlacementOptions';
 
+import type { ProviderStatus } from '@utils/types';
+
 export type CreateProviderPlacement = {
   canDeploy: boolean;
   connection: {
@@ -11,7 +13,7 @@ export type CreateProviderPlacement = {
     isMissing: boolean;
     isReady: boolean;
     loaded: boolean;
-    phase: string | undefined;
+    phase: ProviderStatus | undefined;
   };
   onChange: (field: CopyApplianceSettingField, value: string) => void;
   options: ReturnType<typeof useCopyAppliancePlacementOptions>;

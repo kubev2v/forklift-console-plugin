@@ -62,14 +62,15 @@ const VDDKRadioSelection: FC = () => {
       methodError={!isImageMethod && showValidationError ? methodValidationError : undefined}
       onAioChange={aioController.field.onChange}
       onMethodChange={(nextMethod) => {
-        if (nextMethod !== method) {
+        if (
+          nextMethod !== method &&
+          (nextMethod === VddkSetupMode.CopyAppliance || nextMethod === VddkSetupMode.Skip)
+        ) {
           setValue(ProviderFormFieldId.VsphereVddkInitImage, '', {
             shouldDirty: true,
             shouldTouch: true,
           });
-          if (nextMethod === VddkSetupMode.CopyAppliance || nextMethod === VddkSetupMode.Skip) {
-            aioController.field.onChange(false);
-          }
+          aioController.field.onChange(false);
         }
         setValue(ProviderFormFieldId.VsphereVddkSetupMode, nextMethod, {
           shouldDirty: true,

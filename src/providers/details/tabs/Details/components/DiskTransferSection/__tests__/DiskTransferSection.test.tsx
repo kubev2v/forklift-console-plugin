@@ -114,7 +114,9 @@ describe('DiskTransferSection', () => {
 
     render(<DiskTransferSection data={data(false, 'quay.io/vddk:latest')} />);
 
-    expect(mockWatch).toHaveBeenCalledWith(null);
+    expect(mockWatch).toHaveBeenCalledWith(
+      expect.objectContaining({ name: 'source-copy-appliance-template' }),
+    );
     expect(screen.getByTestId('disk-transfer-method')).toHaveTextContent('VDDK image');
     expect(screen.getByTestId('disk-transfer-edit-button')).not.toBeDisabled();
     expect(screen.queryByText('Unable to load copy appliance templates')).not.toBeInTheDocument();
@@ -138,14 +140,12 @@ describe('DiskTransferSection', () => {
     );
   });
 
-  it('keeps the pending appliance warning visible when the template watch fails', () => {
+  it('reports an unavailable appliance status but keeps editing when the template watch fails', () => {
     mockWatchError = new Error('CRD unavailable');
     render(<DiskTransferSection data={data(true)} />);
 
-    expect(screen.getByText('Copy appliance setup is incomplete')).toBeInTheDocument();
-    expect(screen.getByTestId('disk-transfer-appliance-status')).toHaveTextContent(
-      'Not configured',
-    );
+    expect(screen.getByText('Copy appliance template status is unavailable')).toBeInTheDocument();
+    expect(screen.getByTestId('disk-transfer-appliance-status')).toHaveTextContent('Unavailable');
     expect(screen.queryByTestId('disk-transfer-datastore')).not.toBeInTheDocument();
     expect(screen.getByTestId('disk-transfer-edit-button')).not.toBeDisabled();
   });

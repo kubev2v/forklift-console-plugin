@@ -28,7 +28,7 @@ const glanceStorage: InventoryStorage = {
   selfLink: '',
 };
 
-const subPath: Record<string, string> = {
+const subPath: Record<ProviderType, string> = {
   [PROVIDER_TYPES.ec2]: 'storages',
   [PROVIDER_TYPES.hyperv]: 'storages?detail=1',
   [PROVIDER_TYPES.nutanix]: 'storagecontainers?detail=1',
@@ -58,9 +58,9 @@ export const useSourceStorages = (
     inventory: storages,
     loading,
   } = useProviderInventory<InventoryStorage[]>({
-    disabled: !provider || !subPath[providerType],
+    disabled: !provider,
     provider,
-    subPath: subPath[providerType] ?? '',
+    subPath: subPath[providerType],
   });
 
   const typedStorages = useMemo(() => {

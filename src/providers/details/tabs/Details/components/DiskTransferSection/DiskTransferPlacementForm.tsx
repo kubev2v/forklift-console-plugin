@@ -1,6 +1,14 @@
 import { type FC, Fragment } from 'react';
 
-import { Alert, AlertVariant, Stack, StackItem } from '@patternfly/react-core';
+import {
+  Alert,
+  AlertVariant,
+  Button,
+  ButtonVariant,
+  ExpandableSection,
+  Stack,
+  StackItem,
+} from '@patternfly/react-core';
 import { isEmpty } from '@utils/helpers';
 import { useForkliftTranslation } from '@utils/i18n';
 
@@ -49,28 +57,33 @@ const DiskTransferPlacementForm: FC<DiskTransferPlacementFormProps> = ({
       {(inventoryError ?? templateError ?? permissionError) && (
         <StackItem>
           <Alert
+            actionLinks={
+              inventoryError && (
+                <Button onClick={options.onRetry} variant={ButtonVariant.link}>
+                  {t('Retry')}
+                </Button>
+              )
+            }
             data-testid="disk-transfer-setup-error"
             isInline
             title={getPlacementErrorTitle(inventoryError, templateError)}
             variant={AlertVariant.danger}
           >
-            {inventoryError &&
-              (isEmpty(failedFields) ? (
-                <>
-                  {inventoryError.message}
-                  <br />
-                </>
-              ) : (
-                failedFields.map((field) => (
-                  <Fragment key={field}>
-                    {t('{{field}}: {{reason}}', {
-                      field: labels[field].label,
-                      reason: inventoryErrors[field]?.message,
-                    })}
-                    <br />
-                  </Fragment>
-                ))
-              ))}
+            {inventoryError && (
+              <ExpandableSection toggleText={t('Show details')}>
+                {isEmpty(failedFields)
+                  ? inventoryError.message
+                  : failedFields.map((field) => (
+                      <Fragment key={field}>
+                        {t('{{field}}: {{reason}}', {
+                          field: labels[field].label,
+                          reason: inventoryErrors[field]?.message,
+                        })}
+                        <br />
+                      </Fragment>
+                    ))}
+              </ExpandableSection>
+            )}
             {templateError && (
               <>
                 {templateError}

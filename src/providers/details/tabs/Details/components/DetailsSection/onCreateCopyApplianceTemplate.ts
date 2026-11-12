@@ -8,9 +8,14 @@ import { k8sCreate, k8sGet, k8sPatch } from '@openshift-console/dynamic-plugin-s
 import { getName, getNamespace, getUID } from '@utils/crds/common/selectors';
 import { getCopyApplianceTemplateName } from '@utils/crds/providers/selectors';
 import { isEmpty } from '@utils/helpers';
+import { t } from '@utils/i18n';
 
 import { buildCopyAppliancePlacementPatches } from './buildCopyApplianceSettingPatch';
-import type { CopyAppliancePlacementValues } from './copyAppliancePlacementConfig';
+import {
+  COPY_APPLIANCE_SETTING_FIELDS,
+  COPY_APPLIANCE_TEMPLATE_SPEC_KEY,
+  type CopyAppliancePlacementValues,
+} from './copyAppliancePlacementConfig';
 
 const findCreatedTemplate = async (
   provider: V1beta1Provider,
@@ -58,14 +63,20 @@ const onCreateCopyApplianceTemplate = async (
   const namespace = getNamespace(provider);
   const uid = getUID(provider);
   if (!name || !namespace || !uid) {
-    throw new Error('Provider is missing name, namespace, or uid');
+    throw new Error(t('Provider is missing name, namespace, or uid'));
   }
 
   const templateName = getCopyApplianceTemplateName(provider);
   if (!templateName) {
-    throw new Error('Provider is missing name');
+    throw new Error(t('Provider is missing name'));
   }
 
+  const placementSpec = Object.fromEntries(
+    COPY_APPLIANCE_SETTING_FIELDS.flatMap((field) => {
+      const specKey = COPY_APPLIANCE_TEMPLATE_SPEC_KEY[field];
+      return specKey ? [[specKey, placement[field]]] : [];
+    }),
+  ) as { datastore: string; folder: string; network: string };
   const patches = buildCopyAppliancePlacementPatches(provider, placement);
   if (!isEmpty(patches)) {
     await k8sPatch({
@@ -96,9 +107,7 @@ const onCreateCopyApplianceTemplate = async (
         },
         spec: {
           baseDisk: {},
-          datastore: placement.datastore,
-          folder: placement.folder,
-          network: placement.network,
+          ...placementSpec,
           provider: { name, namespace },
           templateName,
         },

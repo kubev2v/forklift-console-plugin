@@ -30,7 +30,7 @@ describe('CreateProviderForm - vSphere Provider', () => {
       expect(screen.getByRole('textbox', { name: /provider name/i })).toBeInTheDocument();
       expect(screen.getByRole('radiogroup', { name: /vsphere endpoint/i })).toBeInTheDocument();
       expect(screen.getByTestId('vsphere-url-input')).toBeInTheDocument();
-      expect(screen.getByRole('radiogroup', { name: 'Disk transfer method' })).toBeInTheDocument();
+      expect(screen.getByTestId('disk-transfer-configure-radio')).toBeInTheDocument();
       expect(
         screen.getByRole('radio', { name: /skip certificate validation/i }),
       ).toBeInTheDocument();
@@ -83,9 +83,7 @@ describe('CreateProviderForm - vSphere Provider', () => {
       expect(configureRadio).toBeChecked();
     });
     expect(screen.getByTestId('vddk-setup-skip-radio')).not.toBeChecked();
-    expect(screen.getByTestId('disk-transfer-configure-radio')).toHaveAccessibleName(
-      'Configure disk transfer method',
-    );
+    expect(screen.getByTestId('disk-transfer-configure-radio')).toHaveAccessibleName('Configure');
     expect(screen.getByTestId('disk-transfer-method-toggle')).toBeInTheDocument();
   });
 

@@ -6,7 +6,12 @@ jest.mock('../createProvider', () => ({ createProvider: jest.fn() }));
 jest.mock('../findCreatedProvider', () => ({ findCreatedProvider: jest.fn() }));
 jest.mock('../patchProviderSecretOwner', () => ({ patchProviderSecretOwner: jest.fn() }));
 
-import type { IoK8sApiCoreV1Secret, V1beta1Provider } from '@forklift-ui/types';
+const mockK8sDelete = jest.fn();
+jest.mock('@openshift-console/dynamic-plugin-sdk', () => ({
+  k8sDelete: (...args: unknown[]): unknown => mockK8sDelete(...args),
+}));
+
+import { type IoK8sApiCoreV1Secret, SecretModel, type V1beta1Provider } from '@forklift-ui/types';
 
 import { VddkSetupMode } from '../../../utils/constants';
 import { ProviderFormFieldId } from '../../fields/constants';
@@ -38,6 +43,7 @@ const formData = {
 describe('createProviderOnce', () => {
   beforeEach(() => {
     jest.clearAllMocks();
+    mockK8sDelete.mockImplementation((): Promise<void> => Promise.resolve());
     mockBuild.mockReturnValue({ provider, secret });
     mockCreateSecret.mockResolvedValue(secret);
     mockCreateProvider.mockResolvedValue(provider);
@@ -103,7 +109,7 @@ describe('createProviderOnce', () => {
     expect(mockCreateProvider).toHaveBeenLastCalledWith(provider, secret);
   });
 
-  it('does not use changed credentials after Secret creation', async () => {
+  it('recreates the Secret when credentials change before the Provider exists', async () => {
     const progress: ProviderCreationProgress = {};
     const updatedData = { ...formData, vspherePassword: 'new-password' };
     mockBuild.mockImplementation((values) => ({
@@ -118,14 +124,13 @@ describe('createProviderOnce', () => {
     await expect(createProviderOnce(formData, progress)).rejects.toThrow(
       'Temporary Provider failure',
     );
-    await expect(createProviderOnce(updatedData, progress)).rejects.toThrow(
-      'Credentials and Provider identity cannot change',
-    );
-    expect(mockCreateSecret).toHaveBeenCalledTimes(1);
-    expect(mockCreateProvider).toHaveBeenCalledTimes(1);
+    await expect(createProviderOnce(updatedData, progress)).resolves.toBe(provider);
+    expect(mockK8sDelete).toHaveBeenCalledWith({ model: SecretModel, resource: secret });
+    expect(mockCreateSecret).toHaveBeenCalledTimes(2);
+    expect(mockCreateProvider).toHaveBeenCalledTimes(2);
   });
 
-  it('rejects a URL change because the existing Secret contains the original URL', async () => {
+  it('recreates the Secret when the URL changes before the Provider exists', async () => {
     const progress: ProviderCreationProgress = {};
     const originalData = { ...formData, vsphereUrl: 'https://original.example.com' };
     const changedData = { ...formData, vsphereUrl: 'https://changed.example.com' };
@@ -145,11 +150,10 @@ describe('createProviderOnce', () => {
     await expect(createProviderOnce(originalData, progress)).rejects.toThrow(
       'Invalid Provider URL',
     );
-    await expect(createProviderOnce(changedData, progress)).rejects.toThrow(
-      'Credentials and Provider identity cannot change',
-    );
-    expect(mockCreateSecret).toHaveBeenCalledTimes(1);
-    expect(mockCreateProvider).toHaveBeenCalledTimes(1);
+    await expect(createProviderOnce(changedData, progress)).resolves.toBe(provider);
+    expect(mockK8sDelete).toHaveBeenCalledTimes(1);
+    expect(mockCreateSecret).toHaveBeenCalledTimes(2);
+    expect(mockCreateProvider).toHaveBeenCalledTimes(2);
   });
 
   it('reuses an owned Provider when its create response is lost', async () => {

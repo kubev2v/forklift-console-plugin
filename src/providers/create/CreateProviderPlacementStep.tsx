@@ -1,7 +1,8 @@
 import type { FC } from 'react';
 
-import { Alert, AlertVariant } from '@patternfly/react-core';
+import { Alert, AlertVariant, ExpandableSection } from '@patternfly/react-core';
 import { useForkliftTranslation } from '@utils/i18n';
+import { ProviderStatus } from '@utils/types';
 
 import type { CreateProviderPlacement } from './hooks/createProviderPlacement.types';
 import CreateProviderPlacementInventory from './CreateProviderPlacementInventory';
@@ -24,12 +25,14 @@ const CreateProviderPlacementStep: FC<{ placement: CreateProviderPlacement }> = 
         title={t('Unable to load the provider. Check the connection and try again.')}
         variant={AlertVariant.danger}
       >
-        {providerError?.message}
+        <ExpandableSection toggleText={t('Show details')}>
+          {providerError?.message}
+        </ExpandableSection>
       </Alert>
     );
   }
 
-  if (phase === 'ConnectionFailed' || phase === 'ValidationFailed') {
+  if (phase === ProviderStatus.ConnectionFailed || phase === ProviderStatus.ValidationFailed) {
     return (
       <Alert
         isInline

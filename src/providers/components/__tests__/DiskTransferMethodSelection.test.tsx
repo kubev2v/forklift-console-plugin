@@ -38,7 +38,8 @@ describe('DiskTransferMethodSelection', () => {
 
     expect(screen.getByText('Configure the sourcing appliance in the next step.')).toBeVisible();
     expect(screen.getAllByText('Disk transfer method')).toHaveLength(1);
-    expect(screen.getByRole('radiogroup', { name: 'Disk transfer method' })).toBeInTheDocument();
+    expect(screen.getByTestId('disk-transfer-configure-radio')).toBeInTheDocument();
+    expect(screen.queryByRole('radiogroup')).not.toBeInTheDocument();
     expect(screen.queryByTestId('vddk-aio-optimization-checkbox')).not.toBeInTheDocument();
     await user.click(screen.getByTestId('disk-transfer-method-toggle'));
     expect(screen.getByRole('option', { name: 'Use a sourcing appliance' })).toBeInTheDocument();

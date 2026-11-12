@@ -9,20 +9,22 @@ type CreateProviderPlacementLoadingProps = {
 };
 
 const CreateProviderPlacementLoading: FC<CreateProviderPlacementLoadingProps> = ({ label }) => (
-  <Bullseye className="create-provider-placement-loading">
-    <Stack hasGutter>
-      <StackItem>
-        <Bullseye>
-          <Spinner aria-label={label} size="lg" />
-        </Bullseye>
-      </StackItem>
-      <StackItem>
-        <Title headingLevel="h4" size="md">
-          {label}
-        </Title>
-      </StackItem>
-    </Stack>
-  </Bullseye>
+  <div aria-busy="true" aria-live="polite">
+    <Bullseye className="create-provider-placement-loading">
+      <Stack hasGutter>
+        <StackItem>
+          <Bullseye>
+            <Spinner aria-label={label} size="lg" />
+          </Bullseye>
+        </StackItem>
+        <StackItem>
+          <Title headingLevel="h4" size="md">
+            {label}
+          </Title>
+        </StackItem>
+      </Stack>
+    </Bullseye>
+  </div>
 );
 
 export default CreateProviderPlacementLoading;

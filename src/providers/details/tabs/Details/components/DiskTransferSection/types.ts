@@ -14,7 +14,7 @@ export type DiskTransferValues = {
   vddkImage: string;
 };
 
-export type CopyApplianceDisplayStatus = 'configured' | 'pending' | 'unavailable';
+export type CopyApplianceDisplayStatus = 'configured' | 'pending' | 'loading' | 'unavailable';
 
 export type DiskTransferFormValues = DiskTransferValues & { confirmedDeletion: boolean };
 
@@ -41,6 +41,7 @@ export type EditDiskTransferState = {
 
 export type DiskTransferPatch =
   | { op: typeof ADD | typeof REPLACE; path: string; value: Record<string, string> | string }
-  | { op: typeof REMOVE; path: string };
+  | { op: typeof REMOVE; path: string }
+  | { op: 'test'; path: string; value: string };
 
 export type DiskTransferSaveError = Error & { templateDeleted: boolean };

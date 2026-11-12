@@ -1,8 +1,7 @@
 import { DISK_TRANSFER_METHOD_ANNOTATION, VddkSetupMode } from 'src/providers/utils/constants';
+import { getDiskTransferMethod } from 'src/providers/utils/getDiskTransferMethod';
 
 import type { V1beta1Provider } from '@forklift-ui/types';
-
-import { getDiskTransferMethod } from '../getDiskTransferMethod';
 
 const providerWith = (image?: string, marker?: string): V1beta1Provider =>
   ({

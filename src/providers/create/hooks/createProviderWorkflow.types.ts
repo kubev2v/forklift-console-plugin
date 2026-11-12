@@ -16,10 +16,12 @@ export type UseCreateProviderWorkflowParams = {
 
 export type CreateProviderWorkflow = {
   apiError: Error | null;
+  canCreateCopyApplianceTemplate: boolean;
   createdProvider: V1beta1Provider | undefined;
   isDeploying: boolean;
   isProviderPersisted: boolean;
   isSecretCreated: boolean;
+  onCancel: () => Promise<void>;
   onCreate: (onContinue: () => void) => Promise<void>;
   onDeploy: (placement: DeployProviderPlacement) => Promise<void>;
 };

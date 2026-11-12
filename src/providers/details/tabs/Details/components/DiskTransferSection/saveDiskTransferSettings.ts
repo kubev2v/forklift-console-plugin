@@ -1,5 +1,6 @@
 import { VddkSetupMode } from 'src/providers/utils/constants';
 
+import { ADD, REPLACE } from '@components/ModalForm/utils/constants';
 import {
   CopyApplianceTemplateModel,
   ProviderModel,
@@ -10,6 +11,10 @@ import { k8sDelete, k8sPatch } from '@openshift-console/dynamic-plugin-sdk';
 import { isEmpty } from '@utils/helpers';
 import { t } from '@utils/i18n';
 
+import {
+  COPY_APPLIANCE_SETTING_FIELDS,
+  COPY_APPLIANCE_TEMPLATE_SPEC_KEY,
+} from '../DetailsSection/copyAppliancePlacementConfig';
 import onCreateCopyApplianceTemplate from '../DetailsSection/onCreateCopyApplianceTemplate';
 
 import { buildDiskTransferProviderPatches } from './buildDiskTransferProviderPatches';
@@ -37,6 +42,54 @@ const createTemplate = async (
     throw createDiskTransferSaveError(
       t(
         'Provider settings were saved, but the copy appliance template could not be created. Retry to complete setup. {{reason}}',
+        { reason: error instanceof Error ? error.message : String(error) },
+      ),
+      false,
+    );
+  }
+};
+
+const buildTemplatePlacementPatches = (
+  template: V1beta1CopyApplianceTemplate,
+  values: DiskTransferValues,
+): { op: typeof ADD | typeof REPLACE; path: string; value: string }[] =>
+  COPY_APPLIANCE_SETTING_FIELDS.flatMap((field) => {
+    const specKey = COPY_APPLIANCE_TEMPLATE_SPEC_KEY[field];
+    if (!specKey) {
+      return [];
+    }
+    const current = template.spec?.[specKey as keyof typeof template.spec] as string | undefined;
+    const desired = values.placement[field];
+    if (current === desired) {
+      return [];
+    }
+    return [
+      {
+        op: current === undefined ? ADD : REPLACE,
+        path: `/spec/${specKey}`,
+        value: desired,
+      },
+    ];
+  });
+
+const updateTemplatePlacement = async (
+  template: V1beta1CopyApplianceTemplate,
+  values: DiskTransferValues,
+): Promise<void> => {
+  const patches = buildTemplatePlacementPatches(template, values);
+  if (isEmpty(patches)) {
+    return;
+  }
+  try {
+    await k8sPatch({
+      data: patches,
+      model: CopyApplianceTemplateModel,
+      resource: template,
+    });
+  } catch (error) {
+    throw createDiskTransferSaveError(
+      t(
+        'Provider settings were saved, but the copy appliance template could not be updated. Retry to complete setup. {{reason}}',
         { reason: error instanceof Error ? error.message : String(error) },
       ),
       false,
@@ -80,7 +133,9 @@ export const saveDiskTransferSettings = async (
     const updatedProvider = await patchProvider(provider, values);
     if (!template) {
       await createTemplate(updatedProvider, values);
+      return;
     }
+    await updateTemplatePlacement(template, values);
     return;
   }
   if (template) {

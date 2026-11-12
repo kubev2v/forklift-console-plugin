@@ -165,10 +165,11 @@ test.describe('Provider Creation Tests', () => {
         await createProvider.diskTransferMethodToggle.click();
       });
 
-      test.skip(
-        !(await createProvider.diskTransferCopyApplianceOption.isVisible()),
-        'Copy appliance feature is disabled on this cluster',
-      );
+      const copyApplianceOptionVisible = await createProvider.diskTransferCopyApplianceOption
+        .waitFor({ state: 'visible', timeout: 5000 })
+        .then(() => true)
+        .catch(() => false);
+      test.skip(!copyApplianceOptionVisible, 'Copy appliance feature is disabled on this cluster');
 
       await test.step('Select sourcing appliance and verify the next-step guidance', async () => {
         await createProvider.diskTransferCopyApplianceOption.click();
@@ -197,10 +198,11 @@ test.describe('Provider Creation Tests', () => {
       await createProvider.skipCertificateValidation();
       await createProvider.diskTransferConfigureRadio.click();
       await createProvider.diskTransferMethodToggle.click();
-      test.skip(
-        !(await createProvider.diskTransferCopyApplianceOption.isVisible()),
-        'Copy appliance feature is disabled on this cluster',
-      );
+      const copyApplianceOptionVisible = await createProvider.diskTransferCopyApplianceOption
+        .waitFor({ state: 'visible', timeout: 5000 })
+        .then(() => true)
+        .catch(() => false);
+      test.skip(!copyApplianceOptionVisible, 'Copy appliance feature is disabled on this cluster');
       await createProvider.diskTransferCopyApplianceOption.click();
       await expect(createProvider.createButton).toHaveText('Create and continue');
 
