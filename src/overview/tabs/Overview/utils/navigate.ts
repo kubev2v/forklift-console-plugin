@@ -14,7 +14,7 @@ export const navigateToHistoryTab = ({
   selectedRange,
   status,
 }: {
-  interval?: Interval<true> | Interval<false>;
+  interval?: Interval;
   migrations?: string[] | null;
   navigate: NavigateFunction;
   selectedRange?: TimeRangeOptions;
