@@ -6750,10 +6750,10 @@ jsonpath-plus@^10.3.0:
     "@jsep-plugin/regex" "^1.0.4"
     jsep "^1.4.0"
 
-jsrsasign@11.1.2:
-  version "11.1.2"
-  resolved "https://registry.yarnpkg.com/jsrsasign/-/jsrsasign-11.1.2.tgz#38787ee9bd4075d2fdbe9f8e0857d37e1f31b79d"
-  integrity sha512-GJuqiU/Grs6BaBBXMAZM9kxhsBrksZE0pF3qIfpkopMd7OMJ9zZmE/+CpV//97srfEyyyq1Ec0ELQtSlW/gPTA==
+jsrsasign@11.1.5:
+  version "11.1.5"
+  resolved "https://registry.yarnpkg.com/jsrsasign/-/jsrsasign-11.1.5.tgz#7bd0b3ae320ba6738169bde0691a18f8ce1af29a"
+  integrity sha512-i6mAjey0/4UQmlOaNS2vROl8EkWV8Ei436reJAby2OPQ3lF6uXSs1VYpnM8hndmmCMFIzNc04Uw2GF+0JVLFbg==
 
 jss-plugin-camel-case@10.10.0:
   version "10.10.0"
