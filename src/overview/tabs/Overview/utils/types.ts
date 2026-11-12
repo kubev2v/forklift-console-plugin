@@ -7,12 +7,12 @@ export type ChartDatum = {
 
 export type ChartDatumWithName = ChartDatum & {
   name: string;
-  interval: Interval<true> | Interval<false>;
+  interval: Interval;
 };
 
 export type MigrationDataPoint = {
   dateLabel: string;
   value: number;
-  interval: Interval<true> | Interval<false>;
+  interval: Interval;
   migrations: string[];
 };

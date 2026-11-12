@@ -17,7 +17,7 @@ export const navigateToHistoryTab = ({
   navigate: NavigateFunction;
   selectedRange?: TimeRangeOptions;
   status?: string;
-  interval?: Interval<true> | Interval<false>;
+  interval?: Interval;
   migrations?: string[] | null;
 }) => {
   const dateEnd = interval?.end ?? DateTime.now().toUTC();
