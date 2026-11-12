@@ -61,7 +61,6 @@ export const getProviderTypeOptions = (
     description: t('Microsoft Hyper-V virtualization platform. Supports migration via SMB share.'),
     icon: hypervLogo,
     label: t('Microsoft Hyper-V'),
-    techPreview: true,
     value: PROVIDER_TYPES.hyperv,
   },
   {
