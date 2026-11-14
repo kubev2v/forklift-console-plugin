@@ -3,16 +3,7 @@ import { FormProvider, useForm, useWatch } from 'react-hook-form';
 import { useNavigate, useSearchParams } from 'react-router';
 import { getProviderDetailsPageUrl } from 'src/providers/utils/getProviderDetailsPageUrl';
 
-import {
-  Alert,
-  AlertVariant,
-  Button,
-  ButtonVariant,
-  Flex,
-  FlexItem,
-  Form,
-  Split,
-} from '@patternfly/react-core';
+import { Button, ButtonVariant, Flex, FlexItem, Form, Split } from '@patternfly/react-core';
 import { TELEMETRY_EVENTS } from '@utils/analytics/constants';
 import { useForkliftAnalytics } from '@utils/analytics/hooks/useForkliftAnalytics';
 import { getType } from '@utils/crds/common/selectors';
@@ -20,11 +11,14 @@ import { useForkliftTranslation } from '@utils/i18n';
 import { PROVIDER_TYPES } from '@utils/providers/constants';
 
 import { ProviderFormFieldId } from './fields/constants';
+import { useSubmissionCancellation } from './hooks/useSubmissionCancellation';
 import { buildProviderResources } from './utils/buildProviderResources';
 import { createProvider } from './utils/createProvider';
 import { createProviderSecret } from './utils/createProviderSecret';
 import { getDefaultFormValues } from './utils/getDefaultFormValues';
 import { patchProviderSecretOwner } from './utils/patchProviderSecretOwner';
+import { prepareProviderSubmission } from './utils/prepareProviderSubmission';
+import CreateProviderErrorAlert from './CreateProviderErrorAlert';
 import CreateProviderFormContextProvider from './CreateProviderFormContextProvider';
 import ProviderTypeFields from './ProviderTypeFields';
 import type { CreateProviderFormData } from './types';
@@ -39,6 +33,8 @@ const CreateProviderForm: FC = () => {
   const { trackEvent } = useForkliftAnalytics();
   const [apiError, setApiError] = useState<Error | null>(null);
   const [searchParams] = useSearchParams();
+  const { cancelCurrentSubmission, isSubmissionCancelled, startSubmission } =
+    useSubmissionCancellation();
 
   const urlProviderType = searchParams.get('providerType');
   const validatedProviderType =
@@ -63,6 +59,7 @@ const CreateProviderForm: FC = () => {
   const onSubmit = useCallback(
     async (formData: CreateProviderFormData) => {
       setApiError(null);
+      const submissionId = startSubmission();
 
       const providerType = formData[ProviderFormFieldId.ProviderType];
       const namespace = formData[ProviderFormFieldId.ProviderProject];
@@ -73,7 +70,15 @@ const CreateProviderForm: FC = () => {
       });
 
       try {
-        const { provider: newProvider, secret: newSecret } = buildProviderResources(formData);
+        const submission = await prepareProviderSubmission(formData);
+        if (isSubmissionCancelled(submissionId)) {
+          return;
+        }
+
+        const { provider: newProvider, secret: newSecret } = buildProviderResources(
+          submission.formData,
+          submission.ec2Target,
+        );
 
         const secret = await createProviderSecret(newProvider, newSecret);
         const provider = await createProvider(newProvider, secret);
@@ -87,6 +92,10 @@ const CreateProviderForm: FC = () => {
         const providerURL = getProviderDetailsPageUrl(provider);
         navigate(providerURL)?.catch(() => undefined);
       } catch (err) {
+        if (isSubmissionCancelled(submissionId)) {
+          return;
+        }
+
         trackEvent(TELEMETRY_EVENTS.PROVIDER_CREATE_FAILED, {
           error: err instanceof Error ? err.message : 'Unknown error',
           namespace,
@@ -96,7 +105,7 @@ const CreateProviderForm: FC = () => {
         setApiError(err as Error);
       }
     },
-    [navigate, trackEvent],
+    [isSubmissionCancelled, navigate, startSubmission, trackEvent],
   );
 
   return (
@@ -113,16 +122,7 @@ const CreateProviderForm: FC = () => {
           <Form>
             <ProviderTypeFields />
 
-            {apiError && (
-              <Alert
-                className="pf-v6-u-mt-md"
-                isInline
-                title={t('Error creating provider')}
-                variant={AlertVariant.danger}
-              >
-                {apiError.message}
-              </Alert>
-            )}
+            {apiError && <CreateProviderErrorAlert apiError={apiError} />}
           </Form>
 
           <FlexItem>
@@ -139,6 +139,7 @@ const CreateProviderForm: FC = () => {
               <Button
                 data-testid="provider-cancel-button"
                 onClick={() => {
+                  cancelCurrentSubmission();
                   navigate(-1)?.catch(() => undefined);
                 }}
                 variant={ButtonVariant.secondary}

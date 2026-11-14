@@ -11,7 +11,7 @@ import ProviderFormTextInput from '../ProviderFormTextInput';
 
 const SmbCredentialsFields: FC = () => {
   const { t } = useForkliftTranslation();
-  const { clearErrors, control, setValue } = useFormContext<CreateProviderFormData>();
+  const { control, setValue, unregister } = useFormContext<CreateProviderFormData>();
 
   const useDifferentSmbCredentials = useWatch({
     control,
@@ -24,10 +24,8 @@ const SmbCredentialsFields: FC = () => {
   ): void => {
     setValue(ProviderFormFieldId.UseDifferentSmbCredentials, checked);
     if (!checked) {
-      // Clear SMB credential fields when unchecking
-      setValue(ProviderFormFieldId.SmbUser, '');
-      setValue(ProviderFormFieldId.SmbPassword, '');
-      clearErrors([ProviderFormFieldId.SmbUser, ProviderFormFieldId.SmbPassword]);
+      // unregister recomputes isValid; setValue('') + clearErrors left the button disabled.
+      unregister([ProviderFormFieldId.SmbUser, ProviderFormFieldId.SmbPassword]);
     }
   };
 
