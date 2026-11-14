@@ -34,6 +34,7 @@ const TargetProviderField: FC = () => {
           <ProviderSelect
             id={NetworkMapFieldId.TargetProvider}
             isDisabled={isSubmitting}
+            isTarget
             namespace={project}
             onSelect={(_, value) => {
               field.onChange(value);
