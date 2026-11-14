@@ -1,6 +1,6 @@
 # Builder container
 # registry.access.redhat.com/ubi9/nodejs-22:9.9-1793849239
-FROM registry.access.redhat.com/ubi9/nodejs-22@sha256:88f3404fb31987036052725243f2bce5f37c475f13596b74eec6447e701e3203 AS build
+FROM registry.access.redhat.com/ubi9/nodejs-22@sha256:623c4bda86a58190bb410ff85b7b3f8eaf16d8ead17d57388b9db1b6672c1742 AS build
 
 # VERSION default value should match the forklift-console-plugin package version
 # The VERSION value can be customize during build by using --build-arg:
@@ -21,7 +21,7 @@ RUN npm ci && npm run build
 
 # Web server container
 # registry.access.redhat.com/ubi9/nginx-126:9.9-1793849146
-FROM registry.access.redhat.com/ubi9/nginx-126@sha256:f3d687eb2c9cf74ba1bb5b20f2a5f79138cfc97f78a4447fdf317e42bd8aace6
+FROM registry.access.redhat.com/ubi9/nginx-126@sha256:f50ae8fe82e271456779c175015ac2e57576784de3ccd413460c69e55d89e137
 
 # Use none-root user
 USER 1001
