@@ -19,6 +19,7 @@ export const createPlan = async ({
   migrationType,
   nbdeClevis,
   networkMap,
+  offloadPopulatorPriorityClassName,
   planDescription,
   planName,
   planProject,
@@ -54,6 +55,7 @@ export const createPlan = async ({
         storage: getObjectRef(storageMap),
       },
       migrateSharedDisks,
+      ...(offloadPopulatorPriorityClassName && { offloadPopulatorPriorityClassName }),
       preserveStaticIPs: preserveStaticIps,
       provider: {
         destination: getObjectRef(targetProvider),

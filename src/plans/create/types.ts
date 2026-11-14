@@ -64,9 +64,7 @@ export type ProviderNetwork =
   | HypervNetwork
   | Ec2Network;
 
-type VsphereVirtualMachine = VSphereVM & {
-  changeTrackingEnabled: boolean;
-};
+type VsphereVirtualMachine = VSphereVM & { changeTrackingEnabled: boolean };
 
 export type ProviderVirtualMachine =
   VsphereVirtualMachine | OpenshiftVM | OVirtVM | OpenstackVM | OvaVM;
@@ -102,6 +100,7 @@ export type CreatePlanFormData = FieldValues & {
   [OtherSettingsFormFieldId.InstanceTypes]: Record<string, string>;
   [OtherSettingsFormFieldId.MigrateSharedDisks]: boolean;
   [OtherSettingsFormFieldId.NBDEClevis]: boolean;
+  [OtherSettingsFormFieldId.OffloadPopulatorPriorityClassName]?: string;
   [OtherSettingsFormFieldId.PreserveStaticIps]: boolean;
   [OtherSettingsFormFieldId.RootDevice]: string;
   [OtherSettingsFormFieldId.TargetPowerState]: TargetPowerState;
@@ -128,6 +127,7 @@ export type CreatePlanParams = {
   migrationType: MigrationTypeValue;
   nbdeClevis?: boolean;
   networkMap: V1beta1NetworkMap;
+  offloadPopulatorPriorityClassName?: string;
   planDescription?: string;
   planName: string;
   planProject: string;

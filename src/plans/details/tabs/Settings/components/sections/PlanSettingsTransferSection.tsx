@@ -1,5 +1,8 @@
 import type { FC } from 'react';
 
+import { isEmpty } from '@utils/helpers';
+
+import OffloadPopulatorPriorityClassDetailsItem from '../../../Details/components/SettingsSection/components/OffloadPopulatorPriorityClass/OffloadPopulatorPriorityClassDetailsItem';
 import TransferNetworkDetailsItem from '../../../Details/components/SettingsSection/components/PlanTransferNetwork/TransferNetworkDetailsItem';
 import PreserveStaticIPsDetailsItem from '../../../Details/components/SettingsSection/components/PreserveStaticIPs/PreserveStaticIPsDetailsItem';
 import type { PlanSettingsVisibility } from '../../hooks/usePlanSettingsVisibility';
@@ -9,7 +12,7 @@ type PlanSettingsTransferSectionProps = {
 };
 
 const PlanSettingsTransferSection: FC<PlanSettingsTransferSectionProps> = ({ visibility }) => {
-  const { canPatch, isTransferNetworkVisible, isVsphere, plan } = visibility;
+  const { canPatch, isCopyOffloadEnabled, isTransferNetworkVisible, isVsphere, plan } = visibility;
 
   return (
     <>
@@ -19,6 +22,14 @@ const PlanSettingsTransferSection: FC<PlanSettingsTransferSectionProps> = ({ vis
         shouldRender={isTransferNetworkVisible}
       />
       <PreserveStaticIPsDetailsItem canPatch={canPatch} plan={plan} shouldRender={isVsphere} />
+      <OffloadPopulatorPriorityClassDetailsItem
+        canPatch={canPatch}
+        plan={plan}
+        shouldRender={
+          isVsphere &&
+          (isCopyOffloadEnabled || !isEmpty(plan.spec?.offloadPopulatorPriorityClassName))
+        }
+      />
     </>
   );
 };
