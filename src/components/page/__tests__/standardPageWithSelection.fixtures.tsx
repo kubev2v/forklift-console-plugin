@@ -1,7 +1,7 @@
 import type { ReactElement } from 'react';
 import { MemoryRouter } from 'react-router';
 
-import type { ResourceField } from '@components/common/utils/types';
+import type { GlobalActionToolbarProps, ResourceField } from '@components/common/utils/types';
 import { render, type RenderResult } from '@testing-library/react';
 
 export const mockData = [
@@ -34,3 +34,9 @@ export const renderWithRouter = (component: ReactElement): RenderResult =>
   render(<MemoryRouter>{component}</MemoryRouter>);
 
 export const ExpandedContent = (): ReactElement => <div>Expanded details</div>;
+
+export const SelectedIdsProbe = ({
+  selectedIds,
+}: GlobalActionToolbarProps<{ id: string }>): ReactElement => (
+  <div data-testid="selected-ids-probe">{(selectedIds ?? []).join(',')}</div>
+);

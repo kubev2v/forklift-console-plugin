@@ -1,6 +1,7 @@
 import { type FC, useCallback, useMemo } from 'react';
 import { useForkliftTranslation } from 'src/utils/i18n';
 
+import { usePageSelectionConfig } from '@components/page/context/usePageSelectionConfig';
 import type { V1beta1Plan } from '@forklift-ui/types';
 import { useOverlay } from '@openshift-console/dynamic-plugin-sdk';
 import { DropdownItem } from '@patternfly/react-core';
@@ -22,6 +23,7 @@ const BulkDeletePlansDropdownItem: FC<BulkDeletePlansDropdownItemProps> = ({
 }) => {
   const { t } = useForkliftTranslation();
   const launchOverlay = useOverlay();
+  const { pruneSelectionRef } = usePageSelectionConfig<V1beta1Plan>();
 
   const selectedPlans = useMemo(() => getSelectedPlans(plans, selectedIds), [plans, selectedIds]);
   const eligiblePlans = useMemo(() => getPlansEligibleForDelete(selectedPlans), [selectedPlans]);
@@ -46,15 +48,23 @@ const BulkDeletePlansDropdownItem: FC<BulkDeletePlansDropdownItemProps> = ({
     return undefined;
   }, [canDelete, eligiblePlans, hasRunningOrPending, selectedIds, t]);
 
+  const onComplete = useCallback(
+    (succeededPlanIds: string[]) => {
+      pruneSelectionRef.current(succeededPlanIds);
+    },
+    [pruneSelectionRef],
+  );
+
   const onClick = useCallback(() => {
     if (disabledReason) {
       return;
     }
 
     launchOverlay<BulkDeletePlansModalProps>(BulkDeletePlansModal, {
+      onComplete,
       plans: eligiblePlans,
     });
-  }, [disabledReason, eligiblePlans, launchOverlay]);
+  }, [disabledReason, eligiblePlans, launchOverlay, onComplete]);
 
   return (
     <DropdownItem

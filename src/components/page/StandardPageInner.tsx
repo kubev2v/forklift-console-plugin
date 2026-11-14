@@ -39,6 +39,7 @@ const StandardPageInner = <T,>(props: StandardPageInnerProps<T>): ReactElement =
     postFilterData,
     resizableColumns = false,
     row = DefaultRow<T>,
+    selectedIds,
     userSettings,
     ...viewProps
   } = props;
@@ -93,6 +94,7 @@ const StandardPageInner = <T,>(props: StandardPageInnerProps<T>): ReactElement =
     GlobalActionToolbarItems,
     pageData,
     row,
+    selectedIds,
     showPagination,
     toId: viewProps.toId,
   });

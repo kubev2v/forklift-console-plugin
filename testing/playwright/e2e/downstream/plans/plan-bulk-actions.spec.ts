@@ -72,19 +72,37 @@ test.describe('Plans list - bulk actions', { tag: '@downstream' }, () => {
       await expect(modal).toBeHidden();
       await plansListPage.expectPlanHidden(planAName);
       await plansListPage.expectPlanHidden(planBName);
+      await plansListPage.expectSelectionCount(0);
     });
 
-    await test.step('Show archived, re-select, and bulk delete the archived plans', async () => {
-      // Re-navigate so selection state does not keep hidden UIDs (MTV-6641).
-      await plansListPage.navigateDirectly();
+    await test.step('Show archived and confirm archiving cleared the selection', async () => {
       await plansListPage.setShowArchived(true);
       await plansListPage.searchForPlan(prefix);
       await plansListPage.expectPlanVisible(planAName);
       await plansListPage.expectPlanVisible(planBName);
-      await plansListPage.selectNone();
+      await plansListPage.expectSelectionCount(0);
+    });
+
+    await test.step('Filtering out a selected plan narrows the count and the bulk actions', async () => {
       await plansListPage.selectPlanByName(planAName);
       await plansListPage.selectPlanByName(planBName);
+      await plansListPage.expectSelectionCount(2);
 
+      await plansListPage.searchForPlan(planAName);
+      await plansListPage.expectSelectionCount(1);
+
+      const filteredModal = await plansListPage.openBulkDeleteModal();
+      await expect(filteredModal.getByTestId(`bulk-modal-plan-${planAName}`)).toBeVisible();
+      await expect(filteredModal.getByTestId(`bulk-modal-plan-${planBName}`)).toHaveCount(0);
+      await plansListPage.cancelBulkModal();
+      await expect(filteredModal).toBeHidden();
+
+      await plansListPage.searchForPlan(prefix);
+      await plansListPage.expectPlanVisible(planBName);
+      await plansListPage.expectSelectionCount(2);
+    });
+
+    await test.step('Bulk delete the archived plans', async () => {
       const modal = await plansListPage.openBulkDeleteModal();
       await expect(modal.getByTestId('bulk-delete-non-archived-alert')).toHaveCount(0);
       await plansListPage.confirmBulkModal();
