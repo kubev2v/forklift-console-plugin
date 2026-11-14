@@ -1,5 +1,6 @@
 import { useState } from 'react';
 
+import { ExternalLink } from '@components/common/ExternalLink/ExternalLink';
 import { HelpIconPopover } from '@components/common/HelpIconPopover/HelpIconPopover';
 import ModalForm from '@components/ModalForm/ModalForm';
 import type { OverlayComponent } from '@openshift-console/dynamic-plugin-sdk/lib/app/modal-support/OverlayProvider';
@@ -14,7 +15,8 @@ import {
   Stack,
   StackItem,
 } from '@patternfly/react-core';
-import { ForkliftTrans, useForkliftTranslation } from '@utils/i18n';
+import { useForkliftTranslation } from '@utils/i18n';
+import { VIRTIO_WIN_DRIVERS_DOWNLOAD_URL } from '@utils/links';
 
 import type { EditPlanProps } from '../../utils/types';
 
@@ -96,19 +98,22 @@ const GuestConversionEditModal: OverlayComponent<EditPlanProps> = ({ closeOverla
                 />
 
                 <HelpIconPopover>
-                  <ForkliftTrans>
-                    <Stack hasGutter>
-                      <StackItem>
-                        If checked, compatibility devices (SATA bus, E1000E NIC) will be used to
-                        ensure boot-ability.
-                      </StackItem>
+                  <Stack hasGutter>
+                    <StackItem>
+                      {t(
+                        'If checked, compatibility devices (SATA bus, E1000E NIC) will be used to ensure boot-ability.',
+                      )}
+                    </StackItem>
 
-                      <StackItem>
-                        If unchecked, high-performance VirtIO devices will be used. This requires
-                        VirtIO drivers already installed in the source VM.
-                      </StackItem>
-                    </Stack>
-                  </ForkliftTrans>
+                    <StackItem>
+                      {t(
+                        'If unchecked, high-performance VirtIO devices will be used. This requires VirtIO drivers already installed in the source VM.',
+                      )}{' '}
+                      <ExternalLink href={VIRTIO_WIN_DRIVERS_DOWNLOAD_URL} isInline>
+                        {t('Download VirtIO drivers')}
+                      </ExternalLink>
+                    </StackItem>
+                  </Stack>
                 </HelpIconPopover>
               </Flex>
             </FormGroup>
@@ -116,13 +121,18 @@ const GuestConversionEditModal: OverlayComponent<EditPlanProps> = ({ closeOverla
             {!useCompatibilityMode && (
               <Alert
                 className="pf-v6-u-mt-xs pf-v6-u-ml-lg"
+                data-testid="use-compatibility-mode-warning-alert"
                 isInline
                 isPlain
                 title={t(
                   "If you don't use compatibility mode, you must have VirtIO drivers already installed in the source VM.",
                 )}
                 variant={AlertVariant.warning}
-              />
+              >
+                <ExternalLink href={VIRTIO_WIN_DRIVERS_DOWNLOAD_URL} isInline>
+                  {t('Download VirtIO drivers')}
+                </ExternalLink>
+              </Alert>
             )}
           </StackItem>
         )}

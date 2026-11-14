@@ -25,5 +25,8 @@ export const LIVE_MIGRATION_HELP_LINK = ''; // was: `${REDHAT_DOCS_URL}/migratio
 
 export const CBT_HELP_LINK = 'https://knowledge.broadcom.com/external/article?legacyId=1020128';
 
+export const VIRTIO_WIN_DRIVERS_DOWNLOAD_URL =
+  'https://access.redhat.com/downloads/content/virtio-win';
+
 // TODO: Update URL when AEM documentation migration to new platform is complete
 export const FORKLIFT_DOCS_URL = ''; // was: 'https://docs.redhat.com/en/documentation/migration_toolkit_for_virtualization/'
