@@ -22,19 +22,26 @@ export const COPY_APPLIANCE_SETTING_FIELDS: CopyApplianceSettingField[] = [
   'resourcePool',
 ];
 
-export const COPY_APPLIANCE_SETTING_PATH: Record<CopyApplianceSettingField, string> = {
-  datastore: '/spec/settings/copyApplianceDatastore',
-  folder: '/spec/settings/copyApplianceFolder',
-  network: '/spec/settings/copyApplianceNetwork',
-  resourcePool: '/spec/settings/copyApplianceResourcePool',
+export const COPY_APPLIANCE_SETTING_KEY: Record<CopyApplianceSettingField, string> = {
+  datastore: 'copyApplianceDatastore',
+  folder: 'copyApplianceFolder',
+  network: 'copyApplianceNetwork',
+  resourcePool: 'copyApplianceResourcePool',
 };
 
-export const COPY_APPLIANCE_SETTING_CRUMBS: Record<CopyApplianceSettingField, string[]> = {
-  datastore: ['Provider', 'spec', 'settings', 'copyApplianceDatastore'],
-  folder: ['Provider', 'spec', 'settings', 'copyApplianceFolder'],
-  network: ['Provider', 'spec', 'settings', 'copyApplianceNetwork'],
-  resourcePool: ['Provider', 'spec', 'settings', 'copyApplianceResourcePool'],
-};
+export const COPY_APPLIANCE_SETTING_PATH = Object.fromEntries(
+  Object.entries(COPY_APPLIANCE_SETTING_KEY).map(([field, key]) => [
+    field,
+    `/spec/settings/${key}`,
+  ]),
+) as Record<CopyApplianceSettingField, string>;
+
+export const COPY_APPLIANCE_TEMPLATE_SPEC_KEY: Partial<Record<CopyApplianceSettingField, string>> =
+  {
+    datastore: 'datastore',
+    folder: 'folder',
+    network: 'network',
+  };
 
 export const COPY_APPLIANCE_SETTING_GETTERS: Record<
   CopyApplianceSettingField,

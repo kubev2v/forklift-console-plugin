@@ -28,12 +28,13 @@ export type InventoryNetwork =
 
 export const useSourceNetworks = (
   provider: V1beta1Provider | undefined,
-): [InventoryNetwork[], boolean, Error | null] => {
+): [InventoryNetwork[], boolean, Error | null, () => void] => {
   const { t } = useForkliftTranslation();
   const defaultNetworkLabel = t('Default network');
   const providerType: ProviderType = provider?.spec?.type as ProviderType;
   const {
     error,
+    forceRefresh,
     inventory: networks,
     loading,
   } = useProviderInventory<InventoryNetwork[]>({
@@ -63,7 +64,7 @@ export const useSourceNetworks = (
     return networksList;
   }, [defaultNetworkLabel, networks, provider?.spec?.type, providerType]);
 
-  return [typedNetworks, loading, error];
+  return [typedNetworks, loading, error, forceRefresh];
 };
 
 export const useOpenShiftNetworks = (

@@ -17,10 +17,11 @@ import { useVddkBuildImage } from './hooks/useVddkBuildImage';
 import { getUploadButtonText, uploadVddkTarball } from './utils/utils';
 
 type VddkUploaderProps = {
+  errorMessage?: string;
   onChangeVddk: (value: string) => void;
 };
 
-const VddkUploader: FC<VddkUploaderProps> = ({ onChangeVddk }) => {
+const VddkUploader: FC<VddkUploaderProps> = ({ errorMessage, onChangeVddk }) => {
   const { t } = useForkliftTranslation();
   const [file, setFile] = useState<File | undefined>();
   const [filename, setFilename] = useState('');
@@ -45,6 +46,7 @@ const VddkUploader: FC<VddkUploaderProps> = ({ onChangeVddk }) => {
     setError(null);
     setUploading(true);
     setBuildName('');
+    onChangeVddk('');
 
     try {
       const response = await uploadVddkTarball(file);
@@ -68,17 +70,21 @@ const VddkUploader: FC<VddkUploaderProps> = ({ onChangeVddk }) => {
           onClearClick={() => {
             setFile(undefined);
             setFilename('');
+            setBuildName('');
+            onChangeVddk('');
           }}
           onFileInputChange={(_, newFile) => {
             if (newFile) {
               setFile(newFile);
               setFilename(newFile.name);
+              setBuildName('');
+              onChangeVddk('');
             }
           }}
         />
         <HelperText>
-          <HelperTextItem>
-            {t('Upload a VDDK archive and build a VDDK init image from it.')}
+          <HelperTextItem variant={errorMessage ? 'error' : 'default'}>
+            {errorMessage ?? t('Upload a VDDK archive and build a VDDK init image from it.')}
           </HelperTextItem>
         </HelperText>
       </FormGroup>

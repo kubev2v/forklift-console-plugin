@@ -28,7 +28,7 @@ const glanceStorage: InventoryStorage = {
   selfLink: '',
 };
 
-const subPath: Record<string, string> = {
+const subPath: Record<ProviderType, string> = {
   [PROVIDER_TYPES.ec2]: 'storages',
   [PROVIDER_TYPES.hyperv]: 'storages?detail=1',
   [PROVIDER_TYPES.nutanix]: 'storagecontainers?detail=1',
@@ -50,16 +50,17 @@ export type InventoryStorage =
 
 export const useSourceStorages = (
   provider: V1beta1Provider | undefined,
-): [InventoryStorage[], boolean, Error | null] => {
+): [InventoryStorage[], boolean, Error | null, () => void] => {
   const providerType: ProviderType = provider?.spec?.type as ProviderType;
   const {
     error,
+    forceRefresh,
     inventory: storages,
     loading,
   } = useProviderInventory<InventoryStorage[]>({
-    disabled: !provider || !subPath[providerType],
+    disabled: !provider,
     provider,
-    subPath: subPath[providerType] ?? '',
+    subPath: subPath[providerType],
   });
 
   const typedStorages = useMemo(() => {
@@ -74,7 +75,7 @@ export const useSourceStorages = (
     return storageList;
   }, [providerType, storages]);
 
-  return [typedStorages, loading, error];
+  return [typedStorages, loading, error, forceRefresh];
 };
 
 export const useOpenShiftStorages = (
