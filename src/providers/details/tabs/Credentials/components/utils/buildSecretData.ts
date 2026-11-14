@@ -6,6 +6,7 @@ import {
 } from 'src/providers/create/fields/constants';
 import type { CreateProviderFormData } from 'src/providers/create/types';
 import { getAuthTypeValue } from 'src/providers/create/utils/buildOpenstackProviderResources';
+import { CA_CERT_SECRET_KEY } from 'src/providers/utils/constants';
 import { getEc2Url } from 'src/providers/utils/helpers/getEc2Url';
 
 import type { V1beta1Provider } from '@forklift-ui/types';
@@ -44,7 +45,7 @@ export const buildSecretData = (
   };
 
   if (!insecureSkipVerify && formData[ProviderFormFieldId.CaCertificate]) {
-    baseData.cacert = encode(formData[ProviderFormFieldId.CaCertificate] ?? '');
+    baseData[CA_CERT_SECRET_KEY] = encode(formData[ProviderFormFieldId.CaCertificate] ?? '');
   }
 
   switch (providerType) {

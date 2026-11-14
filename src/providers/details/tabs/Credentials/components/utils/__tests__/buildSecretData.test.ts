@@ -5,6 +5,7 @@ import {
   ProviderFormFieldId,
 } from 'src/providers/create/fields/constants';
 import type { CreateProviderFormData } from 'src/providers/create/types';
+import { CA_CERT_SECRET_KEY } from 'src/providers/utils/constants';
 
 import type { V1beta1Provider } from '@forklift-ui/types';
 import { describe, expect, it } from '@jest/globals';
@@ -118,9 +119,10 @@ describe('buildSecretData – nutanix provider', () => {
 
     expect(decode(result.insecureSkipVerify)).toBe('true');
     expect(result.cacert).toBeUndefined();
+    expect(result[CA_CERT_SECRET_KEY]).toBeUndefined();
   });
 
-  it('includes cacert when cert validation is configured', () => {
+  it('includes ca.crt when cert validation is configured', () => {
     const form: Partial<CreateProviderFormData> = {
       [ProviderFormFieldId.NutanixUsername]: 'admin',
       [ProviderFormFieldId.NutanixPassword]: 'pass',
@@ -131,7 +133,8 @@ describe('buildSecretData – nutanix provider', () => {
     const result = buildSecretData(form, nutanixProvider);
 
     expect(decode(result.insecureSkipVerify)).toBe('false');
-    expect(result.cacert).toBeDefined();
-    expect(decode(result.cacert)).toBe('-----BEGIN CERTIFICATE-----\nMIID...');
+    expect(result.cacert).toBeUndefined();
+    expect(result[CA_CERT_SECRET_KEY]).toBeDefined();
+    expect(decode(result[CA_CERT_SECRET_KEY])).toBe('-----BEGIN CERTIFICATE-----\nMIID...');
   });
 });

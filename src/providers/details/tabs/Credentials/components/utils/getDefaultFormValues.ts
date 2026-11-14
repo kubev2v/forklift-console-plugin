@@ -10,6 +10,7 @@ import type { IoK8sApiCoreV1Secret, V1beta1Provider } from '@forklift-ui/types';
 import { getSdkEndpoint, getType, getUrl } from '@utils/crds/common/selectors';
 import { PROVIDER_TYPES } from '@utils/providers/constants';
 
+import { getCACertValue } from './getCACertValue';
 import { getDecodedValue } from './getDecodedValue';
 
 export const getDefaultFormValues = (
@@ -21,7 +22,7 @@ export const getDefaultFormValues = (
   const insecureSkipVerify = getDecodedValue(secret?.data?.insecureSkipVerify) === 'true';
 
   const baseValues: Partial<CreateProviderFormData> = {
-    [ProviderFormFieldId.CaCertificate]: getDecodedValue(secret?.data?.cacert) ?? '',
+    [ProviderFormFieldId.CaCertificate]: getCACertValue(secret) ?? '',
     [ProviderFormFieldId.CertificateValidation]: insecureSkipVerify
       ? CertificateValidationMode.Skip
       : CertificateValidationMode.Configure,

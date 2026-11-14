@@ -62,6 +62,9 @@ export const openstackAuthTypeLabels = {
   tokenWithUsername: t('Token with user name'),
 } as const;
 
+// Canonical CA certificate secret key; `cacert` remains a supported legacy alias.
+export const CA_CERT_SECRET_KEY = 'ca.crt';
+
 export enum SecretFieldsId {
   User = 'user',
   Password = 'password',
