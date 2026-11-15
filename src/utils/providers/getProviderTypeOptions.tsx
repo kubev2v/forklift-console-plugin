@@ -67,9 +67,9 @@ export const getProviderTypeOptions = (
     description: t(
       'Nutanix AHV virtualization platform. Supports migration from Prism Central and Prism Element.',
     ),
-    devPreview: true,
     icon: getNutanixLogo(isDarkTheme),
     label: t('Nutanix AHV'),
+    techPreview: true,
     value: PROVIDER_TYPES.nutanix,
   },
   {

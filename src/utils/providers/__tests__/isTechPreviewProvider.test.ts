@@ -11,8 +11,8 @@ describe('isTechPreviewProvider', () => {
     expect(isTechPreviewProvider(PROVIDER_TYPES.hyperv)).toBe(false);
   });
 
-  it('should return false for Nutanix', () => {
-    expect(isTechPreviewProvider(PROVIDER_TYPES.nutanix)).toBe(false);
+  it('should return true for Nutanix', () => {
+    expect(isTechPreviewProvider(PROVIDER_TYPES.nutanix)).toBe(true);
   });
 
   it('should return false for an unknown provider type', () => {

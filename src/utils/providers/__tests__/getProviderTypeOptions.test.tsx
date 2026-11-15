@@ -64,12 +64,13 @@ describe('getProviderTypeOptions', () => {
     expect(hypervOption?.techPreview).toBeUndefined();
   });
 
-  it('should include Nutanix AHV option with devPreview flag', () => {
+  it('should include Nutanix AHV option with techPreview flag', () => {
     const options = getProviderTypeOptions(false, false);
     const nutanixOption = options.find((option) => option.value === PROVIDER_TYPES.nutanix);
 
     expect(nutanixOption).toBeDefined();
-    expect(nutanixOption?.devPreview).toBe(true);
+    expect(nutanixOption?.techPreview).toBe(true);
+    expect(nutanixOption?.devPreview).toBeUndefined();
     expect(nutanixOption?.label).toBe('Nutanix AHV');
   });
 });
