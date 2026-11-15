@@ -2,6 +2,7 @@ import type { ProviderType, V1beta1Provider } from '@forklift-ui/types';
 import type { ExtendedProviderType } from '@utils/enums';
 
 export const SOURCE_ONLY_PROVIDER_TYPES: ExtendedProviderType[] = [
+  'azure',
   'ec2',
   'hyperv',
   'nutanix',

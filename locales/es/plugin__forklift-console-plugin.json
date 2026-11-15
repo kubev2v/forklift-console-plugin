@@ -932,6 +932,7 @@
   "Memory": "Memoria",
   "Message": "Mensaje",
   "Method of authentication to use when connecting to the OpenStack Identity (Keystone) server.": "Método de autenticación que debe utilizarse para conectarse al servidor OpenStack Identity (Keystone).",
+  "Microsoft Azure": "Microsoft Azure",
   "Microsoft Hyper-V": "Microsoft Hyper-V",
   "Microsoft Hyper-V virtualization platform. Supports migration via SMB share.": "Plataforma de virtualización Microsoft Hyper-V. Admite migración mediante recursos compartidos SMB.",
   "Microsoft Windows VMs, which use the Measured Boot feature, cannot be migrated. Measured Boot is a mechanism to prevent any kind of device changes by checking each start-up component, including the firmware, all the way to the boot driver.": "Las máquinas virtuales de Microsoft Windows que utilizan la funcionalidad de arranque medido no se pueden migrar. El arranque medido es un mecanismo que evita cualquier tipo de cambio en el dispositivo mediante la comprobación de cada componente de inicio, incluido el firmware, hasta el controlador de arranque.",

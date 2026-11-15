@@ -913,6 +913,7 @@
   "Memory": "内存",
   "Message": "消息",
   "Method of authentication to use when connecting to the OpenStack Identity (Keystone) server.": "连接到 OpenStack Identity (Keystone) 服务器时使用的身份验证方法。",
+  "Microsoft Azure": "Microsoft Azure",
   "Microsoft Hyper-V": "Microsoft Hyper-V",
   "Microsoft Hyper-V virtualization platform. Supports migration via SMB share.": "Microsoft Hyper-V 虚拟化平台。通过 SMB 共享支持迁移。",
   "Microsoft Windows VMs, which use the Measured Boot feature, cannot be migrated. Measured Boot is a mechanism to prevent any kind of device changes by checking each start-up component, including the firmware, all the way to the boot driver.": "使用 Measured Boot 功能的 Microsoft Windows 虚拟机无法迁移。Measured Boot 是通过检查每个启动组件（包括固件）的所有启动组件来防止任何类型的设备更改机制，包括固件。",

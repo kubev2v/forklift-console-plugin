@@ -913,6 +913,7 @@
   "Memory": "メモリー",
   "Message": "メッセージ",
   "Method of authentication to use when connecting to the OpenStack Identity (Keystone) server.": "OpenStack Identity (Keystone) サーバーに接続するときに使用する認証方法。",
+  "Microsoft Azure": "Microsoft Azure",
   "Microsoft Hyper-V": "Microsoft Hyper-V",
   "Microsoft Hyper-V virtualization platform. Supports migration via SMB share.": "Microsoft Hyper-V 仮想化プラットフォーム。SMB 共有経由の移行をサポートしています。",
   "Microsoft Windows VMs, which use the Measured Boot feature, cannot be migrated. Measured Boot is a mechanism to prevent any kind of device changes by checking each start-up component, including the firmware, all the way to the boot driver.": "メジャードブート機能を使用する Microsoft Windows 仮想マシンは移行できません。メジャードブートとは、ファームウェアを含む起動コンポーネントからブートドライバーに至るまで、すべての起動コンポーネントをチェックすることで、あらゆる種類のデバイス変更を防止するメカニズムです。",
