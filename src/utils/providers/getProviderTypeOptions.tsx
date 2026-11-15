@@ -61,16 +61,15 @@ export const getProviderTypeOptions = (
     description: t('Microsoft Hyper-V virtualization platform. Supports migration via SMB share.'),
     icon: hypervLogo,
     label: t('Microsoft Hyper-V'),
-    techPreview: true,
     value: PROVIDER_TYPES.hyperv,
   },
   {
     description: t(
       'Nutanix AHV virtualization platform. Supports migration from Prism Central and Prism Element.',
     ),
-    devPreview: true,
     icon: getNutanixLogo(isDarkTheme),
     label: t('Nutanix AHV'),
+    techPreview: true,
     value: PROVIDER_TYPES.nutanix,
   },
   {

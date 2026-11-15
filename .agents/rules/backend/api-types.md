@@ -47,8 +47,8 @@ ProviderStatus {
 | `OpenStack` | `openstack` | Source |
 | `Ova` | `ova` | Source |
 | `EC2` | `ec2` | Source (tech preview; AWS platform only) |
-| `HyperV` | `hyperv` | Source (tech preview) |
-| `Nutanix` | `nutanix` | Source (dev preview in UI) |
+| `HyperV` | `hyperv` | Source (GA) |
+| `Nutanix` | `nutanix` | Source (tech preview in UI) |
 | `Azure` | `azure` | Backend only (not in console plugin yet) |
 | `Undefined` | `""` | — |
 
@@ -671,6 +671,6 @@ Backend `VMStatus.conditions` + `phase` + `pipeline` → frontend `MigrationVirt
 | Provider | UI constant | Notes |
 |---|---|---|
 | `ec2`, `hyperv` | `isTechPreviewProvider()` | Shows `TechPreviewLabel` |
-| `nutanix` | `isDevPreviewProvider()` | Dev preview label |
+| `nutanix` | `isTechPreviewProvider()` | Tech preview label |
 | `ec2` | `useClusterIsAwsPlatform` | Hidden on non-AWS clusters |
 | `azure` | — | Backend CRD exists; no UI yet |

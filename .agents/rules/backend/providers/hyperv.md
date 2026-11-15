@@ -408,4 +408,4 @@ hyperv-server: <server-UID>
 | `concerns[]` | Migration warnings (OPA + SMB validation) |
 | `network.switchType` | External / Internal / Private |
 | `tpmEnabled` / `secureBoot` | Gen2 VMs only |
-| Tech preview | Show `TechPreviewLabel` for Hyper-V provider type |
+| GA | Hyper-V provider type is GA; do not show `TechPreviewLabel` |
