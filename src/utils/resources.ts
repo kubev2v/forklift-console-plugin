@@ -16,3 +16,6 @@ export const isProviderOpenshift = (provider: V1beta1Provider | undefined): bool
 
 export const isProviderEc2 = (provider: V1beta1Provider | undefined): boolean =>
   provider?.spec?.type === 'ec2';
+
+export const isProviderAzure = (provider: V1beta1Provider | undefined): boolean =>
+  provider?.spec?.type === 'azure';
