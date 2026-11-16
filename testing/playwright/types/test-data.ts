@@ -68,6 +68,15 @@ export const Ec2SourceStorages = {
 
 export type Ec2SourceStorage = (typeof Ec2SourceStorages)[keyof typeof Ec2SourceStorages];
 
+export const AzureSourceStorages = {
+  PREMIUM_LRS: 'Premium_LRS',
+  PREMIUM_ZRS: 'Premium_ZRS',
+  STANDARD_LRS: 'Standard_LRS',
+  STANDARD_SSD_LRS: 'StandardSSD_LRS',
+} as const;
+
+export type AzureSourceStorage = (typeof AzureSourceStorages)[keyof typeof AzureSourceStorages];
+
 /**
  * Storage offload options used for vSphere XCOPY/VAAI testing.
  * Display names are the user-visible labels in the UI dropdowns.
@@ -234,6 +243,14 @@ export type ProviderConfig = {
   access_key_id?: string;
   api_url: string;
   auto_target_credentials?: boolean;
+  azure_client_id?: string;
+  azure_client_secret?: string;
+  azure_resource_group?: string;
+  azure_snapshot_resource_group?: string;
+  azure_subscription_id?: string;
+  azure_target_region?: string;
+  azure_tenant_id?: string;
+  azure_volume_snapshot_class_name?: string;
   endpoint_type?: EndpointType;
   password?: string;
   prism_type?: string;
@@ -253,6 +270,15 @@ export type ProviderData = {
   accessKeyId?: string;
   applianceManagement?: boolean;
   autoTargetCredentials?: boolean;
+  azureClientId?: string;
+  azureClientSecret?: string;
+  azureResourceGroup?: string;
+  azureSnapshotResourceGroup?: string;
+  azureSnapshotSku?: string;
+  azureSubscriptionId?: string;
+  azureTargetRegion?: string;
+  azureTenantId?: string;
+  azureVolumeSnapshotClassName?: string;
   crossAccountCredentials?: boolean;
   domainName?: string;
   ec2Region?: string;

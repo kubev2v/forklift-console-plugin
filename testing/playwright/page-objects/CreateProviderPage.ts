@@ -7,6 +7,7 @@ import type { ResourceManager } from '../utils/resource-manager/ResourceManager'
 import { V2_11_0 } from '../utils/version/constants';
 import { isVersionAtLeast } from '../utils/version/version';
 
+import { fillAzureProviderFields } from './CreateProviderPage/fillAzureProviderFields';
 import { fillEC2ProviderFields } from './CreateProviderPage/fillEC2ProviderFields';
 import { selectProviderProject } from './CreateProviderPage/selectProviderProject';
 import { skipProviderCertificateValidation } from './CreateProviderPage/skipProviderCertificateValidation';
@@ -15,6 +16,16 @@ import { ProviderDetailsPage } from './ProviderDetailsPage/ProviderDetailsPage';
 
 export class CreateProviderPage {
   private readonly resourceManager?: ResourceManager;
+  readonly azureAdvancedSettingsToggle;
+  readonly azureClientIdInput;
+  readonly azureClientSecretInput;
+  readonly azureResourceGroupInput;
+  readonly azureSnapshotResourceGroupInput;
+  readonly azureSnapshotSkuSelect;
+  readonly azureSubscriptionIdInput;
+  readonly azureTargetRegionInput;
+  readonly azureTenantIdInput;
+  readonly azureVolumeSnapshotClassNameInput;
   // Certificate validation locators
   readonly caCertificateErrorText;
   readonly certificateConfigureRadio;
@@ -57,6 +68,19 @@ export class CreateProviderPage {
     });
     this.caCertificateErrorText = page.getByTestId('ca-certificate-helper-error');
     this.verifyCertificateModal = new VerifyCertificateModal(page);
+
+    this.azureAdvancedSettingsToggle = page
+      .getByTestId('azure-advanced-settings')
+      .getByRole('button');
+    this.azureClientIdInput = page.getByTestId('azure-client-id-input');
+    this.azureClientSecretInput = page.getByTestId('azure-client-secret-input');
+    this.azureResourceGroupInput = page.getByTestId('azure-resource-group-input');
+    this.azureSnapshotResourceGroupInput = page.getByTestId('azure-snapshot-resource-group-input');
+    this.azureSnapshotSkuSelect = page.getByTestId('azure-snapshot-sku-select');
+    this.azureSubscriptionIdInput = page.getByTestId('azure-subscription-id-input');
+    this.azureTargetRegionInput = page.getByTestId('azure-target-region-input');
+    this.azureTenantIdInput = page.getByTestId('azure-tenant-id-input');
+    this.azureVolumeSnapshotClassNameInput = page.getByTestId('azure-volume-snapshot-class-input');
 
     this.ec2AccessKeyIdInput = page.getByTestId('ec2-access-key-id-input');
     this.ec2AutoTargetCheckbox = page.getByTestId('ec2-auto-target-credentials-checkbox');
@@ -251,7 +275,11 @@ export class CreateProviderPage {
   async fillAndSubmit(testData: ProviderData): Promise<void> {
     await this.fillProviderFields(testData);
 
-    if (testData.type !== ProviderType.OVA && testData.type !== ProviderType.EC2) {
+    if (
+      testData.type !== ProviderType.AZURE &&
+      testData.type !== ProviderType.OVA &&
+      testData.type !== ProviderType.EC2
+    ) {
       await this.skipCertificateValidation();
     }
 
@@ -264,6 +292,9 @@ export class CreateProviderPage {
     await this.fillProviderName(testData.name);
 
     switch (testData.type) {
+      case ProviderType.AZURE:
+        await fillAzureProviderFields(this.page, testData);
+        break;
       case ProviderType.EC2:
         await fillEC2ProviderFields(this.page, testData);
         break;

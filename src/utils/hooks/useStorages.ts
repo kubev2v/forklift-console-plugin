@@ -11,6 +11,7 @@ import type {
 } from '@forklift-ui/types';
 import { STORAGE_NAMES } from '@utils/constants';
 import { PROVIDER_TYPES } from '@utils/providers/constants';
+import type { AzureStorage } from '@utils/types/azureInventory';
 import type { Ec2Storage } from '@utils/types/ec2Inventory';
 import type { NutanixStorageContainer } from '@utils/types/nutanixInventory';
 
@@ -29,6 +30,7 @@ const glanceStorage: InventoryStorage = {
 };
 
 const subPath: Record<string, string> = {
+  [PROVIDER_TYPES.azure]: 'storages?detail=1',
   [PROVIDER_TYPES.ec2]: 'storages',
   [PROVIDER_TYPES.hyperv]: 'storages?detail=1',
   [PROVIDER_TYPES.nutanix]: 'storagecontainers?detail=1',
@@ -46,6 +48,7 @@ export type InventoryStorage =
   | OpenShiftStorageClass
   | TypedOvaResource
   | Ec2Storage
+  | AzureStorage
   | NutanixStorageContainer;
 
 export const useSourceStorages = (

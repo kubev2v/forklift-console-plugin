@@ -51,7 +51,17 @@ describe('getPlanResourcesTableProps', () => {
     });
   });
 
-  it.each([undefined, '', 'unknown', 'azure'] as const)(
+  it('returns inventory sizes with empty resource objects for azure', () => {
+    const inventory = [{ id: 'vm-1' }, { id: 'vm-2' }] as unknown as ProviderVirtualMachine[];
+    expect(getPlanResourcesTableProps(inventory, PROVIDER_TYPES.azure)).toEqual({
+      planInventoryRunningSize: 2,
+      planInventorySize: 2,
+      totalResources: {},
+      totalResourcesRunning: {},
+    });
+  });
+
+  it.each([undefined, '', 'unknown'] as const)(
     'returns null for unsupported providerType %j',
     (providerType) => {
       expect(getPlanResourcesTableProps(emptyInventory, providerType)).toBeNull();

@@ -62,6 +62,8 @@ export const buildStorageMappings = (
     const offloadPluginConfig = createOffloadPluginConfig(mapping);
     const isOpenShiftProvider = sourceProvider?.spec?.type === PROVIDER_TYPES.openshift;
     const isEc2Provider = sourceProvider?.spec?.type === PROVIDER_TYPES.ec2;
+    const isAzureProvider = sourceProvider?.spec?.type === PROVIDER_TYPES.azure;
+    const isNameBasedProvider = isEc2Provider || isAzureProvider;
     const isGlanceStorage = sourceStorage.name === STORAGE_NAMES.GLANCE;
 
     const accessMode = mapping[StorageMapFieldId.AccessMode];
@@ -81,8 +83,9 @@ export const buildStorageMappings = (
       acc.push(createStorageMapping(baseMapping, offloadPluginConfig));
     }
 
-    // EC2 provider: backend FindStorageClass matches Source.Name against EBS volume type
-    if (isEc2Provider) {
+    // EC2 and Azure providers: backend FindStorageClass matches Source.Name against
+    // the EBS volume type or the Azure managed disk SKU.
+    if (isNameBasedProvider) {
       const baseMapping = {
         destination,
         source: {
@@ -104,7 +107,7 @@ export const buildStorageMappings = (
     }
 
     // Default storage mapping: uses id-based mapping
-    if (!isOpenShiftProvider && !isEc2Provider && !isGlanceStorage) {
+    if (!isOpenShiftProvider && !isNameBasedProvider && !isGlanceStorage) {
       const defaultBaseMapping = {
         destination,
         source: {
@@ -125,6 +128,7 @@ const getSourceStorage = (
 ): MappingValue => {
   const isOpenShiftProvider = sourceProvider?.spec?.type === PROVIDER_TYPES.openshift;
   const isEc2Provider = sourceProvider?.spec?.type === PROVIDER_TYPES.ec2;
+  const isAzureProvider = sourceProvider?.spec?.type === PROVIDER_TYPES.azure;
   const isGlanceStorage = source.name === STORAGE_NAMES.GLANCE;
 
   if (isOpenShiftProvider) {
@@ -135,7 +139,7 @@ const getSourceStorage = (
     return { name: STORAGE_NAMES.GLANCE };
   }
 
-  if (isEc2Provider) {
+  if (isEc2Provider || isAzureProvider) {
     const inventoryLabel = getMapResourceLabel(sourceStorages.get(source?.id ?? ''));
     return { name: source.name ?? inventoryLabel ?? source.id ?? '' };
   }

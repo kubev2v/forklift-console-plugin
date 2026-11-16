@@ -10,6 +10,7 @@ import { Button, ButtonVariant, ToolbarItem } from '@patternfly/react-core';
 import { getName, getNamespace } from '@utils/crds/common/selectors';
 import { getResourceUrl } from '@utils/getResourceUrl';
 import { useClusterIsAwsPlatform } from '@utils/hooks/useClusterIsAwsPlatform';
+import { useClusterIsAzurePlatform } from '@utils/hooks/useClusterIsAzurePlatform';
 import { PROVIDER_TYPES } from '@utils/providers/constants';
 
 type CreatePlanActionProps = {
@@ -22,7 +23,10 @@ const CreatePlanAction: FC<CreatePlanActionProps> = ({ namespace, provider }) =>
   const navigate = useNavigate();
   const { trackEvent } = useForkliftAnalytics();
   const { isAwsPlatform } = useClusterIsAwsPlatform();
+  const { isAzurePlatform } = useClusterIsAzurePlatform();
   const isEc2OnNonAwsCluster = provider?.spec?.type === PROVIDER_TYPES.ec2 && !isAwsPlatform;
+  const isAzureOnNonAzureCluster =
+    provider?.spec?.type === PROVIDER_TYPES.azure && !isAzurePlatform;
 
   const { canCreate } = useGetDeleteAndEditAccessReview({
     model: PlanModel,
@@ -60,7 +64,7 @@ const CreatePlanAction: FC<CreatePlanActionProps> = ({ namespace, provider }) =>
     navigate(`${planResourceUrl}/~new${queryString}`)?.catch(() => undefined);
   };
 
-  if (isEc2OnNonAwsCluster) {
+  if (isEc2OnNonAwsCluster || isAzureOnNonAzureCluster) {
     return null;
   }
 

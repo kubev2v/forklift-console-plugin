@@ -4,6 +4,7 @@ import { useForkliftTranslation } from 'src/utils/i18n';
 
 import { PROVIDER_TYPES } from '@utils/providers/constants';
 
+import AzureProviderDetailsPage from './AzureProviderDetailsPage';
 import Ec2ProviderDetailsPage from './Ec2ProviderDetailsPage';
 import HypervProviderDetailsPage from './HypervProviderDetailsPage';
 import NutanixProviderDetailsPage from './NutanixProviderDetailsPage';
@@ -29,6 +30,8 @@ const ProviderDetailsPageByType: FC<ProviderDetailsPageByTypeProps> = ({
   const { t } = useForkliftTranslation();
 
   switch (type) {
+    case PROVIDER_TYPES.azure:
+      return <AzureProviderDetailsPage name={name} namespace={namespace} />;
     case PROVIDER_TYPES.ec2:
       return <Ec2ProviderDetailsPage name={name} namespace={namespace} />;
     case PROVIDER_TYPES.openshift:

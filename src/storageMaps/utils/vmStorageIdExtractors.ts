@@ -9,6 +9,7 @@ import type { EnhancedOvaVM } from '@utils/crds/plans/type-enhancements';
 import { isEmpty } from '@utils/helpers';
 import { PROVIDER_TYPES } from '@utils/providers/constants';
 import type { OVirtVMWithDisks } from '@utils/storage/types';
+import { type AzureVM, getAzureDiskTypes } from '@utils/types/azureVM';
 import { getNutanixStorageContainerIds, isNutanixVm } from '@utils/types/nutanixInventory';
 
 const getOpenshiftVolumeNames = (vm: ProviderVirtualMachine): string[] => {
@@ -90,6 +91,10 @@ const getOvirtStorageIds = (vm: OVirtVMWithDisks): string[] => {
 };
 
 const getStorageIdsForVm = (vm: ProviderVirtualMachine): string[] => {
+  if ((vm as { providerType?: string }).providerType === PROVIDER_TYPES.azure) {
+    return getAzureDiskTypes(vm as unknown as AzureVM);
+  }
+
   if (isNutanixVm(vm)) {
     return getNutanixStorageContainerIds(vm);
   }

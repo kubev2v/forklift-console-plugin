@@ -2,7 +2,7 @@ import { EndpointType, ProviderType } from '../../../types/enums';
 import type { ProviderData } from '../../../types/test-data';
 import { getProviderConfig } from '../../../utils/providers';
 import { MTV_NAMESPACE } from '../../../utils/resource-manager/constants';
-import { V2_11_0, V2_12_0, V5_0_0 } from '../../../utils/version/constants';
+import { V2_11_0, V2_12_0, V5_0_0, V5_1_0 } from '../../../utils/version/constants';
 import type { VersionTuple } from '../../../utils/version/types';
 
 const VSPHERE_KEY = process.env.VSPHERE_PROVIDER ?? 'vsphere-8.0.1';
@@ -12,6 +12,7 @@ const OPENSTACK_KEY = process.env.OPENSTACK_PROVIDER ?? 'openstack-psi';
 const HYPERV_KEY = process.env.HYPERV_PROVIDER ?? 'hyperv-smb';
 const EC2_KEY = process.env.EC2_PROVIDER ?? 'ec2';
 const NUTANIX_KEY = process.env.NUTANIX_PROVIDER ?? 'nutanix';
+const AZURE_KEY = process.env.AZURE_PROVIDER ?? 'azure';
 
 export type ProviderTestScenario = {
   minVersion?: VersionTuple;
@@ -70,6 +71,14 @@ export const createProviderData = (
     baseData.secretAccessKey = providerConfig.secret_access_key;
   }
 
+  if (providerType === ProviderType.AZURE) {
+    baseData.azureClientId = providerConfig.azure_client_id;
+    baseData.azureClientSecret = providerConfig.azure_client_secret;
+    baseData.azureResourceGroup = providerConfig.azure_resource_group;
+    baseData.azureSubscriptionId = providerConfig.azure_subscription_id;
+    baseData.azureTenantId = providerConfig.azure_tenant_id;
+  }
+
   if (providerType === ProviderType.NUTANIX) {
     baseData.prismType = providerConfig.prism_type ?? 'element';
   }
@@ -125,5 +134,11 @@ export const providerTestScenarios: ProviderTestScenario[] = [
     providerKey: NUTANIX_KEY,
     providerType: ProviderType.NUTANIX,
     scenarioName: 'Nutanix AHV provider with Prism Element',
+  },
+  {
+    minVersion: V5_1_0,
+    providerKey: AZURE_KEY,
+    providerType: ProviderType.AZURE,
+    scenarioName: 'Microsoft Azure provider with service principal credentials',
   },
 ];

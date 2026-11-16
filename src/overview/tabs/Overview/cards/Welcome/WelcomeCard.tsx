@@ -19,6 +19,7 @@ import { useForkliftAnalytics } from '@utils/analytics/hooks/useForkliftAnalytic
 import { Namespace } from '@utils/constants';
 import { getResourceUrl } from '@utils/getResourceUrl';
 import { useClusterIsAwsPlatform } from '@utils/hooks/useClusterIsAwsPlatform';
+import { useClusterIsAzurePlatform } from '@utils/hooks/useClusterIsAzurePlatform';
 import { useIsDarkTheme } from '@utils/hooks/useIsDarkTheme';
 import { ForkliftTrans, useForkliftTranslation } from '@utils/i18n';
 import type { ProviderTypes } from '@utils/providers/constants';
@@ -32,12 +33,18 @@ const WelcomeCard: FC = () => {
   const navigate = useNavigate();
   const isDarkTheme = useIsDarkTheme();
   const { isAwsPlatform, loaded: isAwsPlatformLoaded } = useClusterIsAwsPlatform();
+  const { isAzurePlatform, loaded: isAzurePlatformLoaded } = useClusterIsAzurePlatform();
   const { data: { hideWelcomeCardByContext } = {}, setData } = useContext(OverviewContext);
 
-  // Include EC2 only after the platform check confirms AWS.
+  // Platform specific providers are included only after the platform check confirms them.
   const providerTypeOptions = useMemo(
-    () => getProviderTypeOptions(isDarkTheme, isAwsPlatformLoaded && isAwsPlatform),
-    [isAwsPlatform, isAwsPlatformLoaded, isDarkTheme],
+    () =>
+      getProviderTypeOptions(
+        isDarkTheme,
+        isAwsPlatformLoaded && isAwsPlatform,
+        isAzurePlatformLoaded && isAzurePlatform,
+      ),
+    [isAwsPlatform, isAwsPlatformLoaded, isAzurePlatform, isAzurePlatformLoaded, isDarkTheme],
   );
 
   const providersListUrl = useMemo(() => {

@@ -1,5 +1,6 @@
 import { type FC, useMemo } from 'react';
 import { type ControllerRenderProps, useWatch } from 'react-hook-form';
+import { AzureVirtualMachinesList } from 'src/providers/details/tabs/VirtualMachines/AzureVirtualMachinesList';
 import type { ProviderVirtualMachinesListProps } from 'src/providers/details/tabs/VirtualMachines/components/utils/types';
 import type { VmData } from 'src/providers/details/tabs/VirtualMachines/components/VMCellProps';
 import { Ec2VirtualMachinesList } from 'src/providers/details/tabs/VirtualMachines/Ec2VirtualMachinesList';
@@ -120,6 +121,8 @@ const VirtualMachinesTable: FC<VirtualMachinesTableProps> = ({
       return <NutanixVirtualMachinesList {...tableProps} />;
     case PROVIDER_TYPES.vsphere:
       return <VSphereVirtualMachinesList {...tableProps} />;
+    case PROVIDER_TYPES.azure:
+      return <AzureVirtualMachinesList {...tableProps} />;
     case PROVIDER_TYPES.ec2:
       return <Ec2VirtualMachinesList {...tableProps} />;
     case undefined:
