@@ -19,6 +19,11 @@ export const isPlatformRestrictedProvider = (
   );
 };
 
+/**
+ * Providers listed in a provider select. Azure providers are treated as ready
+ * while the development inventory mock is enabled.
+ */
+
 const isProvider = (obj: unknown): obj is V1beta1Provider =>
   typeof obj === 'object' &&
   obj !== null &&

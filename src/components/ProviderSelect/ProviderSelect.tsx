@@ -32,10 +32,9 @@ import { useClusterIsAzurePlatform } from '@utils/hooks/useClusterIsAzurePlatfor
 import { useIsDarkTheme } from '@utils/hooks/useIsDarkTheme';
 import { useK8sWatchResource } from '@utils/hooks/useK8sWatchResource';
 import { ForkliftTrans } from '@utils/i18n';
-import { PROVIDER_TYPES } from '@utils/providers/constants';
-import { ProviderStatus } from '@utils/types';
 
-import { extractProviders, isPlatformRestrictedProvider } from './utils/utils';
+import { isProviderVisible } from './utils/providerVisibility';
+import { extractProviders } from './utils/utils';
 
 type ProviderSelectProps = Pick<
   ComponentProps<typeof Select>,
@@ -85,15 +84,9 @@ const ProviderSelect = (
       return [];
     }
 
-    return providers.filter((provider) => {
-      const isReady = provider.status?.phase === ProviderStatus.Ready;
-
-      if (isTarget) {
-        return isReady && provider.spec?.type === PROVIDER_TYPES.openshift;
-      }
-
-      return isReady && !isPlatformRestrictedProvider(provider, { isAwsPlatform, isAzurePlatform });
-    });
+    return providers.filter((provider) =>
+      isProviderVisible(provider, { isAwsPlatform, isAzurePlatform, isTarget }),
+    );
   }, [isAwsPlatform, isAzurePlatform, isTarget, providers, loaded]);
 
   const providersListUrl = useMemo(

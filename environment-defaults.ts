@@ -2,6 +2,11 @@ import pluginMetadata from './plugin-metadata';
 
 export const ENVIRONMENT_DEFAULTS = {
   /**
+   * Development-only fixtures for Azure provider inventory (VMs, networks and
+   * disk types) so the plan wizard can be reviewed without Azure credentials.
+   */
+  AZURE_MOCK_INVENTORY: 'false',
+  /**
    * UI branding name.
    *
    * Note: downstream builds are set to: 'RedHat'

@@ -6,6 +6,7 @@ import { getInventoryApiUrl } from '@utils/api/getApiUrl';
 import { hasObjectChangedInGivenFields } from '@utils/helpers/hasObjectChangedInGivenFields';
 import { buildProviderInventoryPath } from '@utils/inventory/buildProviderInventoryPath';
 import { DEFAULT_FIELDS_TO_AVOID_COMPARING } from '@utils/inventory/constants';
+import { getAzureMockInventory } from '@utils/mocks/azureInventory';
 
 /**
  * @typedef {Object} UseProviderInventoryParams
@@ -77,6 +78,7 @@ const useProviderInventory = <T>({
   const oldErrorRef = useRef<{ error: string } | null>(null);
   const providerType = provider?.spec?.type;
   const providerUid = provider?.metadata?.uid;
+  const mockedInventory = getAzureMockInventory(provider, subPath);
   const isValidProvider = providerType !== undefined && providerUid !== undefined;
   const fetchKey = `${providerType ?? ''}:${providerUid ?? ''}:${subPath}:${String(disabled)}:${String(onRefresh)}`;
   const [prevFetchKey, setPrevFetchKey] = useState(fetchKey);
@@ -132,6 +134,16 @@ const useProviderInventory = <T>({
         return;
       }
 
+      if (mockedInventory !== undefined) {
+        if (active) {
+          // Mock fixtures are stable module constants, no field diffing needed.
+          updateInventoryIfChanged(mockedInventory as T, []);
+          setError(null);
+          setLoading(false);
+        }
+        return;
+      }
+
       try {
         const newInventory = (await consoleFetchJSON(
           getInventoryApiUrl(
@@ -180,6 +192,7 @@ const useProviderInventory = <T>({
   }, [
     handleError,
     updateInventoryIfChanged,
+    mockedInventory,
     providerType,
     providerUid,
     isValidProvider,
