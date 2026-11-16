@@ -7,6 +7,7 @@ import CreatePlanAction from '../CreatePlanAction';
 
 const mockNavigate = jest.fn();
 const mockUseClusterIsAwsPlatform = jest.fn();
+const mockUseClusterIsAzurePlatform = jest.fn();
 
 jest.mock('react-router', () => ({
   ...jest.requireActual<Record<string, unknown>>('react-router'),
@@ -15,6 +16,10 @@ jest.mock('react-router', () => ({
 
 jest.mock('@utils/hooks/useClusterIsAwsPlatform', () => ({
   useClusterIsAwsPlatform: (): unknown => mockUseClusterIsAwsPlatform(),
+}));
+
+jest.mock('@utils/hooks/useClusterIsAzurePlatform', () => ({
+  useClusterIsAzurePlatform: (): unknown => mockUseClusterIsAzurePlatform(),
 }));
 
 jest.mock('@utils/analytics/hooks/useForkliftAnalytics', () => ({
@@ -40,6 +45,7 @@ const createProvider = (type: string): V1beta1Provider => ({
 describe('CreatePlanAction', () => {
   beforeEach(() => {
     jest.clearAllMocks();
+    mockUseClusterIsAzurePlatform.mockReturnValue({ isAzurePlatform: false, loaded: true });
   });
 
   it('should render the button for a non-EC2 provider', () => {
@@ -79,5 +85,24 @@ describe('CreatePlanAction', () => {
     expect(mockNavigate).toHaveBeenCalledWith(
       expect.stringContaining('sourceProvider=test-provider'),
     );
+  });
+
+  it('should render the button for an Azure provider on an Azure cluster', () => {
+    mockUseClusterIsAwsPlatform.mockReturnValue({ isAwsPlatform: false, loaded: true });
+    mockUseClusterIsAzurePlatform.mockReturnValue({ isAzurePlatform: true, loaded: true });
+
+    render(<CreatePlanAction namespace="test-ns" provider={createProvider('azure')} />);
+
+    expect(screen.getByRole('button', { name: 'Create migration plan' })).toBeVisible();
+  });
+
+  it('should hide the button for an Azure provider on a non-Azure cluster', () => {
+    mockUseClusterIsAwsPlatform.mockReturnValue({ isAwsPlatform: false, loaded: true });
+
+    const { container } = render(
+      <CreatePlanAction namespace="test-ns" provider={createProvider('azure')} />,
+    );
+
+    expect(container).toBeEmptyDOMElement();
   });
 });

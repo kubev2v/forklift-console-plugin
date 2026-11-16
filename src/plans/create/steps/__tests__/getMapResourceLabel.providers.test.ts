@@ -1,5 +1,4 @@
 import type { InventoryStorage } from 'src/utils/hooks/useStorages';
-import type { Ec2Network } from 'src/utils/types/ec2Inventory';
 
 import { describe, expect, it } from '@jest/globals';
 import { PROVIDER_TYPES } from '@utils/providers/constants';
@@ -7,10 +6,7 @@ import { PROVIDER_TYPES } from '@utils/providers/constants';
 import type { ProviderNetwork } from '../../types';
 import { getMapResourceLabel } from '../utils';
 
-const nameOnlyNetwork = (
-  providerType: Ec2Network['providerType'] | 'hyperv' | 'ova' | 'openstack' | 'vsphere',
-  name: string,
-): ProviderNetwork =>
+const nameOnlyNetwork = (providerType: string, name: string): ProviderNetwork =>
   ({
     id: 'res-1',
     name,
@@ -104,5 +100,9 @@ describe('getMapResourceLabel', () => {
       selfLink: '/providers/ec2/uid/storages/gp3',
     };
     expect(getMapResourceLabel(storage)).toBe('gp3');
+  });
+
+  it('returns the name for azure subnets and NIC networks', () => {
+    expect(getMapResourceLabel(nameOnlyNetwork(PROVIDER_TYPES.azure, 'subnet-1'))).toBe('subnet-1');
   });
 });
