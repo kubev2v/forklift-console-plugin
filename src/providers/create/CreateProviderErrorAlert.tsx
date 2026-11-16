@@ -5,7 +5,7 @@ import { Alert, AlertVariant, Button, ButtonVariant } from '@patternfly/react-co
 import { useForkliftTranslation } from '@utils/i18n';
 
 import { ProviderFormFieldId } from './fields/constants';
-import { Ec2TargetResolutionError } from './utils/ec2TargetResolutionError';
+import { isEc2TargetResolutionError } from './utils/ec2TargetResolutionError';
 import type { CreateProviderFormData } from './types';
 
 type CreateProviderErrorAlertProps = {
@@ -16,7 +16,7 @@ const CreateProviderErrorAlert: FC<CreateProviderErrorAlertProps> = ({ apiError 
   const { t } = useForkliftTranslation();
   const { getValues, setValue, unregister } = useFormContext<CreateProviderFormData>();
 
-  const isTargetResolutionError = apiError instanceof Ec2TargetResolutionError;
+  const isTargetResolutionError = isEc2TargetResolutionError(apiError);
 
   const handleEnterTargetSettingsManually = (): void => {
     // The action stays visible after switching to manual mode; only leave auto-detect once so

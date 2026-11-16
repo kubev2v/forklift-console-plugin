@@ -2,7 +2,10 @@ import { t } from '@utils/i18n';
 
 import type { Ec2TargetResolutionFailure } from '../types';
 
+const EC2_TARGET_RESOLUTION_ERROR_NAME = 'Ec2TargetResolutionError';
 const MAX_ERROR_DETAIL_LENGTH = 200;
+
+export type Ec2TargetResolutionIssue = Error & { reason: Ec2TargetResolutionFailure };
 
 const truncateErrorDetail = (detail: string): string =>
   detail.length > MAX_ERROR_DETAIL_LENGTH
@@ -52,12 +55,14 @@ const getEc2TargetResolutionMessage = (
 
 // Long-term this resolution belongs in the operator: if the Provider contract ever exposes
 // server-side target resolution, this client-side resolver becomes a compatibility adapter only.
-export class Ec2TargetResolutionError extends Error {
-  public readonly reason: Ec2TargetResolutionFailure;
+export const createEc2TargetResolutionError = (
+  reason: Ec2TargetResolutionFailure,
+  detail?: string,
+): Ec2TargetResolutionIssue =>
+  Object.assign(new Error(getEc2TargetResolutionMessage(reason, detail)), {
+    name: EC2_TARGET_RESOLUTION_ERROR_NAME,
+    reason,
+  });
 
-  public constructor(reason: Ec2TargetResolutionFailure, detail?: string) {
-    super(getEc2TargetResolutionMessage(reason, detail));
-    this.name = 'Ec2TargetResolutionError';
-    this.reason = reason;
-  }
-}
+export const isEc2TargetResolutionError = (error: unknown): error is Ec2TargetResolutionIssue =>
+  error instanceof Error && error.name === EC2_TARGET_RESOLUTION_ERROR_NAME;

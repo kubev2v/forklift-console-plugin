@@ -8,7 +8,7 @@ import './setup-provider-form-mocks';
 
 import CreateProviderForm from '../CreateProviderForm';
 import type { Ec2ResolvedTarget } from '../types';
-import { Ec2TargetResolutionError } from '../utils/ec2TargetResolutionError';
+import { createEc2TargetResolutionError } from '../utils/ec2TargetResolutionError';
 import { resolveEc2TargetSettings } from '../utils/resolveEc2TargetSettings';
 
 import {
@@ -92,7 +92,7 @@ describe('CreateProviderForm - EC2 submit', () => {
   });
 
   it('shows the resolution error alert without creating the provider', async () => {
-    mockedResolve.mockRejectedValue(new Ec2TargetResolutionError('secretForbidden'));
+    mockedResolve.mockRejectedValue(createEc2TargetResolutionError('secretForbidden'));
     await fillAndEnableAutoDetect();
 
     await submit();
@@ -106,7 +106,7 @@ describe('CreateProviderForm - EC2 submit', () => {
   });
 
   it('moves to manual target settings from the alert action', async () => {
-    mockedResolve.mockRejectedValue(new Ec2TargetResolutionError('nodesForbidden'));
+    mockedResolve.mockRejectedValue(createEc2TargetResolutionError('nodesForbidden'));
     await fillAndEnableAutoDetect();
     await submit();
 

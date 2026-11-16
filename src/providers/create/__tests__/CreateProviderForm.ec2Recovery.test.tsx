@@ -6,7 +6,7 @@ import './setup-provider-form-mocks';
 
 import CreateProviderForm from '../CreateProviderForm';
 import type { Ec2ResolvedTarget } from '../types';
-import { Ec2TargetResolutionError } from '../utils/ec2TargetResolutionError';
+import { createEc2TargetResolutionError } from '../utils/ec2TargetResolutionError';
 import { resolveEc2TargetSettings } from '../utils/resolveEc2TargetSettings';
 
 import {
@@ -61,7 +61,7 @@ describe('CreateProviderForm - EC2 recovery', () => {
   });
 
   it('keeps typed manual target settings when the recovery action is reused', async () => {
-    mockedResolve.mockRejectedValue(new Ec2TargetResolutionError('nodesForbidden'));
+    mockedResolve.mockRejectedValue(createEc2TargetResolutionError('nodesForbidden'));
     await fillAndEnableAutoDetect();
     await submit();
 

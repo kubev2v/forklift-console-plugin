@@ -1,7 +1,7 @@
 import { decode, isValid } from 'js-base64';
 
 import { getLabels, getName } from '@utils/crds/common/selectors';
-import { isEmpty } from '@utils/helpers';
+import { isEmpty, isRecord } from '@utils/helpers';
 
 import {
   AWS_ACCESS_KEY_ID_SECRET_KEY,
@@ -16,8 +16,10 @@ type ParsedAwsCredentials = {
   secretAccessKey: string;
 };
 
-const isRecord = (value: unknown): value is Record<string, unknown> =>
-  typeof value === 'object' && value !== null;
+type ZonedWorker = {
+  name: string;
+  zone: string;
+};
 
 const decodeSecretValue = (value: unknown): string | undefined => {
   if (typeof value !== 'string' || isEmpty(value) || !isValid(value)) {
@@ -68,13 +70,21 @@ export const getTargetAzFromNodes = (nodes: unknown): string | undefined => {
     return undefined;
   }
 
-  const zonedWorkers = nodes
-    .filter(isWorkerNode)
-    .map((node) => ({ name: getName(node) ?? '', zone: getNodeZone(node) }))
-    .filter((worker) => !isEmpty(worker.zone))
-    .sort((first, second) => first.name.localeCompare(second.name));
+  const bestWorker = nodes.reduce<ZonedWorker | undefined>((best, node) => {
+    if (!isWorkerNode(node)) {
+      return best;
+    }
 
-  return zonedWorkers[0]?.zone;
+    const zone = getNodeZone(node);
+    if (isEmpty(zone)) {
+      return best;
+    }
+
+    const name = getName(node) ?? '';
+    return !best || name.localeCompare(best.name) < 0 ? { name, zone } : best;
+  }, undefined);
+
+  return bestWorker?.zone;
 };
 
 const isLowercaseLetter = (value: string): boolean => value >= 'a' && value <= 'z';

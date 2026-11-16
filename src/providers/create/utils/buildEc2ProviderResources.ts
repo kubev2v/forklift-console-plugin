@@ -9,7 +9,7 @@ import type { Ec2FormData, Ec2ResolvedTarget } from '../types';
 
 import { buildProviderObject } from './buildProviderObject';
 import { buildSecretObject } from './buildSecretObject';
-import { Ec2CrossAccountCredentialsError } from './ec2CrossAccountCredentialsError';
+import { createEc2CrossAccountCredentialsError } from './ec2CrossAccountCredentialsError';
 import { firstNonEmpty } from './firstNonEmpty';
 
 type ProviderResources = {
@@ -48,7 +48,7 @@ export const buildEc2ProviderResources = (
   );
 
   if (useCrossAccount && (!explicitTargetAccessKeyId || !explicitTargetSecretAccessKey)) {
-    throw new Ec2CrossAccountCredentialsError();
+    throw createEc2CrossAccountCredentialsError();
   }
 
   const targetAccessKeyId = useCrossAccount

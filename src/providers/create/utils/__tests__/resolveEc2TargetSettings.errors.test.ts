@@ -11,7 +11,10 @@ import {
   AWS_SECRET_ACCESS_KEY_SECRET_KEY,
 } from '../../fields/ec2/constants';
 import type { Ec2FormData, Ec2TargetResolutionFailure, Ec2WorkerNodeList } from '../../types';
-import { Ec2TargetResolutionError } from '../ec2TargetResolutionError';
+import {
+  type Ec2TargetResolutionIssue,
+  isEc2TargetResolutionError,
+} from '../ec2TargetResolutionError';
 import { resolveEc2TargetSettings } from '../resolveEc2TargetSettings';
 
 type Fetcher = () => Promise<unknown>;
@@ -54,15 +57,18 @@ const resolve = (secret: Fetcher, nodes: Fetcher = resolveList([])): Promise<unk
 const expectReason = async (
   promise: Promise<unknown>,
   reason: Ec2TargetResolutionFailure,
-): Promise<Ec2TargetResolutionError> => {
-  const error = await promise.then(
+): Promise<Ec2TargetResolutionIssue> => {
+  const error: unknown = await promise.then(
     () => undefined,
     (rejection: unknown) => rejection,
   );
 
-  expect(error).toBeInstanceOf(Ec2TargetResolutionError);
-  expect(error).toMatchObject({ reason });
-  return error as Ec2TargetResolutionError;
+  if (!isEc2TargetResolutionError(error)) {
+    throw new Error(`Expected an EC2 target resolution error, received: ${String(error)}`);
+  }
+
+  expect(error.reason).toBe(reason);
+  return error;
 };
 
 const SECRET_FORBIDDEN_ERRORS: [string, Error][] = [

@@ -5,7 +5,6 @@ import { describe, expect, it } from '@jest/globals';
 import { ProviderFormFieldId } from '../../fields/constants';
 import type { Ec2FormData } from '../../types';
 import { buildEc2ProviderResources } from '../buildEc2ProviderResources';
-import { Ec2CrossAccountCredentialsError } from '../ec2CrossAccountCredentialsError';
 
 const crossAccountFields: Ec2FormData = {
   [ProviderFormFieldId.Ec2AccessKeyId]: 'SOURCEKEY',
@@ -37,7 +36,7 @@ describe('buildEc2ProviderResources - cross-account credentials', () => {
         ...crossAccountFields,
         [ProviderFormFieldId.Ec2TargetAccessKeyId]: 'TARGETKEY',
       }),
-    ).toThrow(Ec2CrossAccountCredentialsError);
+    ).toThrow(/Cross-account credentials require both the target access key ID and the target/);
   });
 
   it('rejects a whitespace-only target secret access key', () => {
@@ -47,6 +46,6 @@ describe('buildEc2ProviderResources - cross-account credentials', () => {
         [ProviderFormFieldId.Ec2TargetAccessKeyId]: 'TARGETKEY',
         [ProviderFormFieldId.Ec2TargetSecretAccessKey]: '   ',
       }),
-    ).toThrow(Ec2CrossAccountCredentialsError);
+    ).toThrow(/Cross-account credentials require both the target access key ID and the target/);
   });
 });

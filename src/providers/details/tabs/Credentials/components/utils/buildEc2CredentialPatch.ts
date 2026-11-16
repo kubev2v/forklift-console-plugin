@@ -1,8 +1,10 @@
-import { decode, encode } from 'js-base64';
+import { encode } from 'js-base64';
 import { ProviderFormFieldId } from 'src/providers/create/fields/constants';
 import type { CreateProviderFormData } from 'src/providers/create/types';
 
 import { ADD, TEST } from '@components/ModalForm/utils/constants';
+
+import { getDecodedValue } from './getDecodedValue';
 
 export type SecretDataPatchOperation = {
   op: typeof ADD | typeof TEST;
@@ -13,20 +15,18 @@ export type SecretDataPatchOperation = {
 const SECRET_DATA_PATH = '/data';
 const RESOURCE_VERSION_PATH = '/metadata/resourceVersion';
 
-const decodeValue = (value: string | undefined): string => (value ? decode(value) : '');
-
 const hasInheritedTargetCredentials = (
   existingSecretData: Record<string, string> | undefined,
 ): boolean => {
-  const sourceAccessKeyId = decodeValue(existingSecretData?.accessKeyId);
-  const sourceSecretAccessKey = decodeValue(existingSecretData?.secretAccessKey);
+  const sourceAccessKeyId = getDecodedValue(existingSecretData?.accessKeyId) ?? '';
+  const sourceSecretAccessKey = getDecodedValue(existingSecretData?.secretAccessKey) ?? '';
   if (!sourceAccessKeyId || !sourceSecretAccessKey) {
     return false;
   }
 
   return (
-    decodeValue(existingSecretData?.targetAccessKeyId) === sourceAccessKeyId &&
-    decodeValue(existingSecretData?.targetSecretAccessKey) === sourceSecretAccessKey
+    (getDecodedValue(existingSecretData?.targetAccessKeyId) ?? '') === sourceAccessKeyId &&
+    (getDecodedValue(existingSecretData?.targetSecretAccessKey) ?? '') === sourceSecretAccessKey
   );
 };
 

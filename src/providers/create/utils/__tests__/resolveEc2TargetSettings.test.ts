@@ -9,7 +9,7 @@ import {
   AWS_SECRET_ACCESS_KEY_SECRET_KEY,
 } from '../../fields/ec2/constants';
 import type { Ec2FormData, Ec2ResolvedTarget, Ec2TargetResolutionFailure } from '../../types';
-import { Ec2TargetResolutionError } from '../ec2TargetResolutionError';
+import { createEc2TargetResolutionError } from '../ec2TargetResolutionError';
 import { resolveEc2TargetSettings } from '../resolveEc2TargetSettings';
 
 type SecretFetcher = () => Promise<unknown>;
@@ -149,7 +149,7 @@ describe('resolveEc2TargetSettings', () => {
       'noWorkerZone',
       'unknown',
     ];
-    const messages = reasons.map((reason) => new Ec2TargetResolutionError(reason).message);
+    const messages = reasons.map((reason) => createEc2TargetResolutionError(reason).message);
 
     expect(new Set(messages).size).toBe(reasons.length);
     expect(messages.every((message) => message.length > 0)).toBe(true);

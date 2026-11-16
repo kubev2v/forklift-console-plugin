@@ -18,6 +18,9 @@ export const isEmpty = (value: object | unknown[] | string | undefined | null): 
   return false;
 };
 
+export const isRecord = (value: unknown): value is Record<string, unknown> =>
+  typeof value === 'object' && value !== null;
+
 /**
  * Returns a Set of values that appear more than once in an array.
  * @param items

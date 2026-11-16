@@ -19,7 +19,10 @@ import type {
 
 import { getRegionFromAz, getTargetAzFromNodes, parseAwsCredsSecret } from './ec2TargetDetection';
 import { getEc2TargetErrorCode, getEc2TargetErrorMessage } from './ec2TargetErrorDetails';
-import { Ec2TargetResolutionError } from './ec2TargetResolutionError';
+import {
+  createEc2TargetResolutionError,
+  isEc2TargetResolutionError,
+} from './ec2TargetResolutionError';
 import { firstNonEmpty } from './firstNonEmpty';
 
 type ParsedAwsCredentials = {
@@ -65,15 +68,15 @@ const loadAwsCredentials = async (
   try {
     const parsedCredentials = parseAwsCredsSecret(await fetchAwsCredsSecret());
     if (!parsedCredentials) {
-      throw new Ec2TargetResolutionError('secretInvalid');
+      throw createEc2TargetResolutionError('secretInvalid');
     }
     return parsedCredentials;
   } catch (error) {
-    if (error instanceof Ec2TargetResolutionError) {
+    if (isEc2TargetResolutionError(error)) {
       throw error;
     }
 
-    throw new Ec2TargetResolutionError(mapSecretError(error), getEc2TargetErrorMessage(error));
+    throw createEc2TargetResolutionError(mapSecretError(error), getEc2TargetErrorMessage(error));
   }
 };
 
@@ -87,12 +90,12 @@ const detectTargetAz = async (
   try {
     response = await listWorkerNodes();
   } catch (error) {
-    throw new Ec2TargetResolutionError(mapNodesError(error), getEc2TargetErrorMessage(error));
+    throw createEc2TargetResolutionError(mapNodesError(error), getEc2TargetErrorMessage(error));
   }
 
   const az = getTargetAzFromNodes(toWorkerNodes(response));
   if (!az) {
-    throw new Ec2TargetResolutionError('noWorkerZone');
+    throw createEc2TargetResolutionError('noWorkerZone');
   }
   return az;
 };

@@ -1,12 +1,9 @@
-import { HTTP_FORBIDDEN, HTTP_NOT_FOUND } from '../fields/ec2/constants';
+import { isRecord } from '@utils/helpers';
 
-type ErrorRecord = Record<string, unknown>;
+import { HTTP_FORBIDDEN, HTTP_NOT_FOUND } from '../fields/ec2/constants';
 
 const FORBIDDEN_TEXT = 'forbidden';
 const NOT_FOUND_TEXTS = ['notfound', 'not found'];
-
-const isRecord = (value: unknown): value is ErrorRecord =>
-  typeof value === 'object' && value !== null;
 
 const parseHttpCode = (value: unknown): number | undefined => {
   if (typeof value === 'number') {
@@ -21,10 +18,10 @@ const parseHttpCode = (value: unknown): number | undefined => {
   return Number.isInteger(parsed) && parsed > 0 ? parsed : undefined;
 };
 
-const getResponseStatus = (error: ErrorRecord): unknown =>
+const getResponseStatus = (error: Record<string, unknown>): unknown =>
   isRecord(error.response) ? error.response.status : undefined;
 
-const getStatusFromValues = (error: ErrorRecord): number | undefined => {
+const getStatusFromValues = (error: Record<string, unknown>): number | undefined => {
   const candidates = [error.status, error.statusCode, error.code, getResponseStatus(error)];
 
   for (const candidate of candidates) {
@@ -37,7 +34,7 @@ const getStatusFromValues = (error: ErrorRecord): number | undefined => {
   return undefined;
 };
 
-const getStatusFromText = (error: ErrorRecord): number | undefined => {
+const getStatusFromText = (error: Record<string, unknown>): number | undefined => {
   const texts = [error.message, error.reason]
     .filter((value): value is string => typeof value === 'string')
     .map((value) => value.toLowerCase());
