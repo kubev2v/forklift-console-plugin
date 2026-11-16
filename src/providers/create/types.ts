@@ -5,6 +5,8 @@ import type {
   VSphereEndpointType,
 } from 'src/providers/utils/constants';
 
+import type { K8sResourceCommon } from '@openshift-console/dynamic-plugin-sdk';
+
 import type {
   CertificateValidationMode,
   HypervManagementType,
@@ -129,4 +131,28 @@ export type CreateProviderFormData = FieldValues &
 export type CreateProviderFormContextProps = {
   providerNames: string[] | undefined;
   providerNamesLoaded: boolean;
+};
+
+export type Ec2ResolvedTarget = {
+  targetAccessKeyId?: string;
+  targetAz?: string;
+  targetRegion?: string;
+  targetSecretAccessKey?: string;
+};
+
+export type Ec2TargetResolutionFailure =
+  | 'secretForbidden'
+  | 'secretNotFound'
+  | 'secretInvalid'
+  | 'nodesForbidden'
+  | 'noWorkerZone'
+  | 'unknown';
+
+export type Ec2WorkerNode = K8sResourceCommon;
+
+export type Ec2WorkerNodeList = Ec2WorkerNode[] | { items?: Ec2WorkerNode[] };
+
+export type ProviderSubmission = {
+  ec2Target?: Ec2ResolvedTarget;
+  formData: CreateProviderFormData;
 };
