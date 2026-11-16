@@ -37,6 +37,7 @@ export const getPlanResourcesTableProps = (
       return getHypervPlanResources(planInventory as EnhancedHypervVM[]);
     case PROVIDER_TYPES.nutanix:
       return getNutanixPlanResources(planInventory);
+    case PROVIDER_TYPES.azure:
     case PROVIDER_TYPES.ec2:
       return {
         planInventoryRunningSize: planInventory?.length,

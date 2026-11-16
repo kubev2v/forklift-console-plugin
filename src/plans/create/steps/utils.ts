@@ -25,6 +25,7 @@ export const getMapResourceLabel = (
       }
       return resource.name;
     }
+    case PROVIDER_TYPES.azure:
     case PROVIDER_TYPES.ec2:
     case PROVIDER_TYPES.hyperv:
     case PROVIDER_TYPES.nutanix:

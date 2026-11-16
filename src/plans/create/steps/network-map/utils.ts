@@ -16,7 +16,7 @@ import { isSameNetworkSource } from '../../utils/networkMappingSources';
 import { getMapResourceLabel } from '../utils';
 
 import { getHypervVlanQualifiedNetworks } from './hypervVlanNetworks';
-import { getNetworksUsedByProviderVms } from './vmNetworkExtraction';
+import { getAzureNicNetworks, getNetworksUsedByProviderVms } from './vmNetworkExtraction';
 
 export { getHypervVlanQualifiedNetworks } from './hypervVlanNetworks';
 
@@ -38,17 +38,17 @@ export const getSourceNetworkValues = (
   nicProfiles: OVirtNicProfile[],
   defaultNetworkLabel: string = getDefaultNetworkLabel(),
 ): CategorizedSourceMappings => {
-  const usedNetworkIds = new Set(
-    getNetworksUsedByProviderVms(vms, nicProfiles, availableSourceNetworks),
-  );
+  const azureNetworks = getAzureNicNetworks(vms);
+  const sourceNetworks = isEmpty(azureNetworks) ? availableSourceNetworks : azureNetworks;
+  const usedNetworkIds = new Set(getNetworksUsedByProviderVms(vms, nicProfiles, sourceNetworks));
 
-  const vlanQualified = getHypervVlanQualifiedNetworks(vms, availableSourceNetworks);
+  const vlanQualified = getHypervVlanQualifiedNetworks(vms, sourceNetworks);
   const networksWithVlanConflict = new Set(vlanQualified.map((entry) => entry.id));
 
   const used: MappingValue[] = [];
   const other: MappingValue[] = [];
 
-  for (const network of availableSourceNetworks) {
+  for (const network of sourceNetworks) {
     if (networksWithVlanConflict.has(network.id)) {
       // Network replaced by VLAN-qualified entries below
     } else {

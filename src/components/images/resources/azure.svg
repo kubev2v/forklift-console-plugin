@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Microsoft Azure mark.
+
+  Used only to identify the Microsoft Azure service that Migration Toolkit for
+  Virtualization integrates with (nominative use). Microsoft and Azure are
+  trademarks of Microsoft Corporation.
+
+  Geometry: Font Awesome "azure" brand icon, as bundled in @patternfly/react-icons
+  (MIT-licensed package; icon artwork CC BY 4.0 - https://fontawesome.com/license/free).
+  Brand colour: Azure blue (#0078D4).
+  Legal/design sign-off is tracked in MTV-6935 before this asset is merged.
+-->
+<svg width="64px" height="51px" viewBox="0 0 162 129" version="1.1" xmlns="http://www.w3.org/2000/svg">
+    <title>Microsoft Azure</title>
+    <defs>
+        <linearGradient id="azure-brand-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#50E6FF" />
+            <stop offset="100%" stop-color="#0078D4" />
+        </linearGradient>
+    </defs>
+    <path d="m88.33 0-47.66 41.33-40.67 73h36.67zm6.34 9.67-20.34 57.33 39 49-75.66 13h124z" fill="url(#azure-brand-gradient)" />
+</svg>

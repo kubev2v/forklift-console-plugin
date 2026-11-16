@@ -28,13 +28,14 @@ import { getName } from '@utils/crds/common/selectors';
 import { getResourceUrl } from '@utils/getResourceUrl';
 import { isEmpty } from '@utils/helpers';
 import { useClusterIsAwsPlatform } from '@utils/hooks/useClusterIsAwsPlatform';
+import { useClusterIsAzurePlatform } from '@utils/hooks/useClusterIsAzurePlatform';
 import { useIsDarkTheme } from '@utils/hooks/useIsDarkTheme';
 import { useK8sWatchResource } from '@utils/hooks/useK8sWatchResource';
 import { ForkliftTrans } from '@utils/i18n';
 import { PROVIDER_TYPES } from '@utils/providers/constants';
 import { ProviderStatus } from '@utils/types';
 
-import { extractProviders } from './utils/utils';
+import { extractProviders, isPlatformRestrictedProvider } from './utils/utils';
 
 type ProviderSelectProps = Pick<
   ComponentProps<typeof Select>,
@@ -66,6 +67,7 @@ const ProviderSelect = (
 ): ReactElement => {
   const isDarkTheme = useIsDarkTheme();
   const { isAwsPlatform } = useClusterIsAwsPlatform();
+  const { isAzurePlatform } = useClusterIsAzurePlatform();
   const { trackEvent } = useForkliftAnalytics();
   const [rawProviders, loaded] = useK8sWatchResource<V1beta1Provider[]>({
     groupVersionKind: ProviderModelGroupVersionKind,
@@ -78,25 +80,21 @@ const ProviderSelect = (
     [loaded, rawProviders],
   );
 
-  const filteredProviders = useMemo(
-    () =>
-      loaded && !isEmpty(providers)
-        ? providers.filter((provider) => {
-            const isReady = provider.status?.phase === ProviderStatus.Ready;
+  const filteredProviders = useMemo(() => {
+    if (!loaded || isEmpty(providers)) {
+      return [];
+    }
 
-            if (isTarget) {
-              return isReady && provider.spec?.type === PROVIDER_TYPES.openshift;
-            }
+    return providers.filter((provider) => {
+      const isReady = provider.status?.phase === ProviderStatus.Ready;
 
-            if (!isAwsPlatform && provider.spec?.type === PROVIDER_TYPES.ec2) {
-              return false;
-            }
+      if (isTarget) {
+        return isReady && provider.spec?.type === PROVIDER_TYPES.openshift;
+      }
 
-            return isReady;
-          })
-        : [],
-    [isAwsPlatform, isTarget, providers, loaded],
-  );
+      return isReady && !isPlatformRestrictedProvider(provider, { isAwsPlatform, isAzurePlatform });
+    });
+  }, [isAwsPlatform, isAzurePlatform, isTarget, providers, loaded]);
 
   const providersListUrl = useMemo(
     () =>

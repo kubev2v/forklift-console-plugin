@@ -53,7 +53,7 @@ export const getSourceStorageValuesForSelectedVms = (
 ): CategorizedSourceMappings => {
   const sourceProviderType = sourceProvider?.spec?.type;
 
-  if (sourceProviderType === PROVIDER_TYPES.ec2) {
+  if (sourceProviderType === PROVIDER_TYPES.azure || sourceProviderType === PROVIDER_TYPES.ec2) {
     return {
       other: [],
       used: availableSourceStorages.map((storage) => ({

@@ -2,12 +2,19 @@ import type { OVirtNicProfile, OVirtVM, ProviderVirtualMachine } from '@forklift
 import { getNamespace } from '@utils/crds/common/selectors';
 import { getDefaultNetworkLabel } from '@utils/mappings/constants';
 import { PROVIDER_TYPES } from '@utils/providers/constants';
+import { type AzureVM, getAzureNicIds, getAzureNicLabel } from '@utils/types/azureVM';
 import { getEc2SubnetIds, isEc2Vm } from '@utils/types/ec2Inventory';
 import { getNutanixSubnetIds, isNutanixVm } from '@utils/types/nutanixInventory';
 
 import type { ProviderNetwork } from '../../types';
 
 const toNetworksOrProfiles = (vm: ProviderVirtualMachine): string[] => {
+  // Azure network mappings are keyed by NIC ARM id, see
+  // pkg/provider/azure/controller/validator/network.go and builder/vm.go.
+  if ((vm as { providerType?: string }).providerType === PROVIDER_TYPES.azure) {
+    return getAzureNicIds(vm as unknown as AzureVM);
+  }
+
   if (isEc2Vm(vm)) {
     return getEc2SubnetIds(vm);
   }
@@ -106,6 +113,33 @@ const getOvirtNetworkIds = (vm: OVirtVM, nicProfileToNetworkMap: Map<string, str
       return id ? [...acc, id] : acc;
     }, []) ?? []
   );
+};
+
+export const getAzureNicNetworks = (providerVms: ProviderVirtualMachine[]): ProviderNetwork[] => {
+  const seen = new Set<string>();
+
+  return providerVms.reduce<ProviderNetwork[]>((acc, vm) => {
+    if ((vm as { providerType?: string }).providerType !== PROVIDER_TYPES.azure) {
+      return acc;
+    }
+
+    for (const nicId of getAzureNicIds(vm as unknown as AzureVM)) {
+      if (!seen.has(nicId)) {
+        seen.add(nicId);
+        // @forklift-ui/types has no Azure network type yet, so the NIC entry is
+        // shaped like a provider network and cast at this boundary.
+        acc.push({
+          id: nicId,
+          name: getAzureNicLabel(nicId),
+          providerType: PROVIDER_TYPES.azure,
+          revision: 0,
+          selfLink: '',
+        } as unknown as ProviderNetwork);
+      }
+    }
+
+    return acc;
+  }, []);
 };
 
 export const getNetworksUsedByProviderVms = (

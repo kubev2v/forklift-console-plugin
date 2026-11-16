@@ -1,10 +1,11 @@
 import type { ProviderType } from '@forklift-ui/types';
 
-export type ExtendedProviderType = ProviderType;
+export type ExtendedProviderType = ProviderType | 'azure';
 
-export const PROVIDERS: Record<ProviderType, string> =
+export const PROVIDERS: Record<ExtendedProviderType, string> =
   process.env.BRAND_TYPE === 'RedHat'
     ? {
+        azure: 'Microsoft Azure',
         ec2: 'Amazon EC2',
         hyperv: 'HyperV',
         nutanix: 'Nutanix AHV',
@@ -15,6 +16,7 @@ export const PROVIDERS: Record<ProviderType, string> =
         vsphere: 'VMware',
       }
     : {
+        azure: 'Microsoft Azure',
         ec2: 'Amazon EC2',
         hyperv: 'HyperV',
         nutanix: 'Nutanix AHV',

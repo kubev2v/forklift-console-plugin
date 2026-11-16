@@ -103,4 +103,20 @@ describe('getSourceNetworkValues', () => {
     expect(netB).toBeDefined();
     expect(netB?.vlan).toBeUndefined();
   });
+
+  it('uses NIC ARM ids as source networks for azure virtual machines', () => {
+    const nicId =
+      '/subscriptions/sub/resourceGroups/rg/providers/Microsoft.Network/networkInterfaces/nic-1';
+    const azureVm = {
+      id: 'vm-1',
+      name: 'vm-1',
+      object: { networkInterfaces: [{ id: nicId }] },
+      providerType: PROVIDER_TYPES.azure,
+    } as unknown as ProviderVirtualMachine;
+
+    const { other, used } = getSourceNetworkValues([], [azureVm], []);
+
+    expect(used).toEqual([{ id: nicId, name: 'nic-1' }]);
+    expect(other).toEqual([]);
+  });
 });
