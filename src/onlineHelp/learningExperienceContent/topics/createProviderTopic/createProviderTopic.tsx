@@ -11,6 +11,7 @@ import { PROVIDER_TYPES, type ProviderTypes } from '@utils/providers/constants';
 
 import SourceMigrationSelection from '../components/SourceMigrationSelection';
 
+import { azureCreateProviderSubTopics } from './subTopics/azureCreateProviderSubTopics';
 import { ec2CreateProviderSubTopics } from './subTopics/ec2CreateProviderSubTopics';
 import { hypervCreateProviderSubTopics } from './subTopics/hypervCreateProviderSubTopics';
 import { nutanixCreateProviderSubTopics } from './subTopics/nutanixCreateProviderSubTopics';
@@ -37,9 +38,10 @@ const createProviderSubTopics = (providerType?: ProviderTypes): LearningExperien
         return hypervCreateProviderSubTopics();
       case PROVIDER_TYPES.nutanix:
         return nutanixCreateProviderSubTopics();
+      case PROVIDER_TYPES.azure:
+        return azureCreateProviderSubTopics();
       case PROVIDER_TYPES.ec2:
         return ec2CreateProviderSubTopics();
-      case PROVIDER_TYPES.azure:
       case undefined:
       default:
         return vmwareCreateProviderSubTopics();
