@@ -97,5 +97,14 @@
     "api_url": "https://ec2.us-east-2.amazonaws.com",
     "access_key_id": "",
     "secret_access_key": ""
+  },
+  "azure": {
+    "api_url": "https://management.azure.com",
+    "azure_client_id": "",
+    "azure_client_secret": "",
+    "azure_resource_group": "",
+    "azure_subscription_id": "",
+    "azure_tenant_id": "",
+    "type": "azure"
   }
 }

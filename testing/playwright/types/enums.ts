@@ -5,6 +5,7 @@ export enum MigrationType {
 }
 
 export enum ProviderType {
+  AZURE = 'azure',
   EC2 = 'ec2',
   HYPERV = 'hyperv',
   NUTANIX = 'nutanix',
