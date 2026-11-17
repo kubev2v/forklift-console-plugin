@@ -1,5 +1,6 @@
 import type { ReactNode } from 'react';
 import {
+  azureLogo,
   ec2Logo,
   getNutanixLogo,
   getVmwareLogo,
@@ -14,6 +15,7 @@ import { Tooltip } from '@patternfly/react-core';
 import { t } from '@utils/i18n';
 
 const providerTypeLabels: Record<string, string> = {
+  azure: t('Microsoft Azure'),
   ec2: t('Amazon EC2'),
   hyperv: t('Microsoft Hyper-V'),
   nutanix: t('Nutanix AHV'),
@@ -25,6 +27,7 @@ const providerTypeLabels: Record<string, string> = {
 };
 
 const providerTypeIcons = (isDarkTheme: boolean): Record<string, ReactNode> => ({
+  azure: azureLogo,
   ec2: ec2Logo,
   hyperv: hypervLogo,
   nutanix: getNutanixLogo(isDarkTheme),

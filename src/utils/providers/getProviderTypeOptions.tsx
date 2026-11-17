@@ -1,5 +1,6 @@
 import type { ReactElement } from 'react';
 import {
+  azureLogo,
   ec2Logo,
   getNutanixLogo,
   getVmwareLogo,
@@ -25,7 +26,19 @@ type ProviderTypeOption = {
 export const getProviderTypeOptions = (
   isDarkTheme: boolean,
   isAwsPlatform: boolean,
+  isAzurePlatform: boolean,
 ): ProviderTypeOption[] => [
+  ...(isAzurePlatform
+    ? [
+        {
+          description: t('Migrate Microsoft Azure virtual machines to OpenShift Virtualization'),
+          icon: azureLogo,
+          label: t('Microsoft Azure'),
+          techPreview: true,
+          value: PROVIDER_TYPES.azure,
+        },
+      ]
+    : []),
   ...(isAwsPlatform
     ? [
         {

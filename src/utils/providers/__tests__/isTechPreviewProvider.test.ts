@@ -3,6 +3,10 @@ import { describe, expect, it } from '@jest/globals';
 import { isTechPreviewProvider, PROVIDER_TYPES } from '../constants';
 
 describe('isTechPreviewProvider', () => {
+  it('should return true for Azure', () => {
+    expect(isTechPreviewProvider(PROVIDER_TYPES.azure)).toBe(true);
+  });
+
   it('should return true for EC2', () => {
     expect(isTechPreviewProvider(PROVIDER_TYPES.ec2)).toBe(true);
   });

@@ -107,6 +107,18 @@ export const getDefaultFormValues = (
         [ProviderFormFieldId.NutanixUsername]: getDecodedValue(secret?.data?.user) ?? '',
       };
 
+    case PROVIDER_TYPES.azure:
+      return {
+        ...baseValues,
+        [ProviderFormFieldId.AzureClientId]: getDecodedValue(secret?.data?.clientId) ?? '',
+        [ProviderFormFieldId.AzureClientSecret]: getDecodedValue(secret?.data?.clientSecret) ?? '',
+        [ProviderFormFieldId.AzureResourceGroup]:
+          getDecodedValue(secret?.data?.resourceGroup) ?? '',
+        [ProviderFormFieldId.AzureSubscriptionId]:
+          getDecodedValue(secret?.data?.subscriptionId) ?? '',
+        [ProviderFormFieldId.AzureTenantId]: getDecodedValue(secret?.data?.tenantId) ?? '',
+      };
+
     case PROVIDER_TYPES.ec2:
       return {
         ...baseValues,
