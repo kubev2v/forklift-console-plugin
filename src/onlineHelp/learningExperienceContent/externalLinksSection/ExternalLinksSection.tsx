@@ -3,6 +3,7 @@ import type { FC } from 'react';
 import { ExternalLink } from '@components/common/ExternalLink/ExternalLink';
 import { Flex, FlexItem } from '@patternfly/react-core';
 import { useForkliftTranslation } from '@utils/i18n';
+import { VIRTIO_WIN_DRIVERS_DOWNLOAD_URL } from '@utils/links';
 
 import LearningExperienceFooterSection from '../../learningExperienceStructure/LearningExperiencePanel/components/LearningExperienceFooterSection';
 
@@ -38,6 +39,11 @@ const ExternalLinksSection: FC = () => {
         <FlexItem>
           <ExternalLink href={SUPPORT_HREF} iconPosition="start" isInline>
             {t('Get support')}
+          </ExternalLink>
+        </FlexItem>
+        <FlexItem>
+          <ExternalLink href={VIRTIO_WIN_DRIVERS_DOWNLOAD_URL} iconPosition="start" isInline>
+            {t('VirtIO drivers')}
           </ExternalLink>
         </FlexItem>
         <FlexItem>
