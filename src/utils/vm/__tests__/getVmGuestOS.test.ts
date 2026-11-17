@@ -88,6 +88,65 @@ describe('getVmGuestOS', () => {
     expect(getVmGuestOS(makeVm({ providerType: 'ovirt', osType: 'rhel_8x64' }))).toBe('rhel_8x64');
   });
 
+  it('returns guestOsId for nutanix when guestOsId and guestOsVersion are both set', () => {
+    expect(
+      getVmGuestOS(
+        makeVm({
+          providerType: 'nutanix',
+          guestOsId: 'nutanix-id',
+          guestOsVersion: 'windows:64:WindowsServer2019Standard',
+        }),
+      ),
+    ).toBe('nutanix-id');
+  });
+
+  it('falls back to guestOsVersion for nutanix when guestOsId is empty', () => {
+    expect(
+      getVmGuestOS(
+        makeVm({
+          providerType: 'nutanix',
+          guestOsId: '',
+          guestOsVersion: 'windows:64:WindowsServer2019Standard',
+        }),
+      ),
+    ).toBe('windows:64:WindowsServer2019Standard');
+  });
+
+  it('falls back to guestOsVersion for nutanix when guestOsId is missing', () => {
+    expect(
+      getVmGuestOS(
+        makeVm({ providerType: 'nutanix', guestOsVersion: 'linux:64:Rocky Linux-10.2' }),
+      ),
+    ).toBe('linux:64:Rocky Linux-10.2');
+  });
+
+  it('returns empty string for nutanix when both fields are empty', () => {
+    expect(
+      getVmGuestOS(makeVm({ providerType: 'nutanix', guestOsId: '', guestOsVersion: '' })),
+    ).toBe('');
+  });
+
+  it('returns empty string for nutanix when both fields are missing', () => {
+    expect(getVmGuestOS(makeVm({ providerType: 'nutanix' }))).toBe('');
+  });
+
+  it('returns empty string for nutanix when guestOsVersion is whitespace only', () => {
+    expect(
+      getVmGuestOS(makeVm({ providerType: 'nutanix', guestOsId: '', guestOsVersion: '   ' })),
+    ).toBe('');
+  });
+
+  it('trims padded guestOsVersion for nutanix', () => {
+    expect(
+      getVmGuestOS(
+        makeVm({
+          providerType: 'nutanix',
+          guestOsVersion: '  linux:64:Rocky Linux-10.2 ',
+        }),
+      ),
+    ).toBe('linux:64:Rocky Linux-10.2');
+  });
+
   it('returns empty string for openshift', () => {
     expect(getVmGuestOS(makeVm({ providerType: 'openshift' }))).toBe('');
   });
