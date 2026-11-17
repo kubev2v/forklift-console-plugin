@@ -79,6 +79,7 @@ export const StandardPageWithSelection = <T,>(
   const cellRef = useRef(cell);
   const getSelectDisabledReasonRef = useRef(getSelectDisabledReason);
   const toIdRef = useRef(toId);
+  const pruneSelectionRef = useRef<(removedIds: string[]) => void>(() => undefined);
   const toggleExpandForRef = useRef<(items: T[]) => void>(() => undefined);
   const toggleSelectForRef = useRef<(items: T[]) => void>(() => undefined);
 
@@ -92,6 +93,7 @@ export const StandardPageWithSelection = <T,>(
     internalSelectedIds,
     isExpanded,
     onSelectCallback,
+    pruneSelection,
     toggleExpandFor,
     toggleSelectFor,
   } = usePageSelection({
@@ -102,6 +104,7 @@ export const StandardPageWithSelection = <T,>(
     toId,
   });
 
+  pruneSelectionRef.current = pruneSelection;
   toggleExpandForRef.current = toggleExpandFor;
   toggleSelectForRef.current = toggleSelectFor;
 
@@ -112,6 +115,7 @@ export const StandardPageWithSelection = <T,>(
       getSelectDisabledReasonRef,
       hasExpansion: onExpand !== undefined || expandedIds !== undefined,
       hasSelection: onSelect !== undefined,
+      pruneSelectionRef,
       toggleExpandForRef,
       toggleSelectForRef,
       toIdRef,
@@ -127,10 +131,7 @@ export const StandardPageWithSelection = <T,>(
     [internalExpandedIds, internalSelectedIds],
   );
 
-  const row = useMemo(() => {
-    const RowWithSelection = createRowWithSelection<T>();
-    return withTr(RowWithSelection, expanded);
-  }, [expanded]);
+  const row = useMemo(() => withTr(createRowWithSelection<T>(), expanded), [expanded]);
 
   const finalHeader = useMemo(() => {
     return createHeaderWithSelection({
