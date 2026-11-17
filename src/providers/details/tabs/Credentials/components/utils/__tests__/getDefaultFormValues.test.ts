@@ -1,7 +1,9 @@
+import { encode } from 'js-base64';
 import {
   CertificateValidationMode,
   ProviderFormFieldId,
 } from 'src/providers/create/fields/constants';
+import { CA_CERT_SECRET_KEY } from 'src/providers/utils/constants';
 
 import type { IoK8sApiCoreV1Secret, V1beta1Provider } from '@forklift-ui/types';
 import { describe, expect, it } from '@jest/globals';
@@ -64,5 +66,52 @@ describe('getDefaultFormValues - provider URL seeding', () => {
     expect(result[ProviderFormFieldId.CertificateValidation]).toBe(
       CertificateValidationMode.Configure,
     );
+  });
+});
+
+describe('getDefaultFormValues - CA certificate seeding', () => {
+  const provider = providerWithUrl('vsphere');
+  const canonicalCaCert = 'canonical-cert';
+  const legacyCaCert = 'legacy-cert';
+
+  it('seeds the CA certificate from the canonical ca.crt key', () => {
+    const secret: IoK8sApiCoreV1Secret = {
+      data: { [CA_CERT_SECRET_KEY]: encode(canonicalCaCert) },
+    };
+
+    const result = getDefaultFormValues(secret, provider);
+
+    expect(result[ProviderFormFieldId.CaCertificate]).toBe(canonicalCaCert);
+    expect(result[ProviderFormFieldId.CertificateValidation]).toBe(
+      CertificateValidationMode.Configure,
+    );
+  });
+
+  it('prefers ca.crt when both CA keys are present', () => {
+    const secret: IoK8sApiCoreV1Secret = {
+      data: { [CA_CERT_SECRET_KEY]: encode(canonicalCaCert), cacert: encode(legacyCaCert) },
+    };
+
+    expect(getDefaultFormValues(secret, provider)[ProviderFormFieldId.CaCertificate]).toBe(
+      canonicalCaCert,
+    );
+  });
+
+  it('still seeds the CA certificate from the legacy cacert key', () => {
+    const secret: IoK8sApiCoreV1Secret = { data: { cacert: encode(legacyCaCert) } };
+
+    expect(getDefaultFormValues(secret, provider)[ProviderFormFieldId.CaCertificate]).toBe(
+      legacyCaCert,
+    );
+  });
+
+  it('yields Skip when insecureSkipVerify is true', () => {
+    const secret: IoK8sApiCoreV1Secret = {
+      data: { [CA_CERT_SECRET_KEY]: encode(canonicalCaCert), insecureSkipVerify: encode('true') },
+    };
+    const result = getDefaultFormValues(secret, provider);
+
+    expect(result[ProviderFormFieldId.CertificateValidation]).toBe(CertificateValidationMode.Skip);
+    expect(result[ProviderFormFieldId.CaCertificate]).toBe(canonicalCaCert);
   });
 });
