@@ -6,6 +6,11 @@ import TypeaheadSelect from '../TypeaheadSelect';
 
 import { defaultProps } from './typeaheadSelect.fixtures';
 
+const getMenuRoot = (listbox: HTMLElement): Element | null =>
+  // The PF menu root carries the scrollable modifier but is not exposed to the a11y tree.
+  // eslint-disable-next-line testing-library/no-node-access -- the modifier lives on the listbox ancestor
+  listbox.closest('.pf-v6-c-menu');
+
 describe('TypeaheadSelect - rendering', () => {
   beforeEach(() => {
     jest.clearAllMocks();
@@ -55,5 +60,27 @@ describe('TypeaheadSelect - rendering', () => {
     expect(input).toHaveAttribute('aria-expanded', 'false');
 
     expect(screen.queryByText('Option 1')).not.toBeInTheDocument();
+  });
+
+  test('opens a scrollable menu by default', async () => {
+    const user = userEvent.setup();
+    render(<TypeaheadSelect {...defaultProps} />);
+
+    await user.click(screen.getByRole('combobox'));
+
+    const menu = getMenuRoot(await screen.findByRole('listbox'));
+    expect(menu).not.toBeNull();
+    expect(menu).toHaveClass('pf-m-scrollable');
+  });
+
+  test('does not mark the menu scrollable when isScrollable is false', async () => {
+    const user = userEvent.setup();
+    render(<TypeaheadSelect {...defaultProps} isScrollable={false} />);
+
+    await user.click(screen.getByRole('combobox'));
+
+    const menu = getMenuRoot(await screen.findByRole('listbox'));
+    expect(menu).not.toBeNull();
+    expect(menu).not.toHaveClass('pf-m-scrollable');
   });
 });
