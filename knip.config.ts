@@ -34,6 +34,7 @@ export default {
     'testing/**',
     'eslint.ide.config.ts',
     'src/providers/create/fields/hyperv/HypervTransferMethodField.tsx', // hidden until backend iSCSI support lands (kubev2v/forklift#6014)
+    '.agents/skills/types-update/scripts/check-provider-registry.mjs', // standalone CLI guard, run manually from the skill
   ],
   ignoreBinaries: [
     'kubectl',
