@@ -20,6 +20,7 @@ const MultiTypeaheadSelect = (
     footer,
     isCreatable = false,
     isDisabled = false,
+    isScrollable = true,
     listboxId,
     maxSelections,
     noOptionsMessage,
@@ -76,6 +77,7 @@ const MultiTypeaheadSelect = (
     <PfSelect
       id="multi-create-typeahead-select"
       isOpen={isOpen}
+      isScrollable={isScrollable}
       onOpenChange={onOpenChange}
       onSelect={(_event, selection: string | number | undefined) => {
         handleSelect(selection);
