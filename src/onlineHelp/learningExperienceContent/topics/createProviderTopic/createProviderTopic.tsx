@@ -39,6 +39,7 @@ const createProviderSubTopics = (providerType?: ProviderTypes): LearningExperien
         return nutanixCreateProviderSubTopics();
       case PROVIDER_TYPES.ec2:
         return ec2CreateProviderSubTopics();
+      case PROVIDER_TYPES.azure:
       case undefined:
       default:
         return vmwareCreateProviderSubTopics();

@@ -12,6 +12,7 @@ import { migrationTypeTopic } from '../migrationTypeTopic';
 import { troubleShootingTopic } from '../troubleShootingTopic/troubleShootingTopic';
 
 export const MigrationSourceTypeLabels = {
+  [PROVIDER_TYPES.azure]: t('Microsoft Azure'),
   [PROVIDER_TYPES.ec2]: t('Amazon EC2'),
   [PROVIDER_TYPES.hyperv]: t('Microsoft Hyper-V'),
   [PROVIDER_TYPES.nutanix]: t('Nutanix AHV'),

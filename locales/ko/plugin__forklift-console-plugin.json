@@ -924,6 +924,7 @@
   "Message": "메시지",
   "Method": "Method",
   "Method of authentication to use when connecting to the OpenStack Identity (Keystone) server.": "OpenStack Identity(Keystone) 서버에 연결할 때 사용할 인증 방법입니다.",
+  "Microsoft Azure": "Microsoft Azure",
   "Microsoft Hyper-V": "Microsoft Hyper-V",
   "Microsoft Hyper-V virtualization platform. Supports migration via SMB share.": "Microsoft Hyper-V 가상화 플랫폼입니다. SMB 공유를 통한 마이그레이션을 지원합니다.",
   "Microsoft Windows VMs, which use the Measured Boot feature, cannot be migrated. Measured Boot is a mechanism to prevent any kind of device changes by checking each start-up component, including the firmware, all the way to the boot driver.": "측정 부팅 기능을 사용하는 Microsoft Windows 가상 머신은 마이그레이션할 수 없습니다. 측정 부팅은 펌웨어부터 부팅 드라이버까지 모든 시작 구성 요소를 검사하여 장치 변경을 방지하는 메커니즘입니다.",
