@@ -1,4 +1,5 @@
 import type { FC } from 'react';
+import AzureCredentialsFields from 'src/providers/create/fields/azure/AzureCredentialsFields';
 import Ec2CredentialsFields from 'src/providers/create/fields/ec2/Ec2CredentialsFields';
 import HypervCredentialsFields from 'src/providers/create/fields/hyperv/HypervCredentialsFields';
 import NutanixCredentialsFields from 'src/providers/create/fields/nutanix/NutanixCredentialsFields';
@@ -11,6 +12,9 @@ import { PROVIDER_TYPES } from '@utils/providers/constants';
 
 const CredentialFieldsByType: FC<{ providerType: string | undefined }> = ({ providerType }) => {
   switch (providerType) {
+    case PROVIDER_TYPES.azure:
+      return <AzureCredentialsFields />;
+
     case PROVIDER_TYPES.ec2:
       return <Ec2CredentialsFields />;
 

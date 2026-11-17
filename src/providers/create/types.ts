@@ -106,6 +106,19 @@ type Ec2Fields = {
   [ProviderFormFieldId.Ec2UseCrossAccountCredentials]?: boolean;
 };
 
+type AzureFields = {
+  [ProviderFormFieldId.AzureClientId]?: string;
+  [ProviderFormFieldId.AzureClientSecret]?: string;
+  [ProviderFormFieldId.AzureResourceGroup]?: string;
+  [ProviderFormFieldId.AzureSnapshotResourceGroup]?: string;
+  [ProviderFormFieldId.AzureSnapshotSku]?: string;
+  [ProviderFormFieldId.AzureSubscriptionId]?: string;
+  [ProviderFormFieldId.AzureTargetRegion]?: string;
+  [ProviderFormFieldId.AzureTenantId]?: string;
+  [ProviderFormFieldId.AzureVolumeSnapshotClassName]?: string;
+};
+
+export type AzureFormData = BaseFormData & AzureFields;
 export type Ec2FormData = BaseFormData & Ec2Fields;
 export type NutanixFormData = BaseFormData & NutanixFields;
 export type OpenshiftFormData = BaseFormData & OpenshiftFields;
@@ -117,6 +130,7 @@ export type HypervFormData = BaseFormData & HypervFields;
 
 export type CreateProviderFormData = FieldValues &
   BaseFormData &
+  AzureFields &
   Ec2Fields &
   NutanixFields &
   OpenshiftFields &

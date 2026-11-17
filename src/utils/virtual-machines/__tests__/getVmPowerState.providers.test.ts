@@ -15,6 +15,10 @@ describe('getVmPowerState - providers', () => {
     ['hyperv', { powerState: 'On' }, 'on'],
     ['hyperv', { powerState: 'Off' }, 'off'],
     ['hyperv', { powerState: 'Saved' }, 'unknown'],
+    ['azure', { powerState: 'running' }, 'on'],
+    ['azure', { powerState: 'deallocated' }, 'off'],
+    ['azure', { powerState: 'stopped' }, 'off'],
+    ['azure', { powerState: 'starting' }, 'unknown'],
   ] as const)('%s maps %j to %s', (providerType, fields, expected) => {
     expect(getVmPowerState({ providerType, ...fields } as never)).toBe(expected);
   });

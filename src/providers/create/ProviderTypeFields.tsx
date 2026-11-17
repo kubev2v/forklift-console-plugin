@@ -5,6 +5,8 @@ import SectionHeading from '@components/headers/SectionHeading';
 import { useForkliftTranslation } from '@utils/i18n';
 import { PROVIDER_TYPES } from '@utils/providers/constants';
 
+import AzureAdvancedSettingsFields from './fields/azure/AzureAdvancedSettingsFields';
+import AzureCredentialsFields from './fields/azure/AzureCredentialsFields';
 import CertificateValidationField from './fields/CertificateValidationField';
 import { ProviderFormFieldId } from './fields/constants';
 import Ec2CredentialsFields from './fields/ec2/Ec2CredentialsFields';
@@ -55,6 +57,14 @@ const ProviderTypeFields: FC = () => {
         <ProviderTypeField />
         {selectedProviderType && <ProviderNameField />}
       </fieldset>
+
+      {selectedProviderType === PROVIDER_TYPES.azure && (
+        <>
+          <SectionHeading text={t('Provider credentials')} />
+          <AzureCredentialsFields />
+          <AzureAdvancedSettingsFields />
+        </>
+      )}
 
       {selectedProviderType === PROVIDER_TYPES.ec2 && (
         <>

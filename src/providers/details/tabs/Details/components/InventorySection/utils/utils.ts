@@ -2,6 +2,7 @@ import type { FC } from 'react';
 
 import { PROVIDER_TYPES } from '@utils/providers/constants';
 
+import AzureInventorySection from '../AzureInventorySection';
 import Ec2InventorySection from '../Ec2InventorySection';
 import HyperVInventorySection from '../HyperVInventorySection';
 import NutanixInventorySection from '../NutanixInventorySection';
@@ -17,6 +18,8 @@ export const getInventorySectionByType = (
   type: string | undefined,
 ): FC<InventorySectionProps> | undefined => {
   switch (type) {
+    case PROVIDER_TYPES.azure:
+      return AzureInventorySection;
     case PROVIDER_TYPES.ec2:
       return Ec2InventorySection;
     case PROVIDER_TYPES.ovirt:

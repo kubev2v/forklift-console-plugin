@@ -94,6 +94,18 @@ enum Ec2ProviderFormFieldId {
   Ec2UseCrossAccountCredentials = 'ec2UseCrossAccountCredentials',
 }
 
+enum AzureProviderFormFieldId {
+  AzureClientId = 'azureClientId',
+  AzureClientSecret = 'azureClientSecret',
+  AzureResourceGroup = 'azureResourceGroup',
+  AzureSnapshotResourceGroup = 'azureSnapshotResourceGroup',
+  AzureSnapshotSku = 'azureSnapshotSku',
+  AzureSubscriptionId = 'azureSubscriptionId',
+  AzureTargetRegion = 'azureTargetRegion',
+  AzureTenantId = 'azureTenantId',
+  AzureVolumeSnapshotClassName = 'azureVolumeSnapshotClassName',
+}
+
 enum NutanixProviderFormFieldId {
   NutanixPassword = 'nutanixPassword',
   NutanixPrismType = 'nutanixPrismType',
@@ -107,6 +119,7 @@ export enum NutanixPrismType {
 }
 
 export const ProviderFormFieldId = {
+  ...AzureProviderFormFieldId,
   ...CommonProviderFormFieldId,
   ...CertificateFormFieldId,
   ...Ec2ProviderFormFieldId,
@@ -120,6 +133,7 @@ export const ProviderFormFieldId = {
 } as const;
 
 export type ProviderFormFieldIdType =
+  | AzureProviderFormFieldId
   | CommonProviderFormFieldId
   | CertificateFormFieldId
   | Ec2ProviderFormFieldId
