@@ -1,5 +1,8 @@
 import { encode } from 'js-base64';
-import { VSphereEndpointType } from 'src/providers/utils/constants';
+import {
+  DISK_TRANSFER_METHOD_ANNOTATION,
+  VSphereEndpointType,
+} from 'src/providers/utils/constants';
 
 import type { IoK8sApiCoreV1Secret, V1beta1Provider } from '@forklift-ui/types';
 import { encodeFormValue } from '@utils/helpers/encodeFormValue';
@@ -40,12 +43,25 @@ export const buildVsphereProviderResources = (formData: VsphereFormData): Provid
     url,
   });
 
+  if (vddkSetupMode === VddkSetupMode.CopyAppliance) {
+    provider.metadata = {
+      ...provider.metadata,
+      annotations: {
+        ...provider.metadata?.annotations,
+        [DISK_TRANSFER_METHOD_ANNOTATION]: VddkSetupMode.CopyAppliance,
+      },
+    };
+  }
+
   if (provider.spec) {
     provider.spec.settings = {
       sdkEndpoint: endpointType,
     };
 
-    if (vddkSetupMode !== VddkSetupMode.Skip && vddkInitImage?.trim()) {
+    if (
+      (vddkSetupMode === VddkSetupMode.Manual || vddkSetupMode === VddkSetupMode.Upload) &&
+      vddkInitImage?.trim()
+    ) {
       provider.spec.settings.vddkInitImage = vddkInitImage.trim();
       if (useVddkAioOptimization) {
         provider.spec.settings.useVddkAioOptimization = String(useVddkAioOptimization);

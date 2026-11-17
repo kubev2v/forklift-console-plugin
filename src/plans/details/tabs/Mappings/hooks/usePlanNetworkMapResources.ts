@@ -1,11 +1,7 @@
 import { useMemo } from 'react';
 import { getMappingValues } from 'src/networkMaps/create/utils/buildNetworkMappings';
 import { useOvirtNicProfiles } from 'src/plans/create/hooks/useOvirtNicProfiles';
-import {
-  type InventoryNetwork,
-  useOpenShiftNetworks,
-  useSourceNetworks,
-} from 'src/utils/hooks/useNetworks';
+import { useOpenShiftNetworks, useSourceNetworks } from 'src/utils/hooks/useNetworks';
 
 import {
   NetworkMapModelGroupVersionKind,
@@ -33,7 +29,7 @@ type UsePlanNetworkMapResources = ({
   networkMappings: NetworkMapping[];
   networkMapResult: TypedWatchK8sResult<V1beta1NetworkMap>;
   oVirtNicProfilesResult: [OVirtNicProfile[], boolean, Error | null];
-  sourceNetworksResult: [InventoryNetwork[], boolean, Error | null];
+  sourceNetworksResult: ReturnType<typeof useSourceNetworks>;
   targetNetworksResult: [OpenShiftNetworkAttachmentDefinition[], boolean, Error | null];
 };
 

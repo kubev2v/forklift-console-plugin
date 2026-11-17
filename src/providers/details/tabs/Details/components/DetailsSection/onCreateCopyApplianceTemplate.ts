@@ -4,13 +4,56 @@ import {
   type V1beta1CopyApplianceTemplate,
   type V1beta1Provider,
 } from '@forklift-ui/types';
-import { k8sCreate, k8sPatch } from '@openshift-console/dynamic-plugin-sdk';
+import { k8sCreate, k8sGet, k8sPatch } from '@openshift-console/dynamic-plugin-sdk';
 import { getName, getNamespace, getUID } from '@utils/crds/common/selectors';
 import { getCopyApplianceTemplateName } from '@utils/crds/providers/selectors';
 import { isEmpty } from '@utils/helpers';
+import { t } from '@utils/i18n';
 
 import { buildCopyAppliancePlacementPatches } from './buildCopyApplianceSettingPatch';
-import type { CopyAppliancePlacementValues } from './copyAppliancePlacementConfig';
+import {
+  COPY_APPLIANCE_SETTING_FIELDS,
+  COPY_APPLIANCE_TEMPLATE_SPEC_KEY,
+  type CopyAppliancePlacementValues,
+} from './copyAppliancePlacementConfig';
+
+const findCreatedTemplate = async (
+  provider: V1beta1Provider,
+  templateName: string,
+  placement: CopyAppliancePlacementValues,
+): Promise<V1beta1CopyApplianceTemplate | undefined> => {
+  try {
+    const template = await k8sGet<V1beta1CopyApplianceTemplate>({
+      model: CopyApplianceTemplateModel,
+      name: templateName,
+      ns: getNamespace(provider),
+    });
+
+    const belongsToProvider = template.metadata?.ownerReferences?.some(
+      (owner) => owner.kind === 'Provider' && owner.uid === getUID(provider),
+    );
+    if (
+      getName(template) !== templateName ||
+      getNamespace(template) !== getNamespace(provider) ||
+      template.spec?.provider?.name !== getName(provider) ||
+      template.spec?.provider?.namespace !== getNamespace(provider) ||
+      !belongsToProvider
+    ) {
+      return undefined;
+    }
+    if (
+      template.spec?.datastore !== placement.datastore ||
+      template.spec?.folder !== placement.folder ||
+      template.spec?.network !== placement.network ||
+      template.spec?.templateName !== templateName
+    ) {
+      return undefined;
+    }
+    return template;
+  } catch {
+    return undefined;
+  }
+};
 
 const onCreateCopyApplianceTemplate = async (
   provider: V1beta1Provider,
@@ -20,14 +63,20 @@ const onCreateCopyApplianceTemplate = async (
   const namespace = getNamespace(provider);
   const uid = getUID(provider);
   if (!name || !namespace || !uid) {
-    throw new Error('Provider is missing name, namespace, or uid');
+    throw new Error(t('Provider is missing name, namespace, or uid'));
   }
 
   const templateName = getCopyApplianceTemplateName(provider);
   if (!templateName) {
-    throw new Error('Provider is missing name');
+    throw new Error(t('Provider is missing name'));
   }
 
+  const placementSpec = Object.fromEntries(
+    COPY_APPLIANCE_SETTING_FIELDS.flatMap((field) => {
+      const specKey = COPY_APPLIANCE_TEMPLATE_SPEC_KEY[field];
+      return specKey ? [[specKey, placement[field]]] : [];
+    }),
+  ) as { datastore: string; folder: string; network: string };
   const patches = buildCopyAppliancePlacementPatches(provider, placement);
   if (!isEmpty(patches)) {
     await k8sPatch({
@@ -37,35 +86,41 @@ const onCreateCopyApplianceTemplate = async (
     });
   }
 
-  return k8sCreate({
-    data: {
-      apiVersion: `${CopyApplianceTemplateModel.apiGroup}/${CopyApplianceTemplateModel.apiVersion}`,
-      kind: CopyApplianceTemplateModel.kind,
-      metadata: {
-        name: templateName,
-        namespace,
-        ownerReferences: [
-          {
-            apiVersion: provider.apiVersion ?? 'forklift.konveyor.io/v1beta1',
-            blockOwnerDeletion: true,
-            controller: true,
-            kind: provider.kind ?? 'Provider',
-            name,
-            uid,
-          },
-        ],
+  try {
+    return await k8sCreate({
+      data: {
+        apiVersion: `${CopyApplianceTemplateModel.apiGroup}/${CopyApplianceTemplateModel.apiVersion}`,
+        kind: CopyApplianceTemplateModel.kind,
+        metadata: {
+          name: templateName,
+          namespace,
+          ownerReferences: [
+            {
+              apiVersion: provider.apiVersion ?? 'forklift.konveyor.io/v1beta1',
+              blockOwnerDeletion: true,
+              controller: true,
+              kind: provider.kind ?? 'Provider',
+              name,
+              uid,
+            },
+          ],
+        },
+        spec: {
+          baseDisk: {},
+          ...placementSpec,
+          provider: { name, namespace },
+          templateName,
+        },
       },
-      spec: {
-        baseDisk: {},
-        datastore: placement.datastore,
-        folder: placement.folder,
-        network: placement.network,
-        provider: { name, namespace },
-        templateName,
-      },
-    },
-    model: CopyApplianceTemplateModel,
-  });
+      model: CopyApplianceTemplateModel,
+    });
+  } catch (error) {
+    const existing = await findCreatedTemplate(provider, templateName, placement);
+    if (existing) {
+      return existing;
+    }
+    throw error;
+  }
 };
 
 export default onCreateCopyApplianceTemplate;

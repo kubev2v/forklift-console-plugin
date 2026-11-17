@@ -1,3 +1,4 @@
+import { VddkSetupMode } from 'src/providers/utils/constants';
 import { validateVDDKImage } from 'src/providers/utils/validators/provider/vsphere/validateVDDKImage';
 import { validateNoSpaces } from 'src/utils/validation/common';
 
@@ -28,12 +29,30 @@ export const validateVspherePassword = (value: string | undefined): string | tru
   return true;
 };
 
-export const validateVddkInitImage = (value: string | undefined): string | true => {
+export const validateVddkInitImage = (value: string | undefined): string | undefined => {
   const result = validateVDDKImage(value);
 
   if (result.type === ValidationState.Error && typeof result.msg === 'string') {
     return result.msg;
   }
 
-  return true;
+  return undefined;
+};
+
+export const validateVsphereDiskTransfer = (
+  mode: VddkSetupMode | undefined,
+  image: string | undefined,
+): string | undefined => {
+  if (!mode) {
+    return t('Disk transfer selection is required');
+  }
+
+  if (mode === VddkSetupMode.Manual || mode === VddkSetupMode.Upload) {
+    if (!image?.trim()) {
+      return t('VDDK image is required');
+    }
+    return validateVddkInitImage(image);
+  }
+
+  return undefined;
 };

@@ -50,10 +50,11 @@ const ProviderTypeFields: FC = () => {
 
   return (
     <>
-      <ProviderProjectField />
-      <ProviderTypeField />
-
-      {selectedProviderType && <ProviderNameField />}
+      <fieldset className="create-provider-form__fields">
+        <ProviderProjectField />
+        <ProviderTypeField />
+        {selectedProviderType && <ProviderNameField />}
+      </fieldset>
 
       {selectedProviderType === PROVIDER_TYPES.ec2 && (
         <>
@@ -103,11 +104,15 @@ const ProviderTypeFields: FC = () => {
       {selectedProviderType === PROVIDER_TYPES.vsphere && (
         <>
           <VsphereEndpointTypeField />
-          <VsphereUrlField />
+          <fieldset className="create-provider-form__fields">
+            <VsphereUrlField />
+          </fieldset>
           <VsphereVddkField />
-          <SectionHeading text={t('Provider credentials')} />
-          {vsphereUrl?.trim() && <VsphereCredentialsFields />}
-          <CertificateValidationField />
+          <fieldset className="create-provider-form__fields">
+            <SectionHeading text={t('Provider credentials')} />
+            {vsphereUrl?.trim() && <VsphereCredentialsFields />}
+            <CertificateValidationField />
+          </fieldset>
         </>
       )}
 

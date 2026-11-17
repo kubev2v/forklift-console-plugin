@@ -15,7 +15,7 @@ import type { VSphereProvider } from '@forklift-ui/types';
 import { DescriptionList } from '@patternfly/react-core';
 
 import type { DetailsSectionProps } from './utils/types';
-import { VDDKDetailsItem } from './VDDKDetailsItem';
+
 const VSphereDetailsSection: FC<DetailsSectionProps> = ({ data }) => {
   const { t } = useForkliftTranslation();
   const { inventory, permissions, provider } = data;
@@ -68,7 +68,6 @@ const VSphereDetailsSection: FC<DetailsSectionProps> = ({ data }) => {
       <CredentialsDetailsItem resource={provider} />
       <CreatedAtDetailsItem resource={provider} />
       <OwnerDetailsItem resource={provider} />
-      <VDDKDetailsItem canPatch={permissions.canPatch} resource={provider} />
     </DescriptionList>
   );
 };

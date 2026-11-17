@@ -11,11 +11,14 @@ type SettingPatch =
   | { op: typeof ADD | typeof REPLACE; path: string; value: string }
   | { op: typeof REMOVE; path: string };
 
-export const buildCopyApplianceSettingPatch = (
+const buildCopyApplianceSettingPatch = (
   current: string | undefined,
   path: string,
   value: string,
 ): SettingPatch | null => {
+  if (current === value) {
+    return null;
+  }
   if (!value) {
     if (!current) {
       return null;
