@@ -8,6 +8,7 @@ import TechPreviewLabel from '@components/PreviewLabels/TechPreviewLabel';
 import { Flex, FlexItem, SelectList, SelectOption } from '@patternfly/react-core';
 import { getInputValidated } from '@utils/form';
 import { useClusterIsAwsPlatform } from '@utils/hooks/useClusterIsAwsPlatform';
+import { useClusterIsAzurePlatform } from '@utils/hooks/useClusterIsAzurePlatform';
 import { useIsDarkTheme } from '@utils/hooks/useIsDarkTheme';
 import { useForkliftTranslation } from '@utils/i18n';
 import { getProviderTypeOptions } from '@utils/providers/getProviderTypeOptions';
@@ -22,6 +23,7 @@ const ProviderTypeField: FC = () => {
   const { t } = useForkliftTranslation();
   const isDarkTheme = useIsDarkTheme();
   const { isAwsPlatform } = useClusterIsAwsPlatform();
+  const { isAzurePlatform } = useClusterIsAzurePlatform();
   const { control } = useCreateProviderFormContext();
 
   const {
@@ -35,7 +37,7 @@ const ProviderTypeField: FC = () => {
     },
   });
 
-  const providerTypeOptions = getProviderTypeOptions(isDarkTheme, isAwsPlatform);
+  const providerTypeOptions = getProviderTypeOptions(isDarkTheme, isAwsPlatform, isAzurePlatform);
 
   const onSelect = (
     _event: React.MouseEvent | undefined,

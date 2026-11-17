@@ -8,6 +8,7 @@ import type {
   VSphereVM,
 } from '@forklift-ui/types';
 import { PROVIDER_TYPES } from '@utils/providers/constants';
+import { type AzureVM, getAzureVmPowerState } from '@utils/types/azureVM';
 import type { Ec2VM } from '@utils/types/ec2VM';
 
 export type PowerState = 'on' | 'off' | 'unknown';
@@ -84,6 +85,10 @@ const getEc2VmPowerState = (vm: Ec2VM): PowerState => {
 export const getVmPowerState = (vm: ProviderVirtualMachine | Ec2VM | undefined): PowerState => {
   if (!vm) {
     return 'unknown';
+  }
+
+  if ((vm as { providerType?: string }).providerType === 'azure') {
+    return getAzureVmPowerState(vm as unknown as AzureVM);
   }
 
   switch (vm?.providerType) {

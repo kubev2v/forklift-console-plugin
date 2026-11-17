@@ -32,6 +32,8 @@ const migratingVMsSubTopics = (providerType?: ProviderTypes): LearningExperience
         return commonMigratingVMsSubTopics(t('Choose your Microsoft Hyper-V provider.'));
       case PROVIDER_TYPES.nutanix:
         return commonMigratingVMsSubTopics(t('Choose your Nutanix AHV provider.'));
+      case PROVIDER_TYPES.azure:
+        return commonMigratingVMsSubTopics(t('Choose your Microsoft Azure provider.'));
       case PROVIDER_TYPES.ec2:
         return commonMigratingVMsSubTopics(t('Choose your Amazon EC2 provider.'));
       case undefined:

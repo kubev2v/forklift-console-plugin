@@ -8,13 +8,13 @@ mockI18n();
 
 describe('getProviderTypeOptions', () => {
   it('should place EC2 first when the cluster is on AWS platform', () => {
-    const options = getProviderTypeOptions(false, true);
+    const options = getProviderTypeOptions(false, true, false);
 
     expect(options[0]?.value).toBe(PROVIDER_TYPES.ec2);
   });
 
   it('should include EC2 option when cluster is on AWS platform', () => {
-    const options = getProviderTypeOptions(false, true);
+    const options = getProviderTypeOptions(false, true, false);
     const ec2Option = options.find((option) => option.value === PROVIDER_TYPES.ec2);
 
     expect(ec2Option).toBeDefined();
@@ -22,7 +22,7 @@ describe('getProviderTypeOptions', () => {
   });
 
   it('should include EC2 option with techPreview flag when cluster is on AWS platform', () => {
-    const options = getProviderTypeOptions(false, true);
+    const options = getProviderTypeOptions(false, true, false);
     const ec2Option = options.find((option) => option.value === PROVIDER_TYPES.ec2);
 
     expect(ec2Option).toBeDefined();
@@ -30,7 +30,7 @@ describe('getProviderTypeOptions', () => {
   });
 
   it('should exclude EC2 option when cluster is not on AWS platform', () => {
-    const options = getProviderTypeOptions(false, false);
+    const options = getProviderTypeOptions(false, false, false);
     const ec2Option = options.find((option) => option.value === PROVIDER_TYPES.ec2);
 
     expect(ec2Option).toBeUndefined();
@@ -47,8 +47,8 @@ describe('getProviderTypeOptions', () => {
       PROVIDER_TYPES.vsphere,
     ];
 
-    const awsOptions = getProviderTypeOptions(false, true);
-    const nonAwsOptions = getProviderTypeOptions(false, false);
+    const awsOptions = getProviderTypeOptions(false, true, false);
+    const nonAwsOptions = getProviderTypeOptions(false, false, false);
 
     for (const type of nonEc2Types) {
       expect(awsOptions.find((option) => option.value === type)).toBeDefined();
@@ -57,7 +57,7 @@ describe('getProviderTypeOptions', () => {
   });
 
   it('should include Hyper-V option without techPreview flag', () => {
-    const options = getProviderTypeOptions(false, false);
+    const options = getProviderTypeOptions(false, false, false);
     const hypervOption = options.find((option) => option.value === PROVIDER_TYPES.hyperv);
 
     expect(hypervOption).toBeDefined();
@@ -65,12 +65,25 @@ describe('getProviderTypeOptions', () => {
   });
 
   it('should include Nutanix AHV option with techPreview flag', () => {
-    const options = getProviderTypeOptions(false, false);
+    const options = getProviderTypeOptions(false, false, false);
     const nutanixOption = options.find((option) => option.value === PROVIDER_TYPES.nutanix);
 
     expect(nutanixOption).toBeDefined();
     expect(nutanixOption?.techPreview).toBe(true);
     expect(nutanixOption?.devPreview).toBeUndefined();
     expect(nutanixOption?.label).toBe('Nutanix AHV');
+  });
+
+  it('should include Azure first when the cluster is on Azure platform', () => {
+    const options = getProviderTypeOptions(false, false, true);
+
+    expect(options[0]?.value).toBe(PROVIDER_TYPES.azure);
+    expect(options[0]?.techPreview).toBe(true);
+  });
+
+  it('should exclude Azure option when the cluster is not on Azure platform', () => {
+    const options = getProviderTypeOptions(false, true, false);
+
+    expect(options.find((option) => option.value === PROVIDER_TYPES.azure)).toBeUndefined();
   });
 });

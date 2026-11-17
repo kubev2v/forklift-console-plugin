@@ -9,11 +9,14 @@ import type {
 } from '@forklift-ui/types';
 import { PROVIDER_TYPES } from '@utils/providers/constants';
 import type { ProviderData } from '@utils/providers/types';
+import type { AzureProvider } from '@utils/types/azureInventory';
 
 export const getProviderStorageCount = (provider: ProviderData): number | undefined => {
   const { inventory } = provider;
 
   switch (inventory?.type) {
+    case PROVIDER_TYPES.azure:
+      return (inventory as unknown as AzureProvider).storageCount;
     case PROVIDER_TYPES.ova:
       return (inventory as OvaProvider).storageCount;
     case PROVIDER_TYPES.hyperv:
