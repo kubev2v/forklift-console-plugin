@@ -30,7 +30,7 @@ const SetLUKSEncryptionPasswordsDetailsItem: FC<EditableDetailsItemProps> = ({
       content={<LUKSSecretLink plan={plan} />}
       crumbs={['spec', 'vms', 'luks']}
       helpContent={t(
-        'Configure disk decryption settings including passphrases for LUKS-encrypted devices or network-bound disk encryption (NBDE/Clevis) for the VMs you want to migrate.',
+        'Configure disk decryption settings including passphrases for LUKS- or BitLocker-encrypted devices or network-bound disk encryption (NBDE/Clevis) for LUKS-encrypted devices.',
       )}
       moreInfoLink={VIRT_V2V_HELP_LINK}
       onEdit={() => {

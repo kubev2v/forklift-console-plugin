@@ -14,7 +14,7 @@ export const additionalSettingsSubTopic = (): LearningExperienceSubTopic => ({
       title: (
         <HelpTitledContent
           content={t(
-            `If the virtual machines you're migrating have LUKS-encrypted disks, click the "Add passphrase" button. Enter the decryption passphrase for each disk. MTV will try each passphrase until it can unlock the disk. If your VMs are not encrypted, you can leave this section blank.`,
+            `If the virtual machines you're migrating have LUKS- or BitLocker-encrypted disks, click the "Add passphrase" button. Enter the decryption passphrase for each disk. MTV will try each passphrase until it can unlock the disk. If your VMs are not encrypted, you can leave this section blank.`,
           )}
           title={t('Disk decryption passphrases')}
         />

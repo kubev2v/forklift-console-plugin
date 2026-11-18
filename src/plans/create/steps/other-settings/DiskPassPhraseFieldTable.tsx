@@ -59,13 +59,13 @@ const DiskPassPhraseFieldTable = (): ReactElement => {
               <Stack hasGutter>
                 <StackItem>
                   {t(
-                    'Specify a list of passphrases for the Linux Unified Key Setup (LUKS)-encrypted devices for the VMs that you want to migrate.',
+                    'Specify a list of passphrases for the LUKS- or BitLocker-encrypted devices for the VMs that you want to migrate.',
                   )}
                 </StackItem>
 
                 <StackItem>
                   {t(
-                    'For each LUKS-encrypted device, migration toolkit for virtualization (MTV) tries each passphrase until one unlocks the device.',
+                    'For each LUKS- or BitLocker-encrypted device, migration toolkit for virtualization (MTV) tries each passphrase until one unlocks the device.',
                   )}
                 </StackItem>
 

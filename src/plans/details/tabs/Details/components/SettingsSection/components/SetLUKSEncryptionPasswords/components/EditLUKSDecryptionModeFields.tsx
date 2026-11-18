@@ -47,7 +47,9 @@ const EditLUKSDecryptionModeFields: FC<EditLUKSDecryptionModeFieldsProps> = ({
         <Stack hasGutter>
           <Radio
             data-testid="edit-use-existing-secret-radio"
-            description={t('Select a pre-existing secret containing LUKS decryption keys.')}
+            description={t(
+              'Select a pre-existing secret containing LUKS or BitLocker decryption keys.',
+            )}
             id={DECRYPTION_MODE_EXISTING}
             isChecked={decryptionMode === DECRYPTION_MODE_EXISTING}
             label={t('Use an existing secret')}
@@ -91,7 +93,7 @@ const EditLUKSDecryptionModeFields: FC<EditLUKSDecryptionModeFieldsProps> = ({
 
           {decryptionMode === DECRYPTION_MODE_PASSPHRASES && !isSecretWatchPending && (
             <>
-              <FormGroup label={t('Passphrases for LUKS encrypted devices')} />
+              <FormGroup label={t('Passphrases for LUKS- or BitLocker-encrypted devices')} />
               <LUKSPassphraseInputList onChange={setValue} value={value} />
             </>
           )}

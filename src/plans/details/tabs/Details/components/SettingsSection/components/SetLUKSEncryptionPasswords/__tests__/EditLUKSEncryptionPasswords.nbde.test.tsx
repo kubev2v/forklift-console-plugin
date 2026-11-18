@@ -52,7 +52,9 @@ describe('EditLUKSEncryptionPasswords - NBDE and passphrases', () => {
 
     render(<EditLUKSEncryptionPasswords closeOverlay={closeOverlay} resource={mockPlan} />);
 
-    expect(screen.getByText('Passphrases for LUKS encrypted devices')).toBeInTheDocument();
+    expect(
+      screen.getByText('Passphrases for LUKS- or BitLocker-encrypted devices'),
+    ).toBeInTheDocument();
     expect(screen.getByTestId('luks-passphrase-input-list')).toBeInTheDocument();
   });
 
@@ -63,7 +65,9 @@ describe('EditLUKSEncryptionPasswords - NBDE and passphrases', () => {
     const checkbox = screen.getByLabelText('Use network-bound disk encryption (NBDE/Clevis)');
     await user.click(checkbox);
 
-    expect(screen.queryByText('Passphrases for LUKS encrypted devices')).not.toBeInTheDocument();
+    expect(
+      screen.queryByText('Passphrases for LUKS- or BitLocker-encrypted devices'),
+    ).not.toBeInTheDocument();
   });
 
   it('loads existing passphrases from secret', async () => {

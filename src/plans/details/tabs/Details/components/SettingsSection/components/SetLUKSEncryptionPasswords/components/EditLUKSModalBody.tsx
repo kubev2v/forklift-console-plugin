@@ -8,9 +8,10 @@ const EditLUKSModalBody: FC = () => (
     <ForkliftTrans>
       <Stack hasGutter>
         <StackItem>
-          Configure disk decryption for LUKS-encrypted devices. You can use network-bound decryption
-          (NBDE/Clevis) for automatic unlocking via Tang servers, select a pre-existing secret, or
-          provide manual passphrases. These settings apply to all VMs in the migration plan.
+          Configure disk decryption for LUKS- or BitLocker-encrypted devices. You can use
+          network-bound decryption (NBDE/Clevis) with Tang servers to automatically unlock
+          LUKS-encrypted devices, select a pre-existing secret, or provide manual passphrases. These
+          settings apply to all VMs in the migration plan.
         </StackItem>
 
         <StackItem>

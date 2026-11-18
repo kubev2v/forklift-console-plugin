@@ -30,7 +30,7 @@ export const keyTerminologyItems: KeyTerminologyItem[] = [
   },
   {
     description: t(
-      'A list of passphrases for the Linux Unified Key Setup (LUKS)-encrypted devices for the VMs that you want to migrate. For each LUKS-encrypted device, Migration Toolkit for Virtualization (MTV) tries each passphrase until one unlocks the device.',
+      'A list of passphrases for LUKS- or BitLocker-encrypted devices for the VMs that you want to migrate. For each device, Migration Toolkit for Virtualization (MTV) tries each passphrase until one unlocks the device.',
     ),
     title: t('Disk decryption passphrases'),
   },
