@@ -19,14 +19,16 @@ const EditLUKSModalAlert: FC<EditLUKSModalAlertProps> = ({ shouldRender }) => {
       message={
         <Stack hasGutter>
           <StackItem>
-            {t('Warning: not all virtual machines are configures using the same LUKS secret')},
+            {t(
+              'Warning: not all virtual machines are configured to use the same decryption secret',
+            )}
           </StackItem>
           <StackItem>
-            {t('updating the LUKS decryption keys will override the current configuration.')}
+            {t('Updating the disk decryption keys will override the current configuration.')}
           </StackItem>
         </Stack>
       }
-      title={t('The plan LUKS decryption keys were manually configured')}
+      title={t('The plan disk decryption keys were manually configured')}
       variant="warning"
     />
   );

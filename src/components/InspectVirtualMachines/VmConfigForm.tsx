@@ -65,7 +65,7 @@ const VmConfigForm: FC<VmConfigFormProps> = ({ onChange, overrides, vmId }) => {
         labelHelp={
           <HelpIconPopover>
             {t(
-              'Automatically decrypt LUKS-encrypted disks using Tang servers during inspection or provide manual passphrases.',
+              'Automatically decrypt LUKS-encrypted disks using Tang servers during inspection, or provide manual passphrases for LUKS- or BitLocker-encrypted disks.',
             )}
           </HelpIconPopover>
         }
