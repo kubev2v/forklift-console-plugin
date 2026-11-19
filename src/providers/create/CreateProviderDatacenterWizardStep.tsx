@@ -35,7 +35,7 @@ export const createProviderDatacenterWizardStep = ({
   const isInventoryLoading =
     isApplianceSelected && (datacenter.isInventoryLoading || placement.options.inventoryLoading);
   const datacenterField = (
-    <>
+    <Form className="create-provider-form">
       <DatacenterSelect
         error={datacenter.error?.message}
         includeAllDatacenters={!isApplianceSelected}
@@ -54,7 +54,7 @@ export const createProviderDatacenterWizardStep = ({
           {isApplianceSelected && t('Cannot continue until the datacenter list is available.')}
         </Alert>
       )}
-    </>
+    </Form>
   );
 
   return (
@@ -83,9 +83,7 @@ export const createProviderDatacenterWizardStep = ({
                   placement={placement}
                 />
               ))}
-            {!isApplianceSelected && (
-              <Form className="create-provider-form">{datacenterField}</Form>
-            )}
+            {!isApplianceSelected && datacenterField}
           </CreateProviderPlacementStep>
           {apiError && isApplianceSelected && (
             <Alert
