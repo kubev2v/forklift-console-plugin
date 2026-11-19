@@ -53,6 +53,9 @@ export const getUseVddkAioOptimization = (provider: V1beta1Provider): string | u
 export const getSdkEndpoint = (provider: V1beta1Provider): string | undefined =>
   getSettings(provider)?.sdkEndpoint;
 
+export const getVSphereDatacenter = (provider: V1beta1Provider): string | undefined =>
+  getSettings(provider)?.datacenter;
+
 export const getApplianceManagement = (provider: V1beta1Provider): string | undefined =>
   getSettings(provider)?.applianceManagement;
 

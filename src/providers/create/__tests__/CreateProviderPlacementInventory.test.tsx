@@ -1,4 +1,4 @@
-import type { ReactElement } from 'react';
+import type { ReactElement, ReactNode } from 'react';
 import type { CopyApplianceSettingField } from 'src/providers/details/tabs/Details/components/DetailsSection/copyAppliancePlacementConfig';
 import type { CopyAppliancePlacementFieldLabels } from 'src/providers/details/tabs/Details/components/DetailsSection/useCopyAppliancePlacementLabels';
 
@@ -42,9 +42,13 @@ jest.mock('src/utils/i18n', (): unknown => ({
   useForkliftTranslation: (): unknown => ({ t: (key: string): string => key }),
 }));
 
-const renderInventory = (onRetry = jest.fn()): ReturnType<typeof render> =>
+const renderInventory = (
+  onRetry = jest.fn(),
+  leadingField?: ReactNode,
+): ReturnType<typeof render> =>
   render(
     <CreateProviderPlacementInventory
+      leadingField={leadingField}
       placement={{
         canDeploy: false,
         connection: {
@@ -53,6 +57,7 @@ const renderInventory = (onRetry = jest.fn()): ReturnType<typeof render> =>
           isReady: true,
           loaded: true,
           phase: ProviderStatus.Ready,
+          provider: undefined,
         },
         onChange: jest.fn(),
         options: { ...mockOptions, onRetry },
@@ -98,6 +103,21 @@ describe('CreateProviderPlacementInventory', () => {
     expect(screen.queryByTestId('placement-fields')).not.toBeInTheDocument();
     fireEvent.click(screen.getByRole('button', { name: 'Retry' }));
     expect(onRetry).toHaveBeenCalledTimes(1);
+  });
+
+  it('renders the leading field after the intro line and before the placement fields', () => {
+    mockOptions.inventoryLoading = false;
+    renderInventory(jest.fn(), <div data-testid="leading-field" />);
+
+    const intro = screen.getByText(
+      /Datacenter, datastore, folder, network, and resource pool are required/,
+    );
+    const leadingField = screen.getByTestId('leading-field');
+    const placementFields = screen.getByTestId('placement-fields');
+    expect(intro.compareDocumentPosition(leadingField)).toBe(Node.DOCUMENT_POSITION_FOLLOWING);
+    expect(leadingField.compareDocumentPosition(placementFields)).toBe(
+      Node.DOCUMENT_POSITION_FOLLOWING,
+    );
   });
 
   it('shows fields but prevents deployment when required inventory is empty', () => {

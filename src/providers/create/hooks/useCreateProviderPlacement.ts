@@ -55,7 +55,14 @@ export const useCreateProviderPlacement = (
 
   return {
     canDeploy,
-    connection: { error, isMissing: loaded && !watchedProvider, isReady, loaded, phase },
+    connection: {
+      error,
+      isMissing: loaded && !watchedProvider,
+      isReady,
+      loaded,
+      phase,
+      provider: watchedProvider,
+    },
     onChange,
     options,
     values,

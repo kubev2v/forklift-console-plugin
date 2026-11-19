@@ -4,6 +4,7 @@ export const mockNavigate = jest.fn();
 export const mockCreateProvider = jest.fn();
 export const mockCreateProviderSecret = jest.fn();
 export const mockPatchProviderSecretOwner = jest.fn();
+export const mockK8sPatch = jest.fn();
 export const mockSearchParams = new URLSearchParams();
 
 export const clearAllProviderMocks = (): void => {
@@ -12,6 +13,7 @@ export const clearAllProviderMocks = (): void => {
   mockCreateProvider.mockClear();
   mockCreateProviderSecret.mockClear();
   mockPatchProviderSecretOwner.mockClear();
+  mockK8sPatch.mockClear();
 };
 
 export const mockCreateProviderTypeField = (

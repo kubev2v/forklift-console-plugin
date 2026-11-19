@@ -30,10 +30,14 @@ jest.mock(
   }),
 );
 
-const PlacementHarness: FC = () => (
-  <CreateProviderPlacementStep placement={useCreateProviderPlacement(createdProvider)} />
+const PlacementHarness: FC<{ isAppliance?: boolean }> = ({ isAppliance }) => (
+  <CreateProviderPlacementStep
+    isAppliance={isAppliance}
+    placement={useCreateProviderPlacement(createdProvider)}
+  />
 );
-const renderStep = (): ReturnType<typeof render> => render(<PlacementHarness />);
+const renderStep = (isAppliance?: boolean): ReturnType<typeof render> =>
+  render(<PlacementHarness isAppliance={isAppliance} />);
 
 describe('CreateProviderPlacementStep', () => {
   beforeEach(() => {
@@ -64,6 +68,16 @@ describe('CreateProviderPlacementStep', () => {
       screen.getByText('The provider connection failed. Check its URL and credentials.'),
     ).toBeInTheDocument();
     expect(screen.queryByTestId('placement-fields')).not.toBeInTheDocument();
+  });
+
+  it('omits sourcing appliance copy for non-appliance connection failures', () => {
+    mockWatchResult = [{ ...createdProvider, status: { phase: 'ConnectionFailed' } }, true, null];
+    renderStep(false);
+
+    expect(
+      screen.getByText('The provider connection failed. Check its URL and credentials.'),
+    ).toBeInTheDocument();
+    expect(screen.queryByText(/sourcing appliance/i)).not.toBeInTheDocument();
   });
 
   it('shows a Provider watch error without mounting inventory', () => {

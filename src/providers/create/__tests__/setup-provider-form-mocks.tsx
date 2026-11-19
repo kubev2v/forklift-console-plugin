@@ -3,6 +3,7 @@ import type { ReactElement, ReactNode } from 'react';
 import {
   mockCreateProvider,
   mockCreateProviderSecret,
+  mockK8sPatch,
   mockNavigate,
   mockPatchProviderSecretOwner,
   mockSearchParams,
@@ -63,6 +64,7 @@ jest.mock('@openshift-console/dynamic-plugin-sdk', () => ({
     showModal: jest.fn(),
   }),
   useAccessReview: (): [boolean, boolean] => [true, false],
+  k8sPatch: (...args: unknown[]): unknown => mockK8sPatch(...args),
   ProjectModel: {
     apiGroup: 'project.openshift.io',
     plural: 'projects',
