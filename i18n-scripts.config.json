@@ -12,6 +12,13 @@
     "Failed to create inspection for {{count}} VM_other": "Failed to create inspections for {{count}} VMs",
     "Inspect {{count}} VM_other": "Inspect {{count}} VMs",
     "{{count}} pixels wide_one": "{{count}} pixel wide",
-    "{{count}} pixels wide_other": "{{count}} pixels wide"
+    "{{count}} pixels wide_other": "{{count}} pixels wide",
+    "{{count}} completed_other": "{{count}} completed",
+    "{{count}} migrating_other": "{{count}} migrating",
+    "{{count}} failed_other": "{{count}} failed",
+    "{{count}} cannot start_other": "{{count}} cannot start",
+    "{{count}} canceled_other": "{{count}} canceled",
+    "{{count}} paused_other": "{{count}} paused",
+    "{{succeededCount}} of {{count}} VMs processed ({{percentage}}%)_one": "{{succeededCount}} of {{count}} VM processed ({{percentage}}%)"
   }
 }
