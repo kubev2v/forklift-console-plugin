@@ -1,4 +1,5 @@
 import type { ReactElement } from 'react';
+import { MemoryRouter } from 'react-router';
 
 import type { V1beta1Plan } from '@forklift-ui/types';
 import { beforeEach, describe, expect, it } from '@jest/globals';
@@ -48,11 +49,6 @@ jest.mock('src/plans/details/components/PlanStatus/VMStatusIconsRow', () => ({
   default: (): ReactElement => <span>VMIcons</span>,
 }));
 
-jest.mock('../hooks/usePipelineTaskProgress', () => ({
-  __esModule: true,
-  default: (): number => 0,
-}));
-
 jest.mock('@utils/crds/plans/selectors', () => ({
   getPlanVirtualMachines: jest.fn((): unknown[] => []),
   getPlanVirtualMachinesMigrationStatus: jest.fn((): unknown[] => []),
@@ -73,6 +69,13 @@ const makePlan = (): V1beta1Plan =>
     },
   }) as unknown as V1beta1Plan;
 
+const renderPlanStatus = (plan: V1beta1Plan): ReturnType<typeof render> =>
+  render(
+    <MemoryRouter>
+      <PlanStatus plan={plan} />
+    </MemoryRouter>,
+  );
+
 describe('PlanStatus Resume button', () => {
   beforeEach(() => {
     jest.clearAllMocks();
@@ -83,7 +86,7 @@ describe('PlanStatus Resume button', () => {
   it('shows Resume button when plan is resumable, loaded, and no active migration', () => {
     mockCanPlanResumeConversion.mockReturnValue(true);
 
-    render(<PlanStatus plan={makePlan()} />);
+    renderPlanStatus(makePlan());
 
     expect(screen.getByTestId('plan-resume-button-status')).toBeInTheDocument();
     expect(screen.getByText('Resume')).toBeInTheDocument();
@@ -92,7 +95,7 @@ describe('PlanStatus Resume button', () => {
   it('hides Resume button when plan is not resumable', () => {
     mockCanPlanResumeConversion.mockReturnValue(false);
 
-    render(<PlanStatus plan={makePlan()} />);
+    renderPlanStatus(makePlan());
 
     expect(screen.queryByTestId('plan-resume-button-status')).not.toBeInTheDocument();
   });
@@ -101,7 +104,7 @@ describe('PlanStatus Resume button', () => {
     mockCanPlanResumeConversion.mockReturnValue(true);
     mockUsePlanMigration.mockReturnValue([undefined, false]);
 
-    render(<PlanStatus plan={makePlan()} />);
+    renderPlanStatus(makePlan());
 
     expect(screen.queryByTestId('plan-resume-button-status')).not.toBeInTheDocument();
   });
@@ -110,7 +113,7 @@ describe('PlanStatus Resume button', () => {
     mockCanPlanResumeConversion.mockReturnValue(true);
     mockUsePlanMigration.mockReturnValue([{ metadata: { name: 'mig-1' } }, true]);
 
-    render(<PlanStatus plan={makePlan()} />);
+    renderPlanStatus(makePlan());
 
     expect(screen.queryByTestId('plan-resume-button-status')).not.toBeInTheDocument();
   });
@@ -119,7 +122,7 @@ describe('PlanStatus Resume button', () => {
     mockCanPlanResumeConversion.mockReturnValue(true);
     const plan = makePlan();
 
-    render(<PlanStatus plan={plan} />);
+    renderPlanStatus(plan);
 
     const user = userEvent.setup();
     await user.click(screen.getByTestId('plan-resume-button-status'));
