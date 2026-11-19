@@ -1,4 +1,4 @@
-import type { FC } from 'react';
+import type { FC, ReactNode } from 'react';
 import { COPY_APPLIANCE_SETTING_FIELDS } from 'src/providers/details/tabs/Details/components/DetailsSection/copyAppliancePlacementConfig';
 import CopyAppliancePlacementForm from 'src/providers/details/tabs/Details/components/DetailsSection/CopyAppliancePlacementForm';
 import { useCopyAppliancePlacementLabels } from 'src/providers/details/tabs/Details/components/DetailsSection/useCopyAppliancePlacementLabels';
@@ -18,11 +18,17 @@ import type { CreateProviderPlacement } from './hooks/createProviderPlacement.ty
 import CreateProviderInventoryError from './CreateProviderInventoryError';
 import CreateProviderPlacementLoading from './CreateProviderPlacementLoading';
 
-const CreateProviderPlacementInventory: FC<{ placement: CreateProviderPlacement }> = ({
+type CreateProviderPlacementInventoryProps = {
+  leadingField?: ReactNode;
+  placement: CreateProviderPlacement;
+};
+
+const CreateProviderPlacementInventory: FC<CreateProviderPlacementInventoryProps> = ({
+  leadingField,
   placement,
 }) => {
-  const { onChange, options, values } = placement;
   const { t } = useForkliftTranslation();
+  const { onChange, options, values } = placement;
   const labels = useCopyAppliancePlacementLabels();
   const {
     datastoreOptions,
@@ -63,9 +69,10 @@ const CreateProviderPlacementInventory: FC<{ placement: CreateProviderPlacement 
     <Stack className="create-provider-form" hasGutter>
       <StackItem>
         {t(
-          'Select placement for the sourcing appliance template. Datastore, folder, network, and resource pool are required.',
+          'Select placement for the sourcing appliance template. Datacenter, datastore, folder, network, and resource pool are required.',
         )}
       </StackItem>
+      {leadingField && <StackItem>{leadingField}</StackItem>}
       {!isEmpty(missingFields) && (
         <StackItem>
           <Alert

@@ -2,7 +2,7 @@ import { useCallback, useRef, useState } from 'react';
 import { useNavigate } from 'react-router';
 import onCreateCopyApplianceTemplate from 'src/providers/details/tabs/Details/components/DetailsSection/onCreateCopyApplianceTemplate';
 import { getProviderDetailsPageUrl } from 'src/providers/utils/getProviderDetailsPageUrl';
-import { isProviderUsingCopyAppliance } from 'src/providers/utils/isProviderUsingCopyAppliance';
+import { isVSphereEsxiProvider } from 'src/providers/utils/vsphere/datacenter';
 
 import { CopyApplianceTemplateModel, SecretModel, type V1beta1Provider } from '@forklift-ui/types';
 import { k8sDelete, useAccessReview } from '@openshift-console/dynamic-plugin-sdk';
@@ -10,6 +10,7 @@ import { TELEMETRY_EVENTS } from '@utils/analytics/constants';
 import { useForkliftAnalytics } from '@utils/analytics/hooks/useForkliftAnalytics';
 import { getNamespace, getType } from '@utils/crds/common/selectors';
 import { t } from '@utils/i18n';
+import { PROVIDER_TYPES } from '@utils/providers/constants';
 
 import { ProviderFormFieldId } from '../fields/constants';
 import { createProviderOnce } from '../utils/createProviderOnce';
@@ -57,7 +58,7 @@ export const useCreateProviderWorkflow = ({
             providerType: getType(provider),
           });
 
-          if (isProviderUsingCopyAppliance(provider)) {
+          if (getType(provider) === PROVIDER_TYPES.vsphere && !isVSphereEsxiProvider(provider)) {
             onContinue();
             return;
           }

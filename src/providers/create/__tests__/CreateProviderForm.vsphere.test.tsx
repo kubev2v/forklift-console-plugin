@@ -13,6 +13,12 @@ jest.mock('../fields/ProviderTypeField', () => {
   return createMock('vsphere', 'VMware vSphere');
 });
 
+jest.mock('@utils/hooks/useFeatureFlags', () => ({
+  useFeatureFlags: (): { isFeatureEnabled: (featureName: string) => boolean } => ({
+    isFeatureEnabled: (): boolean => true,
+  }),
+}));
+
 describe('CreateProviderForm - vSphere Provider', () => {
   beforeEach(() => {
     clearAllProviderMocks();

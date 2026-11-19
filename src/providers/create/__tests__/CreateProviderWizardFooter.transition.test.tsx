@@ -21,8 +21,10 @@ const WizardHarness: FC = () => {
         <CreateProviderWizardFooter
           canCreate
           canDeploy={false}
+          canFinish
           createdProviderUrl={providerCreated ? '/provider/details' : undefined}
           isApplianceSelected
+          isDatacenterPending={false}
           isSubmitting={false}
           onCancel={(): Promise<void> => Promise.resolve()}
           onCreate={async (onContinue) => {
@@ -31,6 +33,7 @@ const WizardHarness: FC = () => {
             onContinue();
           }}
           onDeploy={(): Promise<void> => Promise.resolve()}
+          onFinish={(): Promise<void> => Promise.resolve()}
         />
       }
     >
@@ -41,7 +44,7 @@ const WizardHarness: FC = () => {
         id={PROVIDER_PLACEMENT_STEP_ID}
         isDisabled={!providerCreated}
         isHidden={!providerCreated}
-        name="Sourcing appliance"
+        name="Datacenter"
       >
         Placement fields
       </WizardStep>

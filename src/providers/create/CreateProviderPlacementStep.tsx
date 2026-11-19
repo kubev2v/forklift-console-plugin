@@ -1,4 +1,4 @@
-import type { FC } from 'react';
+import type { FC, ReactNode } from 'react';
 
 import { Alert, AlertVariant, ExpandableSection } from '@patternfly/react-core';
 import { useForkliftTranslation } from '@utils/i18n';
@@ -8,7 +8,17 @@ import type { CreateProviderPlacement } from './hooks/createProviderPlacement.ty
 import CreateProviderPlacementInventory from './CreateProviderPlacementInventory';
 import CreateProviderPlacementLoading from './CreateProviderPlacementLoading';
 
-const CreateProviderPlacementStep: FC<{ placement: CreateProviderPlacement }> = ({ placement }) => {
+type CreateProviderPlacementStepProps = {
+  children?: ReactNode;
+  isAppliance?: boolean;
+  placement: CreateProviderPlacement;
+};
+
+const CreateProviderPlacementStep: FC<CreateProviderPlacementStepProps> = ({
+  children,
+  isAppliance = true,
+  placement,
+}) => {
   const { t } = useForkliftTranslation();
   const {
     error: providerError,
@@ -39,7 +49,8 @@ const CreateProviderPlacementStep: FC<{ placement: CreateProviderPlacement }> = 
         title={t('The provider connection failed. Check its URL and credentials.')}
         variant={AlertVariant.danger}
       >
-        {t('You can skip sourcing appliance setup and complete it from provider details later.')}
+        {isAppliance &&
+          t('You can skip sourcing appliance setup and complete it from provider details later.')}
       </Alert>
     );
   }
@@ -52,7 +63,7 @@ const CreateProviderPlacementStep: FC<{ placement: CreateProviderPlacement }> = 
     );
   }
 
-  return <CreateProviderPlacementInventory placement={placement} />;
+  return children ?? <CreateProviderPlacementInventory placement={placement} />;
 };
 
 export default CreateProviderPlacementStep;

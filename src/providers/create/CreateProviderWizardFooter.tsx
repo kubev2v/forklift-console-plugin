@@ -18,28 +18,39 @@ import { PROVIDER_PLACEMENT_STEP_ID, PROVIDER_PLACEMENT_STEP_INDEX } from './uti
 type CreateProviderWizardFooterProps = {
   canCreate: boolean;
   canDeploy: boolean;
+  canFinish: boolean;
   createdProviderUrl?: string;
   isApplianceSelected: boolean;
+  isDatacenterPending: boolean;
   isSubmitting: boolean;
   onCancel: () => Promise<void>;
   onCreate: (onContinue: () => void) => Promise<void>;
   onDeploy: () => Promise<void>;
+  onFinish: () => Promise<void>;
 };
 
 const CreateProviderWizardFooter: FC<CreateProviderWizardFooterProps> = ({
   canCreate,
   canDeploy,
+  canFinish,
   createdProviderUrl,
   isApplianceSelected,
+  isDatacenterPending,
   isSubmitting,
   onCancel,
   onCreate,
   onDeploy,
+  onFinish,
 }) => {
   const { t } = useForkliftTranslation();
   const navigate = useNavigate();
   const { activeStep, goToStepByIndex } = useWizardContext();
-  const isPlacementStep = activeStep.id === PROVIDER_PLACEMENT_STEP_ID;
+  const isDatacenterStep = activeStep.id === PROVIDER_PLACEMENT_STEP_ID;
+  const canSubmitDatacenterStep = isApplianceSelected ? canDeploy : canFinish;
+  const primaryLabel =
+    isDatacenterStep && !isApplianceSelected
+      ? t('Finish')
+      : getCreateProviderButtonLabel(isDatacenterStep, isApplianceSelected);
 
   return (
     <WizardFooterWrapper>
@@ -47,12 +58,16 @@ const CreateProviderWizardFooter: FC<CreateProviderWizardFooterProps> = ({
         <ActionListGroup>
           <ActionListItem>
             <Button
-              data-testid={isPlacementStep ? 'provider-deploy-button' : 'provider-create-button'}
-              isDisabled={isSubmitting || (isPlacementStep ? !canDeploy : !canCreate)}
+              data-testid={isDatacenterStep ? 'provider-deploy-button' : 'provider-create-button'}
+              isDisabled={
+                isSubmitting ||
+                isDatacenterPending ||
+                (isDatacenterStep ? !canSubmitDatacenterStep : !canCreate)
+              }
               isLoading={isSubmitting}
               onClick={async () => {
-                if (isPlacementStep) {
-                  await onDeploy();
+                if (isDatacenterStep) {
+                  await (isApplianceSelected ? onDeploy() : onFinish());
                   return;
                 }
                 await onCreate(() => {
@@ -61,14 +76,14 @@ const CreateProviderWizardFooter: FC<CreateProviderWizardFooterProps> = ({
               }}
               variant={ButtonVariant.primary}
             >
-              {getCreateProviderButtonLabel(isPlacementStep, isApplianceSelected)}
+              {primaryLabel}
             </Button>
           </ActionListItem>
-          {isPlacementStep && createdProviderUrl && (
+          {isDatacenterStep && isApplianceSelected && createdProviderUrl && (
             <ActionListItem>
               <Button
                 data-testid="provider-skip-placement-button"
-                isDisabled={isSubmitting}
+                isDisabled={isSubmitting || isDatacenterPending}
                 onClick={() => {
                   navigate(createdProviderUrl)?.catch(() => undefined);
                 }}
