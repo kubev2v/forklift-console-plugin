@@ -1,0 +1,13 @@
+.network-ip-mode {
+  &__header {
+    align-items: center;
+  }
+
+  &__form {
+    margin-top: var(--pf-t--global--spacer--sm);
+  }
+
+  &__clear-button-container {
+    margin-left: var(--pf-t--global--spacer--sm);
+  }
+}

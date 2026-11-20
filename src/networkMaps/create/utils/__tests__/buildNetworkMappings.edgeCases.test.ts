@@ -129,4 +129,19 @@ describe('buildNetworkMappings - edge cases', () => {
 
     expect(result[0].sourceNetwork).toEqual({ id: 'pod', name: getDefaultNetworkLabel() });
   });
+
+  it('should preserve network IP mode when mapping values are round-tripped', () => {
+    const mappings = [
+      {
+        ...mockNetworkMapping,
+        networkIPMode: 'preserve' as const,
+      },
+    ];
+
+    const resourceMappings = buildNetworkMappings(mappings, mockVMwareProvider);
+    const formMappings = getMappingValues(resourceMappings, mockVMwareProvider, [], []);
+
+    expect(resourceMappings[0].networkIPMode).toBe('preserve');
+    expect(formMappings[0].networkIPMode).toBe('preserve');
+  });
 });

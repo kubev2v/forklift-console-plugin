@@ -1,4 +1,4 @@
-import type { V1beta1NetworkMap } from '@forklift-ui/types';
+import type { V1beta1NetworkMap, V1beta1NetworkMapSpecMap } from '@forklift-ui/types';
 import type { MappingValue, PermissionStatus } from '@utils/types';
 
 export type NetworkMapData = {
@@ -16,7 +16,10 @@ export enum NetworkMapFieldId {
   TargetNetwork = 'targetNetwork',
 }
 
+export type NetworkIPMode = NonNullable<V1beta1NetworkMapSpecMap['networkIPMode']>;
+
 export type NetworkMapping = {
   [NetworkMapFieldId.SourceNetwork]: MappingValue;
   [NetworkMapFieldId.TargetNetwork]: MappingValue;
+  networkIPMode?: NetworkIPMode;
 };

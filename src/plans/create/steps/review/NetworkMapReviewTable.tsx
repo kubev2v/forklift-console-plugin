@@ -1,4 +1,5 @@
 import type { FC } from 'react';
+import { getNetworkIPModeLabel } from 'src/components/networkIPMode/networkIPModeUtils';
 
 import { Card } from '@patternfly/react-core';
 import { Table, TableVariant, Tbody, Td, Th, Thead, Tr } from '@patternfly/react-table';
@@ -36,14 +37,14 @@ const NetworkMapReviewTable: FC<NetworkMapReviewTableProps> = ({ networkMap }) =
       >
         <Thead>
           <Tr>
-            <Th width={50}>{t('Source network')}</Th>
-            <Th width={50}>{t('Target network')}</Th>
+            <Th width={40}>{t('Source network')}</Th>
+            <Th width={40}>{t('Target network')}</Th>
+            <Th width={20}>{t('Network IP mode')}</Th>
           </Tr>
         </Thead>
 
         <Tbody>
           {networkMap.map((mapping) => {
-            // Only render rows that have both source and target network names
             if (
               mapping[NetworkMapFieldId.SourceNetwork].name &&
               mapping[NetworkMapFieldId.TargetNetwork].name
@@ -55,6 +56,9 @@ const NetworkMapReviewTable: FC<NetworkMapReviewTableProps> = ({ networkMap }) =
                   </Td>
                   <Td dataLabel={NetworkMapFieldId.TargetNetwork}>
                     {mapping[NetworkMapFieldId.TargetNetwork].name}
+                  </Td>
+                  <Td dataLabel="networkIPMode">
+                    {getNetworkIPModeLabel(mapping.networkIPMode, t)}
                   </Td>
                 </Tr>
               );

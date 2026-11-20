@@ -1,3 +1,4 @@
+import type { NetworkIPMode } from '@utils/crds/maps/types';
 import { t } from '@utils/i18n';
 import { getDefaultNetworkTarget, IgnoreNetwork } from '@utils/mappings/constants';
 import type { MappingValue } from '@utils/types';
@@ -21,6 +22,7 @@ export const netMapFieldLabels: Partial<Record<NetworkMapFieldId, ReturnType<typ
 export type NetworkMapping = {
   [NetworkMapFieldId.SourceNetwork]: MappingValue;
   [NetworkMapFieldId.TargetNetwork]: MappingValue;
+  networkIPMode?: NetworkIPMode;
 };
 
 export const getDefaultNetMapping = (): NetworkMapping => ({
