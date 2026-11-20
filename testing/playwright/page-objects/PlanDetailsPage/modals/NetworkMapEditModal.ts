@@ -27,8 +27,9 @@ export class NetworkMapEditModal extends BaseMappingEditModal {
   }
 
   async expandNetworkIPModeAtIndex(index: number): Promise<void> {
-    const row = this.page.getByTestId(`field-row-${index}`);
-    const toggle = row.getByRole('button', { name: 'Network IP mode (optional)' });
+    const toggle = this.modal
+      .getByTestId(`network-ip-mode-row-${index}`)
+      .getByRole('button', { name: 'Network IP mode (optional)' });
     await expect(toggle).toBeVisible();
     const expanded = await toggle.getAttribute('aria-expanded');
     if (expanded !== 'true') {
@@ -37,6 +38,7 @@ export class NetworkMapEditModal extends BaseMappingEditModal {
       await expect(this.page.getByTestId(NETWORK_IP_MODE_TEST_ID(index))).toBeVisible();
     }
   }
+
 
   async getSourceNetworkAtIndex(index: number): Promise<string> {
     return this.getSourceAtIndex(index);

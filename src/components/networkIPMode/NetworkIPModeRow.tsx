@@ -28,9 +28,10 @@ const getNetworkIPModeFieldId = (index: number): string => `networkMap.${index}.
 const NetworkIPModeRow: FC<NetworkIPModeRowProps> = ({ index, isDisabled, targetNetworkFieldId }) => {
   const { t } = useForkliftTranslation();
   const { setValue, watch } = useFormContext();
-  const target = watch(targetNetworkFieldId) as { name?: string } | undefined;
-  const show = isNetworkIPModeEditableForTargetName(target?.name, isDefaultNetworkTarget);
+  const target = watch(targetNetworkFieldId) as { id?: string; name?: string } | undefined;
+  const show = isNetworkIPModeEditableForTargetName(target, isDefaultNetworkTarget);
   const [isExpanded, setIsExpanded] = useState(false);
+
 
   if (!show) {
     return null;
@@ -39,7 +40,7 @@ const NetworkIPModeRow: FC<NetworkIPModeRowProps> = ({ index, isDisabled, target
   const fieldId = getNetworkIPModeFieldId(index);
 
   return (
-    <div className="network-ip-mode">
+    <div className="network-ip-mode" data-testid={`network-ip-mode-row-${index}`}>
       <Split className="network-ip-mode__header">
         <SplitItem isFilled>
           <ExpandableSection
@@ -63,6 +64,7 @@ const NetworkIPModeRow: FC<NetworkIPModeRowProps> = ({ index, isDisabled, target
           <Button
             className="network-ip-mode__clear-button"
             data-testid={`networkMap.${index}.networkIPMode-clear`}
+            isDisabled={isDisabled}
             isInline
             onClick={() => {
               setValue(fieldId, undefined, { shouldDirty: true, shouldValidate: true });

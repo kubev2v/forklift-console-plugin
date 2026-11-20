@@ -45,18 +45,18 @@ export const isNetworkIPModeEditable = (
 };
 
 export const isNetworkIPModeEditableForTargetName = (
-  targetName: string | undefined,
+  target: { id?: string; name?: string } | undefined,
   isDefaultTarget: (target: { id?: string; name?: string }) => boolean,
 ): boolean => {
-  if (!targetName) {
+  if (!target) {
     return false;
   }
 
-  if (targetName === IgnoreNetwork.Label) {
+  if (target.id === IGNORED) {
     return false;
   }
 
-  if (isDefaultTarget({ name: targetName })) {
+  if (isDefaultTarget(target)) {
     return false;
   }
 
