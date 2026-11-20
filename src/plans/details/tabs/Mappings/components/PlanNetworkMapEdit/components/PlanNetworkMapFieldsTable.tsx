@@ -1,4 +1,4 @@
-import { type FC, useEffect } from 'react';
+import { type FC, useEffect, useMemo } from 'react';
 import { useFieldArray, useFormContext, useWatch } from 'react-hook-form';
 import { getNetworkIPModeRow } from 'src/components/networkIPMode/networkMapTableHelpers';
 import { networkMapFieldLabels } from 'src/networkMaps/utils/constants';
@@ -65,12 +65,16 @@ const PlanNetworkMapFieldsTable: FC<PlanNetworkMapFieldsTableProps> = ({
     };
   }, [trigger]);
 
-  const { multiNicNetworkIds, networkNames, vmsList } = getPlanNetworkMapDerived({
-    otherSourceNetworks,
-    oVirtNicProfiles,
-    usedSourceNetworks,
-    vms,
-  });
+  const { multiNicNetworkIds, networkNames, vmsList } = useMemo(
+    () =>
+      getPlanNetworkMapDerived({
+        otherSourceNetworks,
+        oVirtNicProfiles,
+        usedSourceNetworks,
+        vms,
+      }),
+    [otherSourceNetworks, oVirtNicProfiles, usedSourceNetworks, vms],
+  );
 
   return (
     <Stack hasGutter>

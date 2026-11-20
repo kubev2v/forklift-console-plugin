@@ -25,6 +25,7 @@ import {
   getMapDestinationProviderNamespace,
   getMapSourceProviderName,
   getMapSourceProviderNamespace,
+  getNetworkMapMappings,
 } from '@utils/crds/maps/selectors';
 import { useK8sWatchResource } from '@utils/hooks/useK8sWatchResource';
 
@@ -71,12 +72,12 @@ const NetworkMapDetailsTab: FC<NetworkMapDetailsTabProps> = ({ name, namespace }
   const currentMappings = useMemo(
     () =>
       getMappingValues(
-        networkMap?.spec?.map,
+        getNetworkMapMappings(networkMap),
         sourceProvider,
         sourceNetworks,
         destinationNetworks,
       ) ?? [],
-    [networkMap?.spec?.map, sourceProvider, sourceNetworks, destinationNetworks],
+    [networkMap, sourceProvider, sourceNetworks, destinationNetworks],
   );
   const providersReady = Boolean(
     sourceProvider?.metadata?.uid && destinationProvider?.metadata?.uid,

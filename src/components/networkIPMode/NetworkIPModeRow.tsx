@@ -68,7 +68,10 @@ const NetworkIPModeRow: FC<NetworkIPModeRowProps> = ({
             isDisabled={isDisabled}
             isInline
             onClick={() => {
-              setValue(fieldId, undefined, { shouldDirty: true, shouldValidate: true });
+              setValue(fieldId, null, {
+                shouldDirty: true,
+                shouldValidate: true,
+              });
               setIsExpanded(false);
             }}
             variant={ButtonVariant.link}

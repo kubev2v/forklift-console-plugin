@@ -1,8 +1,8 @@
-import type { V1beta1NetworkMapSpecMapDestination } from '@forklift-ui/types';
-import { IGNORED, POD } from '@utils/constants';
+import { IGNORED } from '@utils/constants';
+import { IgnoreNetwork } from '@utils/mappings/constants';
 
 export const NETWORK_IP_MODE_INHERIT = 'inherit';
-export type NetworkIPModeOption = {
+type NetworkIPModeOption = {
   label: string;
   value: string;
 };
@@ -17,7 +17,7 @@ export const getNetworkIPModeOptions = (
 ];
 
 export const getNetworkIPModeLabel = (
-  mode: string | undefined,
+  mode: string | undefined | null,
   translate: (value: string) => string,
 ): string => {
   switch (mode) {
@@ -29,20 +29,11 @@ export const getNetworkIPModeLabel = (
       return translate('Preserve static IPs');
     case NETWORK_IP_MODE_INHERIT:
     case undefined:
+    case null:
       return translate('Inherit Plan setting');
     default:
       return translate('Unknown');
   }
-};
-
-export const isNetworkIPModeEditable = (
-  destination: V1beta1NetworkMapSpecMapDestination | undefined,
-): boolean => {
-  if (!destination) {
-    return false;
-  }
-
-  return destination.type !== IGNORED && destination.type !== POD;
 };
 
 export const isNetworkIPModeEditableForTargetName = (
@@ -52,8 +43,7 @@ export const isNetworkIPModeEditableForTargetName = (
   if (!target) {
     return false;
   }
-
-  if (target.id === IGNORED) {
+  if (target.id === IGNORED || target.name === IgnoreNetwork.Label) {
     return false;
   }
 
