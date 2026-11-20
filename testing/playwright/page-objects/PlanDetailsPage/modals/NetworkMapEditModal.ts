@@ -3,9 +3,9 @@ import { expect, type Locator, type Page } from '@playwright/test';
 import { BaseMappingEditModal, type MappingModalConfig } from './BaseMappingEditModal';
 
 const MODAL_TEST_ID = 'edit-network-map-modal';
-const NETWORK_IP_MODE_TEST_ID = (index: number): string => `networkMap.${index}.networkIPMode`;
+const networkIPModeTestId = (index: number): string => `networkMap.${index}.networkIPMode`;
 
-const getNetworkIPModeTestId = (index: number): string => NETWORK_IP_MODE_TEST_ID(index);
+const getNetworkIPModeTestId = (index: number): string => networkIPModeTestId(index);
 
 /**
  * Page object for the Network Map Edit Modal.

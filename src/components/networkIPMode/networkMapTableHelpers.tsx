@@ -1,6 +1,7 @@
 import type { ReactElement } from 'react';
-import { NetworkMapFieldId } from '@utils/crds/maps/types';
 import { getNetworkMapFieldId } from 'src/networkMaps/utils/getNetworkMapFieldId';
+
+import { NetworkMapFieldId } from '@utils/crds/maps/types';
 
 import NetworkIPModeRow from './NetworkIPModeRow';
 
