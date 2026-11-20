@@ -264,7 +264,10 @@ export const createEslintConfig = () =>
         'max-statements': 'off',
         'new-cap': [
           'error',
-          { capIsNewExceptionPattern: 'Factory$', capIsNewExceptions: ['ImmutableMap'] },
+          {
+            capIsNewExceptionPattern: 'Factory$|Page$|Locator$',
+            capIsNewExceptions: ['ImmutableMap'],
+          },
         ],
         'no-alert': 'off',
         'no-console': 'error',
@@ -677,11 +680,11 @@ export const createEslintConfig = () =>
         '@typescript-eslint/no-magic-numbers': 'off',
         '@typescript-eslint/no-namespace': 'off',
         '@typescript-eslint/promise-function-async': 'off',
-        '@typescript-eslint/strict-void-return': 'off',
-        // sonarjs only applies to src/**; keep offs harmless if scope changes
         'sonarjs/cognitive-complexity': 'off',
         'sonarjs/no-duplicate-string': 'off',
         'sonarjs/no-identical-functions': 'off',
+        // Locator/Page are Playwright type names, not constructors
+        'new-cap': 'off',
       },
     },
     // MTV-6276 / MTV-6509: e2e + page-objects stay exempt from file/function size limits

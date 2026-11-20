@@ -1,4 +1,4 @@
-import { expect, type Page } from '@playwright/test';
+import { expect, type Locator, type Page } from '@playwright/test';
 
 import { BaseMappingEditModal, type MappingModalConfig } from './BaseMappingEditModal';
 
@@ -21,22 +21,6 @@ export class NetworkMapEditModal extends BaseMappingEditModal {
     super(page, MODAL_TEST_ID);
   }
 
-  async getSourceNetworkAtIndex(index: number): Promise<string> {
-    return this.getSourceAtIndex(index);
-  }
-
-  async getTargetNetworkAtIndex(index: number): Promise<string> {
-    return this.getTargetAtIndex(index);
-  }
-
-  async selectSourceNetworkAtIndex(index: number, sourceNetwork: string): Promise<void> {
-    return this.selectSourceAtIndex(index, sourceNetwork);
-  }
-
-  async selectTargetNetworkAtIndex(index: number, targetNetwork: string): Promise<void> {
-    return this.selectTargetAtIndex(index, targetNetwork);
-  }
-
   async clearNetworkIPModeAtIndex(index: number): Promise<void> {
     await this.page.getByTestId(`networkMap.${index}.networkIPMode-clear`).click();
     await expect(this.networkIPModeAtIndex(index)).toContainText('Inherit');
@@ -49,10 +33,30 @@ export class NetworkMapEditModal extends BaseMappingEditModal {
     const expanded = await toggle.getAttribute('aria-expanded');
     if (expanded !== 'true') {
       await toggle.click();
+      // eslint-disable-next-line new-cap -- Page.getByTestId is not a constructor
       await expect(this.page.getByTestId(NETWORK_IP_MODE_TEST_ID(index))).toBeVisible();
     }
   }
 
+  async getSourceNetworkAtIndex(index: number): Promise<string> {
+    return this.getSourceAtIndex(index);
+  }
+
+  async getTargetNetworkAtIndex(index: number): Promise<string> {
+    return this.getTargetAtIndex(index);
+  }
+
+  // eslint-disable-next-line new-cap
+  networkIPModeAtIndex(index: number): Locator {
+    return this.page.getByTestId(NETWORK_IP_MODE_TEST_ID(index));
+  }
+
+  // eslint-disable-next-line new-cap
+  networkIPModeClearButtonAtIndex(index: number): Locator {
+    return this.page.getByTestId(`networkMap.${index}.networkIPMode-clear`);
+  }
+
+  // eslint-disable-next-line new-cap -- Page.getByTestId wrapper is not a constructor
   async selectNetworkIPModeAtIndex(index: number, modeLabel: string): Promise<void> {
     const selector = this.page.getByTestId(NETWORK_IP_MODE_TEST_ID(index));
     await expect(selector).toBeVisible();
@@ -60,19 +64,20 @@ export class NetworkMapEditModal extends BaseMappingEditModal {
     await this.page.getByRole('option', { name: modeLabel }).click();
   }
 
+  async selectSourceNetworkAtIndex(index: number, sourceNetwork: string): Promise<void> {
+    return this.selectSourceAtIndex(index, sourceNetwork);
+  }
+
+  async selectTargetNetworkAtIndex(index: number, targetNetwork: string): Promise<void> {
+    return this.selectTargetAtIndex(index, targetNetwork);
+  }
+
   async verifyNetworkIPModeAtIndex(index: number, expectedText: string): Promise<void> {
     await expect(this.networkIPModeAtIndex(index)).toContainText(expectedText);
   }
 
   async verifyNetworkIPModeNotVisibleAtIndex(index: number): Promise<void> {
+    // eslint-disable-next-line new-cap -- Page.getByTestId is not a constructor
     await expect(this.page.getByTestId(NETWORK_IP_MODE_TEST_ID(index))).toBeHidden();
-  }
-
-  networkIPModeAtIndex(index: number): ReturnType<Page['getByTestId']> {
-    return this.page.getByTestId(NETWORK_IP_MODE_TEST_ID(index));
-  }
-
-  networkIPModeClearButtonAtIndex(index: number): ReturnType<Page['getByTestId']> {
-    return this.page.getByTestId(`networkMap.${index}.networkIPMode-clear`);
   }
 }
