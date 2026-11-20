@@ -47,4 +47,25 @@ export class NetworkMapEditModal extends BaseMappingEditModal {
   async verifyNetworkIPModeNotVisibleAtIndex(index: number): Promise<void> {
     await expect(this.page.getByTestId(NETWORK_IP_MODE_TEST_ID(index))).toBeHidden();
   }
+
+  async expandNetworkIPModeAtIndex(index: number): Promise<void> {
+    const row = this.page.getByTestId(`field-row-${index}`);
+    const toggle = row.getByRole('button', { name: 'Network IP mode (optional)' });
+    await expect(toggle).toBeVisible();
+    const expanded = await toggle.getAttribute('aria-expanded');
+    if (expanded !== 'true') {
+      await toggle.click();
+      await expect(this.page.getByTestId(NETWORK_IP_MODE_TEST_ID(index))).toBeVisible();
+    }
+  }
+
+  async clearNetworkIPModeAtIndex(index: number): Promise<void> {
+    await this.page.getByTestId(`networkMap.${index}.networkIPMode-clear`).click();
+  }
+
+  async getNetworkIPModeAtIndex(index: number): Promise<string> {
+    const selector = this.page.getByTestId(NETWORK_IP_MODE_TEST_ID(index));
+    const text = (await selector.textContent()) ?? '';
+    return text.trim();
+  }
 }
