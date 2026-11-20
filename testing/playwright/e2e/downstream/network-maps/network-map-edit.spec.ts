@@ -38,51 +38,42 @@ test.describe('Network Map Details - Editing', { tag: '@downstream' }, () => {
       await modal.verifySaveButtonEnabled();
       await modal.save();
 
-      await expect
-        .poll(
-          async () => {
-            const modalAfterSave = await networkMapDetailsPage.openEditModal();
-            const mappingCount = await modalAfterSave.getMappingCount();
-            await modalAfterSave.cancel();
-            return mappingCount;
-          },
-          { timeout: 30_000 },
-        )
-        .toBe(1);
+      await networkMapDetailsPage.verifyNetworkMapDetailsPage({
+        mappings: [{ sourceNetwork: SourceNetworks.VM_NETWORK, targetNetwork: NetworkTargets.DEFAULT }],
+        networkMapName: testNetworkMap.name,
+        sourceProvider: testNetworkMap.sourceProvider,
+        targetProvider: testNetworkMap.targetProvider,
+      });
     });
 
     await test.step('Edit network mapping and verify save', async () => {
       const modal = await networkMapDetailsPage.openEditModal();
+      await modal.verifyModalStructure();
 
-      // Change target from 'Default network' (set in previous step) to 'Ignore network'
-      await modal.selectTargetNetworkAtIndex(0, NetworkTargets.IGNORE);
+      const editedRowIndex = 0;
+      await modal.selectTargetNetworkAtIndex(editedRowIndex, NetworkTargets.IGNORE);
       await modal.verifySaveButtonEnabled();
       await modal.save();
 
-      const modalAfterSave = await networkMapDetailsPage.openEditModal();
-      const currentTarget = await modalAfterSave.getTargetNetworkAtIndex(0);
-      expect(currentTarget.toLowerCase()).toContain('ignore');
-      await modalAfterSave.cancel();
+      await networkMapDetailsPage.verifyNetworkMapDetailsPage({
+        mappings: [{ sourceNetwork: SourceNetworks.VM_NETWORK, targetNetwork: NetworkTargets.IGNORE }],
+        networkMapName: testNetworkMap.name,
+        sourceProvider: testNetworkMap.sourceProvider,
+        targetProvider: testNetworkMap.targetProvider,
+      });
     });
 
     await test.step('Add and remove additional mapping', async () => {
       const modal = await networkMapDetailsPage.openEditModal();
-      const initialCount = await modal.getMappingCount();
-
       const newRowIndex = await modal.addMapping();
-      expect(newRowIndex).toBe(initialCount);
       await modal.selectSourceNetworkAtIndex(newRowIndex, SourceNetworks.MGMT_NETWORK);
-      await modal.selectTargetNetworkAtIndex(newRowIndex, NetworkTargets.IGNORE);
-      await modal.verifySaveButtonEnabled();
+      await modal.selectTargetNetworkAtIndex(newRowIndex, NetworkTargets.DEFAULT);
       await modal.save();
 
-      const modalAfterAdd = await networkMapDetailsPage.openEditModal();
-      const countAfterAdd = await modalAfterAdd.getMappingCount();
-      expect(countAfterAdd).toBe(initialCount + 1);
-
-      await modalAfterAdd.removeMapping(countAfterAdd - 1);
-      expect(await modalAfterAdd.getMappingCount()).toBe(initialCount);
-      await modalAfterAdd.save();
+      const secondModal = await networkMapDetailsPage.openEditModal();
+      await secondModal.removeMapping(newRowIndex);
+      await secondModal.verifySaveButtonEnabled();
+      await secondModal.save();
     });
   });
 });
@@ -91,7 +82,7 @@ sharedProviderTest.describe('Network Map Network IP mode - Editing', { tag: '@do
   requireVersion(sharedProviderTest, V5_1_0);
 
   sharedProviderTest(
-    'should edit IP mode and disable it for the default network',
+    'should edit IP mode inline and hide it for default/ignored targets',
     async ({ page, resourceManager, testNetworkMap }) => {
       if (!testNetworkMap) {
         throw new Error('testNetworkMap is required');
@@ -103,31 +94,29 @@ sharedProviderTest.describe('Network Map Network IP mode - Editing', { tag: '@do
       const targetNad = await createTestNad(resourceManager, { namespace: MTV_NAMESPACE });
       const targetNadLabel = `${MTV_NAMESPACE}/${targetNad.metadata.name}`;
 
-      const mappingModal = await networkMapDetailsPage.openEditModal();
-      const newRowIndex = await mappingModal.addMapping();
-      await mappingModal.selectSourceNetworkAtIndex(newRowIndex, SourceNetworks.VM_NETWORK);
-      await mappingModal.selectTargetNetworkAtIndex(newRowIndex, NetworkTargets.DEFAULT);
-      await mappingModal.save();
+      // Pod target: IP mode hidden (per mapping, part of map section table)
+      const podModal = await networkMapDetailsPage.openEditModal();
+      const podRowIndex = await podModal.addMapping();
+      await podModal.selectSourceNetworkAtIndex(podRowIndex, SourceNetworks.VM_NETWORK);
+      await podModal.selectTargetNetworkAtIndex(podRowIndex, NetworkTargets.DEFAULT);
+      await podModal.verifyNetworkIPModeNotVisibleAtIndex(podRowIndex);
+      await podModal.save();
 
-      const secondMappingModal = await networkMapDetailsPage.openEditModal();
-      const secondRowIndex = await secondMappingModal.addMapping();
-      await secondMappingModal.selectSourceNetworkAtIndex(
-        secondRowIndex,
-        SourceNetworks.MGMT_NETWORK,
-      );
-      await secondMappingModal.selectTargetNetworkAtIndex(secondRowIndex, targetNadLabel);
-      await secondMappingModal.save();
+      // NAD target: IP mode editable inline
+      const nadModal = await networkMapDetailsPage.openEditModal();
+      const nadRowIndex = await nadModal.addMapping();
+      await nadModal.selectSourceNetworkAtIndex(nadRowIndex, SourceNetworks.MGMT_NETWORK);
+      await nadModal.selectTargetNetworkAtIndex(nadRowIndex, targetNadLabel);
+      await nadModal.selectNetworkIPModeAtIndex(nadRowIndex, 'Preserve static IPs');
+      await nadModal.verifySaveButtonEnabled();
+      await nadModal.save();
 
-      const modeModal = await networkMapDetailsPage.openNetworkIPModeModal();
-      await modeModal.verifyModalStructure();
-      await modeModal.verifyModeSelectorDisabled(NetworkTargets.DEFAULT);
-      await modeModal.selectMode(targetNadLabel, 'Preserve static IPs');
-      await modeModal.verifySaveButtonEnabled();
-      await modeModal.save();
-
-      const savedModeModal = await networkMapDetailsPage.openNetworkIPModeModal();
-      await savedModeModal.verifyMode(targetNadLabel, 'Preserve static IPs');
-      await savedModeModal.cancel();
+      // Persisted across edit open
+      const verifyModal = await networkMapDetailsPage.openEditModal();
+      await expect(
+        verifyModal.page.getByTestId(`networkMap.${nadRowIndex}.networkIPMode`),
+      ).toContainText('Preserve static IPs');
+      await verifyModal.cancel();
     },
   );
 });

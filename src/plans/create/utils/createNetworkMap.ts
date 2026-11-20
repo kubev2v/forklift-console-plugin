@@ -108,10 +108,11 @@ export const createNetworkMap = async ({
       },
       spec: {
         map: (mappings ?? []).reduce(
-          (acc: V1beta1NetworkMapSpecMap[], { sourceNetwork, targetNetwork }) => {
+          (acc: V1beta1NetworkMapSpecMap[], { sourceNetwork, targetNetwork, networkIPMode }) => {
             if (sourceNetwork.name) {
               acc.push({
                 destination: getDestination(targetNetwork, targetNamespace),
+                ...(networkIPMode ? { networkIPMode } : {}),
                 source: getSource(sourceNetwork, sourceProvider),
               });
             }

@@ -1,5 +1,6 @@
 import type { ReactElement } from 'react';
 import { useFieldArray, useFormContext } from 'react-hook-form';
+import NetworkIPModeRow from 'src/components/networkIPMode/NetworkIPModeRow';
 import InventorySourceNetworkField from 'src/networkMaps/create/fields/InventorySourceNetworkField';
 import { validateNetworkMaps } from 'src/networkMaps/create/fields/utils';
 import { defaultNetworkMapping, networkMapFieldLabels } from 'src/networkMaps/utils/constants';
@@ -84,6 +85,13 @@ const NetworkMapEditFieldTable = ({
         }}
         fieldRows={networkMappingFields.map((field, index) => ({
           ...field,
+          additionalOptions: (
+            <NetworkIPModeRow
+              index={index}
+              isDisabled={isSubmitting}
+              targetNetworkFieldId={getNetworkMapFieldId(NetworkMapFieldId.TargetNetwork, index)}
+            />
+          ),
           inputs: [
             <InventorySourceNetworkField
               fieldId={getNetworkMapFieldId(NetworkMapFieldId.SourceNetwork, index)}
@@ -104,12 +112,12 @@ const NetworkMapEditFieldTable = ({
           {
             isRequired: true,
             label: networkMapFieldLabels[NetworkMapFieldId.SourceNetwork],
-            width: 45,
+            width: 40,
           },
           {
             isRequired: true,
             label: networkMapFieldLabels[NetworkMapFieldId.TargetNetwork],
-            width: 45,
+            width: 40,
           },
         ]}
         removeButton={{

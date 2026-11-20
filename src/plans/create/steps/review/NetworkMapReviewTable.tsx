@@ -1,27 +1,11 @@
 import type { FC } from 'react';
 
+import { getNetworkIPModeLabel } from 'src/components/networkIPMode/networkIPModeUtils';
+
 import { Card } from '@patternfly/react-core';
 import { Table, TableVariant, Tbody, Td, Th, Thead, Tr } from '@patternfly/react-table';
 import { useForkliftTranslation } from '@utils/i18n';
 import { NetworkMapFieldId, type NetworkMapping } from '@utils/mappings/networkMap';
-
-const getNetworkIPModeLabel = (
-  mode: NetworkMapping['networkIPMode'],
-  translate: (value: string) => string,
-): string => {
-  switch (mode) {
-    case 'dhcp':
-      return translate('DHCP');
-    case 'none':
-      return translate('Do not configure IP');
-    case 'preserve':
-      return translate('Preserve static IPs');
-    case undefined:
-      return translate('Inherit Plan setting');
-    default:
-      return translate('Unknown');
-  }
-};
 
 type NetworkMapReviewTableProps = {
   networkMap: NetworkMapping[];
@@ -54,15 +38,14 @@ const NetworkMapReviewTable: FC<NetworkMapReviewTableProps> = ({ networkMap }) =
       >
         <Thead>
           <Tr>
-            <Th width={50}>{t('Source network')}</Th>
-            <Th width={30}>{t('Target network')}</Th>
+            <Th width={40}>{t('Source network')}</Th>
+            <Th width={40}>{t('Target network')}</Th>
             <Th width={20}>{t('Network IP mode')}</Th>
           </Tr>
         </Thead>
 
         <Tbody>
           {networkMap.map((mapping) => {
-            // Only render rows that have both source and target network names
             if (
               mapping[NetworkMapFieldId.SourceNetwork].name &&
               mapping[NetworkMapFieldId.TargetNetwork].name

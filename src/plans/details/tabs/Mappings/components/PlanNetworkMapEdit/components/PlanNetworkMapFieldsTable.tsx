@@ -1,5 +1,6 @@
 import { type FC, useEffect, useMemo } from 'react';
 import { useFieldArray, useFormContext, useWatch } from 'react-hook-form';
+import NetworkIPModeRow from 'src/components/networkIPMode/NetworkIPModeRow';
 import { networkMapFieldLabels } from 'src/networkMaps/utils/constants';
 import { getNetworkMapFieldId } from 'src/networkMaps/utils/getNetworkMapFieldId';
 import { validateNetworkMap } from 'src/plans/create/steps/network-map/utils';
@@ -115,6 +116,12 @@ const PlanNetworkMapFieldsTable: FC<PlanNetworkMapFieldsTableProps> = ({
         }}
         fieldRows={networkMappingFields.map((field, index) => ({
           ...field,
+          additionalOptions: (
+            <NetworkIPModeRow
+              index={index}
+              targetNetworkFieldId={getNetworkMapFieldId(NetworkMapFieldId.TargetNetwork, index)}
+            />
+          ),
           inputs: [
             <SourceNetworkField
               fieldId={getNetworkMapFieldId(NetworkMapFieldId.SourceNetwork, index)}
@@ -134,11 +141,11 @@ const PlanNetworkMapFieldsTable: FC<PlanNetworkMapFieldsTableProps> = ({
         headers={[
           {
             label: networkMapFieldLabels[NetworkMapFieldId.SourceNetwork],
-            width: 45,
+            width: 40,
           },
           {
             label: networkMapFieldLabels[NetworkMapFieldId.TargetNetwork],
-            width: 45,
+            width: 40,
           },
         ]}
         removeButton={{

@@ -5,7 +5,6 @@ import {
   type MapDetailsExpectedData,
   type MapDetailsPageConfig,
 } from './common/BaseMapDetailsPage';
-import { NetworkIPModeEditModal } from './PlanDetailsPage/modals/NetworkIPModeEditModal';
 import { NetworkMapEditModal } from './PlanDetailsPage/modals/NetworkMapEditModal';
 
 export class NetworkMapDetailsPage extends BaseMapDetailsPage {
@@ -16,13 +15,11 @@ export class NetworkMapDetailsPage extends BaseMapDetailsPage {
     resourceType: 'NetworkMap',
   };
 
-  public readonly networkIPModeEditModal: NetworkIPModeEditModal;
   public readonly networkMapEditModal: NetworkMapEditModal;
 
   constructor(page: Page) {
     super(page);
     this.networkMapEditModal = new NetworkMapEditModal(page);
-    this.networkIPModeEditModal = new NetworkIPModeEditModal(page);
   }
 
   async openEditModal(): Promise<NetworkMapEditModal> {
@@ -34,15 +31,6 @@ export class NetworkMapDetailsPage extends BaseMapDetailsPage {
     await this.networkMapEditModal.waitForModalToOpen();
     await this.page.waitForLoadState('domcontentloaded');
     return this.networkMapEditModal;
-  }
-
-  async openNetworkIPModeModal(): Promise<NetworkIPModeEditModal> {
-    await this.verifyOnDetailsPage();
-    const detailItem = this.page.getByTestId('network-ip-mode-detail-item');
-    await expect(detailItem).toBeVisible();
-    await detailItem.locator('button').click();
-    await this.networkIPModeEditModal.waitForModalToOpen();
-    return this.networkIPModeEditModal;
   }
 
   async verifyNetworkMapDetailsPage(expectedData: {
