@@ -37,15 +37,9 @@ export class NetworkMapEditModal extends BaseMappingEditModal {
     return this.selectTargetAtIndex(index, targetNetwork);
   }
 
-  async selectNetworkIPModeAtIndex(index: number, modeLabel: string): Promise<void> {
-    const selector = this.page.getByTestId(NETWORK_IP_MODE_TEST_ID(index));
-    await expect(selector).toBeVisible();
-    await selector.click();
-    await this.page.getByRole('option', { name: modeLabel }).click();
-  }
-
-  async verifyNetworkIPModeNotVisibleAtIndex(index: number): Promise<void> {
-    await expect(this.page.getByTestId(NETWORK_IP_MODE_TEST_ID(index))).toBeHidden();
+  async clearNetworkIPModeAtIndex(index: number): Promise<void> {
+    await this.page.getByTestId(`networkMap.${index}.networkIPMode-clear`).click();
+    await expect(this.networkIPModeAtIndex(index)).toContainText('Inherit');
   }
 
   async expandNetworkIPModeAtIndex(index: number): Promise<void> {
@@ -59,13 +53,26 @@ export class NetworkMapEditModal extends BaseMappingEditModal {
     }
   }
 
-  async clearNetworkIPModeAtIndex(index: number): Promise<void> {
-    await this.page.getByTestId(`networkMap.${index}.networkIPMode-clear`).click();
+  async selectNetworkIPModeAtIndex(index: number, modeLabel: string): Promise<void> {
+    const selector = this.page.getByTestId(NETWORK_IP_MODE_TEST_ID(index));
+    await expect(selector).toBeVisible();
+    await selector.click();
+    await this.page.getByRole('option', { name: modeLabel }).click();
   }
 
-  async getNetworkIPModeAtIndex(index: number): Promise<string> {
-    const selector = this.page.getByTestId(NETWORK_IP_MODE_TEST_ID(index));
-    const text = (await selector.textContent()) ?? '';
-    return text.trim();
+  async verifyNetworkIPModeAtIndex(index: number, expectedText: string): Promise<void> {
+    await expect(this.networkIPModeAtIndex(index)).toContainText(expectedText);
+  }
+
+  async verifyNetworkIPModeNotVisibleAtIndex(index: number): Promise<void> {
+    await expect(this.page.getByTestId(NETWORK_IP_MODE_TEST_ID(index))).toBeHidden();
+  }
+
+  networkIPModeAtIndex(index: number): ReturnType<Page['getByTestId']> {
+    return this.page.getByTestId(NETWORK_IP_MODE_TEST_ID(index));
+  }
+
+  networkIPModeClearButtonAtIndex(index: number): ReturnType<Page['getByTestId']> {
+    return this.page.getByTestId(`networkMap.${index}.networkIPMode-clear`);
   }
 }

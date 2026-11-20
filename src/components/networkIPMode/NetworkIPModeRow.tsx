@@ -51,7 +51,11 @@ const NetworkIPModeRow: FC<NetworkIPModeRowProps> = ({ index, isDisabled, target
             toggleText={t('Network IP mode (optional)')}
           >
             <Form className="network-ip-mode__form">
-              <NetworkIPModeField fieldId={fieldId} isDisabled={isDisabled} />
+              <NetworkIPModeField
+                fieldId={fieldId}
+                isDisabled={isDisabled}
+                targetNetworkFieldId={targetNetworkFieldId}
+              />
             </Form>
           </ExpandableSection>
         </SplitItem>

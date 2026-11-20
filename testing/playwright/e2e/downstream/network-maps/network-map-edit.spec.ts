@@ -39,7 +39,9 @@ test.describe('Network Map Details - Editing', { tag: '@downstream' }, () => {
       await modal.save();
 
       await networkMapDetailsPage.verifyNetworkMapDetailsPage({
-        mappings: [{ sourceNetwork: SourceNetworks.VM_NETWORK, targetNetwork: NetworkTargets.DEFAULT }],
+        mappings: [
+          { sourceNetwork: SourceNetworks.VM_NETWORK, targetNetwork: NetworkTargets.DEFAULT },
+        ],
         networkMapName: testNetworkMap.name,
         sourceProvider: testNetworkMap.sourceProvider,
         targetProvider: testNetworkMap.targetProvider,
@@ -56,7 +58,9 @@ test.describe('Network Map Details - Editing', { tag: '@downstream' }, () => {
       await modal.save();
 
       await networkMapDetailsPage.verifyNetworkMapDetailsPage({
-        mappings: [{ sourceNetwork: SourceNetworks.VM_NETWORK, targetNetwork: NetworkTargets.IGNORE }],
+        mappings: [
+          { sourceNetwork: SourceNetworks.VM_NETWORK, targetNetwork: NetworkTargets.IGNORE },
+        ],
         networkMapName: testNetworkMap.name,
         sourceProvider: testNetworkMap.sourceProvider,
         targetProvider: testNetworkMap.targetProvider,
@@ -81,6 +85,21 @@ test.describe('Network Map Details - Editing', { tag: '@downstream' }, () => {
 sharedProviderTest.describe('Network Map Network IP mode - Editing', { tag: '@downstream' }, () => {
   requireVersion(sharedProviderTest, V5_1_0);
 
+  /**
+   * Isolates NAD mapping creation so each test can use a distinct NAD target
+   * without duplicating the source/target selection plumbing.
+   */
+  const addNadMapping = async (
+    modal: Awaited<ReturnType<NetworkMapDetailsPage['openEditModal']>>,
+    sourceNetwork: string,
+    targetNadLabel: string,
+  ): Promise<number> => {
+    const rowIndex = await modal.addMapping();
+    await modal.selectSourceNetworkAtIndex(rowIndex, sourceNetwork);
+    await modal.selectTargetNetworkAtIndex(rowIndex, targetNadLabel);
+    return rowIndex;
+  };
+
   sharedProviderTest(
     'should edit IP mode inline and hide it for default/ignored targets',
     async ({ page, resourceManager, testNetworkMap }) => {
@@ -94,65 +113,72 @@ sharedProviderTest.describe('Network Map Network IP mode - Editing', { tag: '@do
       const targetNad = await createTestNad(resourceManager, { namespace: MTV_NAMESPACE });
       const targetNadLabel = `${MTV_NAMESPACE}/${targetNad.metadata.name}`;
 
-      // Pod target: IP mode hidden (per mapping, part of map section table)
-      const podModal = await networkMapDetailsPage.openEditModal();
-      const podRowIndex = await podModal.addMapping();
-      await podModal.selectSourceNetworkAtIndex(podRowIndex, SourceNetworks.VM_NETWORK);
-      await podModal.selectTargetNetworkAtIndex(podRowIndex, NetworkTargets.DEFAULT);
-      await podModal.verifyNetworkIPModeNotVisibleAtIndex(podRowIndex);
-      await podModal.save();
+      await test.step('Pod target hides IP mode', async () => {
+        const podModal = await networkMapDetailsPage.openEditModal();
+        const podRowIndex = await addNadMapping(
+          podModal,
+          SourceNetworks.VM_NETWORK,
+          NetworkTargets.DEFAULT,
+        );
+        await podModal.verifyNetworkIPModeNotVisibleAtIndex(podRowIndex);
+        await podModal.save();
+      });
 
-      // NAD target: IP mode editable inline (expandable)
-      const nadModal = await networkMapDetailsPage.openEditModal();
-      const nadRowIndex = await nadModal.addMapping();
-      await nadModal.selectSourceNetworkAtIndex(nadRowIndex, SourceNetworks.MGMT_NETWORK);
-      await nadModal.selectTargetNetworkAtIndex(nadRowIndex, targetNadLabel);
-      await nadModal.expandNetworkIPModeAtIndex(nadRowIndex);
-      await nadModal.selectNetworkIPModeAtIndex(nadRowIndex, 'Preserve static IPs');
-      await nadModal.verifySaveButtonEnabled();
-      await nadModal.save();
+      await test.step('NAD target shows expandable IP mode and persists', async () => {
+        const nadModal = await networkMapDetailsPage.openEditModal();
+        const nadRowIndex = await addNadMapping(
+          nadModal,
+          SourceNetworks.MGMT_NETWORK,
+          targetNadLabel,
+        );
+        await nadModal.expandNetworkIPModeAtIndex(nadRowIndex);
+        await nadModal.selectNetworkIPModeAtIndex(nadRowIndex, 'Preserve static IPs');
+        await nadModal.verifySaveButtonEnabled();
+        await nadModal.save();
 
-      // Persisted across edit open — expand to reveal stored value
-      const verifyModal = await networkMapDetailsPage.openEditModal();
-      await verifyModal.expandNetworkIPModeAtIndex(nadRowIndex);
-      await expect(verifyModal.getNetworkIPModeAtIndex(nadRowIndex)).resolves.toContain('Preserve static IPs');
-      await verifyModal.cancel();
+        const verifyModal = await networkMapDetailsPage.openEditModal();
+        await verifyModal.expandNetworkIPModeAtIndex(nadRowIndex);
+        await verifyModal.verifyNetworkIPModeAtIndex(nadRowIndex, 'Preserve static IPs');
+        await verifyModal.cancel();
+      });
     },
   );
 
   sharedProviderTest(
-    'should review IP mode in details table (30/30/30) and clear to Inherit',
+    'should review IP mode in details table and clear to Inherit',
     async ({ page, resourceManager, testNetworkMap }) => {
       if (!testNetworkMap) {
         throw new Error('testNetworkMap is required');
       }
 
       const networkMapDetailsPage = new NetworkMapDetailsPage(page);
-      await networkMapDetailsPage.navigate(testNetworkMap.name);
-
+      const reviewTable = page.getByTestId('network-map-review-table');
       const targetNad = await createTestNad(resourceManager, { namespace: MTV_NAMESPACE });
       const targetNadLabel = `${MTV_NAMESPACE}/${targetNad.metadata.name}`;
 
-      const modal = await networkMapDetailsPage.openEditModal();
-      const rowIndex = await modal.addMapping();
-      await modal.selectSourceNetworkAtIndex(rowIndex, SourceNetworks.MGMT_NETWORK);
-      await modal.selectTargetNetworkAtIndex(rowIndex, targetNadLabel);
-      await modal.expandNetworkIPModeAtIndex(rowIndex);
-      await modal.selectNetworkIPModeAtIndex(rowIndex, 'DHCP');
-      await modal.save();
+      await test.step('Create NAD mapping with DHCP and verify review table', async () => {
+        await networkMapDetailsPage.navigate(testNetworkMap.name);
+        const modal = await networkMapDetailsPage.openEditModal();
+        const rowIndex = await addNadMapping(modal, SourceNetworks.MGMT_NETWORK, targetNadLabel);
+        await modal.expandNetworkIPModeAtIndex(rowIndex);
+        await modal.selectNetworkIPModeAtIndex(rowIndex, 'DHCP');
+        await modal.save();
 
-      // Details read-only table shows 30/30/30 with resolved value
-      await expect(page.getByRole('columnheader', { name: 'Network IP mode' })).toBeVisible();
-      await expect(page.getByRole('cell', { name: 'DHCP' })).toBeVisible();
-      await expect(page.locator('[data-testid="network-map-review-table"]')).toContainText('DHCP');
+        await expect(
+          reviewTable.getByRole('columnheader', { name: 'Network IP mode' }),
+        ).toBeVisible();
+        await expect(reviewTable.getByRole('cell', { name: 'DHCP' })).toBeVisible();
+        await expect(reviewTable).toContainText('DHCP');
+      });
 
-      // Clear returns to Inherit (absent key)
-      const clearModal = await networkMapDetailsPage.openEditModal();
-      await clearModal.expandNetworkIPModeAtIndex(rowIndex);
-      await clearModal.clearNetworkIPModeAtIndex(rowIndex);
-      await expect(clearModal.getNetworkIPModeAtIndex(rowIndex)).resolves.toContain('Inherit');
-      await clearModal.save();
-      await expect(page.getByRole('cell', { name: 'Inherit Plan setting' })).toBeVisible();
+      await test.step('Clear IP mode and verify Inherit in review table', async () => {
+        const clearModal = await networkMapDetailsPage.openEditModal();
+        const lastRow = (await clearModal.getMappingCount()) - 1;
+        await clearModal.expandNetworkIPModeAtIndex(lastRow);
+        await clearModal.clearNetworkIPModeAtIndex(lastRow);
+        await clearModal.save();
+        await expect(reviewTable.getByRole('cell', { name: 'Inherit Plan setting' })).toBeVisible();
+      });
     },
   );
 });
