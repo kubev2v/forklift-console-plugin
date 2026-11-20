@@ -25,8 +25,7 @@ const NetworkIPModeField: FC<NetworkIPModeFieldProps> = ({
   const { t } = useForkliftTranslation();
   const { control } = useFormContext();
   const targetValue = useWatch({ control, name: targetNetworkFieldId }) as
-    | { id?: string; name?: string }
-    | undefined;
+    { id?: string; name?: string } | undefined;
   const options = getNetworkIPModeOptions(t);
   const isEditable = isNetworkIPModeEditableForTargetName(targetValue, isDefaultNetworkTarget);
 
@@ -49,7 +48,7 @@ const NetworkIPModeField: FC<NetworkIPModeFieldProps> = ({
           }}
           options={options}
           testId={fieldId}
-          value={field.value ?? NETWORK_IP_MODE_INHERIT}
+          value={(field.value as string | undefined) ?? NETWORK_IP_MODE_INHERIT}
         />
       )}
     />

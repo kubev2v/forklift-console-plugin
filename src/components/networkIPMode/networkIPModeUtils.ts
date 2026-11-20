@@ -1,6 +1,5 @@
 import type { V1beta1NetworkMapSpecMapDestination } from '@forklift-ui/types';
 import { IGNORED, POD } from '@utils/constants';
-import { IgnoreNetwork } from '@utils/mappings/constants';
 
 export const NETWORK_IP_MODE_INHERIT = 'inherit';
 export type NetworkIPModeOption = {
@@ -8,7 +7,9 @@ export type NetworkIPModeOption = {
   value: string;
 };
 
-export const getNetworkIPModeOptions = (translate: (value: string) => string): NetworkIPModeOption[] => [
+export const getNetworkIPModeOptions = (
+  translate: (value: string) => string,
+): NetworkIPModeOption[] => [
   { label: translate('Inherit Plan setting'), value: NETWORK_IP_MODE_INHERIT },
   { label: translate('Preserve static IPs'), value: 'preserve' },
   { label: translate('DHCP'), value: 'dhcp' },

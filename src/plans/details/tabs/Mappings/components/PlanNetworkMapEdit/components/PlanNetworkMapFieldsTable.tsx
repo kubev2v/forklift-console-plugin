@@ -1,4 +1,4 @@
-import { type FC, useEffect, useMemo } from 'react';
+import { type FC, useEffect } from 'react';
 import { useFieldArray, useFormContext, useWatch } from 'react-hook-form';
 import NetworkIPModeRow from 'src/components/networkIPMode/NetworkIPModeRow';
 import { networkMapFieldLabels } from 'src/networkMaps/utils/constants';
@@ -9,7 +9,6 @@ import { hasPodNetworkMappings } from 'src/plans/create/utils/hasMultiplePodNetw
 import FieldBuilderTable from '@components/FieldBuilderTable/FieldBuilderTable';
 import MultiNicInfoAlert from '@components/mappings/network-mappings/MultiNicInfoAlert';
 import TargetNetworkField from '@components/mappings/network-mappings/TargetNetworkField';
-import { getMultiNicSourceNetworks } from '@components/mappings/network-mappings/utils/getMultiNicSourceNetworks';
 import type { OVirtNicProfile, ProviderVirtualMachine } from '@forklift-ui/types';
 import { Stack } from '@patternfly/react-core';
 import { NetworkMapFieldId } from '@utils/crds/maps/types';
@@ -19,6 +18,7 @@ import type { MappingValue } from '@utils/types';
 
 import type { PlanNetworkEditFormValues } from '../utils/types';
 
+import { getPlanNetworkMapDerived } from './planNetworkMapDerived';
 import SourceNetworkField from './SourceNetworkField';
 
 type PlanNetworkMapFieldsTableProps = {
@@ -42,12 +42,7 @@ const PlanNetworkMapFieldsTable: FC<PlanNetworkMapFieldsTableProps> = ({
 }) => {
   const { t } = useForkliftTranslation();
   const { control, trigger } = useFormContext<PlanNetworkEditFormValues>();
-
-  const networkMappings = useWatch({
-    control,
-    name: NetworkMapFieldId.NetworkMap,
-  });
-
+  const networkMappings = useWatch({ control, name: NetworkMapFieldId.NetworkMap });
   const {
     append,
     fields: networkMappingFields,
@@ -57,12 +52,7 @@ const PlanNetworkMapFieldsTable: FC<PlanNetworkMapFieldsTableProps> = ({
     name: NetworkMapFieldId.NetworkMap,
     rules: {
       validate: (values) =>
-        validateNetworkMap({
-          oVirtNicProfiles,
-          usedSourceNetworks,
-          values,
-          vms,
-        }),
+        validateNetworkMap({ oVirtNicProfiles, usedSourceNetworks, values, vms }),
     },
   });
 
@@ -70,26 +60,17 @@ const PlanNetworkMapFieldsTable: FC<PlanNetworkMapFieldsTableProps> = ({
     const timeoutId = setTimeout(() => {
       trigger().catch(() => undefined);
     }, 0);
-
     return (): void => {
       clearTimeout(timeoutId);
     };
   }, [trigger]);
 
-  const vmsList = useMemo(() => Object.values(vms), [vms]);
-  const networkNames = useMemo(
-    () =>
-      new Map(
-        [...usedSourceNetworks, ...otherSourceNetworks]
-          .filter((net) => net.id)
-          .map((net) => [net.id ?? '', net.name]),
-      ),
-    [usedSourceNetworks, otherSourceNetworks],
-  );
-  const multiNicNetworkIds = useMemo(() => {
-    const multiNicMap = getMultiNicSourceNetworks(vmsList, oVirtNicProfiles);
-    return new Set(multiNicMap.keys());
-  }, [vmsList, oVirtNicProfiles]);
+  const { multiNicNetworkIds, networkNames, vmsList } = getPlanNetworkMapDerived({
+    otherSourceNetworks,
+    oVirtNicProfiles,
+    usedSourceNetworks,
+    vms,
+  });
 
   return (
     <Stack hasGutter>
@@ -110,7 +91,6 @@ const PlanNetworkMapFieldsTable: FC<PlanNetworkMapFieldsTableProps> = ({
                 ? ignoreNetMapping[NetworkMapFieldId.TargetNetwork]
                 : defaultMapping[NetworkMapFieldId.TargetNetwork],
             });
-
             await trigger();
           },
         }}
@@ -139,14 +119,8 @@ const PlanNetworkMapFieldsTable: FC<PlanNetworkMapFieldsTableProps> = ({
           ],
         }))}
         headers={[
-          {
-            label: networkMapFieldLabels[NetworkMapFieldId.SourceNetwork],
-            width: 40,
-          },
-          {
-            label: networkMapFieldLabels[NetworkMapFieldId.TargetNetwork],
-            width: 40,
-          },
+          { label: networkMapFieldLabels[NetworkMapFieldId.SourceNetwork], width: 40 },
+          { label: networkMapFieldLabels[NetworkMapFieldId.TargetNetwork], width: 40 },
         ]}
         removeButton={{
           isDisabled: () => networkMappingFields.length <= 1,

@@ -108,7 +108,7 @@ export const createNetworkMap = async ({
       },
       spec: {
         map: (mappings ?? []).reduce(
-          (acc: V1beta1NetworkMapSpecMap[], { sourceNetwork, targetNetwork, networkIPMode }) => {
+          (acc: V1beta1NetworkMapSpecMap[], { networkIPMode, sourceNetwork, targetNetwork }) => {
             if (sourceNetwork.name) {
               const destination = getDestination(targetNetwork, targetNamespace);
               const isNadDestination = destination.type === MULTUS;
@@ -116,6 +116,7 @@ export const createNetworkMap = async ({
               acc.push({
                 destination,
                 ...(sanitizedNetworkIPMode ? { networkIPMode: sanitizedNetworkIPMode } : {}),
+                source: getSource(sourceNetwork, sourceProvider),
               });
             }
 

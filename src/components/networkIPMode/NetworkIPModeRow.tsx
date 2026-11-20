@@ -12,8 +12,8 @@ import {
 import { useForkliftTranslation } from '@utils/i18n';
 import { isDefaultNetworkTarget } from '@utils/mappings/constants';
 
-import { isNetworkIPModeEditableForTargetName } from './networkIPModeUtils';
 import NetworkIPModeField from './NetworkIPModeField';
+import { isNetworkIPModeEditableForTargetName } from './networkIPModeUtils';
 
 import './NetworkIPModeRow.style.scss';
 
@@ -23,21 +23,22 @@ type NetworkIPModeRowProps = {
   targetNetworkFieldId: string;
 };
 
-const getNetworkIPModeFieldId = (index: number): string => `networkMap.${index}.networkIPMode`;
-
-const NetworkIPModeRow: FC<NetworkIPModeRowProps> = ({ index, isDisabled, targetNetworkFieldId }) => {
+const NetworkIPModeRow: FC<NetworkIPModeRowProps> = ({
+  index,
+  isDisabled,
+  targetNetworkFieldId,
+}) => {
   const { t } = useForkliftTranslation();
   const { setValue, watch } = useFormContext();
   const target = watch(targetNetworkFieldId) as { id?: string; name?: string } | undefined;
   const show = isNetworkIPModeEditableForTargetName(target, isDefaultNetworkTarget);
   const [isExpanded, setIsExpanded] = useState(false);
 
-
   if (!show) {
     return null;
   }
 
-  const fieldId = getNetworkIPModeFieldId(index);
+  const fieldId = `networkMap.${index}.networkIPMode`;
 
   return (
     <div className="network-ip-mode" data-testid={`network-ip-mode-row-${index}`}>
@@ -81,4 +82,3 @@ const NetworkIPModeRow: FC<NetworkIPModeRowProps> = ({ index, isDisabled, target
 };
 
 export default NetworkIPModeRow;
-export { getNetworkIPModeFieldId };

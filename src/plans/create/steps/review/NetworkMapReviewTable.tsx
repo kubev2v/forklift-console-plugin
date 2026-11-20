@@ -1,5 +1,4 @@
 import type { FC } from 'react';
-
 import { getNetworkIPModeLabel } from 'src/components/networkIPMode/networkIPModeUtils';
 
 import { Card } from '@patternfly/react-core';
