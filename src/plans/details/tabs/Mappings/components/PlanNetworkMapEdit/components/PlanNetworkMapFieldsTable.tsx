@@ -1,6 +1,6 @@
 import { type FC, useEffect } from 'react';
 import { useFieldArray, useFormContext, useWatch } from 'react-hook-form';
-import NetworkIPModeRow from 'src/components/networkIPMode/NetworkIPModeRow';
+import { getNetworkIPModeRow } from 'src/components/networkIPMode/networkMapTableHelpers';
 import { networkMapFieldLabels } from 'src/networkMaps/utils/constants';
 import { getNetworkMapFieldId } from 'src/networkMaps/utils/getNetworkMapFieldId';
 import { validateNetworkMap } from 'src/plans/create/steps/network-map/utils';
@@ -96,12 +96,7 @@ const PlanNetworkMapFieldsTable: FC<PlanNetworkMapFieldsTableProps> = ({
         }}
         fieldRows={networkMappingFields.map((field, index) => ({
           ...field,
-          additionalOptions: (
-            <NetworkIPModeRow
-              index={index}
-              targetNetworkFieldId={getNetworkMapFieldId(NetworkMapFieldId.TargetNetwork, index)}
-            />
-          ),
+          additionalOptions: getNetworkIPModeRow(index),
           inputs: [
             <SourceNetworkField
               fieldId={getNetworkMapFieldId(NetworkMapFieldId.SourceNetwork, index)}

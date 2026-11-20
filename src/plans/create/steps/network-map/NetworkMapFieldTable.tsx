@@ -1,6 +1,6 @@
 import { type FC, useMemo } from 'react';
 import { useFieldArray } from 'react-hook-form';
-import NetworkIPModeRow from 'src/components/networkIPMode/NetworkIPModeRow';
+import { getNetworkIPModeRow } from 'src/components/networkIPMode/networkMapTableHelpers';
 
 import FieldBuilderTable from '@components/FieldBuilderTable/FieldBuilderTable';
 import MultiNicInfoAlert from '@components/mappings/network-mappings/MultiNicInfoAlert';
@@ -94,12 +94,7 @@ const NetworkMapFieldTable: FC<NetworkMapFieldTableProps> = ({
         }}
         fieldRows={netMappingFields.map((field, index) => ({
           ...field,
-          additionalOptions: (
-            <NetworkIPModeRow
-              index={index}
-              targetNetworkFieldId={getNetworkMapFieldId(NetworkMapFieldId.TargetNetwork, index)}
-            />
-          ),
+          additionalOptions: getNetworkIPModeRow(index),
           inputs: [
             <SourceNetworkField
               fieldId={getNetworkMapFieldId(NetworkMapFieldId.SourceNetwork, index)}

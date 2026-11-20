@@ -1,6 +1,6 @@
 import type { FC } from 'react';
 import { useFieldArray, useFormContext, useWatch } from 'react-hook-form';
-import NetworkIPModeRow from 'src/components/networkIPMode/NetworkIPModeRow';
+import { getNetworkIPModeRow } from 'src/components/networkIPMode/networkMapTableHelpers';
 import { getNetworkMapFieldId } from 'src/networkMaps/utils/getNetworkMapFieldId';
 import { useSourceNetworks } from 'src/utils/hooks/useNetworks';
 import useTargetNetworks from 'src/utils/hooks/useTargetNetworks';
@@ -59,13 +59,7 @@ const CreateNetworkMapFieldTable: FC = () => {
       }}
       fieldRows={networkMappingFields.map((field, index) => ({
         ...field,
-        additionalOptions: (
-          <NetworkIPModeRow
-            index={index}
-            isDisabled={isSubmitting}
-            targetNetworkFieldId={getNetworkMapFieldId(NetworkMapFieldId.TargetNetwork, index)}
-          />
-        ),
+        additionalOptions: getNetworkIPModeRow(index, isSubmitting),
         inputs: [
           <InventorySourceNetworkField
             fieldId={getNetworkMapFieldId(NetworkMapFieldId.SourceNetwork, index)}
