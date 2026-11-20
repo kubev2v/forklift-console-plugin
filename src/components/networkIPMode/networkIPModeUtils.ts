@@ -1,8 +1,8 @@
 import type { V1beta1NetworkMapSpecMapDestination } from '@forklift-ui/types';
 import { IGNORED, POD } from '@utils/constants';
+import { IgnoreNetwork } from '@utils/mappings/constants';
 
 export const NETWORK_IP_MODE_INHERIT = 'inherit';
-
 export type NetworkIPModeOption = {
   label: string;
   value: string;
@@ -52,7 +52,7 @@ export const isNetworkIPModeEditableForTargetName = (
     return false;
   }
 
-  if (targetName === 'Ignore network') {
+  if (targetName === IgnoreNetwork.Label) {
     return false;
   }
 
