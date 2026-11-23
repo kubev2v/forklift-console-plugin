@@ -83,6 +83,9 @@ test.describe('Plan existing LUKS secret', { tag: '@downstream' }, () => {
       const { settingsTab } = new PlanDetailsPage(page);
       await settingsTab.clickEditDiskDecryption();
       await expect(settingsTab.editDiskDecryptionModal).toBeVisible();
+      await expect(settingsTab.editDiskDecryptionModal).toContainText(
+        'LUKS- or BitLocker-encrypted devices',
+      );
       await expect(page.getByTestId('edit-use-existing-secret-radio')).toBeChecked();
       await expect(page.getByTestId('edit-use-passphrases-radio')).toBeVisible();
 

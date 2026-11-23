@@ -69,7 +69,7 @@ const OtherSettingsStep: FC<{ isLiveMigrationFeatureEnabled: boolean }> = ({
                         <Radio
                           data-testid="use-existing-luks-secret-radio"
                           description={t(
-                            'Select a pre-existing secret containing LUKS decryption keys.',
+                            'Select a pre-existing secret containing LUKS or BitLocker decryption keys.',
                           )}
                           id={DiskDecryptionType.Existing}
                           isChecked={diskDecryptionTypeField.value === DiskDecryptionType.Existing}

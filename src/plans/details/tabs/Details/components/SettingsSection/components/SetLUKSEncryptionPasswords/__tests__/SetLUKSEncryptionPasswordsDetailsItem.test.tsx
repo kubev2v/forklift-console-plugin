@@ -66,6 +66,19 @@ describe('SetLUKSEncryptionPasswordsDetailsItem', () => {
     expect(screen.getByText('No decryption defined')).toBeInTheDocument();
   });
 
+  it('mentions BitLocker in the disk decryption help', async () => {
+    const user = userEvent.setup();
+    mockIsPlanEditable.mockReturnValue(true);
+
+    render(
+      <SetLUKSEncryptionPasswordsDetailsItem canPatch={true} plan={mockPlan} shouldRender={true} />,
+    );
+
+    await user.click(screen.getAllByRole('button')[0]);
+
+    expect(screen.getByText(/LUKS- or BitLocker-encrypted devices/)).toBeInTheDocument();
+  });
+
   it('allows editing when permissions allow', async () => {
     const user = userEvent.setup();
     mockIsPlanEditable.mockReturnValue(true);
