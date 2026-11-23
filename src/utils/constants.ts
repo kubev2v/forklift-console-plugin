@@ -109,6 +109,14 @@ export const INFRASTRUCTURE_GVK = {
   version: 'v1',
 };
 
+export const PRIORITY_CLASS_GVK = {
+  group: 'scheduling.k8s.io',
+  kind: 'PriorityClass',
+  version: 'v1',
+};
+
+export const CLUSTER_DEFAULT_PRIORITY_CLASS_VALUE = '';
+
 export const ConfigMapModel = {
   abbr: 'CM',
   apiVersion: 'v1',

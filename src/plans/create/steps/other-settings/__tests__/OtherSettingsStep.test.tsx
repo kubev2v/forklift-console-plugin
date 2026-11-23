@@ -16,10 +16,20 @@ jest.mock('../../../hooks/useCreatePlanFormContext', () => ({
     mockUseCreatePlanFormContext(),
 }));
 
+const mockIsFeatureEnabled = jest.fn();
+jest.mock('@utils/hooks/useFeatureFlags', () => ({
+  useFeatureFlags: (): { isFeatureEnabled: typeof mockIsFeatureEnabled } => ({
+    isFeatureEnabled: mockIsFeatureEnabled,
+  }),
+}));
+
 jest.mock('../InstanceTypeField', () => (): ReactElement => (
   <div data-testid="instance-type-field" />
 ));
 jest.mock('../NBDEClevisField', () => (): ReactElement => <div data-testid="nbde-field" />);
+jest.mock('../OffloadPopulatorPriorityClassField', () => (): ReactElement => (
+  <div data-testid="offload-priority-class-field" />
+));
 jest.mock('../DiskPassPhraseFieldTable', () => (): ReactElement => (
   <div data-testid="passphrase-field" />
 ));
@@ -67,6 +77,7 @@ const TestWrapper = ({
 describe('OtherSettingsStep', () => {
   beforeEach(() => {
     jest.clearAllMocks();
+    mockIsFeatureEnabled.mockReturnValue(false);
   });
 
   it('shows passphrase field when NBDE is disabled', () => {
@@ -92,6 +103,30 @@ describe('OtherSettingsStep', () => {
     expect(screen.getByTestId('transfer-field')).toBeInTheDocument();
     expect(screen.getByTestId('power-state-field')).toBeInTheDocument();
     expect(screen.queryByTestId('nbde-field')).not.toBeInTheDocument();
+  });
+
+  it('shows the offload priority class field for vSphere when copy offload is enabled', () => {
+    mockIsFeatureEnabled.mockReturnValue(true);
+    const vsphereProvider = { spec: { type: PROVIDER_TYPES.vsphere } };
+    render(<TestWrapper sourceProvider={vsphereProvider} />);
+
+    expect(screen.getByTestId('offload-priority-class-field')).toBeInTheDocument();
+  });
+
+  it('hides the offload priority class field when copy offload is disabled', () => {
+    mockIsFeatureEnabled.mockReturnValue(false);
+    const vsphereProvider = { spec: { type: PROVIDER_TYPES.vsphere } };
+    render(<TestWrapper sourceProvider={vsphereProvider} />);
+
+    expect(screen.queryByTestId('offload-priority-class-field')).not.toBeInTheDocument();
+  });
+
+  it('hides the offload priority class field for non-vSphere providers', () => {
+    mockIsFeatureEnabled.mockReturnValue(true);
+    const nonVsphereProvider = { spec: { type: PROVIDER_TYPES.ovirt } };
+    render(<TestWrapper sourceProvider={nonVsphereProvider} />);
+
+    expect(screen.queryByTestId('offload-priority-class-field')).not.toBeInTheDocument();
   });
 
   it('reactively hides passphrase field when NBDE is toggled', async () => {

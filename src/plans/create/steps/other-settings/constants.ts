@@ -6,6 +6,7 @@ export enum OtherSettingsFormFieldId {
   ExistingLUKSSecret = 'existingLUKSSecret',
   InstanceTypes = 'instanceTypes',
   NBDEClevis = 'nbdeClevis',
+  OffloadPopulatorPriorityClassName = 'offloadPopulatorPriorityClassName',
   TransferNetwork = 'transferNetwork',
   PreserveStaticIps = 'preserveStaticIps',
   RootDevice = 'rootDevice',
@@ -30,6 +31,9 @@ export const otherFormFieldLabels: Record<OtherSettingsFormFieldId, ReturnType<t
   [OtherSettingsFormFieldId.InstanceTypes]: t('Instance types'),
   [OtherSettingsFormFieldId.MigrateSharedDisks]: t('Migrate shared disks'),
   [OtherSettingsFormFieldId.NBDEClevis]: t('Use network-bound disk encryption (NBDE/Clevis)'),
+  [OtherSettingsFormFieldId.OffloadPopulatorPriorityClassName]: t(
+    'Offload populator pod priority class',
+  ),
   [OtherSettingsFormFieldId.PreserveStaticIps]: t('Preserve static IPs'),
   [OtherSettingsFormFieldId.RootDevice]: t('Root device'),
   [OtherSettingsFormFieldId.TargetPowerState]: t('VM target power state'),

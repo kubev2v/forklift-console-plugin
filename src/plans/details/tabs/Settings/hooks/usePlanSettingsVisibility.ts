@@ -16,6 +16,7 @@ import type { PlanSettingsVisibilityInput } from '../utils/planSettingsVisibilit
 
 export type PlanSettingsVisibility = PlanSettingsVisibilityInput & {
   canPatch: boolean;
+  isCopyOffloadEnabled: boolean;
   isProviderLoaded: boolean;
   isVddkInitImageNotSet: boolean;
   plan: V1beta1Plan;
@@ -47,6 +48,7 @@ export const usePlanSettingsVisibility = (plan: V1beta1Plan): PlanSettingsVisibi
 
   return {
     canPatch,
+    isCopyOffloadEnabled: isFeatureEnabled(FEATURE_NAMES.COPY_OFFLOAD),
     isOvirt,
     isProviderLoaded,
     isTransferNetworkVisible,

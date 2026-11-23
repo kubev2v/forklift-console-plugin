@@ -3,6 +3,8 @@ import { Controller, useWatch } from 'react-hook-form';
 
 import WizardStepContainer from '@components/common/WizardStepContainer';
 import { Flex, FlexItem, Form, Radio, Stack } from '@patternfly/react-core';
+import { FEATURE_NAMES } from '@utils/constants';
+import { useFeatureFlags } from '@utils/hooks/useFeatureFlags';
 import { useForkliftTranslation } from '@utils/i18n';
 import { PROVIDER_TYPES } from '@utils/providers/constants';
 
@@ -21,6 +23,7 @@ import DiskPassPhraseFieldTable from './DiskPassPhraseFieldTable';
 import ExistingLUKSSecretField from './ExistingLUKSSecretField';
 import InstanceTypeField from './InstanceTypeField';
 import NBDEClevisField from './NBDEClevisField';
+import OffloadPopulatorPriorityClassField from './OffloadPopulatorPriorityClassField';
 import PreserveStaticIpsField from './PreserveStaticIpsField';
 import RootDeviceField from './RootDeviceField';
 import SharedDisksField from './SharedDisksField';
@@ -32,6 +35,7 @@ const OtherSettingsStep: FC<{ isLiveMigrationFeatureEnabled: boolean }> = ({
 }) => {
   const { t } = useForkliftTranslation();
   const { control } = useCreatePlanFormContext();
+  const { isFeatureEnabled } = useFeatureFlags();
   const [sourceProvider, nbdeClevis, migrationType] = useWatch({
     control,
     name: [
@@ -41,6 +45,7 @@ const OtherSettingsStep: FC<{ isLiveMigrationFeatureEnabled: boolean }> = ({
     ],
   });
   const isVsphere = sourceProvider?.spec?.type === PROVIDER_TYPES.vsphere;
+  const isCopyOffloadEnabled = isFeatureEnabled(FEATURE_NAMES.COPY_OFFLOAD);
 
   const isTransferNetworkVisible =
     !hasLiveMigrationProviderType(sourceProvider) ||
@@ -118,6 +123,7 @@ const OtherSettingsStep: FC<{ isLiveMigrationFeatureEnabled: boolean }> = ({
             <PreserveStaticIpsField />
             <RootDeviceField />
             <SharedDisksField />
+            {isCopyOffloadEnabled && <OffloadPopulatorPriorityClassField />}
           </>
         )}
 
