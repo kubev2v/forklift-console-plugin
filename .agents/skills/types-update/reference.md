@@ -297,7 +297,21 @@ export interface Foo extends Base {
 
 **Hyper-V:** `web/hyperv/*.go` + `model/hyperv/model.go`
 
-All Go paths are relative to `pkg/controller/provider/` in the forklift repo.
+All Go paths above are relative to `pkg/controller/provider/` in the forklift repo.
+
+**Per-provider package layout (`pkg/provider/<name>/inventory/`)**
+
+`ec2`, `nutanix`, `azure` and newer providers do not use the legacy tree. Map them as:
+
+| TypeScript File | Go Source |
+|---|---|
+| `provider/<name>/Provider.ts` | `pkg/provider/<name>/inventory/web/provider.go` |
+| `provider/<name>/VM.ts` | `pkg/provider/<name>/inventory/web/vm.go` plus `inventory/model/model.go` (VM details) |
+| `provider/<name>/Network.ts` | `pkg/provider/<name>/inventory/web/network.go` |
+| `provider/<name>/Storage*.ts`, `Disk*.ts` | `pkg/provider/<name>/inventory/web/{storage,volume,disk}.go` |
+| `provider/<name>/Resource.ts` | `pkg/provider/<name>/inventory/web/resource.go` |
+
+Sub-resource files differ per provider — Azure exposes disk types as `Storage` (keyed by SKU) and `Disk` (managed disks); EC2 keys storage by EBS volume type. Always list the upstream directory before mapping files.
 
 ### CRD type cross-references
 
@@ -356,11 +370,22 @@ After regenerating per-provider types, update these aggregation files:
 - **`ProviderHost.ts`**: union of host types (`OVirtHost | VSphereHost`)
 - **`ProvidersInventoryList.ts`**: object with optional arrays per provider
 
-If a new provider is added upstream (e.g., `ec2`), add it to all union types and to `provider/index.ts`.
+When a new provider is added upstream:
+
+1. Create `src/types/provider/<name>/` from the Go source (legacy or `pkg/provider/<name>/inventory` layout).
+2. Add `export * from './<name>';` to `provider/index.ts`.
+3. Add the provider/VM symbols to `ProviderInventory.ts`, `ProviderVM.ts` and `ProvidersInventoryList.ts`.
+4. Add `'<name>'` to the `ProviderType` union in `src/types/ProviderSecret.ts` and hand-write `src/types/secret/<Name>ProviderSecret.ts`, then add it to the `ProviderSecret` union.
+5. Run the registry guard and require a clean exit:
+
+```bash
+node .agents/skills/types-update/scripts/check-provider-registry.mjs --root "$TYPES_REPO_DIR"
+```
 
 ### Files to leave untouched
 
-- `src/types/secret/` -- K8s Secret data shapes, not derivable from Go inventory structs
+- `src/types/secret/` -- K8s Secret data shapes, not derivable from Go inventory structs. Read them, but edit by hand when a provider is added.
+- `src/types/ProviderSecret.ts` -- contains the hand-maintained `ProviderType` and `ProviderSecret` unions. It is never generated; update it by hand and let `check-provider-registry.mjs` verify it.
 - `src/types/k8s/` -- re-exports `K8sResourceCommon`, `ObjectMetadata`, `ManagedFieldsEntry`, `FieldsV1` from `@openshift/api-types`; also local helpers (`K8sResourceCondition`, `V1NetworkAttachmentDefinition`). Do not hand-clone FieldsV1/ObjectMeta here.
 - `src/types/Modify.ts` -- utility type
 - `src/types/MustGatherResponse.ts` -- must-gather API response, not from inventory
@@ -368,7 +393,7 @@ If a new provider is added upstream (e.g., `ec2`), add it to all union types and
 
 ### Inventory types edge cases
 
-- **New provider appears upstream**: create the provider directory, add to `provider/index.ts`, add to all union types
+- **New provider appears upstream**: create the provider directory, add to `provider/index.ts`, add to all union types, add to `ProviderType`, add the hand-written secret type, then run `check-provider-registry.mjs`. Watch for the `pkg/provider/<name>/inventory/` layout — the legacy paths will not exist for it.
 - **Struct field removed upstream**: remove from TypeScript interface. Check consumer project for usage before proceeding.
 - **Struct field type changed**: update the TypeScript type. Flag to user if it might be a breaking change.
 - **Go struct uses non-JSON tags only (`sql:` without `json:`)**: skip those fields -- they are DB-only and not serialized to JSON.
