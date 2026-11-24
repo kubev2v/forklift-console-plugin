@@ -51,6 +51,7 @@ const TypeaheadSelect = (
     footer,
     isCreatable = false,
     isDisabled = false,
+    isScrollable = true,
     noOptionsMessage,
     noResultsMessage = getDefaultNoResults,
     onChange,
@@ -94,6 +95,7 @@ const TypeaheadSelect = (
   return (
     <Select
       isOpen={isOpen}
+      isScrollable={isScrollable}
       onOpenChange={(open) => {
         closeSelectWhenBlurred(open, setIsOpen);
       }}
