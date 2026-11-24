@@ -108,10 +108,14 @@ export const createNetworkMap = async ({
       },
       spec: {
         map: (mappings ?? []).reduce(
-          (acc: V1beta1NetworkMapSpecMap[], { sourceNetwork, targetNetwork }) => {
+          (acc: V1beta1NetworkMapSpecMap[], { networkIPMode, sourceNetwork, targetNetwork }) => {
             if (sourceNetwork.name) {
+              const destination = getDestination(targetNetwork, targetNamespace);
+              const isNadDestination = destination.type === MULTUS;
+              const sanitizedNetworkIPMode = isNadDestination ? networkIPMode : undefined;
               acc.push({
-                destination: getDestination(targetNetwork, targetNamespace),
+                destination,
+                ...(sanitizedNetworkIPMode ? { networkIPMode: sanitizedNetworkIPMode } : {}),
                 source: getSource(sourceNetwork, sourceProvider),
               });
             }

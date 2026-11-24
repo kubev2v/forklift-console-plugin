@@ -60,6 +60,8 @@ export const buildNetworkMappings = (
 
     const isOpenShiftProvider = sourceProvider?.spec?.type === PROVIDER_TYPES.openshift;
     const destination = getDestination(targetNetwork);
+    const isNadDestination = destination.type === MULTUS;
+    const networkIPMode = isNadDestination ? mapping.networkIPMode : undefined;
 
     if (isOpenShiftProvider) {
       const isPodSourceNetwork = isDefaultNetworkTarget(sourceNetwork);
@@ -68,6 +70,7 @@ export const buildNetworkMappings = (
         : { name: sourceNetwork.name.replace(/^\//gu, '') };
       const baseMapping: V1beta1NetworkMapSpecMap = {
         destination,
+        ...(networkIPMode ? { networkIPMode } : {}),
         source,
       };
       acc.push(baseMapping);
@@ -81,6 +84,7 @@ export const buildNetworkMappings = (
       };
       const baseMapping: V1beta1NetworkMapSpecMap = {
         destination,
+        ...(networkIPMode ? { networkIPMode } : {}),
         source,
       };
       acc.push(baseMapping);
@@ -159,6 +163,7 @@ export const getMappingValues = (
     };
 
     return {
+      ...(mapping.networkIPMode ? { networkIPMode: mapping.networkIPMode } : {}),
       sourceNetwork,
       targetNetwork,
     };

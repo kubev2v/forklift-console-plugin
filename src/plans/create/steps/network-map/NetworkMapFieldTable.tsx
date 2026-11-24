@@ -1,5 +1,6 @@
 import { type FC, useMemo } from 'react';
 import { useFieldArray } from 'react-hook-form';
+import { getNetworkIPModeRow } from 'src/components/networkIPMode/networkMapTableHelpers';
 
 import FieldBuilderTable from '@components/FieldBuilderTable/FieldBuilderTable';
 import MultiNicInfoAlert from '@components/mappings/network-mappings/MultiNicInfoAlert';
@@ -93,6 +94,7 @@ const NetworkMapFieldTable: FC<NetworkMapFieldTableProps> = ({
         }}
         fieldRows={netMappingFields.map((field, index) => ({
           ...field,
+          additionalOptions: getNetworkIPModeRow(index),
           inputs: [
             <SourceNetworkField
               fieldId={getNetworkMapFieldId(NetworkMapFieldId.SourceNetwork, index)}
@@ -112,8 +114,8 @@ const NetworkMapFieldTable: FC<NetworkMapFieldTableProps> = ({
           ],
         }))}
         headers={[
-          { label: netMapFieldLabels[NetworkMapFieldId.SourceNetwork], width: 45 },
-          { label: netMapFieldLabels[NetworkMapFieldId.TargetNetwork], width: 45 },
+          { label: netMapFieldLabels[NetworkMapFieldId.SourceNetwork], width: 40 },
+          { label: netMapFieldLabels[NetworkMapFieldId.TargetNetwork], width: 40 },
         ]}
         removeButton={{
           isDisabled: () => netMappingFields.length <= 1,

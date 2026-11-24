@@ -117,7 +117,10 @@ const FieldBuilderTable: FC<FieldBuilderTableProps<FormData>> = ({
             // Conditionally add additional options row if it exists
             if (fieldRow.additionalOptions) {
               acc.push(
-                <Tr key={`${fieldRow.id}-additional`}>
+                <Tr
+                  data-testid={`field-row-${rowIndex}-additional`}
+                  key={`${fieldRow.id}-additional`}
+                >
                   <Td colSpan={totalColSpan}>{fieldRow.additionalOptions}</Td>
                 </Tr>,
               );
