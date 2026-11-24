@@ -1,4 +1,5 @@
 import type { FC } from 'react';
+import { AzureVirtualMachinesList } from 'src/providers/details/tabs/VirtualMachines/AzureVirtualMachinesList';
 import { Ec2VirtualMachinesList } from 'src/providers/details/tabs/VirtualMachines/Ec2VirtualMachinesList';
 import { HypervVirtualMachinesList } from 'src/providers/details/tabs/VirtualMachines/HypervVirtualMachinesList';
 import { NutanixVirtualMachinesList } from 'src/providers/details/tabs/VirtualMachines/NutanixVirtualMachinesList';
@@ -42,6 +43,8 @@ const VirtualMachinesListSection: FC<VirtualMachinesListSectionProps> = ({ provi
       return <HypervVirtualMachinesList {...tableProps} />;
     case PROVIDER_TYPES.nutanix:
       return <NutanixVirtualMachinesList {...tableProps} />;
+    case PROVIDER_TYPES.azure:
+      return <AzureVirtualMachinesList {...tableProps} />;
     case PROVIDER_TYPES.ec2:
       return <Ec2VirtualMachinesList {...tableProps} />;
     case undefined:

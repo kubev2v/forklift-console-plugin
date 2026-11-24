@@ -41,6 +41,11 @@ const addProviderToInventory = (
     case PROVIDER_TYPES.hyperv:
       newInventory.hyperv = [...(newInventory.hyperv ?? []), provider as HypervProvider];
       break;
+    case PROVIDER_TYPES.azure: {
+      const extended = newInventory as ProvidersInventoryList & Record<string, ProviderInventory[]>;
+      extended.azure = [...(extended.azure ?? []), provider];
+      break;
+    }
     case PROVIDER_TYPES.ec2: {
       const extended = newInventory as ProvidersInventoryList & Record<string, ProviderInventory[]>;
       extended.ec2 = [...(extended.ec2 ?? []), provider];

@@ -9,7 +9,7 @@ import ConcernsAndConditionsTable from '@components/ConcernsAndConditionsTable/C
 import { EmptyState, EmptyStateVariant, Spinner, Title } from '@patternfly/react-core';
 import { getNamespace } from '@utils/crds/common/selectors';
 import type { ProviderData } from '@utils/providers/types';
-import { isProviderEc2, isProviderOpenshift } from '@utils/resources';
+import { isProviderAzure, isProviderEc2, isProviderOpenshift } from '@utils/resources';
 
 import { getVmId } from '../utils/helpers/vmProps';
 
@@ -92,11 +92,11 @@ export const ProviderVirtualMachinesList: FC<ProviderVirtualMachinesListProps> =
   }
 
   const getStandardPageProps = (): StandardPageSelectionProps => {
-    const ec2 = isProviderEc2(provider);
+    const flatRows = isProviderEc2(provider) || isProviderAzure(provider);
 
     if (handleSelectedIds) {
       return {
-        ...(!isProviderOpenshift(provider) && !ec2 ? { expandedIds: EMPTY_EXPANDED_IDS } : {}),
+        ...(!isProviderOpenshift(provider) && !flatRows ? { expandedIds: EMPTY_EXPANDED_IDS } : {}),
         ...(GlobalActionToolbarItems ? { GlobalActionToolbarItems } : {}),
         onSelect: handleSelectedIds,
         selectedIds: initialSelectedIds,
@@ -104,7 +104,7 @@ export const ProviderVirtualMachinesList: FC<ProviderVirtualMachinesListProps> =
       };
     }
 
-    if (!isProviderOpenshift(provider) && !ec2) {
+    if (!isProviderOpenshift(provider) && !flatRows) {
       return {
         expandedIds: EMPTY_EXPANDED_IDS,
         onExpand: (): void => undefined,
@@ -130,7 +130,7 @@ export const ProviderVirtualMachinesList: FC<ProviderVirtualMachinesListProps> =
       userSettings={userSettings}
       {...getStandardPageProps()}
       expanded={
-        isProviderOpenshift(provider) || isProviderEc2(provider)
+        isProviderOpenshift(provider) || isProviderEc2(provider) || isProviderAzure(provider)
           ? undefined
           : (props): ReactElement => <ConcernsAndConditionsTable vmData={props.resourceData} />
       }

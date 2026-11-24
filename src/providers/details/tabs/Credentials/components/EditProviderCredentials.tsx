@@ -66,9 +66,9 @@ const EditProviderCredentials: OverlayComponent<EditProviderCredentialsProps> = 
       >
         <Form>
           <CredentialFieldsByType providerType={providerType} />
-          {providerType !== PROVIDER_TYPES.ec2 && providerType !== PROVIDER_TYPES.ova && (
-            <CertificateValidationField />
-          )}
+          {providerType !== PROVIDER_TYPES.azure &&
+            providerType !== PROVIDER_TYPES.ec2 &&
+            providerType !== PROVIDER_TYPES.ova && <CertificateValidationField />}
         </Form>
       </ModalForm>
     </FormProvider>

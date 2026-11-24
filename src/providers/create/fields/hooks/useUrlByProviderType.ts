@@ -20,7 +20,7 @@ export const useUrlByProviderType = (): string => {
       ProviderFormFieldId.ProviderType,
     ]);
 
-  if (providerType === PROVIDER_TYPES.ec2) {
+  if (providerType === PROVIDER_TYPES.azure || providerType === PROVIDER_TYPES.ec2) {
     return '';
   }
   if (providerType === PROVIDER_TYPES.openshift) {

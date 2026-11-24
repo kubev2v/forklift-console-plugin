@@ -5,6 +5,7 @@ import { CONDITION_STATUS } from '@utils/constants';
 import { PROVIDER_TYPES } from '@utils/providers/constants';
 import { ProviderStatus } from '@utils/types';
 
+import AzureDetailsSection from '../AzureDetailsSection';
 import Ec2DetailsSection from '../Ec2DetailsSection';
 import HyperVDetailsSection from '../HyperVDetailsSection';
 import NutanixDetailsSection from '../NutanixDetailsSection';
@@ -20,6 +21,8 @@ export const getDetailsSectionByType = (
   type: string | undefined,
 ): FC<DetailsSectionProps> | undefined => {
   switch (type) {
+    case PROVIDER_TYPES.azure:
+      return AzureDetailsSection;
     case PROVIDER_TYPES.ec2:
       return Ec2DetailsSection;
     case PROVIDER_TYPES.ovirt:
