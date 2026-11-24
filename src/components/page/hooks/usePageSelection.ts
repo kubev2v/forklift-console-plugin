@@ -13,11 +13,12 @@ type UsePageSelectionResult<T> = {
   internalSelectedIds: string[] | undefined;
   isExpanded: ((item: T) => boolean) | undefined;
   onSelectCallback: (ids: string[]) => void;
+  pruneSelection: (removedIds: string[]) => void;
   toggleExpandFor: (items: T[]) => void;
   toggleSelectFor: (items: T[]) => void;
 };
 
-/** Manages selection/expansion state with toggle functions and callback handling. */
+/** Manages selection/expansion state with toggle functions, pruning and callback handling. */
 export const usePageSelection = <T>({
   expandedIds,
   onExpand,
@@ -93,11 +94,28 @@ export const usePageSelection = <T>({
     [onSelect],
   );
 
+  const pruneSelection = useCallback(
+    (removedIds: string[]) => {
+      const removed = new Set(removedIds);
+      const current = internalSelectedIds ?? [];
+      const next = current.filter((id) => !removed.has(id));
+
+      if (next.length === current.length) {
+        return;
+      }
+
+      setInternalSelectedIds(next);
+      onSelect?.(next);
+    },
+    [internalSelectedIds, onSelect],
+  );
+
   return {
     internalExpandedIds,
     internalSelectedIds,
     isExpanded,
     onSelectCallback,
+    pruneSelection,
     toggleExpandFor,
     toggleSelectFor,
   };

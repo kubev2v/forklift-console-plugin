@@ -25,16 +25,19 @@ import {
   type BulkPlanActionFailure,
   getBulkActionFailure,
   getPlanRowId,
+  getSucceededPlanIds,
   runSettledInBatches,
 } from './utils';
 
 export type BulkArchivePlansModalProps = {
+  onComplete?: (succeededPlanIds: string[]) => void;
   plans: V1beta1Plan[];
   skippedArchivedCount?: number;
 };
 
 const BulkArchivePlansModal: OverlayComponent<BulkArchivePlansModalProps> = ({
   closeOverlay,
+  onComplete,
   plans,
   skippedArchivedCount = 0,
 }) => {
@@ -52,6 +55,8 @@ const BulkArchivePlansModal: OverlayComponent<BulkArchivePlansModalProps> = ({
       }),
     );
 
+    onComplete?.(getSucceededPlanIds(plans, results));
+
     const failures = results.flatMap((result, index) => {
       if (result.status === 'fulfilled') {
         return [];
@@ -64,7 +69,7 @@ const BulkArchivePlansModal: OverlayComponent<BulkArchivePlansModalProps> = ({
       setActionFailures(failures);
       throw new Error('');
     }
-  }, [plans]);
+  }, [onComplete, plans]);
   return (
     <ModalForm
       closeOverlay={closeOverlay}

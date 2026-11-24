@@ -4,7 +4,7 @@ import type { RowProps } from '@components/common/TableView/types';
 import { withTr } from '@components/common/TableView/withTr';
 import type { GlobalActionToolbarProps, ResourceField } from '@components/common/utils/types';
 
-import { getVisibleColumns } from '../utils/utils';
+import { getVisibleColumns, pruneSelectedIds } from '../utils/utils';
 
 type UseStandardPageInnerDataArgs<T> = {
   canSelect?: (item: T) => boolean;
@@ -15,6 +15,7 @@ type UseStandardPageInnerDataArgs<T> = {
   GlobalActionToolbarItems: FC<GlobalActionToolbarProps<T>>[];
   pageData: T[];
   row: FC<RowProps<T>>;
+  selectedIds?: string[];
   showPagination: boolean;
   toId?: (item: T) => string;
 };
@@ -25,6 +26,7 @@ type UseStandardPageInnerDataReturn<T> = {
   pageDataIds: string[];
   renderedGlobalActions: ReactElement[];
   RowComponent: FC<RowProps<T>>;
+  selectedIds?: string[];
   visibleColumns: ResourceField[];
 };
 
@@ -37,6 +39,7 @@ export const useStandardPageInnerData = <T,>({
   GlobalActionToolbarItems,
   pageData,
   row,
+  selectedIds,
   showPagination,
   toId,
 }: UseStandardPageInnerDataArgs<T>): UseStandardPageInnerDataReturn<T> => {
@@ -47,6 +50,16 @@ export const useStandardPageInnerData = <T,>({
   const dataOnScreen = useMemo(
     () => (showPagination ? pageData : finalFilteredData),
     [showPagination, pageData, finalFilteredData],
+  );
+
+  const visibleIds = useMemo(
+    () => (finalFilteredData ?? []).map((item) => toId?.(item) ?? ''),
+    [finalFilteredData, toId],
+  );
+
+  const prunedSelectedIds = useMemo(
+    () => (selectedIds ? pruneSelectedIds(selectedIds, visibleIds) : undefined),
+    [selectedIds, visibleIds],
   );
 
   const dataIds = useMemo(
@@ -71,9 +84,9 @@ export const useStandardPageInnerData = <T,>({
       seen.set(base, occurrence + 1);
       const key = occurrence === 0 ? base : `${base}__${occurrence}`;
 
-      return <Action dataOnScreen={dataOnScreen} key={key} />;
+      return <Action dataOnScreen={dataOnScreen} key={key} selectedIds={prunedSelectedIds} />;
     });
-  }, [GlobalActionToolbarItems, dataOnScreen]);
+  }, [GlobalActionToolbarItems, dataOnScreen, prunedSelectedIds]);
 
   return {
     dataIds,
@@ -81,6 +94,7 @@ export const useStandardPageInnerData = <T,>({
     pageDataIds,
     renderedGlobalActions,
     RowComponent,
+    selectedIds: prunedSelectedIds,
     visibleColumns,
   };
 };

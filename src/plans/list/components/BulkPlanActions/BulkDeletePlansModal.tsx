@@ -23,16 +23,19 @@ import {
   getBulkActionFailure,
   getOwnedPlans,
   getPlanRowId,
+  getSucceededPlanIds,
   hasNonArchivedSelectedPlans,
   runSettledInBatches,
 } from './utils';
 
 export type BulkDeletePlansModalProps = {
+  onComplete?: (succeededPlanIds: string[]) => void;
   plans: V1beta1Plan[];
 };
 
 const BulkDeletePlansModal: OverlayComponent<BulkDeletePlansModalProps> = ({
   closeOverlay,
+  onComplete,
   plans,
 }) => {
   const { t } = useForkliftTranslation();
@@ -48,6 +51,8 @@ const BulkDeletePlansModal: OverlayComponent<BulkDeletePlansModalProps> = ({
       k8sDelete({ model: PlanModel, resource: plan }),
     );
 
+    onComplete?.(getSucceededPlanIds(plans, results));
+
     const failures = results.flatMap((result, index) => {
       if (result.status === 'fulfilled') {
         return [];
@@ -60,7 +65,7 @@ const BulkDeletePlansModal: OverlayComponent<BulkDeletePlansModalProps> = ({
       setActionFailures(failures);
       throw new Error('');
     }
-  }, [plans]);
+  }, [onComplete, plans]);
 
   return (
     <ModalForm
