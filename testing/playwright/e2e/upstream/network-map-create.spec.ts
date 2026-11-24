@@ -36,6 +36,12 @@ test.describe(
         targetNetwork: 'Default network',
         targetProvider: TEST_DATA.providers.target.name,
       });
+
+      // Only Ready OpenShift providers may be offered as target (MTV-6674)
+      await networkMapCreatePage.expectTargetProviderOptions({
+        excluded: [TEST_DATA.providers.source.name],
+        included: [TEST_DATA.providers.target.name],
+      });
       await expect(networkMapCreatePage.createButton).toBeEnabled();
 
       // Submit form
