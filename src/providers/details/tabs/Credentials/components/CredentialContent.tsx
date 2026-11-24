@@ -56,6 +56,7 @@ const CredentialsContent: FC<CredentialsContentProps> = ({ provider, reveal, sec
     case PROVIDER_TYPES.nutanix:
       return <CredentialFields fields={nutanixCredentialsFields} reveal={reveal} secret={secret} />;
 
+    case PROVIDER_TYPES.azure:
     case PROVIDER_TYPES.ova:
     case undefined:
     default:

@@ -1,6 +1,7 @@
 import type { ReactElement } from 'react';
 
 import ec2Img from './resources/aws-ec2.svg';
+import azureImg from './resources/azure.svg';
 import hypervImg from './resources/hyperv.svg';
 import nutanixImgDark from './resources/nutanix-dark.svg';
 import nutanixImgLight from './resources/nutanix-light.svg';
@@ -12,6 +13,14 @@ import vmwareImgDark from './resources/vmware-dark.svg';
 import vmwareImgLight from './resources/vmware-light.svg';
 
 import './logos.scss';
+
+export const azureLogo = (
+  <img
+    alt="Microsoft Azure logo"
+    className="forklift--create-provider-edit-card-title-logo"
+    src={azureImg}
+  />
+);
 
 export const ec2Logo = (
   <img
