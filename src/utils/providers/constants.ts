@@ -1,4 +1,5 @@
 export const PROVIDER_TYPES = {
+  azure: 'azure',
   ec2: 'ec2',
   hyperv: 'hyperv',
   nutanix: 'nutanix',
@@ -12,6 +13,7 @@ export const PROVIDER_TYPES = {
 export type ProviderTypes = (typeof PROVIDER_TYPES)[keyof typeof PROVIDER_TYPES];
 
 const TECH_PREVIEW_PROVIDER_TYPES: readonly ProviderTypes[] = [
+  PROVIDER_TYPES.azure,
   PROVIDER_TYPES.ec2,
   PROVIDER_TYPES.nutanix,
 ] as const;

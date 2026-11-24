@@ -4,6 +4,7 @@ import { PROVIDER_TYPES } from '@utils/providers/constants';
 import { ProviderFormFieldId } from '../fields/constants';
 import type { CreateProviderFormData } from '../types';
 
+import { buildAzureProviderResources } from './buildAzureProviderResources';
 import { buildEc2ProviderResources } from './buildEc2ProviderResources';
 import { buildHypervProviderResources } from './buildHypervProviderResources';
 import { buildNutanixProviderResources } from './buildNutanixProviderResources';
@@ -22,6 +23,8 @@ export const buildProviderResources = (formData: CreateProviderFormData): Provid
   const providerType = formData[ProviderFormFieldId.ProviderType];
 
   switch (providerType) {
+    case PROVIDER_TYPES.azure:
+      return buildAzureProviderResources(formData);
     case PROVIDER_TYPES.ec2:
       return buildEc2ProviderResources(formData);
     case PROVIDER_TYPES.ova:

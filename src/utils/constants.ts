@@ -103,6 +103,8 @@ export const STORAGE_NAMES = {
 
 export const AWS_PLATFORM = 'AWS';
 
+export const AZURE_PLATFORM = 'Azure';
+
 export const INFRASTRUCTURE_GVK = {
   group: 'config.openshift.io',
   kind: 'Infrastructure',

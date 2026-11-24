@@ -14,6 +14,8 @@ import WelcomeCard from '../WelcomeCard';
 
 const mockNavigate = jest.fn();
 const mockUseClusterIsAwsPlatform = jest.fn<() => { isAwsPlatform: boolean; loaded: boolean }>();
+const mockUseClusterIsAzurePlatform =
+  jest.fn<() => { isAzurePlatform: boolean; loaded: boolean }>();
 
 jest.mock('react-router', () => ({
   ...jest.requireActual<Record<string, unknown>>('react-router'),
@@ -23,6 +25,11 @@ jest.mock('react-router', () => ({
 jest.mock('@utils/hooks/useClusterIsAwsPlatform', () => ({
   useClusterIsAwsPlatform: (): ReturnType<typeof mockUseClusterIsAwsPlatform> =>
     mockUseClusterIsAwsPlatform(),
+}));
+
+jest.mock('@utils/hooks/useClusterIsAzurePlatform', () => ({
+  useClusterIsAzurePlatform: (): ReturnType<typeof mockUseClusterIsAzurePlatform> =>
+    mockUseClusterIsAzurePlatform(),
 }));
 
 jest.mock('@utils/hooks/useIsDarkTheme', () => ({
@@ -59,6 +66,7 @@ const renderWelcomeCard = (): ReturnType<typeof render> =>
 describe('WelcomeCard', () => {
   beforeEach(() => {
     jest.clearAllMocks();
+    mockUseClusterIsAzurePlatform.mockReturnValue({ isAzurePlatform: false, loaded: true });
   });
 
   it('shows Amazon EC2 and all core provider tiles on AWS-platform clusters', () => {
@@ -111,6 +119,38 @@ describe('WelcomeCard', () => {
 
     expect(mockNavigate).toHaveBeenCalledWith(
       expect.stringContaining(`?providerType=${PROVIDER_TYPES.ec2}`),
+    );
+  });
+
+  it('shows the Microsoft Azure tile on Azure-platform clusters', () => {
+    mockUseClusterIsAwsPlatform.mockReturnValue({ isAwsPlatform: false, loaded: true });
+    mockUseClusterIsAzurePlatform.mockReturnValue({ isAzurePlatform: true, loaded: true });
+
+    renderWelcomeCard();
+
+    expect(screen.getByText('Microsoft Azure')).toBeVisible();
+    expect(screen.queryByText('Amazon EC2')).not.toBeInTheDocument();
+  });
+
+  it('hides the Microsoft Azure tile on non-Azure clusters', () => {
+    mockUseClusterIsAwsPlatform.mockReturnValue({ isAwsPlatform: false, loaded: true });
+
+    renderWelcomeCard();
+
+    expect(screen.queryByText('Microsoft Azure')).not.toBeInTheDocument();
+  });
+
+  it('navigates to create provider with the azure type when the Azure tile is clicked', async () => {
+    const user = userEvent.setup();
+    mockUseClusterIsAwsPlatform.mockReturnValue({ isAwsPlatform: false, loaded: true });
+    mockUseClusterIsAzurePlatform.mockReturnValue({ isAzurePlatform: true, loaded: true });
+
+    renderWelcomeCard();
+
+    await user.click(screen.getByRole('button', { name: 'Microsoft Azure' }));
+
+    expect(mockNavigate).toHaveBeenCalledWith(
+      expect.stringContaining(`?providerType=${PROVIDER_TYPES.azure}`),
     );
   });
 });
