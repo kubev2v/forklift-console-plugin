@@ -9,6 +9,7 @@ import {
   openstackCacertField,
   openstackInsecureSkipVerifyField,
 } from './utils/commonCredentialsFields';
+import { getCACertValue } from './utils/getCACertValue';
 import { getDecodedValue } from './utils/getDecodedValue';
 import { getOpenstackFieldsByAuthType } from './utils/getOpenstackFieldsByAuthType';
 import CredentialContentField from './CredentialFieldContent';
@@ -23,7 +24,7 @@ const OpenstackCredentialsContent: FC<OpenstackCredentialsContentProps> = ({ rev
   const decodedAuthType = getDecodedValue(secret?.data?.authType);
   const openstackFields = getOpenstackFieldsByAuthType(decodedAuthType);
   const decodedInsecureSkipVerify = getDecodedValue(secret?.data?.insecureSkipVerify);
-  const decodedCacert = getDecodedValue(secret?.data?.cacert);
+  const decodedCacert = getCACertValue(secret);
 
   return (
     <>

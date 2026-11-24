@@ -4,7 +4,7 @@ import type { SecretFieldsId } from 'src/providers/utils/constants';
 import { DetailsItem } from '@components/DetailItems/DetailItem';
 import type { IoK8sApiCoreV1Secret } from '@forklift-ui/types';
 
-import { getDecodedValue } from './utils/getDecodedValue';
+import { getCredentialFieldValue } from './utils/getCredentialFieldValue';
 import type { Fields } from './utils/types';
 import CredentialContentField from './CredentialFieldContent';
 
@@ -17,7 +17,7 @@ type CredentialFieldsProps = {
 const CredentialFields: FC<CredentialFieldsProps> = ({ fields, reveal, secret }) => (
   <>
     {Object.entries(fields).map(([key, field]) => {
-      const value = getDecodedValue(secret?.data?.[key]);
+      const value = getCredentialFieldValue(secret, key);
 
       return (
         <DetailsItem
