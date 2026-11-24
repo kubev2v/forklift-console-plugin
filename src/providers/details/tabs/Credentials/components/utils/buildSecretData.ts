@@ -124,6 +124,22 @@ export const buildSecretData = (
         user: encode(formData[ProviderFormFieldId.NutanixUsername] ?? ''),
       };
 
+    case PROVIDER_TYPES.azure: {
+      const azureData: Record<string, string> = {
+        clientId: encode(formData[ProviderFormFieldId.AzureClientId] ?? ''),
+        clientSecret: encode(formData[ProviderFormFieldId.AzureClientSecret] ?? ''),
+        subscriptionId: encode(formData[ProviderFormFieldId.AzureSubscriptionId] ?? ''),
+        tenantId: encode(formData[ProviderFormFieldId.AzureTenantId] ?? ''),
+      };
+      const resourceGroup = formData[ProviderFormFieldId.AzureResourceGroup]?.trim();
+
+      if (resourceGroup) {
+        azureData.resourceGroup = encode(resourceGroup);
+      }
+
+      return azureData;
+    }
+
     case PROVIDER_TYPES.ec2: {
       const ec2Region = provider?.spec?.settings?.ec2Region ?? '';
 

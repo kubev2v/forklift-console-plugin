@@ -4,6 +4,7 @@ import { ProviderStatus } from '@utils/types';
 
 import { getDetailsSectionByType, isApplianceManagementEnabled } from '../utils';
 
+jest.mock('../../AzureDetailsSection', (): unknown => ({ __esModule: true, default: 'Azure' }));
 jest.mock('../../Ec2DetailsSection', (): unknown => ({ __esModule: true, default: 'Ec2' }));
 jest.mock('../../HyperVDetailsSection', (): unknown => ({ __esModule: true, default: 'HyperV' }));
 jest.mock('../../NutanixDetailsSection', (): unknown => ({ __esModule: true, default: 'Nutanix' }));
@@ -21,6 +22,7 @@ jest.mock('../../VSphereDetailsSection', (): unknown => ({ __esModule: true, def
 
 describe('DetailsSection utils - byType', () => {
   it.each([
+    [PROVIDER_TYPES.azure, 'Azure'],
     [PROVIDER_TYPES.ec2, 'Ec2'],
     [PROVIDER_TYPES.ovirt, 'Ovirt'],
     [PROVIDER_TYPES.openshift, 'Openshift'],
