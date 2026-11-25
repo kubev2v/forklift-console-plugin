@@ -6,6 +6,8 @@ import type { MigrationAlert } from '@utils/hooks/useMigrationAlerts/types';
 
 import MigrationAlertsCard from '../MigrationAlertsCard';
 
+import { failedAlert, succeededAlert } from './MigrationAlertsCard.fixtures';
+
 const mockUseMigrationAlerts =
   jest.fn<() => { alerts: MigrationAlert[]; error: unknown; loaded: boolean }>();
 
@@ -31,35 +33,6 @@ jest.mock('@utils/i18n', () => {
     useForkliftTranslation: (): { t: typeof mockT } => ({ t: mockT }),
   };
 });
-
-const failedAlert: MigrationAlert = {
-  activeAt: '2026-06-23T14:30:00Z',
-  alertName: 'MigrationFailed',
-  description:
-    'Cold migration plan "plan-alpha" with VSphere provider failed on DiskTransfer phase.',
-  mode: 'Cold',
-  phase: 'DiskTransfer',
-  planName: 'plan-alpha',
-  planUid: 'uid-1',
-  provider: 'VSphere',
-  severity: 'critical',
-  state: 'firing',
-  target: 'Local',
-};
-
-const succeededAlert: MigrationAlert = {
-  activeAt: '2026-06-24T10:00:00Z',
-  alertName: 'MigrationSucceeded',
-  description: 'Migration plan "plan-beta" succeeded.',
-  mode: 'Warm',
-  phase: '',
-  planName: 'plan-beta',
-  planUid: 'uid-2',
-  provider: 'oVirt',
-  severity: 'info',
-  state: 'firing',
-  target: 'Local',
-};
 
 const renderCard = (): ReturnType<typeof render> =>
   render(
@@ -158,6 +131,47 @@ describe('MigrationAlertsCard', () => {
     const detailLinks = screen.getAllByRole('link', { name: 'View details' });
     expect(detailLinks).toHaveLength(2);
     expect(detailLinks[0]).toHaveAttribute('href', '/monitoring/alerts?alertname=MigrationFailed');
+  });
+
+  it('shows error state instead of empty state when alerts fail to load', () => {
+    mockUseMigrationAlerts.mockReturnValue({
+      alerts: [],
+      error: new Error('Service Unavailable'),
+      loaded: true,
+    });
+
+    renderCard();
+
+    expect(screen.getByText('Unable to load migration alerts')).toBeInTheDocument();
+    expect(screen.queryByText('No migrations have completed or failed yet.')).toBeNull();
+  });
+
+  it('shows error state instead of spinner when error is set before load completes', () => {
+    mockUseMigrationAlerts.mockReturnValue({
+      alerts: [],
+      error: new Error('Forbidden'),
+      loaded: false,
+    });
+
+    renderCard();
+
+    expect(screen.getByText('Unable to load migration alerts')).toBeInTheDocument();
+    expect(screen.queryByRole('progressbar')).toBeNull();
+  });
+
+  it('hides summary counts and stale alerts when an error is present', () => {
+    mockUseMigrationAlerts.mockReturnValue({
+      alerts: [failedAlert],
+      error: new Error('Service Unavailable'),
+      loaded: true,
+    });
+
+    renderCard();
+
+    expect(screen.getByText('Unable to load migration alerts')).toBeInTheDocument();
+    expect(screen.queryByText('Failed', { exact: true })).toBeNull();
+    expect(screen.queryByText('MigrationFailed')).toBeNull();
+    expect(screen.getByRole('link', { name: 'View alerts' })).toBeInTheDocument();
   });
 
   it('renders "View alerts" link in header', () => {
