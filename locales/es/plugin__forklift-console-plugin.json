@@ -1218,6 +1218,7 @@
   "Page table": "Tabla de páginas",
   "Partially migrated": "Partially migrated",
   "Passphrase {{index}}": "Frase de paso {{index}}",
+  "Passphrase {{number}}": "Passphrase {{number}}",
   "Passphrases for LUKS encrypted devices": "Frases de paso para dispositivos cifrados LUKS",
   "Password": "Contraseña",
   "Password for accessing the SMB share": "Contraseña para acceder al recurso compartido SMB",

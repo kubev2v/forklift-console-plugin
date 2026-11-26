@@ -41,6 +41,7 @@ const toHeaderEntries = (
 
 type FieldBuilderTableProps<FormData extends FieldValues> = {
   addButton: AddButtonType;
+  additionalActions?: ReactNode;
   fieldRows: FieldRow<FormData>[];
   headers: FieldBuilderHeader[];
   removeButton: RemoveButtonType;
@@ -48,12 +49,24 @@ type FieldBuilderTableProps<FormData extends FieldValues> = {
 
 const FieldBuilderTable: FC<FieldBuilderTableProps<FormData>> = ({
   addButton,
+  additionalActions,
   fieldRows,
   headers,
   removeButton,
 }) => {
   const totalColSpan = headers.length + 1; // +1 for action column
-
+  const addMappingButton = (
+    <Button
+      data-testid="add-mapping-button"
+      icon={<PlusCircleIcon />}
+      isDisabled={addButton.isDisabled}
+      isInline
+      onClick={addButton.onClick}
+      variant={ButtonVariant.link}
+    >
+      {addButton.label}
+    </Button>
+  );
   return (
     <Flex direction={{ default: 'column' }} spaceItems={{ default: 'spaceItemsSm' }}>
       <Table
@@ -128,16 +141,14 @@ const FieldBuilderTable: FC<FieldBuilderTableProps<FormData>> = ({
         </Tbody>
       </Table>
 
-      <Button
-        data-testid="add-mapping-button"
-        icon={<PlusCircleIcon />}
-        isDisabled={addButton.isDisabled}
-        isInline
-        onClick={addButton.onClick}
-        variant={ButtonVariant.link}
-      >
-        {addButton.label}
-      </Button>
+      {additionalActions ? (
+        <Flex spaceItems={{ default: 'spaceItemsMd' }}>
+          {addMappingButton}
+          {additionalActions}
+        </Flex>
+      ) : (
+        addMappingButton
+      )}
     </Flex>
   );
 };

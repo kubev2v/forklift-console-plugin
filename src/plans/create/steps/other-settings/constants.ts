@@ -46,3 +46,6 @@ export const defaultDiskPassPhrase: DiskPassPhrase = { value: '' };
 export const defaultTransferNetwork = t('Target provider default');
 
 export const maxDiskPassPhrases = 20;
+
+export const passwordInput = 'password';
+export const textInput = 'text';
