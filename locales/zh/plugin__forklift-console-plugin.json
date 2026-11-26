@@ -1185,6 +1185,7 @@
   "Page table": "页表",
   "Partially migrated": "Partially migrated",
   "Passphrase {{index}}": "密码短语 {{index}}",
+  "Passphrase {{number}}": "Passphrase {{number}}",
   "Passphrases for LUKS encrypted devices": "LUKS 加密设备的密码短语",
   "Password": "密码",
   "Password for accessing the SMB share": "用于访问 SMB 共享的密码",

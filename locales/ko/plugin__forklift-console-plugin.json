@@ -1185,6 +1185,7 @@
   "Page table": "페이지 테이블",
   "Partially migrated": "Partially migrated",
   "Passphrase {{index}}": "암호문 {{index}}",
+  "Passphrase {{number}}": "Passphrase {{number}}",
   "Passphrases for LUKS encrypted devices": "LUKS 암호화 장치용 암호문",
   "Password": "암호",
   "Password for accessing the SMB share": "SMB 공유에 접근하기 위한 비밀번호",

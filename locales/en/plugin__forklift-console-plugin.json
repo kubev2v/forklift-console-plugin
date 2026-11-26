@@ -1196,6 +1196,7 @@
   "Page table": "Page table",
   "Partially migrated": "Partially migrated",
   "Passphrase {{index}}": "Passphrase {{index}}",
+  "Passphrase {{number}}": "Passphrase {{number}}",
   "Passphrases for LUKS encrypted devices": "Passphrases for LUKS encrypted devices",
   "Password": "Password",
   "Password for accessing the SMB share": "Password for accessing the SMB share",
